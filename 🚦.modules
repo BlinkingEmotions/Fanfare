@@ -1,0 +1,33 @@
+/* 🚦.modules | Multiple products. (DO-NOT-DISTRIBUTE-TWO-MIDDLE-SECTIONS) */
+
+module Twinbeam_embeds [system] [no_undeclared_includes]
+{
+  requires cplusplus17, coroutines 
+  /* Actually 'cplusplus20' and also c17. */
+  config_macros [exhaustive] __MZ__
+  link "Twinbeam_pic32mz" link "Twinbeam_macOS"
+  export *
+}
+
+module Pic32mx {
+  use Twinbeam_embeds header "../Apps/Twinbeam.h"
+  /* ⬷ Incorporated with 'coroutine'. */
+  header "pic32mx.hpp"
+  use possibly_encompassed
+  export * module Twinbeam_embeds { export * }
+}
+
+module Pic32mzda {
+  use Twinbeam_embeds header "../Apps/Twinbeam.h"
+  /* ⬷ Incorporated with 'coroutine'. */
+  header "pic32mzda.hpp"
+  /* header "pic32mzda⋔₁.hpp" */
+  /* header "pic32mzda⋔₂.hpp" */
+  use possibly_encompassed
+  export * module Twinbeam_embeds { export * }
+}
+
+module Pic32mm { /* … */ } /* ⬷ Non-double processor. */
+
+/* … */
+
