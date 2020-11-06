@@ -1,2 +1,7 @@
 # Fanfare
-Miscellaneous bits and pieces for microcontrollers.
+
+To compile write similar to:
+
+```
+xcrun clang @ccargs_mz -o Contours '🥽⋆Rävvägen.cpp'
+```
