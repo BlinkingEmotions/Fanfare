@@ -1,15 +1,11 @@
 -g
 -I /Users/path to --<Twinbeam.h>/
--D__MZDAStarterBoard__ -D__MZ__ -D__REFLECTIVE__
 -std=c++2a -fno-rtti -fblocks -fcoroutines-ts -fno-exceptions
 -fno-signed-char -fno-builtin -Wno-format
--fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules
+-fmodules-ts -fimplicit-modules -fmodule-map-file=🅰𝔷.modules
 -target mipsel -mfloat-abi=hard -mcpu=mips32r5 -mabi=o32 -mfp64 -mmsa -mdspr2
--gdwarf-5 -Wno-format
--fforce-enable-int128
--ffreestanding
--fno-builtin
+-fforce-enable-int128 -ffreestanding -fno-builtin -gdwarf-5
 ../Apps/Source/Releases/libTwinbeam_pic32mz_0146030c.a
 ../Apps/Additions/Releases/libAdditions_pic32mz_7b315b5c.a
-../Apps/Source/llvm-rt3.cpp
--T ../../pic32rt/pic32two.ld
+../../ia64+pic32rt/llvm-rt3.cpp
+-T ../../ia64+pic32rt/Pic32-two.ld
