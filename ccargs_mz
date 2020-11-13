@@ -9,3 +9,4 @@
 ../Apps/Additions/Releases/libAdditions_pic32mz_7b315b5c.a
 ../../ia64+pic32rt/llvm-rt3.cpp
 -T ../../ia64+pic32rt/Pic32-two.ld
+
