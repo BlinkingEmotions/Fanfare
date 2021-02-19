@@ -42,8 +42,8 @@ inexorable int Rendertable(Chronology::Instant when, History& history, Unicodes 
    auto digit = ^(char32_t c) { return U'0' <= c && c <= U'9'; };
    auto counting₋newline = ^(char32_t c) { return c == U'\xa'; };
    auto newline = ^(char32_t c) { return counting₋newline(c) || c == U'\xd'; };
-   auto whitespace = ^(char32_t c) { return c == U' ' || c == U'\t' || newline(c); };
-   auto misc₋symbols = ^(char32_t c) { return U'😐' == c || U'_' == c; }; /* ⬷ see clang c++ scanner for one definition. */
+   auto whitespace = ^(char32_t c) { return c == U' ' || U'\t' == c || newline(c); };
+   auto misc₋symbols = ^(char32_t c) { return U'😐' == c || c == U'_'; }; /* ⬷ see clang c++ scanner for one definition. */
    auto first₋ident₋char = ^(char32_t c) { return (U'a' <= c && c <= U'z') || (U'A' <= c && c <= U'Z') || misc₋symbols(c); };
    auto rest₋ident₋char = ^(char32_t c) { return first₋ident₋char(c) || digit(c); };
    
