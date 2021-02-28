@@ -37,7 +37,6 @@ struct Sheep { /* ⬷ implicit 'words₋per₋tile'. */
    
 };
 
-
 int
 main(
   int argc, 
@@ -47,7 +46,7 @@ main(
    Sheep index; auto leaf₋alloc = ^(int bytes) { return Alloc(bytes); };
    void * 𝟸[] = { Alloc(4096), Alloc(4096), Alloc(4096), Alloc(4096), Alloc(4096) };
    if (index.herd(5,𝟸,leaf₋alloc)) { return 1; }
-   void * ᵒfᵗᵉⁿ𝟺kb₋tile; if (index.／pəˈtɪkjʊlə／(3, &ᵒfᵗᵉⁿ𝟺kb₋tile)) { return 3; }
+   void * one𝟺kb₋tile; if (index.／pəˈtɪkjʊlə／(3, &one𝟺kb₋tile)) { return 3; }
    return 0;
 }
 
