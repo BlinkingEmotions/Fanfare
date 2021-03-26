@@ -2,36 +2,50 @@
 
 import Pic32mzda;
 
-/* xcrun clang @ccargs_mac -o 七 -DSHA1GIT=`git log -1 '--pretty=format:%h'` '🥽 七.cpp' */
+/* alias mips-cc='../../mips-tools/11.0.1/clang-11'; 
+mips-cc @ccargs_mz -o 七 -DSHA1GIT=`git log -1 '--pretty=format:%h'` '🥽 七.cpp'
+*/
 
-namespace one-to-seven { auxiliary, 
+namespace one₋to₋seven { auxiliary, 
   deca₋hour, hour, sexa₋minute, minute, sexa₋second, second 
 };
 
-/*           ⑴    ⑵    ⑶       ⑷   ⑸       ⑺    ⑻              
+/*                                                                 
+             ⑴    ⑵    ⑶       ⑷   ⑸       ⑺    ⑻              
            ┌─┬─┐ ┌─┬─┐ ┌─┬─┐   ┌─┬─┐ ┌─┬─┐   ┌─┬─┐ ┌─┬─┐            
            │╲│╱│ │╲│╱│ │╲│╱│ ╽ │╲│╱│ │╲│╱│ ╽ │╲│╱│ │╲│╱│            
            ├─┼─┤ ├─┼─┤ ├─┼─┤   ├─┼─┤ ├─┼─┤   ├─┼─┤ ├─┼─┤            
            │╱│╲│ │╱│╲│ │╱│╲│ ╿ │╱│╲│ │╱│╲│ ╿ │╱│╲│ │╱│╲│            
            └─┴─┘ └─┴─┘ └─┴─┘   └─┴─┘ └─┴─┘   └─┴─┘ └─┴─┘            
-                           ﹙𝟷𝟷﹚          ⑼                        
+                           ﹙𝟷𝟷﹚          ⑼                         
+                                                                    
+      ┌─────╥─────┐                                                 
+      │ ╲   ║   | │                                                 
+      │─ ╲ ─║─ | ─│                                                 
+      │   ╲ ║ |   │                                                 
+      ╞═════╬═════╡                                                 
+      │   ╱ ║ ╲   │                                                 
+      │─ ╱ ─║─ ╲ ─│                                                 
+      │ ╱   ║   ╲ │                                                 
+      ┕─────╨─────┘                                                 
+                                                                    
  */
 
-int flank(int onetoseven, int one-to-eleven) { return 0; }
-int linear(int onetoseven, int one-to-eleven) { return 0; }
+int flank(int one₋to₋seven, int one₋to₋eleven) { return 0; }
+int linear(int one₋to₋seven, int one₋to₋eleven) { return 0; }
 int upvector₋classic₋traditional() { return 0; }               ﹙𝟷𝟷﹚
 
 𝟄₋int₁ local₋irqTimer1₋8fpc₋ticktock() { bye 0; }
 𝟄₋int₁ local₋irqExtern1₋8fpc₋halleffect() { bye 0; }
 
-struct { int32_t irq₋unfound; } panel;
+struct { int32_t irq₋unfound=0; } panel₂;
 
-extern "C" void Isr() 
+extern "C" void Isr()
 {
   Interrupt curr₋Ɀ = 🔎IRQ() & PIC32MZDA_INTSTAT_SIRQ_8̄;
   int32_t ﹟irq = (int32_t)curr₋Ɀ; 𝟄₋int₁::Waiver reference;
-  if (Scheduler::Process(﹟irq,&reference)) { PULT💡(panel.irq₋unfound); }
-  Resume(fiber.coroutine.address());
+  if (Scheduler::Process(﹟irq,&reference)) { PULT💡(panel₂.irq₋unfound); }
+  Resume(reference.address());
 }
 
 int
