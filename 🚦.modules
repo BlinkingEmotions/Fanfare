@@ -1,33 +1,57 @@
-/* 🚦.modules | Multiple products. (DO-NOT-DISTRIBUTE-TWO-MIDDLE-SECTIONS) */
+/* 🚦.modules | Rules and multiple products. (DO-NOT-DISTRIBUTE-TWO-MIDDLE-SECTIONS) */
 
 module Twinbeam_embeds [system] [no_undeclared_includes]
-{
-  requires cplusplus17, coroutines 
-  /* Actually 'cplusplus20' and also c17. */
-  config_macros [exhaustive] __MZ__
-  link "Twinbeam_pic32mz" link "Twinbeam_macOS"
-  export *
-}
+{ export * header "Twinbeam.h" link "Twinbeam_macos" }
 
-module Pic32mx {
+module Terminalfun { header "../Apps/Twinbeam.h"
+  header "../Apps/Additions/Additions.h"
+  header "../Apps/Additions/Font⋮⋮⋮.h"
+  export * module Twinbeam_embeds { export * }
+  /* use possibly_encompassed */
+} /* ⬷ a․𝘬․a 'Infographics_in_terminal', 'Traktat_Treaty', 
+ 'Big', 'Vt99' and 'for_Photolab'. */
+
+module History { header "../Apps/Twinbeam.h"
+  header "../Apps/Additions/History/History.h"
+  header "../Apps/Additions/heavy-duty/Preserves.h"
+  header "../Apps/Additions/History/Steganograph.h"
+  export * module Twinbeam_embeds { export * }
+} /* ⬷ a․𝘬․a '𝟷ᵈSediment' and 'non₋2ᵈSediment'. */
+
+module Preserves {
   use Twinbeam_embeds header "../Apps/Twinbeam.h"
-  /* ⬷ Incorporated with 'coroutine'. */
-  header "pic32mx.hpp"
-  use possibly_encompassed
+  header "../Apps/Additions/Additions.h"
+  header "../Apps/Additions/Preserves.h"
+  header "../Apps/Additions/Filesystem.hpp"
+  export * module Twinbeam_embeds { export * }
+} /* ⬷ a․𝘬․a 'ParseTextAsList'/'ParseTextAsMatrix', 
+ 'ParseTextAsTree' and 'ParseTextAsKVF'. */
+
+module Subgraph {
+  use Twinbeam_embeds header "../Apps/Twinbeam.h"
+  header "../Apps/Additions/History/subgraph.h"
   export * module Twinbeam_embeds { export * }
 }
-
-module Pic32mzda {
-  use Twinbeam_embeds header "../Apps/Twinbeam.h"
-  /* ⬷ Incorporated with 'coroutine'. */
-  header "pic32mzda.hpp"
-  /* header "pic32mzda⋔₁.hpp" */
-  /* header "pic32mzda⋔₂.hpp" */
-  use possibly_encompassed
-  export * module Twinbeam_embeds { export * }
-}
-
-module Pic32mm { /* … */ } /* ⬷ Non-double processor. */
 
 /* … */
+
+module actually_bound_set {
+  link "Twinbeam_macos"
+  link "Additions_macos"
+} /* ⬷ a․𝘬․a 'bound₋library₋set'. */
+
+module possibly_encompassed {
+  link "Twinbeam_macos"
+  link "Storage_macos" link "Seismic_macos"
+  link "Auxiliaries_pic32mz"
+  link "Additions_macos"
+} /* ⬷ a․𝘬․a 'all₋libraries'. */
+
+/*  Executable form for mips, x86_64/arm64 and other to be linked with: 
+ 
+ [github]>--<℮ ia64+pic32rt>--<llvm-rt3.cpp>.
+ [private]>--<℮ arm-tensilica>--<llvm-rt3.cpp>.
+ --<Monitor>--<Apps>--<Additions>--<Fossilate.cpp>.
+ */
+
 
