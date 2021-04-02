@@ -1,12 +1,12 @@
 -g
--I /Users/path to --<Twinbeam.h>/
+-I /Users/<Path to --<Twinbeam.h>/
 -std=c++2a -fno-rtti -fblocks -fcoroutines-ts -fno-exceptions
 -fno-signed-char -fno-builtin -Wno-format
 -fmodules-ts -fimplicit-modules -fmodule-map-file=🅰𝔷.modules
 -target mipsel -mfloat-abi=hard -mcpu=mips32r5 -mabi=o32 -mfp64 -mmsa -mdspr2
 -fforce-enable-int128 -ffreestanding -fno-builtin -gdwarf-5
-../Apps/Source/Releases/libTwinbeam_pic32mz_0146030c.a
-../Apps/Additions/Releases/libAdditions_pic32mz_7b315b5c.a
-../../ia64+pic32rt/llvm-rt3.cpp
--T ../../ia64+pic32rt/Pic32-two.ld
+../Apps/Source/Releases/libTwinbeam_pic32mz.a
+../Apps/Additions/Releases/libAdditions_pic32mz.a
+'../../℮ ia64+pic32rt/llvm-rt3.cpp'
+-T '../../℮ ia64+pic32rt/Pic32-two.ld'
 
