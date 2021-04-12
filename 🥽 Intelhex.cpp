@@ -7,7 +7,7 @@ import Terminalfun;
 
 /* clang++ -o intelhex -std=c++2a -g -I ../../                               \
  -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules                \
-                                                          '🥽 Intelhex.cpp' */
+ '🥽 Intelhex.cpp' */
 
 /* xcrun clang @ccargs_mac -o intelhex '🥽 Intelhex.cpp' ../Apps/Additions/Fossilate.cpp */
 
