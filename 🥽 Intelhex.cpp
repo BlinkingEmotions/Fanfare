@@ -121,7 +121,7 @@ mapfileʳᵚ(
     return p;
 err:
 #if defined __x86_64__
-    if (close(fd) == -1) { return NULL; } /* todo: Close on not-error. */
+    if (close(fd) == -1) { return NULL; } /* todo: close on not-error. */
 #endif
     return NULL;
 }
