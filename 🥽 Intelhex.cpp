@@ -14,7 +14,7 @@ import Terminalfun;
 inexorable
 int
 ParseIntelHex(
-  const char * 𝑙𝑒𝑎𝑑𝑖𝑛𝑔 utf8text, 
+  const char * 𝑙𝑒𝑎𝑑𝑖𝑛𝑔 utf8₋text, 
   void (^material)(uint8_t byte, bool& stop)
 ) /* Returns `0` or the line number to first faulty line. */
 {  int line=0;
@@ -27,14 +27,14 @@ ParseIntelHex(
     auto delta = ^(char c, int pos0To3) { return hex﹖(upper⁷ᵇⁱᵗ(c))<<(4*pos0To3); };
     uint8_t acc=0; __builtin_uint_t i=0; bool hi=true;
 again:
-    unsigned char c = *(utf8text + i); ++i;
+    unsigned char c = *(utf8₋text + i); ++i;
     if (non7bitchar(c)) { return line; }
     if (c == 0) { return hi ? i != 0 : line; }
     if (c == '\x0a') { line++; goto again; }
     if (c == '\x0d') { goto again; }
     if (c == '\x20') { goto again; } /* ⬷ space-up your Intel-Hex files! */
     if (c == ':') { /* Starting new text line here, yet no code... */ goto again; }
-    if (c == '#') { do { i++; c = *(utf8text + i); } while (c != '\x0a' && c != '\x0d' 
+    if (c == '#') { do { i++; c = *(utf8₋text + i); } while (c != '\x0a' && c != '\x0d' 
       && c != '\x00'); if (c == '\x0a') line++; } /* Comments not actually in spec. */
     if (!(digit⁷ᵇⁱᵗ(c) || letter⁷ᵇⁱᵗ(c))) { return line; }
     if (hi) { acc = delta(c, 1); hi=false; }
@@ -47,7 +47,7 @@ inexorable
 int
 ParseIntelHex(
   const char * 𝑙𝑒𝑎𝑑𝑖𝑛𝑔 utf8text,
-  void (^aim)(uint16_t upper), /* When an extended linear address is found. */
+  void (^aim)(uint16_t upper), /* ⬷ when an extended linear address is found. */
   void (^row)(int bytes, uint8_t * material, uint16_t lower),
   void (^endoffile)()
 )
@@ -65,7 +65,7 @@ ParseIntelHex(
       if (idx == bytes) { if (crcneq(byte)) { /* stop=true; */ } idx=-5; accCRC=0; }
       else if (idx == bytes - 1) switch (type) {
       case 0: row(bytes, buf₂, addrhi<<8 | addrlo<<0); break;
-      case 4: aim(buf₂[0]<<8 | buf₂[1]); break; /* ⬷ Stored in big endian. */
+      case 4: aim(buf₂[0]<<8 | buf₂[1]); break; /* ⬷ stored in big endian. */
       case 1: endoffile(); break;
       }
     idx++; accCRC += byte; });
@@ -86,7 +86,7 @@ Reprogram(
         flash cell may be detected at any time. */
     /* Toggle PFSWAP in case of no errors. */
     return 0;
-} /* ⬷ a․𝘬․a `'nstantiatedInBoot_Reprogram'. */
+} /* ⬷ a․𝘬․a 'instantiatedInBoot_Reprogram'. */
 
 #ifdef __x86_64__
 #include <sys/mman.h>
@@ -110,7 +110,7 @@ mapfileʳᵚ(
     int fd = open(canonicalRegularOrLinkpathᵘᵗf⁸, O_RDONLY);
     if (fd == -1) { return NULL; } struct stat sb;
     if (fstat(fd, &sb) == -1) { goto err; }
-    if (!S_ISREG(sb.st_mode)) { goto err; } /* Not regular file. */
+    if (!S_ISREG(sb.st_mode)) { goto err; } /* ⬷ not regular file⁈ */
     *bytesActual = pagesCountOrZero == 0 ? sb.st_size - bytesOffset : 
       pagesCountOrZero*Syspagesize();
     p = mmap(0, *bytesActual, PROT_READ, MAP_SHARED, fd, bytesOffset);
@@ -121,7 +121,7 @@ mapfileʳᵚ(
     return p;
 err:
 #if defined __x86_64__
-    if (close(fd) == -1) { return NULL; } /* todo: Close when not error. */
+    if (close(fd) == -1) { return NULL; } /* todo: Close on not-error. */
 #endif
     return NULL;
 }
@@ -136,7 +136,7 @@ main(
 {  __builtin_int_t bytesActual;
     const char * filepath = "Minimum.hex";
     const char * text = (const char *)mapfileʳᵚ(filepath, 0, 0, &bytesActual, true);
-    if (text == NULL) { return 1; } int __block count=1, bytes, addrhi, addrlo, type;
+    if (text == NULL) { return 1; } int 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 count=1, bytes, addrhi, addrlo, type;
     /* if (ParseIntelHex(text, ^(uint8_t d) { printf("%x\n", d); })) { return 1; } */
     if (ParseIntelHex(text,
       ^(uint16_t upper) { printf("32-bit linear addr (upper 16-bits): %x\n", upper); },
