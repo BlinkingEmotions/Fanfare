@@ -35,7 +35,7 @@ again:
     if (c == '\x20') { goto again; } /* ⬷ space-up your Intel-Hex files! */
     if (c == ':') { /* Starting new text line here, yet no code... */ goto again; }
     if (c == '#') { do { i++; c = *(utf8₋text + i); } while (c != '\x0a' && c != '\x0d' 
-      && c != '\x00'); if (c == '\x0a') line++; } /* Comments not actually in spec. */
+      && c != '\x00'); if (c == '\x0a') line++; } /* ⬷ comments not actually in hex-spec. */
     if (!(digit⁷ᵇⁱᵗ(c) || letter⁷ᵇⁱᵗ(c))) { return line; }
     if (hi) { acc = delta(c, 1); hi=false; }
     else { acc += delta(c, 0); bool stop=false; material(acc, stop); 
