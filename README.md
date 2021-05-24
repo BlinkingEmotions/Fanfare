@@ -17,7 +17,7 @@ to load the mac-debugger with your program and set a breakpoint when its `main` 
 To compile, debug and run on prototype board or the Pic32 simulator, write something similar to
 
 ```
-./retro-mips.sh @ccargs-mm 七
+./retro-mips.sh @ccargs_mm 七
 ./retro-deb.sh 七
 ```
 
