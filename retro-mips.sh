@@ -20,10 +20,6 @@ builtin typeset additions=/Users/<Path to --<Twinbeam.h>/Additions/Releases/libA
 builtin typeset script='/Users/<Path to --<℮ ia64+pic32rt>/Pic32-two.ld'
 builtin typeset boot=/Users/<Path to --<Twinbeam.h>/Bootloader/Releases/bootloader_mz_39e78938.hex
 builtin typeset hexintel=/Users/<Path to --<Twinbeam.h>/Sprinkle/llvm2pic32
-builtin typeset MDBPATH=/Applications/microchip/mplabx/v5.25/mplab_platform/bin
-builtin typeset PIC32DEVICE=PIC32MZ2064DAB288
-builtin typeset pdb=/Users/<Path to --<Twinbeam.h>/Sprinkle/pdb/pdb
-# ⬷ avoid 'source retro-files' instead 'builtin typeset boot --<bootloader_mz_39e78938.hex>'.
 
 #  This script is 'read' by 'a shell' and a binary is 'loaded' followed 
 #  by 'executed'. Following Unix, for details on execution, enter 'man zsh', 
@@ -41,7 +37,7 @@ function usage
 {
    cat << HEREDOC
    
-   Usage: $progname [-s] project-infix
+   Usage: $progname [-s] [response and .cpp files] project-infix
    
    optional arguments:
      -h, --help           show this help message and exit
@@ -125,21 +121,26 @@ function compile()
     fi
     objectfiles+=$objfile
   }
+  command $llvm/clang-12 $response_files -o tb-start.o -c $tb_start
+  if [ ! $? -eq 0 ]; then
+    echo "\nUnable to assemble '${tb_start}'.\n"
+    exit 4
+  fi
   command $llvm/clang-12 $response_files -o llvm-rt3.o -c $runtime
   if [ ! $? -eq 0 ]; then
     echo "\nUnable to compile '${runtime}'.\n"
-    exit 4
+    exit 5
   fi
   command $llvm/clang-12 $response_files -o Fossilate.o -c $fossilat
   if [ ! $? -eq 0 ]; then
     echo "\nUnable to compile '${fossilat}'.\n"
-    exit 5
+    exit 4
   fi
   command $llvm/ld.lld -T $script -o $infix $twinbeam $additions            \
    $objectfiles Fossilate.o llvm-rt3.o
   if [ ! $? -eq 0 ]; then
     echo "\nUnable to link producing '${infix}'.\n"
-    exit 6
+    exit 7
   fi
   command $hexintel -b $boot $infix > "${infix}.hex"
   if [ $? -eq 0 ]; then
@@ -147,18 +148,16 @@ function compile()
   else
     echo "Unable to create binary.\n"
   fi
-  command rm llvm-rt3.o Fossilate.o
+  command rm llvm-rt3.o Fossilate.o tb-start.o
 }
 
-# Starts the simulator/debugger with %prompt> pdb myprogram.hex
+# Starts the simulator/debugger with %prompt> pdb [-s] myprogram.hex
 function debug()
 {
   if [[ -n "$simulator" ]]; then
-    command -p $pdb -s "${infix}.hex"
-# ~/Projects/Monitor/Apps/bin/mdb setup_mzda_simulator 2>/dev/null
+    source "retro-deb.sh" -s "${infix}.hex"
   else
-    command -p $pdb "${infix}.hex"
-# ~/Projects/Monitor/Apps/bin/mdb setup_mzda_target 2>/dev/null
+    source "retro-deb.sh" "${infix}.hex"
   fi
 }
 
