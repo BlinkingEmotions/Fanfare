@@ -3,6 +3,7 @@
 import Twinbeam;
 import CppThread; /* ⬷ formerly #include<thread>. */
 import CString;
+import After_9;
 
 /* compile with xcrun clang @ccargs_mac -o helixsh                           \
  -DSHA1GIT=`git log -1 '--pretty=format:%h'` '􀖆 ⒞-maskin.cpp'. */
@@ -20,7 +21,7 @@ const char32̄_t * gpl₋keywords[] = {
   UC("END"), UC("STRING"), UC("INSTANT"), UC("EXPRESSION"), 
   UC("ATTRIBUTE"), UC("LAMBDA"), UC("SERVER"), UC("DEPLOY"), 
   UC("SUM"), UC("COUNT"), UC("AVG"), UC("VARIANCE"), UC("STDDEV"), 
-  UC("MIN"), UC("MAX"), UC("MEDIAN"), ΨΛΩ
+  UC("MIN"), UC("MAX"), UC("MEDIAN"), ΨΛΩ /* GIT-SECURE */
 };
 
 /*
@@ -108,7 +109,7 @@ again:
 
 enum shell₋command₋type { 
  command₋help,          command₋load,         command₋list, 
- command₋goto,          command₋wd,           command₋pushd, 
+ command₋goto,          command₋pwd,          command₋pushd, 
  command₋popd,          command₋mksg,         command₋mkv, 
  command₋bridge,        command₋mkkey,        command₋delta, 
  command₋commit,        command₋rollback,     command₋peek, 
@@ -140,11 +141,11 @@ struct shell₋command {
                                                 { ΨΛΩ }, { command₋mksg } }, 
   { 1, { UC("mkv") }, UC("<regular token>"), UC("create a new vectice"), 
                                                 { ΨΛΩ }, { command₋mkv } }, 
-  { 1, { UC("bridge₍to₎") }, UC("<regular token> <vertex graph path>"), 
+  { 1, { UC("bridge-to") }, UC("<regular token> <vertex graph path>"), 
                                                 { ΨΛΩ }, { command₋bridge } }, 
   { 1, { UC("mkkey") }, UC("<regular token>"), UC(""),   
                                                 { ΨΛΩ }, { command₋mkkey } }, 
-  { 1, { UC("delta") }, UC("<single or double value"), UC(""), 
+  { 1, { UC("delta") }, UC("<single or double value>"), UC(""), 
                                                 { ΨΛΩ }, { command₋delta } }, 
   { 1, { UC("commit") }, UC("<optional instant>"), UC(""), 
                                                 { ΨΛΩ }, { command₋commit } }, 
