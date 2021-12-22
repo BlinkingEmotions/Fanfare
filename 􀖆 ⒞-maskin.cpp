@@ -21,7 +21,7 @@ const char32̄_t * gpl₋keywords[] = {
   UC("END"), UC("STRING"), UC("INSTANT"), UC("EXPRESSION"), 
   UC("ATTRIBUTE"), UC("LAMBDA"), UC("SERVER"), UC("DEPLOY"), 
   UC("SUM"), UC("COUNT"), UC("AVG"), UC("VARIANCE"), UC("STDDEV"), 
-  UC("MIN"), UC("MAX"), UC("MEDIAN"), ΨΛΩ /* GIT-SECURE */
+  UC("MIN"), UC("MAX"), UC("MEDIAN"), ΨΛΩ 
 };
 
 /*
@@ -49,7 +49,7 @@ static unicode₋string current₋graphpath;
  *  and 'pushd'.
  */
 
-static Vector<unicode₋string> graphpath₋stack;
+static vector<unicode₋string> graphpath₋stack;
 
 /*
  *  map with all aliases created with the 'alias' command.
@@ -62,7 +62,7 @@ static string₋map aliases;
  *  .gpl and .gpl.enc file-endings.)
  */
 
-static Vector<utf8₋string> filepaths₋sequence;
+static vector<utf8₋string> filepaths₋sequence;
 
 /*
  *  file path to cryptologic bag and with its default relative file 
