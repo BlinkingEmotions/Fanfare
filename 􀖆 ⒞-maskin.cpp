@@ -1,4 +1,4 @@
-/*  ⓒ-maskin.cpp | arabic keyput, completion and command-line with parameters. */
+/*  ⓒ-maskin.cpp | arabic and numeric keyput, completion and command-line. */
 
 import Twinbeam;
 import CppThread; /* ⬷ formerly #include<thread>. */
@@ -21,7 +21,7 @@ const char32̄_t * gpl₋keywords[] = {
   UC("END"), UC("STRING"), UC("INSTANT"), UC("EXPRESSION"), 
   UC("ATTRIBUTE"), UC("LAMBDA"), UC("SERVER"), UC("DEPLOY"), 
   UC("SUM"), UC("COUNT"), UC("AVG"), UC("VARIANCE"), UC("STDDEV"), 
-  UC("MIN"), UC("MAX"), UC("MEDIAN"), ΨΛΩ 
+  UC("MIN"), UC("MAX"), UC("MEDIAN"), ΨΛΩ
 };
 
 /*
@@ -42,7 +42,7 @@ const char32̄_t multiline₋prompt        = UC("> ");
  *  individual path components are base-64 encoded.
  */
 
-static unicode₋string current₋graphpath;
+static unicode₋string /* a․𝘬․a 'vector<char32̄_t>' */ current₋graphpath;
 
 /*
  *  stack containing all graph paths pushed and popped via 'popd' 
@@ -52,28 +52,30 @@ static unicode₋string current₋graphpath;
 static vector<unicode₋string> graphpath₋stack;
 
 /*
- *  map with all aliases created with the 'alias' command.
+ *  associative map catalogue with all substitutions created with 
+ *  the 'alias' command. (Unicodes to Unicodes)
  */
 
-static string₋map aliases;
+static thesaurus aliases;
 
 /*
  *  all files entered at the command line to be processed. (.helixsh, 
  *  .gpl and .gpl.enc file-endings.)
  */
 
-static vector<utf8₋string> filepaths₋sequence;
+static vector<char8₋t *> filepaths₋sequence;
 
 /*
- *  file path to cryptologic bag and with its default relative file 
+ *  file path to cryptology bag and with its default relative file 
  *  name given.
  */
 
 const char8₋t * pkcs12₋filename = U8("./passwords.p12");
 
 /*
- *  file path to a complex as currently known and checked in using the 
- *  libgit2 software.
+ *  file path to a complex when currently known and checked in via a 
+ *  system("git add my₋journal.gpl") call. Note that completion entering 
+ *  'git add my-deleted-file' for z-shell currently is non-operational.
  */
 
 const char8₋t * journal₋filename = ΨΛΩ;
@@ -108,18 +110,22 @@ again:
 }
 
 enum shell₋command₋type { 
- command₋help,          command₋load,         command₋list, 
- command₋goto,          command₋pwd,          command₋pushd, 
- command₋popd,          command₋mksg,         command₋mkv, 
- command₋bridge,        command₋mkkey,        command₋delta, 
- command₋commit,        command₋rollback,     command₋peek, 
- command₋sample₋before, command₋sample₋after, command₋sum, 
- command₋average,       command₋variance,     command₋stddev, 
- command₋median,        command₋difference,   command₋max, 
- command₋min,           command₋count,        command₋create₋alias, 
- command₋list₋alias,    command₋unalias,      command₋quit, 
- command₋program
-};
+ command₋help,         command₋load,          command₋list, 
+ command₋goto,         command₋pwd,           command₋pushd, 
+ command₋popd,         command₋mksg,          command₋mkv, 
+ command₋bridge,       command₋voluntary,     command₋mkkey, 
+  /* ⬷ building structures whose limit 'går mot' 'gitter' och 'yello', not bi-relative 
+    subordination such as --<􀖆 ⒞-maskin.cpp> and --<⒞-helixsh-completion.cxx> and 
+    its corresponding. Consider 'includes' and 'preclude'. */
+ command₋preclude, /* ⬷ a․𝘬․a 'parent⁻¹'. */
+ command₋delta,        command₋commit,        command₋rollback, 
+ command₋peek,         command₋sample₋before, command₋sample₋after, 
+ command₋sum,          command₋average,       command₋variance, 
+ command₋stddev,       command₋median,        command₋difference, 
+ command₋max,          command₋min,           command₋count, 
+ command₋create₋alias, command₋list₋alias,    command₋unalias, 
+ command₋quit,         command₋program
+}; /* ⬷ and not company₋retreat, possibly 'command₋indirect' and 'command₋direct'. */
 
 struct shell₋command {
    int count;
