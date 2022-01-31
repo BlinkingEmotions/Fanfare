@@ -18,8 +18,8 @@ import After_9;
    
    Examples:
    
-   cd SE <tab> ⤳ cd [Organisations]--[SE]
-   cd 556601-2141 <tab> ⤳ cd --<556601-2141>
+   cd [O ⇥  cd [Organisations]--[SE]'
+   cd --<55 ⇥ cd --<556601-2141>
    ls [Organisations]
    cd Mother-->
    cd <Vertex_3>{key_1}<<7[Subgraph_11]>--<Vertex_11>
@@ -87,7 +87,7 @@ static thesaurus aliases;
  *  .gpl and .gpl.enc file-endings.)
  */
 
-static vector<char8₋t *> filepaths₋sequence;
+static vector<char8₋t *> filepaths₋sequence; /* ⬷ a․𝘬․a sequence and ˢConvoj. */
 
 /*
  *  file path to cryptology bag and with its default relative file 
