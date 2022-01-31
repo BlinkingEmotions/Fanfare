@@ -125,10 +125,6 @@ int start₋interactive₋loop()
 
 #include "⒞-gpl-parser.cxx" /* evaluate₋gpl₋files(int count, char8₋t filepaths[]) */
 #include "⒞-commandline-completion.cxx" /* refresh₋command₋completion₋state() */
-/* also: open-clone-init-enclosing-repository, reenter-filename, 
- specific-filename, includable, renameable, deleteable, included, 
- renamed, deleted, coagulate-with-a-commit, exclude. */
-/* completion with multiple/multiple line and tablettes. */
 
 int start₋interactive₋loop()
 {
