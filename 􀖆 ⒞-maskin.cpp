@@ -8,6 +8,30 @@ import After_9;
 /* compile with xcrun clang @ccargs_mac -o helixsh                           \
  -DSHA1GIT=`git log -1 '--pretty=format:%h'` '􀖆 ⒞-maskin.cpp'. */
 
+/**
+   
+   The following program mimics a traditional computer shell and understands 
+   both token-based commands such as 'cd' and 'ls' and and in-case the 
+   proper flags are included at start-up, texts that are assumed to be parts 
+   of a graph-path program.  The helixsh allows a user to via a traditional 
+   keyboard browse complex using absolute and relative graph paths:
+   
+   Examples:
+   
+   cd SE <tab> ⤳ cd [Organisations]--[SE]
+   cd 556601-2141 <tab> ⤳ cd --<556601-2141>
+   ls [Organisations]
+   cd Mother-->
+   cd <Vertex_3>{key_1}<<7[Subgraph_11]>--<Vertex_11>
+   cd <Vertex_3>{key_1}:>1[ANC]>--<v2>{abc2}
+   
+   A graph-path beginning with '~' is assumed to be absolute.
+   
+ */
+
+/* #define SCIENTIFIC₋FLAVOURS ⬷ three decimals and '+' alternatively '-'  
+ and  '±' with '.' before and after fractional records. */
+
 const char32̄_t * gpl₋keywords[] = {
   UC("ENCRYPT"), UC("EDGE"), UC("VERTEX"), UC("SUBGRAPH"), 
   UC("ADD"), UC("NAMED"), UC("FROM"), UC("TO"), UC("COMMIT"), 
@@ -49,11 +73,11 @@ static unicode₋string /* a․𝘬․a 'vector<char32̄_t>' */ current₋graphp
  *  and 'pushd'.
  */
 
-static vector<unicode₋string> graphpath₋stack;
+static remmingway graphpath₋stack;
 
 /*
  *  associative map catalogue with all substitutions created with 
- *  the 'alias' command. (Unicodes to Unicodes)
+ *  the 'alias' command.
  */
 
 static thesaurus aliases;
@@ -99,8 +123,12 @@ int start₋interactive₋loop()
    return 0;
 }
 
-#include "⒞-gpl-parser.cxx" /* evaluate₋gpl₋files() */
-#include "⒞-helixsh-completion.cxx" /* refresh₋command₋completion₋state() */
+#include "⒞-gpl-parser.cxx" /* evaluate₋gpl₋files(int count, char8₋t filepaths[]) */
+#include "⒞-commandline-completion.cxx" /* refresh₋command₋completion₋state() */
+/* also: open-clone-init-enclosing-repository, reenter-filename, 
+ specific-filename, includable, renameable, deleteable, included, 
+ renamed, deleted, coagulate-with-a-commit, exclude. */
+/* completion with multiple/multiple line and tablettes. */
 
 int start₋interactive₋loop()
 {
@@ -117,7 +145,7 @@ enum shell₋command₋type {
   /* ⬷ building structures whose limit 'går mot' 'gitter' och 'yello', not bi-relative 
     subordination such as --<􀖆 ⒞-maskin.cpp> and --<⒞-helixsh-completion.cxx> and 
     its corresponding. Consider 'includes' and 'preclude'. */
- command₋preclude, /* ⬷ a․𝘬․a 'parent⁻¹'. */
+ command₋preclude, /* ⬷ a․𝘬․a 'parent⁻¹' possibly 'command₋indirect' and 'command₋direct'. */
  command₋delta,        command₋commit,        command₋rollback, 
  command₋peek,         command₋sample₋before, command₋sample₋after, 
  command₋sum,          command₋average,       command₋variance, 
@@ -125,17 +153,17 @@ enum shell₋command₋type {
  command₋max,          command₋min,           command₋count, 
  command₋create₋alias, command₋list₋alias,    command₋unalias, 
  command₋quit,         command₋program
-}; /* ⬷ and not company₋retreat, possibly 'command₋indirect' and 'command₋direct'. */
+};
 
 struct shell₋command {
    int count;
    const char32̄_t * names[];
    const char32̄_t * arguments;
    const char32̄_t * text;
-   int (**code)(int argc, const char * argv[]);
+   int (**feature)(int argc, const char * argv[]);
    enum shell₋command₋type types[];
 } commands[] = {
-  { 1, { UC("help") }, UC(""), UC("display this help"),  
+  { 1, { UC("help") }, UC(""), UC("display this help"), 
                                                 { ΨΛΩ }, { command₋help } }, 
   { 1, { UC("load") }, UC(""), UC("load a .gpl or a .gpl.enc program"), 
                                                 { ΨΛΩ }, { command₋load } }, 
@@ -149,7 +177,7 @@ struct shell₋command {
                                                 { ΨΛΩ }, { command₋mkv } }, 
   { 1, { UC("bridge-to") }, UC("<regular token> <vertex graph path>"), 
                                                 { ΨΛΩ }, { command₋bridge } }, 
-  { 1, { UC("mkkey") }, UC("<regular token>"), UC(""),   
+  { 1, { UC("mkkey") }, UC("<regular token>"), UC(""), 
                                                 { ΨΛΩ }, { command₋mkkey } }, 
   { 1, { UC("delta") }, UC("<single or double value>"), UC(""), 
                                                 { ΨΛΩ }, { command₋delta } }, 
