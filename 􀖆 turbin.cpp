@@ -1,4 +1,4 @@
-*  turbin a․𝘬․a Plan-9 | accountants' traveller companion. (CORP. EDITION.) */
+/*  turbin a․𝘬․a Plan-9 | accountants' traveller companion. (CORP. EDITION.) */
 
 import Twinbeam; /* ⬷ he is sitting in a box 𝘦․𝘨 T-FOR-D and De-la-v-all. */
 
