@@ -1,4 +1,5 @@
-/*  ⓒ-maskin.cpp | arabic and numeric keyput, completion and command-line. */
+/*  ⓒ-maskin.cpp | arabic and numeric keyput, non-rectangular non-fixative 
+ completion from command-line. */
 
 import Twinbeam;
 import CppThread; /* ⬷ formerly #include<thread>. */
@@ -49,49 +50,50 @@ const char32̄_t * gpl₋keywords[] = {
 };
 
 /*
- *  an unique prompt allows us to quickly identify the shell we 
- *  (sometimes accidently) entered.
+ *  a reference to a default and unique prompt allows us to quickly identify 
+ *. the shell we (sometimes accidently) entered.
  */
 
-const char32̄_t initial₋prompt          = UC("helixsh> ");
+const char32̄_t * initial₋prompt          = UC("helixsh> ");
 
 /*
- *  this prompt is presented when user has ended a line with a 
- *  backslash character.
+ *  this prompt is presented when user has ended a line with a backslash 
+ *  character.
  */
 
-const char32̄_t multiline₋prompt        = UC("> ");
+const char32̄_t * multiline₋prompt        = UC("> ");
 
 /*
- *  individual path components are base-64 encoded.
+ *  individual path components are base-64 encoded and 'recorded/stored' 
+ *  somewhere in the heap.
  */
 
 static unicode₋string /* a․𝘬․a 'vector<char32̄_t>' */ current₋graphpath;
 
 /*
- *  stack containing all graph paths pushed and popped via 'popd' 
- *  and 'pushd'.
+ *  stack that records all graph paths pushed and popped via 'popd' and 
+ *  'pushd'.
  */
 
 static remmingway graphpath₋stack;
 
 /*
- *  associative map catalogue with all substitutions created with 
- *  the 'alias' command.
+ *  associative map catalogue with all substitutions created with the 
+ * 'alias'  command. Both 'key' and 'value' is in the heap.
  */
 
 static thesaurus aliases;
 
 /*
- *  all files entered at the command line to be processed. (.helixsh, 
- *  .gpl and .gpl.enc file-endings.)
+ *  a reference to each file entered at the command line to be processed. 
+ *  (.helixsh, .gpl and .gpl.enc file-endings.)
  */
 
 static vector<char8₋t *> filepaths₋sequence; /* ⬷ a․𝘬․a sequence and ˢConvoj. */
 
 /*
- *  file path to cryptology bag and with its default relative file 
- *  name given.
+ *  reference to file path to cryptology bag and with its default relative 
+ *  file name given.
  */
 
 const char8₋t * pkcs12₋filename = U8("./passwords.p12");
@@ -125,6 +127,10 @@ int start₋interactive₋loop()
 
 #include "⒞-gpl-parser.cxx" /* evaluate₋gpl₋files(int count, char8₋t filepaths[]) */
 #include "⒞-commandline-completion.cxx" /* refresh₋command₋completion₋state() */
+/* also: open-clone-init-enclosing-repository, reenter-filename, 
+ specific-filename, includable, renameable, deleteable, included, 
+ renamed, deleted, coagulate-with-a-commit, exclude. */
+/* completion with multiple/multiple line and tablettes. */
 
 int start₋interactive₋loop()
 {
@@ -138,10 +144,18 @@ enum shell₋command₋type {
  command₋goto,         command₋pwd,           command₋pushd, 
  command₋popd,         command₋mksg,          command₋mkv, 
  command₋bridge,       command₋voluntary,     command₋mkkey, 
-  /* ⬷ building structures whose limit 'går mot' 'gitter' och 'yello', not bi-relative 
-    subordination such as --<􀖆 ⒞-maskin.cpp> and --<⒞-helixsh-completion.cxx> and 
-    its corresponding. Consider 'includes' and 'preclude'. */
- command₋preclude, /* ⬷ a․𝘬․a 'parent⁻¹' possibly 'command₋indirect' and 'command₋direct'. */
+/* note that structures may be 
+ - 'strict' 
+ - 'blobby' navier-stokes
+ - 'field with div/rot/curl' and 'böjer av med' vid modellering 
+ - crosstalk/paracitic-model. */
+/* Find new abstraction to enhance clarity compared to '#include'. */
+/* transmissions alternatively nätelement. */
+/* Consider 'includes' and 'preclude'. */
+ command₋preclude, /* ⬷ a․𝘬․a 'parent⁻¹', possibly 'command₋indirect' alternatively 
+ 'command₋direct' possibly with a 'weak'and 'strong' components of a directed graph. */
+ /* 
+ Notice ARM big.Little and earlier 'virtual/sandbox'. */
  command₋delta,        command₋commit,        command₋rollback, 
  command₋peek,         command₋sample₋before, command₋sample₋after, 
  command₋sum,          command₋average,       command₋variance, 
@@ -309,4 +323,6 @@ main(
    print("helixsh quitted\n\n");
    return 0;
 }
+
+
 
