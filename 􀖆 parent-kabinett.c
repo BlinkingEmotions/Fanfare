@@ -2,7 +2,7 @@
 
 import Twinbeam;
 
-#pragma recto inclusive, differen petit, different grand, replace and utrangeré
+#pragma recto inclusive, differen petit, differen grand, replace and utrangeré
 
 int corout₋interaction₋presence()
 {
@@ -29,3 +29,4 @@ main(
 {
    return 0;
 }
+
