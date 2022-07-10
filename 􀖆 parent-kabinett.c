@@ -58,15 +58,15 @@ void begin₋transaction() { /* most likely outcome and assigned guids possibly-
 
 void commit₋transaction(struct Unicodes message) { /* git commit -m '... */ }
 
-int mkdir(char32̄_t * command, ...)
+int mkdir(char32̄_t * path, ...)
 { int y;
-   typedef void (^Out)(char8₋t *,__builtin_int_t);
-   Out out = ^(char8₋t * u8s, __builtin_int_t bytes) {
-     mkdir("hello/Monitor", 0777);
-   };
-   va_prologue(command)
-   y = print﹟(out, const char * utf8format, __builtin_va_list argument)
-   
+   va_prologue(path)
+   int y = Play(path, params, ^(struct Unicodes serial) {
+      int y = TransformAndResolve(path, 
+       ^(const char * regular𝘖rLinkpath) {
+          mkdir(regular𝘖rLinkpath, 0777);
+       });
+   });
    va_epilogue
 }
 
