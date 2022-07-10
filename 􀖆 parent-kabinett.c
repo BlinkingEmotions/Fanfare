@@ -49,6 +49,10 @@ void quit₋program() { pid_t pid=getpid(); kill(pid,SIGQUIT); }
 
 void interrupt₋program() { pid_t pid=getpid(); kill(pid,SIGINT); }
 
+void begin₋transaction() { /* most likely outcome and assigned guids possibly-maybe stash. */ }
+
+void commit₋transaction() { /* git commit -m '... */ }
+
 /* find unicode-symbol in reflection, find fingerprint recollection. */
 /* sometimes unicode-symbol is written in multiple files as experiment and library. */
 /* see new fingprints assigned after a interaction. */
@@ -106,4 +110,4 @@ again:
    return 0;
 }
 
-
+/* compile with xcrun clang -o prv '􀖆 parent-kabinett.c' */
