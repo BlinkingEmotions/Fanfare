@@ -44,16 +44,37 @@ int corout₋interaction₋histoir(coro_t * coro)
    return 0;
 } /*  after-commit rendition. */
 
+int timeserie₋reflect(version₋ts * revision₋initial, struct timeserie * 🅹)
+{
+   if (timeserie₋init(revision₋initial,101,5,🅹)) { return -1; }
+   struct Unicodes key; union historypod entry; struct sevenbit₋text ref;
+   struct timeserie₋entry initial₋angle = { key, entry, ref };
+   if (timeserie₋create(&initial₋angle,🅹)) { return -2; }
+   return 0;
+}
+
+union historypod
+pod₋summation(
+  union historypod x₁, 
+  union historypod x₂
+)
+{
+   union historypod y = { };
+   return y;
+}
+
 int corout₋appendement₋windowcontroller(coro_t * coro)
 {
    print("angular init\n");
-   if (timeserie₋init(&revision,101,5,&angles)) { return -1; }
-   if (timeserie₋create(...)) { return -2; }
+   if (timeserie₋reflect(&revision,&angles)) { return -1; }
    coro_feedback(coro,1);
    while (1) {
      print("angular iterativ\n");
-     if (timeserie₋update(...)) { return -3; }
-     if (timeserie₋commit(...)) { return -4; }
+     struct Unicodes key; union historypod entry; struct sevenbit₋text ref;
+     struct timeserie₋entry row = { key, entry, ref };
+     if (timeserie₋update(&row,&angles)) { return -3; }
+     line₋completed completion = ^(struct timeserie₋entry row,version₋ts revision) { };
+     if (timeserie₋commit(&revision,completion,&angles,pod₋summation)) { return -4; }
      coro_feedback(coro,2);
    }
    timeserie₋uninit(&angles);
@@ -62,17 +83,16 @@ int corout₋appendement₋windowcontroller(coro_t * coro)
  parallel med bordsyta. (Exempelvis nār genomskinlig skārm 
  aktiveras) */
 
-#include <time.h>
-#include <dirent.h> /* opendir and readdir. */
-#include <sys/xattr.h> /* getfxattr and fsetxattr. */
-#include <sys/timex.h>
-#include <sys/snapshot.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <signal.h>
-#include <termios.h>
-#include <pthread.h>
-#include <stdio.h>
+#include <time.h>          /* nanosleep, clock_getres. */
+#include <pthread.h>       /* pthread_create. */
+#include <termios.h>       /* tcgetattr, tcsetattr, cfmakeraw. */
+#include <unistd.h>        /* read, write, select, FD_ZERO, FD_SET, getpid. */
+#include <signal.h>        /* kill. */
+#include <sys/xattr.h>     /* getfxattr and fsetxattr. */
+#include <dirent.h>        /* opendir and readdir. */
+#include <sys/timex.h> // ntp_gettime and struct ntptimeval
+#include <sys/snapshot.h> // fs_snapshot_create and fs_snapshot_revert requires superuser
+#include <sys/stat.h>      /* stat */
 #include "../Apps/Additions/geolog-orient.h" /* EarthbasedSpatial. */
 
 /*
@@ -109,7 +129,7 @@ inexorable int Git(char32̄_t * command, ...)
 
 void begin₋transaction()
 {
-
+  struct guid g = Guid();
 }/*  most likely outcome and assigned guids possibly-maybe stash. */
 
 MENTATIVE commit₋transaction(struct Unicodes noquotes₋message)
@@ -137,10 +157,23 @@ noninated₋pamplet(
 )
 {
    typedef void (^Out)(struct Unicodes);
-   Out out = ^(struct Unicodes unicodes) {
-     
+   Out out = ^(struct Unicodes unicode₋path) {
+     int y = TransformAndResolve(unicode₋path, 
+      ^(const char * regular𝘖rLinkpath) {
+        struct stat st; int fd; ssize_t bytes;
+        🧵(UnabletoOpen,UnabletoFind,UnabletoWrite) {
+        case UnabletoFind: print("Unable to find '⬚'\n",﹟s7(regular𝘖rLinkpath)); return;
+        case UnabletoOpen: print("Unable to open '⬚'\n",﹟s7(regular𝘖rLinkpath)); return;
+        case UnabletoWrite: print("Unable to write to '⬚'\n",﹟s7(regular𝘖rLinkpath)); return;
+        }
+        if (stat(regular𝘖rLinkpath,&st) == 0) { confess(UnabletoFind); }
+        fd = open(regular𝘖rLinkpath, O_NOFOLLOW | O_WRONLY | O_CREAT);
+        if (fd == -1) { confess(UnabletoOpen); }
+        bytes = write(fd,templates.unicodes,templates.tetras*4); /* also 'writev'. */
+        if (bytes == 4*templates.tetras) { confess(UnabletoWrite); }
+      });
    };
-   int y = Play(out, U"⬚/Monitor/⬚", base₋project,primaryAndSecondary);
+   int y = Play(out,U"⬚/Monitor/⬚",base₋project,primaryAndSecondary);
 }
 
 inexorable int augment₋with₋meridians(int fd, struct EarthbasedSpatial 
@@ -162,11 +195,12 @@ MENTATIVE interrupt₋program() { pid_t pid=getpid(); kill(pid,SIGINT); }
 
 MENTATIVE quit₋program() { /* kill(getpid(),SIGQUIT); */ quit=true; }
 
+/* see difference between snippets retrieved. */
+/* see new fingprints assigned after a interaction. */
+
 /* find unicode-symbol in reflection, find fingerprint recollection. */
 /* sometimes unicode-symbol is written in multiple files as experiment and 
  library. */
-/* see new fingprints assigned after a interaction. */
-/* see difference between snippets retrieved. */
 
 inexorable int wait₋until₋kbhits₋stdio()
 { struct timeval tv={0L,0L};
@@ -207,12 +241,12 @@ main(
    coro_t * film = coro_await(corout₋interaction₋presence);
    coro_t * reflection = coro_await(corout₋interaction₋histoir);
    coro_t * interrupt = coro_await(corout₋appendement₋windowcontroller);
-   struct timespec rqtp={0,25000},rmtp={0,0};
-   if (pthread_create(&secondary₋thread,ΨΛΩ,input,ΨΛΩ)) { return -9; }
+   struct timespec rqtp={0,40000000},rmtp={0,0}; /* 25 fps == 0.04s */
+   if (pthread_create(&secondary₋thread,ΨΛΩ,input,ΨΛΩ)) { return 1; }
    int ts = clock_getres(CLOCK_PROCESS_CPUTIME_ID,&rqtp);
    print("resolution ⬚\n", ﹟d((__builtin_uint_t)ts));
 again:
-   if (nanosleep(&rqtp,&rmtp)) { return 1; }
+   if (nanosleep(&rqtp,&rmtp)) { return 2; }
    if (quit) { goto unagain; }
    coro_resume(film);
    coro_resume(reflection);
@@ -224,5 +258,7 @@ unagain:
 
 /*  compile with xcrun clang  -o patent -fmodules-ts -fimplicit-modules      \
  -fmodule-map-file=../Apps/module.modulemap                                  \
- -DSHA1GIT=`git log -1 '--pretty=format:%h'` '􀖆 parent-kabinett.c' */
+ -DSHA1GIT=`git log -1 '--pretty=format:%h'` '􀖆 parent-kabinett.c'         \
+ ../Apps/Source/Releases/libTwinbeam-x86_64.a ../../Cox-route/context-1.S    \
+ ../../Cox-route/context-2.c ../../Cox-route/coro-main.c */
 
