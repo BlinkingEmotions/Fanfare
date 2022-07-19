@@ -53,13 +53,24 @@ int timeserie₋reflect(version₋ts * revision₋initial, struct timeserie * �
    return 0;
 }
 
+int corout₋statistic₋morphometry(coro_t * coro)
+{
+   print("morphometry init\n");
+   coro_feedback(coro,1);
+   while (1) {
+      print("morphometry iterativ\n");
+      coro_feedback(coro,2);
+   }
+   return 0;
+} /*  arab morphometric transgression when presence tends to histoir. */
+
 union historypod
 pod₋summation(
   union historypod x₁, 
   union historypod x₂
 )
 {
-   union historypod y = { };
+   union historypod y = { .fixed = x₁.fixed.frac + x₂.fixed.frac };
    return y;
 }
 
@@ -106,7 +117,7 @@ inexorable int mkdir(char32̄_t * path, ...) ⓣ
    va_prologue(path)
    y1 = Play(path,__various,^(struct Unicodes serial) {
       y2 = TransformAndResolve(serial, 
-       ^(const char * regular𝘖rLinkpath) {
+       ^(char * regular𝘖rLinkpath) {
           y3 = mkdir(regular𝘖rLinkpath,0777);
        });
    });
@@ -159,7 +170,7 @@ noninated₋pamplet(
    typedef void (^Out)(struct Unicodes);
    Out out = ^(struct Unicodes unicode₋path) {
      int y = TransformAndResolve(unicode₋path, 
-      ^(const char * regular𝘖rLinkpath) {
+      ^(char * regular𝘖rLinkpath) {
         struct stat st; int fd; ssize_t bytes;
         🧵(UnabletoOpen,UnabletoFind,UnabletoWrite) {
         case UnabletoFind: print("Unable to find '⬚'\n",﹟s7(regular𝘖rLinkpath)); return;
@@ -240,6 +251,7 @@ main(
 {
    coro_t * film = coro_await(corout₋interaction₋presence);
    coro_t * reflection = coro_await(corout₋interaction₋histoir);
+   coro_t * transport = coro_await(corout₋statistic₋morphometry);
    coro_t * interrupt = coro_await(corout₋appendement₋windowcontroller);
    struct timespec rqtp={0,40000000},rmtp={0,0}; /* 25 fps == 0.04s */
    if (pthread_create(&secondary₋thread,ΨΛΩ,input,ΨΛΩ)) { return 1; }
@@ -250,6 +262,7 @@ again:
    if (quit) { goto unagain; }
    coro_resume(film);
    coro_resume(reflection);
+   coro_resume(transport);
    coro_resume(interrupt);
    goto again;
 unagain:
