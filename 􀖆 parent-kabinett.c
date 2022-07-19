@@ -235,7 +235,7 @@ void * input(void * ctxt)
    while (1) {
      while (!wait₋until₋kbhits₋stdio()) {
        if (get₋stdin₋byte(&byte)) { print("error\n"); }
-       if (byte<128) { print("eight-bit character\n"); }
+       if (byte<128) { print("eight-bit character\n"); if (byte=='q') quit=true; }
        else {
          brk+=1; print("multi-byte character\n");
        }
@@ -253,7 +253,7 @@ main(
    coro_t * reflection = coro_await(corout₋interaction₋histoir);
    coro_t * transport = coro_await(corout₋statistic₋morphometry);
    coro_t * interrupt = coro_await(corout₋appendement₋windowcontroller);
-   struct timespec rqtp={0,40000000},rmtp={0,0}; /* 25 fps == 0.04s */
+   struct timespec rqtp={4,40000000},rmtp={0,0}; /* 25 fps == 0.04s */
    if (pthread_create(&secondary₋thread,ΨΛΩ,input,ΨΛΩ)) { return 1; }
    int ts = clock_getres(CLOCK_PROCESS_CPUTIME_ID,&rqtp);
    print("resolution ⬚\n", ﹟d((__builtin_uint_t)ts));
