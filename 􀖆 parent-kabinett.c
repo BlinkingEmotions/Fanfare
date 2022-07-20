@@ -53,16 +53,26 @@ int timeserie₋reflect(version₋ts * revision₋initial, struct timeserie * �
    return 0;
 }
 
+struct {
+  chronology₋instant previous₋instant;
+} morphometic₋ctxt;
+
 int corout₋statistic₋morphometry(coro_t * coro)
 {
    print("morphometry init\n");
+//   morphometic₋ctxt.previous₋instant = Now();
    coro_feedback(coro,1);
+   chronology₋instant current₋instant;
+//   struct short₋chronology₋relative diff;
    while (1) {
       print("morphometry iterativ\n");
+ //     current₋instant = Now();
+ //     diff = duration(morphometic₋ctxt.previous₋instant,current₋instant);
       coro_feedback(coro,2);
+      morphometic₋ctxt.previous₋instant = current₋instant;
    }
    return 0;
-} /*  arab morphometric transgression when presence tends to histoir. */
+} /*  arab morphometric interpolation when presence tends to histoir. */
 
 union historypod
 pod₋summation(
@@ -105,6 +115,7 @@ int corout₋appendement₋windowcontroller(coro_t * coro)
 #include <sys/snapshot.h> // fs_snapshot_create and fs_snapshot_revert requires superuser
 #include <sys/stat.h>      /* stat */
 #include "../Apps/Additions/geolog-orient.h" /* EarthbasedSpatial. */
+#include <sys/rbtree.h>
 
 /*
  *  keyboard press thread.
@@ -132,11 +143,11 @@ inexorable int Git(char32̄_t * command, ...)
      char8₋t text[4*serial.tetras]; __builtin_int_t u8bytes;
      y2 = UnicodeToUtf8(serial.tetras,serial.unicodes,text,&u8bytes);
      text[u8bytes] = '\0';
-     system((char *)text);
+     system((char *)text); /* see [Mininmum]--<> on how to handle stdout. */
    });
    va_epilogue
    return y2;
-}
+} /* int y = Git("git status --porcelain=v2", ^(char32_t * ucs, int bytes) { }); */
 
 void begin₋transaction()
 {
@@ -243,6 +254,36 @@ void * input(void * ctxt)
    }
 }
 
+#include <CoreVideo/CVDisplayLink.h>
+#include <CoreText/CoreText.h>
+#include <CoreGraphics/CoreGraphics.h>
+/* #include <CoreServices/CoreServices.h> */
+
+CGImageRef background;
+CTFrameRef frame;
+
+void files(const char * directory₋path, void (^entry)(const char * name, int is₋directory))
+{ struct dirent * e;
+   DIR * d = opendir(directory₋path);
+again:
+   e = readdir(d);
+   if (e == ΨΛΩ) { goto unagain; }
+   print("%d: %s\n", e->d_type, e->d_name);
+   entry(e->d_name, e->d_type == DT_DIR ? 1 : 0);
+   goto again;
+unagain:
+   closedir(d);
+} 
+
+void filetree(const char * directory₋path, struct rb_tree * opaque)
+{ rb_tree_ops_t ops = { };
+   rb_tree_init(opaque,&ops);
+   files(directory₋path, ^(const char * name, int is₋directory) {
+     /* rb_tree_insert_node(opaque,); */
+   });
+   
+}
+
 int
 main(
   int argc, 
@@ -257,6 +298,54 @@ main(
    if (pthread_create(&secondary₋thread,ΨΛΩ,input,ΨΛΩ)) { return 1; }
    int ts = clock_getres(CLOCK_PROCESS_CPUTIME_ID,&rqtp);
    print("resolution ⬚\n", ﹟d((__builtin_uint_t)ts));
+   CGDirectDisplayID display = kCGDirectMainDisplay;
+   CGRect displaybounds = CGDisplayBounds(display);
+   CVDisplayLinkRef displaylink;
+   CVDisplayLinkOutputHandler handler = ^(CVDisplayLinkRef 𝑙𝑒𝑎𝑑𝑖𝑛𝑔 ref, const CVTimeStamp * 𝑙𝑒𝑎𝑑𝑖𝑛𝑔 t1, 
+    const CVTimeStamp * 𝑙𝑒𝑎𝑑𝑖𝑛𝑔 t2, CVOptionFlags flags1, CVOptionFlags * flags2)
+      {
+         print("display sync\n");
+         CGContextRef context = CGDisplayGetDrawingContext(kCGDirectMainDisplay);
+         /* CGSize milimetres = CGDisplayScreenSize(display); */
+         CGContextDrawImage(context,displaybounds,background);
+         CGRect rect = CGRectMake(10, 10, displaybounds.size.width - 20, displaybounds.size.height - 20);
+         CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceCMYK();
+         const CGFloat cmyk₋spacegray[] = { 0.5, 0.5, 0.5, 0.5, 0.3 };
+         CGColorRef color = CGColorCreate(colorspace,cmyk₋spacegray);
+         CGContextSetFillColorWithColor(context,color);
+         CGContextFillRect(context,rect);
+         CTFrameDraw(frame,context);
+         CGContextFlush(context);
+         return kCVReturnSuccess;
+      };
+   CVDisplayLinkCreateWithActiveCGDisplays(&displaylink);
+   CVDisplayLinkSetOutputHandler(displaylink,handler);
+   // CGWindowID windowId = CGShieldingWindowID(display);
+   // CFArrayRef windows = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly,kCGNullWindowID);
+   // background = CGWindowListCreateImageFromArray(displaybounds,windows,kCGWindowImageDefault);
+   background = CGDisplayCreateImage(display);
+   CGDisplayCapture(display);
+   CFStringRef caption = CFSTR("Modified collection   |   Now staged files   |   Untracked fileset");
+  /* stage, discard and 'reveal in finder'.                                            */
+  /*                                   'unstage'                                       */
+  /*                                                              add to /info/exclude */
+   CFStringRef name = CFSTR("Chalkduster");
+   CTFontRef font = CTFontCreateWithName(name,43.0,ΨΛΩ);
+   CGColorSpaceRef space = CGColorSpaceCreateDeviceCMYK();
+   const CGFloat cmyk[] = { 0.0, 0.0, 0.0, 0.0, 1.0 };
+   CGColorRef textcolor = CGColorCreate(space,cmyk);
+   CFStringRef keys[] = { kCTFontAttributeName, kCTForegroundColorAttributeName };
+   CFTypeRef vals[] = { font, textcolor };
+   CFDictionaryRef attrs = CFDictionaryCreate(kCFAllocatorDefault,(const void **)&keys, 
+    (const void **)&vals, sizeof(keys)/sizeof(keys[0]), &kCFTypeDictionaryKeyCallBacks,
+    &kCFTypeDictionaryValueCallBacks);
+   CFAttributedStringRef text = CFAttributedStringCreate(kCFAllocatorDefault,caption,attrs);
+   CTFramesetterRef setter = CTFramesetterCreateWithAttributedString(text);
+   CGRect rect = CGRectMake(20 + 13,800,displaybounds.size.width - 40,200);
+   CFRange range=CFRangeMake(0,66); CGPathRef path=CGPathCreateWithRect(rect,ΨΛΩ);
+   frame = CTFramesetterCreateFrame(setter,range,path,ΨΛΩ);
+   CVDisplayLinkStart(displaylink);
+   /* For₋CommitTextEdit₋and₋Project₋Selection(); */ // a.k.a Interaction.
 again:
    if (nanosleep(&rqtp,&rmtp)) { return 2; }
    if (quit) { goto unagain; }
@@ -266,6 +355,8 @@ again:
    coro_resume(interrupt);
    goto again;
 unagain:
+   CVDisplayLinkStop(displaylink);
+   CGDisplayRelease(display);
    return 0;
 }
 
@@ -273,5 +364,11 @@ unagain:
  -fmodule-map-file=../Apps/module.modulemap                                  \
  -DSHA1GIT=`git log -1 '--pretty=format:%h'` '􀖆 parent-kabinett.c'         \
  ../Apps/Source/Releases/libTwinbeam-x86_64.a ../../Cox-route/context-1.S    \
- ../../Cox-route/context-2.c ../../Cox-route/coro-main.c */
+ ../../Cox-route/context-2.c ../../Cox-route/coro-main.c                     \
+ -framework CoreVideo                                                        \
+ -framework CoreText                                                         \
+ -framework Foundation                                                       \
+ -framework CoreGraphics                                                     \
+ -framework Cocoa -std=c2x -g
+ */
 
