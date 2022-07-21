@@ -116,6 +116,7 @@ int corout₋appendement₋windowcontroller(coro_t * coro)
 #include <sys/stat.h>      /* stat */
 #include "../Apps/Additions/geolog-orient.h" /* EarthbasedSpatial. */
 #include <sys/rbtree.h>
+#include <sys/queue.h> /* man 3 queue */
 
 /*
  *  keyboard press thread.
@@ -143,7 +144,8 @@ inexorable int Git(char32̄_t * command, ...)
      char8₋t text[4*serial.tetras]; __builtin_int_t u8bytes;
      y2 = UnicodeToUtf8(serial.tetras,serial.unicodes,text,&u8bytes);
      text[u8bytes] = '\0';
-     system((char *)text); /* see [Mininmum]--<> on how to handle stdout. */
+     system((char *)text); /* see [Minimum]--<thread-fork.h> and 
+      [Pic32step-pdb]--<main.cpp> on how to handle stdout. */
    });
    va_epilogue
    return y2;
@@ -257,31 +259,60 @@ void * input(void * ctxt)
 #include <CoreVideo/CVDisplayLink.h>
 #include <CoreText/CoreText.h>
 #include <CoreGraphics/CoreGraphics.h>
-/* #include <CoreServices/CoreServices.h> */
+/* #include <CoreServices/CoreServices.h> */ /* ⬷ attention! hayra-module. */
 
 CGImageRef background;
 CTFrameRef frame;
 
-void files(const char * directory₋path, void (^entry)(const char * name, int is₋directory))
+void filenames(const char * directory₋path, void (^entry)(const char * name, 
+ int is₋directory))
 { struct dirent * e;
    DIR * d = opendir(directory₋path);
 again:
    e = readdir(d);
    if (e == ΨΛΩ) { goto unagain; }
-   print("%d: %s\n", e->d_type, e->d_name);
    entry(e->d_name, e->d_type == DT_DIR ? 1 : 0);
    goto again;
 unagain:
    closedir(d);
 } 
 
-void filetree(const char * directory₋path, struct rb_tree * opaque)
-{ rb_tree_ops_t ops = { };
+void why₋filetree(const char * directory₋path, struct rb_tree * opaque)
+{ rb_tree_ops_t ops = { /* ... */ };
    rb_tree_init(opaque,&ops);
-   files(directory₋path, ^(const char * name, int is₋directory) {
-     /* rb_tree_insert_node(opaque,); */
+   filenames(directory₋path, ^(const char * name, int is₋directory) {
+     /* rb_tree_insert_node(opaque,); ... */
    });
-   
+   /* ... */
+}
+
+struct fileentry { char8₋t * name; LIST_ENTRY(fileentry) entries; };
+
+LIST_HEAD(Filelist,fileentry) current₋files = LIST_HEAD_INITIALIZER(current₋files);
+
+void correct₋filelist(const char * directory₋path, struct Filelist * files)
+{
+   LIST_INIT(files); struct fileentry * last=ΨΛΩ, 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 *fresh;
+   filenames(directory₋path, ^(const char * name, int is₋directory) {
+      if (!is₋directory) {
+        fresh = Heap₋alloc(sizeof(struct fileentry));
+        char8₋t * copy = retranscript((char8₋t *)name,BUILTIN₋INT₋MAX);
+        fresh->name = copy;
+        if (last != ΨΛΩ) { LIST_INSERT_AFTER(last,fresh,entries); }
+        else { LIST_INSERT_HEAD(files,fresh,entries); }
+        print("'⬚'\n", ﹟s8(copy));
+      }
+    });
+}
+
+void cleanup₋filelist(struct Filelist * files)
+{ struct fileentry * node;
+   while (!LIST_EMPTY(files)) {
+     node = LIST_FIRST(files);
+     Heap₋unalloc(node->name);
+     LIST_REMOVE(node,entries);
+     free(node);
+   }
 }
 
 int
@@ -345,6 +376,7 @@ main(
    CFRange range=CFRangeMake(0,66); CGPathRef path=CGPathCreateWithRect(rect,ΨΛΩ);
    frame = CTFramesetterCreateFrame(setter,range,path,ΨΛΩ);
    CVDisplayLinkStart(displaylink);
+   correct₋filelist("/tmp",&current₋files);
    /* For₋CommitTextEdit₋and₋Project₋Selection(); */ // a.k.a Interaction.
 again:
    if (nanosleep(&rqtp,&rmtp)) { return 2; }
@@ -353,10 +385,12 @@ again:
    coro_resume(reflection);
    coro_resume(transport);
    coro_resume(interrupt);
+   quit = 1;
    goto again;
 unagain:
    CVDisplayLinkStop(displaylink);
    CGDisplayRelease(display);
+   cleanup₋filelist(&current₋files);
    return 0;
 }
 
