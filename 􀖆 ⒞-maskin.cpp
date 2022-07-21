@@ -20,13 +20,17 @@ import After_9;
    Examples:
    
    cd [O ⇥  cd [Organisations]--[SE]'
-   cd --<55 ⇥ cd --<556601-2141>
+   􀉈
+   cd --<55 ⇥ cd --<556601-2142>
+   ✂️
    ls [Organisations]
    cd Mother-->
    cd <Vertex_3>{key_1}<<7[Subgraph_11]>--<Vertex_11>
    cd <Vertex_3>{key_1}:>1[ANC]>--<v2>{abc2}
    
    A graph-path beginning with '~' is assumed to be absolute.
+   
+   mkv vertex_11 vertex_12 @ 2022-07-21 19:41:31.123
    
  */
 
@@ -208,11 +212,11 @@ struct shell₋command {
    "of the directory stack"),                   { ΨΛΩ }, { command₋pushd } }, 
   { 1, { UC("popd") }, UC(""), UC("go to the path stored on the top of "
    "the dicrectory stack"),                     { ΨΛΩ }, { command₋popd } }, 
-  { 1, { UC("alias") }, UC("<name> <definition>"), UC("introduce a string "
+  { 1, { UC("alibi") }, UC("<name> <definition>"), UC("introduce a string "          /* formerly 'alias', later 'shortform'. */
    "substitution"),                             { ΨΛΩ }, { command₋create₋alias } }, 
-  { 1, { UC("aliases") }, UC(""), UC("list all string substitutions"), 
+  { 1, { UC("alibis") }, UC(""), UC("list all string substitutions"), 
                                                 { ΨΛΩ }, { command₋list₋alias } }, 
-  { 1, { UC("unalias") }, UC("<name>"), UC("remove a previously added alias") }, 
+  { 1, { UC("unalibi") }, UC("<name>"), UC("remove a previously added alias") }, 
                                                 { ΨΛΩ }, { command₋unalias } }, 
   { 1, { UC("quit") }, UC(""), UC("exit the shell"), 
                                                 { ΨΛΩ }, { command₋quit } }
@@ -323,6 +327,4 @@ main(
    print("helixsh quitted\n\n");
    return 0;
 }
-
-
 
