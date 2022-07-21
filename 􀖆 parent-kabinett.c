@@ -74,11 +74,7 @@ int corout₋statistic₋morphometry(coro_t * coro)
    return 0;
 } /*  arab morphometric interpolation when presence tends to histoir. */
 
-union historypod
-pod₋summation(
-  union historypod x₁, 
-  union historypod x₂
-)
+union historypod pod₋summation(union historypod x₁, union historypod x₂)
 {
    union historypod y = { .fixed = x₁.fixed.frac + x₂.fixed.frac };
    return y;
@@ -137,28 +133,44 @@ inexorable int mkdir(char32̄_t * path, ...) ⓣ
    return y3;
 }
 
-inexorable int Git(char32̄_t * command, ...)
-{ int y1, 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 y2;
+typedef void (^Response)(char32̄_t * ucs, __builtin_int_t bytes);
+
+inexorable int Order(Response out, char32̄_t * command, ...)
+{ int y1, 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 y2,status=0; pid_t pid; size_t 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 bytes₋read;
    va_prologue(command)
    y1 = Play(command, __various, ^(struct Unicodes serial) {
      char8₋t text[4*serial.tetras]; __builtin_int_t u8bytes;
      y2 = UnicodeToUtf8(serial.tetras,serial.unicodes,text,&u8bytes);
      text[u8bytes] = '\0';
-     system((char *)text); /* see [Minimum]--<thread-fork.h> and 
-      [Pic32step-pdb]--<main.cpp> on how to handle stdout. */
+     FILE * fp = popen((char *)text,"r");
+     uint8_t buffer[4097];
+again:
+     if (ferror(fp)) { print("error reading stream\n"); goto unagain; }
+     if (feof(fp)) { goto unagain; }
+     bytes₋read = fread(buffer,1,4096,fp);
+     buffer[bytes₋read] = '\0'; fprintf(fp, "%s",buffer);
+     /* out(char32,bytes2); */
+     goto again;
+unagain:
+     pclose(fp);
    });
    va_epilogue
    return y2;
-} /* int y = Git("git status --porcelain=v2", ^(char32_t * ucs, int bytes) { }); */
+}
+
+MENTATIVE analyze₋files₋and₋directories(struct Unicodes base₋project, Response out)
+{
+   int y = Order(out, U"cd '⬚'; git status --porcelain=v2", ﹟S(base₋project));
+}
 
 void begin₋transaction()
 {
   struct guid g = Guid();
 }/*  most likely outcome and assigned guids possibly-maybe stash. */
 
-MENTATIVE commit₋transaction(struct Unicodes noquotes₋message)
+MENTATIVE commit₋transaction(struct Unicodes noquotes₋message, Response out)
 {
-   int y = Git(U"git commit -m '⬚'", ﹟S(noquotes₋message));
+   int y = Order(out, U"git commit -m '⬚'", ﹟S(noquotes₋message));
 }
 
 MENTATIVE assign₋storage(struct Unicodes base₋project)
@@ -325,9 +337,9 @@ main(
    coro_t * reflection = coro_await(corout₋interaction₋histoir);
    coro_t * transport = coro_await(corout₋statistic₋morphometry);
    coro_t * interrupt = coro_await(corout₋appendement₋windowcontroller);
-   struct timespec rqtp={4,40000000},rmtp={0,0}; /* 25 fps == 0.04s */
+   struct timespec rqtp={4.0,40000000},rmtp={0,0},rq; /* 25 fps == 0.04s */
    if (pthread_create(&secondary₋thread,ΨΛΩ,input,ΨΛΩ)) { return 1; }
-   int ts = clock_getres(CLOCK_PROCESS_CPUTIME_ID,&rqtp);
+   int ts = clock_getres(CLOCK_PROCESS_CPUTIME_ID,&rq);
    print("resolution ⬚\n", ﹟d((__builtin_uint_t)ts));
    CGDirectDisplayID display = kCGDirectMainDisplay;
    CGRect displaybounds = CGDisplayBounds(display);
@@ -378,6 +390,9 @@ main(
    CVDisplayLinkStart(displaylink);
    correct₋filelist("/tmp",&current₋files);
    /* For₋CommitTextEdit₋and₋Project₋Selection(); */ // a.k.a Interaction.
+   Response out = ^(char32̄_t * ucs, __builtin_int_t bytes) { print("⬚",﹟S(bytes,ucs)); };
+   struct Unicodes base₋project = Run(U"my₋project");
+   analyze₋files₋and₋directories(base₋project,out);
 again:
    if (nanosleep(&rqtp,&rmtp)) { return 2; }
    if (quit) { goto unagain; }
@@ -405,4 +420,5 @@ unagain:
  -framework CoreGraphics                                                     \
  -framework Cocoa -std=c2x -g
  */
+
 
