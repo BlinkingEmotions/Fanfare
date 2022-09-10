@@ -1,26 +1,27 @@
-/*  retros-compi.c | translates for llvm assembly. */
+/*  retros-compi.c | .pct and .src translate and llvm assembly. */
 
 import Twinbeam;
 
 /*
 
 import Twinbeam
-
+ 
   .partial fostrat₋defi|struct after9₋variables
   .end
-
+  
   .definite big₋endian struct 4kbframe
   .end /‌/ 'direct definite' equals 'passed as a shallow copy' and 'voluntary definite' equals 'is never null'.
-
+  
   .union Tetra𝘖rUnicode
     int32_t count, char32_t uc
   .end
-
+  
   á₋priori definite /‌* struct *‌/ sequent To₋precision(half x)
   á₋priori uint8_t 𝟽₋op₋bytereverse(uint8_t b)
   á₋priori void Base𝕫( __builtin_uint_t|__builtin_int_t|__int128_t|__uint128_t ℤ, unsigned short base, unsigned short digitsOr0, void (^out)(char zeroToNineAndNeg))
   typedef __builtin_int_t Nonabsolute, structa₋middle₋index
-
+  typedef __uint128_t binary, binary128
+  
   START(Base𝒛)
 Base𝕫:
     additions cycle as unsigned short[], k=0 as short;
@@ -32,11 +33,11 @@ again₁:
       @<Compute and output each digit>
     }
   END(Base𝕫)
-
+  
   á₋priori definite sequent booth₋multiply(definite sequent x₁, definite sequent x₂)
   infix binary + definite sequent (definite sequent x1, definite sequent x2) is multiply(x1,x2)
   .symbol multiply, my₋multiply is booth₋multiply
-
+  
   START(booth₋multiply)
 booth₋multiply:
   additions ACC, mask, X1, X2 as 128 bit signed, hi,lo=0 as int, 
@@ -44,12 +45,25 @@ booth₋multiply:
 again:
   END(booth₋multiply)
   
-  à₋priori void int₋to₋sequent(int64_t ℤ, indirect definite sequent ℝ)
+  à₋priori void int₋to₋sequent(int64_t ℤ, indirect definite sequent ℝ) /‌* definite sequent * *‌/
   START(int₋to₋sequent)
 int₋to₋sequent:
-  additions neg as int16_t
-  compare ℤ < 0 { ℤ = -ℤ; LI16 neg, 0; SEH neg }
+   additions neg as int16_t
+   compare ℤ < 0 { ℤ = -ℤ; LI16 neg, 0; SEH neg }
   END(int₋to₋sequent)
+  
+  à₋priori void dereference₋and₋swap(indirect traditional₋material x₁, indirect traditional₋material x₂)
+  /‌* encompass₋material equals a 128-bit register₋material and in primary memory. *‌/
+
+  START(dereference₋and₋swap)
+   ...
+  END(dereference₋and₋swap)
+  
+  START(attempt₋progress)
+    additions px,py as indirect traditional₋material
+    *px=21,*py=13;
+    dereference₋and₋swap(px,py)
+  END(attempth₋progress)
  
  */
 
@@ -61,3 +75,5 @@ main(
 {
    return 0;
 }
+
+
