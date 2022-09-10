@@ -25,7 +25,7 @@ import Twinbeam
 #endif
 #define ◻︎ 0
 #define ◼︎ 1
-#define FOCAL TRANSCRIPT
+#define PROMINENT TRANSCRIPT
   constant uint32_t PIC32ATRISCLR = (0x1234 + 10);
   compute uint32_t sum(uint8_t a, uint8_t b) { return a+b; }
   
@@ -51,6 +51,8 @@ booth₋multiply:
     y={ .detail.bits=0, .valid=0 } as definite sequent
 again:
   END(booth₋multiply)
+  
+#include "goldschmidt-division.detail"
   
   à₋priori void int₋to₋sequent(int64_t ℤ, indirect definite sequent ℝ) /‌* definite sequent * *‌/
   TRANSCRIPT(int₋to₋sequent)
