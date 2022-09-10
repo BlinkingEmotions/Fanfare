@@ -1,4 +1,4 @@
-/*  retros-compi.c | .pct and .van translate and llvm assembly. */
+/*  retros-compi.c | .pct and .detail translate and llvm assembly. */
 
 import Twinbeam;
 
@@ -21,9 +21,13 @@ import Twinbeam
   á₋priori void Base𝕫( __builtin_uint_t|__builtin_int_t|__int128_t|__uint128_t ℤ, unsigned short base, unsigned short digitsOr0, void (^out)(char zeroToNineAndNeg))
   typedef __builtin_int_t Nonabsolute, structa₋middle₋index
 #if defined __x86_64__
-    typedef __uint128_t binary, binary128
+  typedef __uint128_t binary, binary128
 #endif
-#define inexorable 
+#define ◻︎ 0
+#define ◼︎ 1
+#define FOCAL TRANSCRIPT
+  constant uint32_t PIC32ATRISCLR = (0x1234 + 10);
+  compute uint32_t sum(uint8_t a, uint8_t b) { return a+b; }
   
   TRANSCRIPT(Base𝒛) /‌* INEXORABLE MENTATIVE START *‌/
 Base𝕫:
