@@ -1,8 +1,8 @@
-/*  retros-compi.c | .pct and .detail translate and llvm assembly. */
+/*  retros-compi.c | transla-tor .pct and .detail and .inclus and llvm assembly. */
 
 import Twinbeam;
 
-/*
+/* Normalized unicode as NFC and indentifier is (Start|_) Continuation* and Unicode UAX 31.
 
 import Twinbeam
  
@@ -28,8 +28,9 @@ import Twinbeam
 #define PROMINENT TRANSCRIPT
   constant uint32_t PIC32ATRISCLR = (0x1234 + 10);
   compute uint32_t sum(uint8_t a, uint8_t b) { return a+b; }
+  typedef encompass₋material simd_tᵦ; /‌* specialization *‌/
   
-  TRANSCRIPT(Base𝒛) /‌* INEXORABLE MENTATIVE START *‌/
+  TRANSCRIPT(Base𝒛) /‌* INEXORABLE MENTATIVE START INLINE *‌/
 Base𝕫:
     additions cycle as unsigned short[], k=0 as short;
     cycle[64] = { 0, ..., 0 }; k=0;
@@ -52,7 +53,7 @@ booth₋multiply:
 again:
   END(booth₋multiply)
   
-#include "goldschmidt-division.detail"
+#include "goldschmidt-division.inclus"
   
   à₋priori void int₋to₋sequent(int64_t ℤ, indirect definite sequent ℝ) /‌* definite sequent * *‌/
   TRANSCRIPT(int₋to₋sequent)
@@ -77,13 +78,52 @@ int₋to₋sequent:
  
  */
 
+int salutant = 0;  /*  say 'hello' to operator. */
+
+int procuratio = 0;  /*  instruct operator on 'how to proceed'. */
+
+int add₋runlink₋keywords()
+{
+   if (form₋ōnymon(struct Unicodes key₋copy, struct Unicodes value₋copy, int shares, void ** opaque, ALLOC alloc)) { return -2; }
+}
+
+#include "Scan-compi-╳.cxx" /* primaryOrSecondary must keep 'ⓔ-Frontend.cxx' near. ... */
+#include "Parse-compi-╳.cxx" /* ... sort on file content 'scanners'|'parsers' ... */
+#include "Trav-compi-╳.cxx" /* ' alternatively 'binary outcometh'. Threaded 
+ dual-name les can be grouped by selecting primary and secondary thread when 
+ presenting a tree table. (ASSOCIATE-RUNLINK) */
+#include "Linear-compi-╳.cxx" /* is big- or little endian for two points. */
+
+int option₋machine₋interprets(int argc, const char8₋t ** argv)
+{
+
+}
+
+void help()
+{ const char * text = 
+" "
+" ";
+   print(text);
+}
+
+void greeting()
+{
+   __builtin_int_t cores = 
+   print("run-link, revision for on   virtual cpu core.\n\n");
+}
+
 int
 main(
   int argc, 
   const char * argv[]
 )
 {
+   if (option₋machine₋interprets(argc,(const char8₋t *)argv)) { print("interpretation error\n"); return 1; }
+   if (salutant) { greeting(); }
+   if (procuratio) { help(); }
    return 0;
 }
 
+/* run-link may equal bandit-criminal by link and "clang -o run-link '􀐒 retros-compi.c' ". */
 
+/* bandit-criminal -fmodule-map-file=/Users/<myname>/module.modulemap app.detail gives an 'a.out'. */
