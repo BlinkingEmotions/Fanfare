@@ -102,7 +102,7 @@ int₋to₋sequent:
 
 static symboltable₋ref preproc, keywords, operator₋arm, operator₋intel, operator₋mips;  /*  predefined words and non-identifiers. */
 
-static collection /* char8₋t * */ filepathssequence;  /*  a.k.a pointer₋sequence. */
+static collection /* char8₋t * */ filepathssequence;  /*  a․𝘬․a pointer₋sequence. */
 
 const char8₋t * modulefile₋path = ΨΛΩ;  /*  file path to module.modulemap file with no default name. */
 
@@ -110,14 +110,32 @@ int salutant = 0;  /*  say 'hello' to operator. */
 
 int procuratio = 0;  /*  instruct operator on 'how to proceed'. */
 
-int do₋not₋link = 0;  /*  only compile to assembly listing do not produce binary file. */
+int do₋not₋link = 0;  /*  only compile to assembly listing, do not produce binary file. */
 
 typedef void (*Action)();
 
 int add₋runlink₋keywords()
 {
-   const char32̄_t *word₋include=UC("#include"), *word₋if=UC("#if"), *word₋endif=UC("#endif"), 
-    *word₋define=UC("#define");
+   const char32̄_t *word₋include=UC("#include"),*word₋if=UC("#if"),*word₋endif=
+    UC("#endif"),*word₋define=UC("#define"),*word₋defined=UC("defined");
+   const char32̄_t *word₋import=UC("import"),*word₋partial=UC(".partial"), 
+    *word₋fostrat=UC("fostrat₋defi"),*word₋struct=UC("struct"), 
+    *word₋end(".end"),*word₋definite=UC(".definite"),*word₋bigendian= 
+    UC("big₋endian"),*word₋littleendian=UC("little₋endian"),*word₋union= 
+    UC(".union"),*word₋ápriori=UC("á₋priori"),*word₋typedef=UC("typedef"), 
+    *word₋constant=UC("constant"),*word₋comp=UC("compute"),*word₋compare= 
+    UC("compare"),*word₋if=UC("if"),*word₋goto=UC("goto"),*word₋transcript= 
+    UC("TRANSCRIPT"),*word₋inexorable=UC("INEXORABLE"),*word₋mentantiv= 
+    UC("MENTATIVE"),*word₋start=UC("START"),*word₋inline=UC("INLINE"), 
+    *word₋coroutine=UC("COROUTINE"),*word₋End=UC("END"),*word₋additions= 
+    UC("additions"),word₋as=UC("as"),*word₋indirect=UC("indirect"), 
+    *word₋voluntary=UC("voluntary"),*word₋and=UC("&&"),*word₋or=UC("||"),
+    *word₋not=UC("!"),*word₋lparen=UC("("),*word₋rparen=UC(")"),word₋add= 
+    UC("+"),*word₋sub=UC("-"),*word₋star=UC("*"),*word₋div=UC("/"),*word₋bitor=
+    UC("|"),*word₋bitand=UC("&"),*word₋bitinv=UC("~"),*word₋inexlanatori=UC("@"),
+    *word₋cutaway₋start=UC("@<"),*word₋cutaway₋end₁=UC("@>="),*word₋cutaway₋end=
+    UC("@"),*word₋cutaway₋inclus₋start=word₋cutaway₋start,
+    *word₋cutaway₋end₂=UC("@>");
    INIT init = ^(void * uninited) { return -1; };
    preproc=ΨΛΩ,keywords=ΨΛΩ,operator₋arm=ΨΛΩ,operator₋intel=ΨΛΩ,operator₋mips=ΨΛΩ;
    Action note = jot(Run(word₋include),&preproc,sizeof(Action),Alloc,init);
@@ -136,7 +154,7 @@ again:
    if (i>=argc) { goto unagain; }
    token = *(argv + i);
    if (output₋filepath) { print("output is ⬚\n", ﹟s8(token)); output₋filepath=0; goto next; }
-   if (modulemap₋filepath) { print("modulemap is ⬚", ﹟s8(token)); modulemap₋filepath=0; goto next; }
+   if (modulemap₋filepath) { print("modulemap is ⬚\n", ﹟s8(token)); modulemap₋filepath=0; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-v");
    if (y == 0) { salutant=true; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-h");
@@ -144,9 +162,9 @@ again:
    y = IsPrefixOrEqual((const char *)token, (const char *)"-c");
    if (y == 0) { do₋not₋link=true; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-o");
-   if (y ==0) { output₋filepath=true; goto next; }
+   if (y == 0) { output₋filepath=true; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-fmodule-map-file");
-   if (y==0) { modulemap₋filepath=true; goto next; }
+   if (y == 0) { modulemap₋filepath=true; goto next; }
 next:
    i+=1; goto again;
 unagain:
