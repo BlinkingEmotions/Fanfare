@@ -106,6 +106,8 @@ static collection /* char8₋t * */ filepathssequence;  /*  a․𝘬․a pointer
 
 const char8₋t * modulefile₋path = ΨΛΩ;  /*  file path to module.modulemap file with no default name. */
 
+const char8₋t * outputfile₋path = U8("a.out");
+
 int salutant = 0;  /*  say 'hello' to operator. */
 
 int procuratio = 0;  /*  instruct operator on 'how to proceed'. */
@@ -116,30 +118,36 @@ typedef void (*Action)();
 
 int add₋runlink₋keywords()
 {
-   const char32̄_t *word₋include=UC("#include"),*word₋if=UC("#if"),*word₋endif=
-    UC("#endif"),*word₋define=UC("#define"),*word₋defined=UC("defined");
+   const char32̄_t *word₋include=UC("#include"),*word₋if=UC("#if"), 
+    *word₋endif=UC("#endif"),*word₋define=UC("#define"), 
+    *word₋defined=UC("defined");
    const char32̄_t *word₋import=UC("import"),*word₋partial=UC(".partial"), 
     *word₋fostrat=UC("fostrat₋defi"),*word₋struct=UC("struct"), 
-    *word₋end(".end"),*word₋definite=UC(".definite"),*word₋bigendian= 
-    UC("big₋endian"),*word₋littleendian=UC("little₋endian"),*word₋union= 
-    UC(".union"),*word₋ápriori=UC("á₋priori"),*word₋typedef=UC("typedef"), 
-    *word₋constant=UC("constant"),*word₋comp=UC("compute"),*word₋compare= 
-    UC("compare"),*word₋if=UC("if"),*word₋goto=UC("goto"),*word₋transcript= 
-    UC("TRANSCRIPT"),*word₋inexorable=UC("INEXORABLE"),*word₋mentantiv= 
-    UC("MENTATIVE"),*word₋start=UC("START"),*word₋inline=UC("INLINE"), 
-    *word₋coroutine=UC("COROUTINE"),*word₋End=UC("END"),*word₋additions= 
-    UC("additions"),word₋as=UC("as"),*word₋indirect=UC("indirect"), 
-    *word₋voluntary=UC("voluntary"),*word₋and=UC("&&"),*word₋or=UC("||"),
-    *word₋not=UC("!"),*word₋lparen=UC("("),*word₋rparen=UC(")"),word₋add= 
-    UC("+"),*word₋sub=UC("-"),*word₋star=UC("*"),*word₋div=UC("/"),*word₋bitor=
-    UC("|"),*word₋bitand=UC("&"),*word₋bitinv=UC("~"),*word₋inexlanatori=UC("@"),
-    *word₋cutaway₋start=UC("@<"),*word₋cutaway₋end₁=UC("@>="),*word₋cutaway₋end=
-    UC("@"),*word₋cutaway₋inclus₋start=word₋cutaway₋start,
-    *word₋cutaway₋end₂=UC("@>");
+    *word₋end(".end"),*word₋definite=UC(".definite"), 
+    *word₋bigendian=UC("big₋endian"),*word₋littleendian=UC("little₋endian"), 
+    *word₋union=UC(".union"),*word₋ápriori=UC("á₋priori"), 
+    *word₋typedef=UC("typedef"),*word₋constant=UC("constant"), 
+    *word₋comp=UC("compute"),*word₋compare=UC("compare"),*word₋if=UC("if"), 
+    *word₋goto=UC("goto"),*word₋transcript=UC("TRANSCRIPT"), 
+    *word₋inexorable=UC("INEXORABLE"),*word₋mentantiv=UC("MENTATIVE"), 
+    *word₋start=UC("START"),*word₋inline=UC("INLINE"), 
+    *word₋coroutine=UC("COROUTINE"),*word₋End=UC("END"), 
+    *word₋additions=UC("additions"),word₋as=UC("as"), 
+    *word₋indirect=UC("indirect"),*word₋voluntary=UC("voluntary"), 
+    *word₋and=UC("&&"),*word₋or=UC("||"),*word₋not=UC("!"),*word₋lparen=UC("("), 
+    *word₋rparen=UC(")"),word₋add=UC("+"),*word₋sub=UC("-"),*word₋star=UC("*"), 
+    *word₋div=UC("/"),*word₋bitor=UC("|"),*word₋bitand=UC("&"), 
+    *word₋bitinv=UC("~"),*word₋inexlanatori₋start=UC("@*"), 
+    *word₋inexlanatori₋continuation₋and₋cutway₋text₋end=UC("@"), 
+    *word₋cutaway₋define₋start₋and₋instans₋start=UC("@<"), 
+    *word₋cutaway₋end₁=UC("@>="),*word₋cutaway₋end₂=UC("@>");
+   const char32̄_t *word₋int=UC("int"),*word₋u8=UC("char8₋t"), 
+    *word₋uc=UC("char32̄_t"),*word₋binary32=UC("binary32"), 
+    *word₋decimal=UC("decimal32"),*word₋unsigned=UC("unsigned");
    INIT init = ^(void * uninited) { return -1; };
    preproc=ΨΛΩ,keywords=ΨΛΩ,operator₋arm=ΨΛΩ,operator₋intel=ΨΛΩ,operator₋mips=ΨΛΩ;
    Action note = jot(Run(word₋include),&preproc,sizeof(Action),Alloc,init);
-}
+} /* 'AJ/I remember everything'. \authur Jonny Cash.  */
 
 #include "Scan-compi-╳.cxx" /* primaryOrSecondary must keep 'ⓔ-Frontend.cxx' near. ... */
 #include "Parse-compi-╳.cxx" /* ... sort on file content 'scanners'|'parsers' ... */
@@ -153,8 +161,8 @@ int option₋machine₋interprets(int argc, const char8₋t ** argv)
 again:
    if (i>=argc) { goto unagain; }
    token = *(argv + i);
-   if (output₋filepath) { print("output is ⬚\n", ﹟s8(token)); output₋filepath=0; goto next; }
-   if (modulemap₋filepath) { print("modulemap is ⬚\n", ﹟s8(token)); modulemap₋filepath=0; goto next; }
+   if (output₋filepath) { print("output is ⬚\n", ﹟s8(token)); outputfile₋path=token; output₋filepath=0; goto next; }
+   if (modulemap₋filepath) { print("modulemap is ⬚\n", ﹟s8(token)); modulefile₋path=token; modulemap₋filepath=0; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-v");
    if (y == 0) { salutant=true; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-h");
