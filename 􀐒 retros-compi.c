@@ -116,6 +116,11 @@ int do₋not₋link = 0;  /*  only compile to assembly listing, do not produce b
 
 typedef void (*Action)();
 
+void include₋Action()
+{
+   print("include-action\n"):
+}
+
 int add₋runlink₋keywords()
 {
    const char32̄_t *word₋include=UC("#include"),*word₋if=UC("#if"), 
@@ -144,10 +149,11 @@ int add₋runlink₋keywords()
    const char32̄_t *word₋int=UC("int"),*word₋u8=UC("char8₋t"), 
     *word₋uc=UC("char32̄_t"),*word₋binary32=UC("binary32"), 
     *word₋decimal=UC("decimal32"),*word₋unsigned=UC("unsigned");
-   INIT init = ^(void * uninited) { return -1; };
+   INIT init = ^(void * uninited) { *((Action *)uninited)=; return 0; };
    preproc=ΨΛΩ,keywords=ΨΛΩ,operator₋arm=ΨΛΩ,operator₋intel=ΨΛΩ,operator₋mips=ΨΛΩ;
    Action note = jot(Run(word₋include),&preproc,sizeof(Action),Alloc,init);
-} /* 'AJ/I remember everything'. \authur Jonny Cash.  */
+   note = include₋Action;
+} /* 'I remember everything'. \authur Jonny Cash.  */
 
 #include "Scan-compi-╳.cxx" /* primaryOrSecondary must keep 'ⓔ-Frontend.cxx' near. ... */
 #include "Parse-compi-╳.cxx" /* ... sort on file content 'scanners'|'parsers' ... */
@@ -214,4 +220,6 @@ main(
 
 /*  xcrun clang @ccargs_mac -DSHA1GIT=`git log -1 '--pretty=format:%h'` \
  -o run-link '􀐒 retros-compi.c'
+
+
 
