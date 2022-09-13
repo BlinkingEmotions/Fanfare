@@ -1,8 +1,9 @@
-/*  retros-compi.c | transla-tor .pct and .detail and .inclus and llvm assembly. */
+/*  retros-compi.c | transla-tor .pct and .detail and .inclus and llvm-assembly files. */
 
 import Twinbeam;
 
-/* Normalized unicode as NFC and indentifier is (Start|_) Continuation* and Unicode UAX 31.
+/* Example is stored as an Utf-8 file and NFC normalized unicode when processedand indentifier is 
+ (Start|_) Continuation* and Unicode UAX 31.
 
 import Twinbeam
  
@@ -30,20 +31,41 @@ import Twinbeam
   compute uint32_t sum(uint8_t a, uint8_t b) { return a+b; }
   typedef encompass₋material simd_tᵦ; /‌* specialization *‌/
   
-  TRANSCRIPT(Base𝒛) /‌* INEXORABLE MENTATIVE START INLINE *‌/
+@ This case takes care in case we want to output a fixed number of digits.
+
+@<Compute and output selected digits@>=
+  k = digitsOr0 - 1
+again:
+  if (k>=0) { }
+  k = k - 1
+  goto again
+  @
+
+@ This case handles when we have inputted $0$ as argument to |digitsOr0|.
+
+@<Compute and output each digit@>=
+again:
+  if (k>=0) { }
+  goto again
+unagain:
+  @
+
+  TRANSCRIPT(Base𝒛) /‌* INEXORABLE MENTATIVE START INLINE COROUTINE *‌/
 Base𝕫:
     additions cycle as unsigned short[], k=0 as short;
     cycle[64] = { 0, ..., 0 }; k=0;
-again₁:
+again:
     cycle[k] = ℕ % base; N /= base; k+=1;
-    if|compare|guard (ℕ) branch|goto again₁;
-    if (digitisOR0) {
-      @<Compute and output each digit>
+    if (ℕ) goto again; /‌* also compare|guard and branch|goto. *‌/
+    if (digitisOr0) {
+      @<Compute and output selected digits@>
+    } else {
+      @<Compute and output each digit@>
     }
   END(Base𝕫)
   
   á₋priori definite sequent booth₋multiply(definite sequent x₁, definite sequent x₂)
-  infix binary + definite sequent (definite sequent x1, definite sequent x2) is multiply(x1,x2)
+  infix binary + definite sequent (definite sequent x₁, definite sequent x₂) is multiply(x₁,x₂)
   .symbol multiply, my₋multiply is booth₋multiply
   
   TRANSCRIPT(booth₋multiply)
@@ -78,13 +100,27 @@ int₋to₋sequent:
  
  */
 
+static symboltable₋ref preproc, keywords, operator₋arm, operator₋intel, operator₋mips;  /*  predefined words and non-identifiers. */
+
+static collection /* char8₋t * */ filepathssequence;  /*  a.k.a pointer₋sequence. */
+
+const char8₋t * modulefile₋path = ΨΛΩ;  /*  file path to module.modulemap file with no default name. */
+
 int salutant = 0;  /*  say 'hello' to operator. */
 
 int procuratio = 0;  /*  instruct operator on 'how to proceed'. */
 
+int do₋not₋link = 0;  /*  only compile to assembly listing do not produce binary file. */
+
+typedef void (*Action)();
+
 int add₋runlink₋keywords()
 {
-   if (form₋ōnymon(struct Unicodes key₋copy, struct Unicodes value₋copy, int shares, void ** opaque, ALLOC alloc)) { return -2; }
+   const char32̄_t *word₋include=UC("#include"), *word₋if=UC("#if"), *word₋endif=UC("#endif"), 
+    *word₋define=UC("#define");
+   INIT init = ^(void * uninited) { return -1; };
+   preproc=ΨΛΩ,keywords=ΨΛΩ,operator₋arm=ΨΛΩ,operator₋intel=ΨΛΩ,operator₋mips=ΨΛΩ;
+   Action note = jot(Run(word₋include),&preproc,sizeof(Action),Alloc,init);
 }
 
 #include "Scan-compi-╳.cxx" /* primaryOrSecondary must keep 'ⓔ-Frontend.cxx' near. ... */
@@ -95,21 +131,43 @@ int add₋runlink₋keywords()
 #include "Linear-compi-╳.cxx" /* is big- or little endian for two points. */
 
 int option₋machine₋interprets(int argc, const char8₋t ** argv)
-{
-
+{ int i=0,y,output₋filepath=0,modulemap₋filepath=0; char8₋t * token;
+again:
+   if (i>=argc) { goto unagain; }
+   token = *(argv + i);
+   if (output₋filepath) { print("output is ⬚\n", ﹟s8(token)); output₋filepath=0; goto next; }
+   if (modulemap₋filepath) { print("modulemap is ⬚", ﹟s8(token)); modulemap₋filepath=0; goto next; }
+   y = IsPrefixOrEqual((const char *)token, (const char *)"-v");
+   if (y == 0) { salutant=true; goto next; }
+   y = IsPrefixOrEqual((const char *)token, (const char *)"-h");
+   if (y == 0) { salutant=true; procuratio=true; goto next; }
+   y = IsPrefixOrEqual((const char *)token, (const char *)"-c");
+   if (y == 0) { do₋not₋link=true; goto next; }
+   y = IsPrefixOrEqual((const char *)token, (const char *)"-o");
+   if (y ==0) { output₋filepath=true; goto next; }
+   y = IsPrefixOrEqual((const char *)token, (const char *)"-fmodule-map-file");
+   if (y==0) { modulemap₋filepath=true; goto next; }
+next:
+   i+=1; goto again;
+unagain:
+   return 0;
 }
 
 void help()
 { const char * text = 
-" "
-" ";
+"usage run-link [options] <.detail including .inclus input files>\n\n"
+" -fmodule-map-file = <path and file>\n"
+" -c \n"
+" -o <path and file>";
    print(text);
 }
 
 void greeting()
 {
-   __builtin_int_t cores = 
-   print("run-link, revision for on   virtual cpu core.\n\n");
+   __builtin_int_t cores = sysconf("_SC_NPROCESSORS_ONLN"); /* SYSTEM_INFO and GetSystemInfo on Windows. */
+   print("run-link, revision ⬚ for ⬚ on ⬚ virtual cpu core⬚.\n\n", 
+    ﹟s7(SHA1GIT), ﹟s7("Macbook Pro"), ﹟d((__builtin_int_t)cores), 
+    ﹟s7(cores == 1 ? "" : "s"));
 }
 
 int
@@ -118,12 +176,16 @@ main(
   const char * argv[]
 )
 {
-   if (option₋machine₋interprets(argc,(const char8₋t *)argv)) { print("interpretation error\n"); return 1; }
+   if (option₋machine₋interprets(argc,(const char8₋t *)argv)) { print("command-line interpretation error\n"); exit(1); }
    if (salutant) { greeting(); }
-   if (procuratio) { help(); }
+   if (procuratio) { help(); exit(2); }
    return 0;
 }
 
 /* run-link may equal bandit-criminal by link and "clang -o run-link '􀐒 retros-compi.c' ". */
 
 /* bandit-criminal -fmodule-map-file=/Users/<myname>/module.modulemap app.detail gives an 'a.out'. */
+
+/*  xcrun clang @ccargs_mac -DSHA1GIT=`git log -1 '--pretty=format:%h'` \
+ -o run-link '􀐒 retros-compi.c'
+
