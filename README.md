@@ -1,6 +1,12 @@
-
-
 To compile and debug one of the mac programs, write
+
+```
+./retro-mac.sh -d intel-hex
+```
+
+alternatively
+
+to compile and debug one of the mac programs, write
 
 ```
 xcrun clang @ccargs_mac -o Contours '🥽⋆Rävvägen.cpp'
