@@ -1,10 +1,10 @@
 #!/usr/bin/env /bin/zsh
 
-builtin typeset INITIAL='-g -std=c2x -mmacosx-version-min=11.3.1'
-builtin typeset MODULES='-fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules'
-builtin typeset MACINTOSH='-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk'
+builtin typeset INITIAL="-g -std=c2x"
+builtin typeset MACINTOSH='-mmacosx-version-min=11.3.1 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk'
 builtin typeset GIT="-DSHA1GIT=`git log -1 '--pretty=format:%h'`"
-builtin typeset CCARG_MAC="$MODULES $MACINTOSH $GIT"
+builtin typeset MISCELLANEOUS='-fblocks -fno-rtti -fno-coroutines-ts -fno-exceptions'
+builtin typeset CCARG_MAC="$INITIAL $MACINTOSH $GIT $MISCELLANEOUS"
 
 builtin typeset progname=$0
 # builtin typeset -a sku_keys         # array
@@ -24,7 +24,6 @@ components=(
   'uql-gen' '🥽⋆UQL.cpp 🥽⋆UQL₂.cpp'
   'linguistics-epi' '􀥳 lingustics-epi.c'
   'enforce-beskow' '􁕊 enforce-beskow.c'
-  'nut-f1-schweiz' '􀐒 slow-pid.c'
 )
 
 output=(
@@ -34,9 +33,9 @@ output=(
   'parent-kabinett' 'patent'
   'intel-hex' 'intelhex'
   'uql-gen' "question"
-  'linguistics-epi' 'linguistics-epi'
+  'linguistics-epi' 'x86_epitom-7'
   'enforce-beskow' 'beskow'
-  'nut-f1-schweiz' 'non-bell'
+  'nut-f1-schweiz' 'non-bell' # for inspector and intendent and not higher-ranked police.
 )
 
 function usage
@@ -86,11 +85,12 @@ function compile_and_run()
 {
    for sku_key ($sku_sequence) {
      builtin typeset text="-o $output[$sku_key] ${CCARG_MAC}"
-     builtin command xcrun "clang $INITIAL $text '$components[$sku_key]'"
+     builtin command clang $text -fmodule-map-file=🚦.modules "$components[$sku_key]"
      if [[ -n "$debugger" ]]; then
-       command xcrun lldb $output[$sku_key]
+       builtin command xcrun lldb $output[$sku_key]
      fi
    }
 }
 
 compile_and_run
+
