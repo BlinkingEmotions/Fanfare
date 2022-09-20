@@ -118,7 +118,7 @@ typedef void (*Action)();
 
 void include₋Action()
 {
-   print("include-action\n"):
+   print("include-action\n");
 }
 
 int add₋runlink₋keywords()
@@ -153,7 +153,7 @@ int add₋runlink₋keywords()
    preproc=ΨΛΩ,keywords=ΨΛΩ,operator₋arm=ΨΛΩ,operator₋intel=ΨΛΩ,operator₋mips=ΨΛΩ;
    Action note = jot(Run(word₋include),&preproc,sizeof(Action),Alloc,init);
    note = include₋Action;
-} /* 'I remember everything'. \authur Jonny Cash.  */
+} /* 'I remember everything'. \authur Jonny Cash. */
 
 #include "Scan-compi-╳.cxx" /* primaryOrSecondary must keep 'ⓔ-Frontend.cxx' near. ... */
 #include "Parse-compi-╳.cxx" /* ... sort on file content 'scanners'|'parsers' ... */
@@ -179,6 +179,7 @@ again:
    if (y == 0) { output₋filepath=true; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-fmodule-map-file");
    if (y == 0) { modulemap₋filepath=true; goto next; }
+   return -1;
 next:
    i+=1; goto again;
 unagain:
@@ -220,6 +221,3 @@ main(
 
 /*  xcrun clang @ccargs_mac -DSHA1GIT=`git log -1 '--pretty=format:%h'` \
  -o run-link '􀐒 retros-compi.c'
-
-
-
