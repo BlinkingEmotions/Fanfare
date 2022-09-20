@@ -1,4 +1,4 @@
-/*  retros-compi.c | transla-tor .pct and .detail and .inclus and llvm-assembly files. */
+/*  retros-compi.c | transla-tor .pct and .detail and .inclu and llvm-assembly files. */
 
 import Twinbeam;
 
@@ -221,3 +221,4 @@ main(
 
 /*  xcrun clang @ccargs_mac -DSHA1GIT=`git log -1 '--pretty=format:%h'` \
  -o run-link '􀐒 retros-compi.c'
+
