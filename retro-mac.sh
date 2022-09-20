@@ -1,10 +1,10 @@
 #!/usr/bin/env /bin/zsh
 
 builtin typeset INITIAL="-g -std=c2x"
-builtin typeset MACINTOSH='-mmacosx-version-min=11.3.1 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk'
+builtin typeset MACINTOSH='-mmacosx-version-min=12.6 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk ../Apps/Source/Releases/libTwinbeam_macos.a'
 builtin typeset GIT="-DSHA1GIT=`git log -1 '--pretty=format:%h'`"
-builtin typeset MISCELLANEOUS='-fblocks -fno-rtti -fno-coroutines-ts -fno-exceptions'
-builtin typeset CCARG_MAC="$INITIAL $MACINTOSH $GIT $MISCELLANEOUS"
+builtin typeset MISCELLANEOUS='-fblocks -fno-signed-char -fno-builtin -fno-format'
+builtin typeset CCARG_MAC="$INITIAL $GIT $MISCELLANEOUS $MACINTOSH"
 
 builtin typeset progname=$0
 # builtin typeset -a sku_keys         # array
@@ -85,7 +85,7 @@ function compile_and_run()
 {
    for sku_key ($sku_sequence) {
      builtin typeset text="-o $output[$sku_key] ${CCARG_MAC}"
-     builtin command clang $text -fmodule-map-file=🚦.modules "$components[$sku_key]"
+     builtin command clang -fmodule-map-file=🚦.modules $text "$components[$sku_key]"
      if [[ -n "$debugger" ]]; then
        builtin command xcrun lldb $output[$sku_key]
      fi
