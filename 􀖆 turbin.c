@@ -2,7 +2,7 @@
 
 import Twinbeam; /* ⬷ he is sitting in a box 𝘦․𝘨 T-FOR-D and De-la-v-all. */
 
-/* compile with ./retro-mac.sh turbin. */
+/* ./retro-mac.sh turbin-āttika to compile. */
 
 typedef int64_t     Integer;
 typedef Sequenta    Real; /* ⬷ here we attempt base two and ten hardware 
