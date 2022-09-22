@@ -2,8 +2,7 @@
 
 import Twinbeam; /* ⬷ he is sitting in a box 𝘦․𝘨 T-FOR-D and De-la-v-all. */
 
-/* xcrun clang @ccargs_mac -o turbin -DSHA1GIT=`git log -1 '--pretty=format:%h'` 
- '􀖆 turbin.cpp' */
+/* compile with ./retro-mac.sh turbin. */
 
 typedef int64_t     Integer;
 typedef Sequenta    Real; /* ⬷ here we attempt base two and ten hardware 
