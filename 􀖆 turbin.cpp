@@ -1,4 +1,4 @@
-/*  turbin a․𝘬․a Plan-9 | accountants' traveller companion. (CORP. EDITION.) */
+/*  turbin a․𝘬․a Plan-9 | modellers' traveller companion. (CORP. EDITION.) */
 
 import Twinbeam; /* ⬷ he is sitting in a box 𝘦․𝘨 T-FOR-D and De-la-v-all. */
 
@@ -6,63 +6,94 @@ import Twinbeam; /* ⬷ he is sitting in a box 𝘦․𝘨 T-FOR-D and De-la-v-a
  '􀖆 turbin.cpp' */
 
 typedef int64_t     Integer;
-typedef Sequenta    Real; /* ⬷ here we toggle - base two and ten - native 
- Ieee754 and software arithmetics (base two and ten). */
-typedef struct Unicodes transient₋Unicode;
-typedef unicode₋shatter unicode₋memory;
-typedef struct structa Regularpool;
+typedef Sequenta    Real; /* ⬷ here we attempt base two and ten hardware 
+ Ieee754 and software arithmetics. */
+typedef struct structa Regularset;
 
-/* ╳╳ scandinavian 'således' tran-sact-ions and veri-fi-c-at-es (lexer and parser) ╳╳ */
+/* ╳╳ northern 'således' tran-sact-ions and veri-fi-c-at-es ╳╳ */
 
-struct Ɀ₋AST { /* seder-custom and recollect */ 
- enum { INSTANT, REGULAR, INSTANT, FUNCTION_KEYWORD, L₋BRACKET, R₋BRACKET, 
-  END₋OF₋TRANSMISSION };
-};
+typedef struct {
+ enum { REGULAR, MONETARY, FUNCTION_KEYWORD, INSTANT, 
+  BOOKKEEP_KEYWORD, DEBET_KEYWORD, CREDIT_KEYWORD, COMMENT_KEYWORD, WITH_KEYWORD, 
+  PRINT_KEYWORD, BREAK_KEYWORD, SET_KEYWORD, VAR_KEYWORD, RETURN_KEYWORD, 
+  DO_KEYWORD, IF_KEYWORD, THEN_KEYWORD, ELSE_KEYWORD, END_KEYWORD, BEFORE_KEYWORD, 
+  PLUS_SYMBOL, MINUS_SYMBOL, MULT_SYMBOL, DIV_SYMBOL, AND_SYMBOLS, OR_SYMBOLS, 
+  NOT_SYMBOL, XOR_SYMBOL, ENTITY_KEYWORD, ACCOUNT_KEYWORD, 
+  TABLE_KEYWORD, DISPLAY_KEYWORD, FROM_KEYWORD, 
+  CREATE_KEYWORD, NAMED_KEYWORD, TRADING_KEYWORD, IN_KEYWORD, RESIDENT_KEYWORD, 
+  WITH_KEYWORD, IS_KEYWORD, TO_KEYWORD, SCHEDULE_KEYWORD, STARTING_KEYWORD, 
+  OCCURING_KEYWORD, ENDING_KEYWORD, DROP₋SCHEDULE_KEYWORD, EXCHANGE_KEYWORD, 
+  RATE_KEYWORD, CURRENCY_KEYWORD, 
+  L₋BRACKET, R₋BRACKET, QUOTED₋TEXT, END₋OF₋TRANSMISSION };
+ typedef enum { initial, singline₋comment, multiline₋comment, 
+  quoted₋text } mode=initial;
+} Ɀ₋AST; /* ⬷ a․𝘬․a bokföringssed, custom and recollect. */
 
-/* ╳╳ computation two tables: 'annual return' and 'profit and loss' (lexer and parser) ╳╳ */
+/* ╳╳ computation two tables: 'annual return' and 'profit and loss' ╳╳ */
 
-struct ᵀAST {
-  
-  enum { /* terminals ⤐ */ POP_KEYWORD, SWAP_KEYWORD, DUP_KEYWORD, 
-   PLUS_KEYWORD, MINUS_KEYWORD, MULT_KEYWORD, DIV_KEYWORD, REPORT_KEYWORD, 
-   BOLD_KEYWORD, IDENTIFIER, SQSTRING, /* non-terminals ⤐ */ // DEBET/CREDIT
-   report, opt₋bold, END₋OF₋TRANSMISSION };
-  
-}; /* ⬷ a․𝘬․a 'table₋parser'․ */
+typedef struct {
+  enum { POP_KEYWORD, SWAP_KEYWORD, DUP_KEYWORD, 
+   PLUS_KEYWORD, MINUS_KEYWORD, MULT_KEYWORD, DIV_KEYWORD, 
+   REPORT_KEYWORD, BOLD_KEYWORD, REGULAR, QUOTED₋TEXT, 
+   END₋OF₋TRANSMISSION, report, opt₋bold };
+  typedef enum { initial, singleline₋comment, multiline₋comment, 
+   quoted₋text } mode=initial;
+} ᵀAST; /* ⬷ a․𝘬․a 'table₋parser' and terminals-and-nonterminals․ */
 
-struct language₋context { enum 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 mode { initial, c₋comment, qstring } mode=initial; 
-  
-  __builtin_int_t linenumber₋first=1,linenumber₋last=1;
+typedef struct {
+  __builtin_int_t linenumber₋first=1,linenumber₋last=1, 
+   column₋first=1,column₋last=1,tip₋unicode;
   
   fifo order₋and₋memory; Structa symbol₋stack;
   
-}; /* ⬷ a․𝘬․a 'verificate₋parser' and token-i-sa-tio-n. */
+} language₋context; /* ⬷ a․𝘬․a 'verificate₋parser' and token-i-sa-tio-n. */
 
-Regularpool languageᵀ,languageⱿ;
+Regularset languageᵀ,languageⱿ;
 
-struct { __builtin_int_t kiddle₋error; } error₋panel;
+struct { __builtin_uint_t diagnosis₋count; } error₋panel;
 
-inexorable int init₋context(__builtin_int_t program₋bytes, struct Businessrule₋scanner₋ctxt * const ctx)
+inexorable 
+int context₋init(
+  __builtin_int_t program₋bytes, 
+  struct language₋context * const ctxt
+)
 {
-   ctx->lineno₋first=1, ctx->lineno₋last=1; ctx->idx₋u8c=0; ctx->negative=0; 
+   ctx->linenumber₋first=1, ctx->linenumber₋last=1, ctx->idx₋u8c=0, 
+     ctx->negative=0;
+   __builtin_int_t maxu8bytes=BUILTIN₋INT₋MAX;
+   ctx->sourcepath = Retranscript(u8txtpath,maxu8bytes);
    ctx->mode = initial;
    return 0;
 }
 
+inexorable int scan₋sequence₋of₋evidence₋and₋absorb( /* it. verificare */
+  __builtin_int_t symbols, char32̄_t text[])
+{
+   
+}
+
+inexorable int scan₋sequence₋of₋evidence₋and₋absorb(
+  __builtin_int_t bytes, char8₋t * setyb)
+{
+   
+}
+
+inexorable int deinit₋context(struct language₋context * ctxt) { Fallow(ctxt); }
+
 inexorable int
-Lookahead₋scan₋Businessrules(
-  __builtin_int_t bytes, char8_t text[], 
+scan₋sequence₋of₋evidence₋and₋absorb(
+  __builtin_int_t bytes, char8₋t text[], 
   enum Business₋token₋symbol * kind, 
   union Business₋symbol₋token₋detail * detail, 
   struct Businessrule₋scanner₋ctxt * b₋ctxt, 
-  void (*identifier)(int symbols, char32_t * start)
+  void (*identifier)(int symbols, char32̄_t * start)
 )
 {
-   uchar c,f,e,d; char32_t unicode; __builtin_int_t i=s₋ctxt->idx₋u8c;
+   uchar c,f,e,d; char32̄_t unicode; __builtin_int_t i=s₋ctxt->idx₋u8c;
    
    🧵(utf8₋error,pool₋error,scanner₋error,conversion₋error,
-   unterminated₋quote,unknown₋keyword,wrong₋number₋of₋argument,token,
-   truncated₋token₋utf8) {
+  unterminated₋quote,unknown₋keyword,wrong₋number₋of₋argument,
+  token,truncated₋token₋utf8) {
     case utf8₋error: return -1;
     case pool₋error: return -2;
     case unterminated₋quote: return -3;
@@ -72,23 +103,23 @@ Lookahead₋scan₋Businessrules(
     case truncated₋token₋utf8: return 0;
    }
    
-   typedef int (^type)(char32_t c);
+   typedef int (^type)(char32̄_t c);
    typedef void (^action)(void);
    
-   type digit = ^(char32_t c) { return U'0' <= c && c <= U'9'; };
-   type derender₋newline = ^(char32_t c) { return c == U'\xa'; }; /* de- = completely = fullgångna. */
-   type newline = ^(char32_t c) { return derender₋newline(c) || c == U'\xd'; };
-   type whitespace = ^(char32_t c) { return c == U' ' || U'\t' == c || newline(c); };
-   type regular = ^(char32_t c) { return (U'a' <= c && c <= U'z') || (U'A' <= c && c <= U'Z') || digit(c); };
-   type period = ^(char32_t c) { return c == U'.'; };
+   type digit = ^(char32̄_t c) { return U'0' <= c && c <= U'9'; };
+   type derender₋newline = ^(char32̄_t c) { return c == U'\xa'; }; /* de- = completely = fullgångna. */
+   type newline = ^(char32̄_t c) { return derender₋newline(c) || c == U'\xd'; };
+   type whitespace = ^(char32̄_t c) { return c == U' ' || U'\t' == c || newline(c); };
+   type regular = ^(char32̄_t c) { return (U'a' <= c && c <= U'z') || (U'A' <= c && c <= U'Z') || digit(c); };
+   type period = ^(char32̄_t c) { return c == U'.'; };
    
-   typedef int (^Assistant₁)();
-   typedef int (^Assistant₂)(Stringpool, char32_t);
-   typedef int (*Assistant₂₋params)(char32_t unicode);
-   typedef Assistant₂₋params Stringpool;
+   typedef int (^History)();
+   typedef int (^Nondeterminist)(Stringpool, char32̄_t);
+   typedef int (*History₋params)(char32̄_t unicode);
+   typedef History₋params Stringpool;
    
-   Assistant₂ assistant₂ = ^(Stringpool follow₋current, char32_t unicode) { return follow₋current(unicode); };
-   Assistant₁ assistant₁ = ^(void (*close₋current)(void)) { close₋current(); return 0; };
+   History extrapolat = ^(Stringpool follow₋current, char32̄_t unicode) { return follow₋current(unicode); };
+   Nondeterminist retrospect = ^(void (*close₋current)(void)) { close₋current(); return 0; };
    
    action token₋sep = ^{ s₋ctxt->mode = initial; };
    
@@ -128,7 +159,7 @@ again:
         (0x3F & e); }
        if (followers == 3) { unicode = ((0b111 & c) << 18) | ((0x3F & d) << 12) | 
         ((0x3F & e) << 6) | (0x3F & f); }
-     } else { unicode = (char32_t)c; s₋ctxt->idx₋u8c+=1; }
+     } else { unicode = (char32̄_t)c; s₋ctxt->idx₋u8c+=1; }
    }
    
    /* ⤐ Unicode decoded and available ⤐ */
@@ -140,7 +171,7 @@ again:
    else if (s₋ctxt->mode == initial && digit(unicode)) {
      Feeder feeder = ^(unsigned short * l₋to₋r₋digit) {
        return complete; };
-     if (CastTˣᵗToSequent(feeder,&s₋ctxt->ongoing)) { confess(conversion₋error); }
+     if (CastTextToNumeric(feeder,&s₋ctxt->ongoing)) { confess(conversion₋error); }
    }
    else if (s₋ctxt->mode == initial && period(unicode)) {
      switch (s₋ctxt->mode) {
@@ -185,17 +216,17 @@ inexorable int Rendertable(Chronology::Instant when, History& history, Unicodes 
    
    /* character classes ⤐ */
    
-   auto digit = ^(char32_t c) { return U'0' <= c && c <= U'9'; };
-   auto counting₋newline = ^(char32_t c) { return c == U'\xa'; };
-   auto newline = ^(char32_t c) { return counting₋newline(c) || c == U'\xd'; };
-   auto whitespace = ^(char32_t c) { return c == U' ' || U'\t' == c || newline(c); };
-   auto misc₋symbols = ^(char32_t c) { return U'😐' == c || c == U'_'; }; /* ⬷ see clang c++ scanner for one definition. */
-   auto first₋ident₋char = ^(char32_t c) { return (U'a' <= c && c <= U'z') || (U'A' <= c && c <= U'Z') || misc₋symbols(c); };
-   auto rest₋ident₋char = ^(char32_t c) { return first₋ident₋char(c) || digit(c); };
+   auto digit = ^(char32̄_t c) { return U'0' <= c && c <= U'9'; };
+   auto counting₋newline = ^(char32̄_t c) { return c == U'\xa'; };
+   auto newline = ^(char32̄_t c) { return counting₋newline(c) || c == U'\xd'; };
+   auto whitespace = ^(char32̄_t c) { return c == U' ' || U'\t' == c || newline(c); };
+   auto misc₋symbols = ^(char32̄_t c) { return U'😐' == c || c == U'_'; }; /* ⬷ see clang c++ scanner for one definition. */
+   auto first₋ident₋char = ^(char32̄_t c) { return (U'a' <= c && c <= U'z') || (U'A' <= c && c <= U'Z') || misc₋symbols(c); };
+   auto rest₋ident₋char = ^(char32̄_t c) { return first₋ident₋char(c) || digit(c); };
    
    /* connect to kiddle qstring alt. identifier a․𝘬․a 'regular token' ⤐ */
    
-   auto append₋qstring₋alt₋ident₋unicode = ^(char32_t c) { if (ctx.puddle.copy₋append₋text(1, { c })) { PULT💡(panel.kiddle₋error); } } };
+   auto append₋qstring₋alt₋ident₋unicode = ^(char32̄_t c) { if (ctx.puddle.copy₋append₋text(1, { c })) { PULT💡(panel.kiddle₋error); } } };
    auto regular-token-ended = ^{ /* ✃✃✃ */ if (ctx.puddle.datum₋text(regulartetras)) { PULT💡(panel.kiddle₋error); } /* ✁✁✁ */ };
    auto regular₋token-started = ^{ /* ✁✁✁ */ regulartetras=0; /* ✃✃✃ */ };
    
@@ -236,7 +267,7 @@ inexorable int Rendertable(Chronology::Instant when, History& history, Unicodes 
    /* match and retrieve longest possible token until token 
      ended alternatively a keyword is found ⤐ \*/
    
-   auto lexer₋peek₋one₋symbol = ^(__builtin_int_t &optbeam) { char32_t c; 
+   auto lexer₋peek₋one₋symbol = ^(__builtin_int_t &optbeam) { char32̄_t c; 
 again:
      if (beam >= program.tetras) { goto unagain; }
      c = *(beam + program.unicodes);
@@ -377,7 +408,7 @@ unagain:
    return 0;
 } /* ⬷ a․𝘬․a 'Parse-and-render-tabular'. */
 
-#pragma mark - event parser front-end
+#pragma - event parser front-end
 
 struct AstNode { };
 struct Expression : public AstNode { };
@@ -393,7 +424,7 @@ inexorable int BsimParse(ParserContext₁& ctx, Unicodes events) { return 0; }
 
 #include "ⓔ-Frontend.cxx" /* ⬷ either interval, possibly distribution function. */
 
-#pragma mark - Simulator
+#pragma - Simulator
 
 struct Simulator { History history; Version version=101L; 
   Simulator() : history(version) { }
@@ -403,11 +434,9 @@ struct Simulator { History history; Version version=101L;
 
 #include "ⓔ-Simulator.cxx" /* ⬷ variance and sums of normally distributed variables. */
 
-#pragma mark - Commando line
+#pragma recto command line
 
-
-
-#pragma mark - Startup and reporting
+#pragma recto startup and reporting
 
 #include <stddef.h> /* For `size_t`… */
 #include <stdio.h> /* ...and `fprintf`, `FILE`, `fopen`, `fread`, 
@@ -419,60 +448,85 @@ struct Simulator { History history; Version version=101L;
 #include <unistd.h>
 #include <fcntl.h>
 
-int FileSystemItemExists(const char * path, off_t * bytes) { struct stat st; int y = 
- stat(path,&st); if (y == 0) { *bytes = st.st_size; return 1; } else { return 0; } 
-}
+int FileSystemItemExists(const char * u8path, __builtin_int_t * bytes) { struct stat st; 
+ int y=stat(u8path,&st); if (y==0) { *bytes = (__builtin_int_t)(st.st_size); return 1; } 
+ else { return 0; } }
 
 #define ⁺⁼ProcessCommandline(ARGV)                                              \
 auto process_commandline = ^(const char * argv[]) {                             \
   auto scan_option = ^(const char * arg) {                                      \
     switch (*arg) {                                                             \
-    case 'h': fprintf(stderr, "Usage: %s [-f <figures.table file>] [-g] "       \
+    case 'h': vfprint("Usage: ⬚ [-f <figures.table file>] [-g] "                \
       "<event file>\n", argv[0]); exit(1);                                      \
     case 'f': ++ca; if (ca) { open_figures_file(*ca); } else { exit(2); } return; \
     case 'g': interactive = true; return;                                       \
-    case 'v': fprintf(stderr, "%s version: %s\n", argv[0], "0x" STRINGIFY(SHA1GIT)); \
+    case 'v': vfprint("⬚s version: ⬚\n", argv[0], "0x" STRINGIFY(SHA1GIT));     \
       exit(3);                                                                  \
-    default: fprintf(stderr, "Unknown command-line argument\n"); exit(4); }     \
+    default: vfprint("Unknown command-line argument\n"); exit(4); }             \
   }; /* argv[argc] == NULL, so: */                                              \
   for (ca = argv + 1; *ca && (*ca)[0] == '-'; ++ca) scan_option(1 + *ca);       \
   if (!*ca) scan_option("h"); /* 'No args' ∧ 'ends with argument'. */           \
 }; process_commandline(ARGV) /* Implicits in lambda expression: `ca`, `interactive` and `SHA1GIT`. */
+
+int option₋machine₋interprets(int argc, const char8₋t ** argv)
+{ int i=0,y,figures₋filepath=0,char8₋t * token;
+again:
+   if (i>=argc) { goto unagain; }
+   token = *(argv + i);
+   if (figures₋filepath) { figures₋filepath=0; goto next; }
+   y = IsPrefixOrEqual((const char *)token, (const char *)"-h");
+   if (y == 0) { vfprint("Usage ⬚ [-f <figures.table file>] [-g] " 
+    "<event file>\n", argv[0]); exit(2); }
+   y = IsPrefixOrEqual((const char *)token, (const char *)"-f");
+   if (y == 0) { figures₋filepath=1; goto next; }
+   y = IsPrefixOrEqual((const char *)token, (const char *)"-g");
+   if (y == 0) { interactive = true; goto next; }
+   y = IsPrefixOrEqual((const char *)token, (const char *)"-v");
+   if (y == 0) { vfprint("⬚ version ⬚\n", argv[0], "0x" STRIGIFY(SHA1GIT)); goto next; }
+   y = IsPrefixOrEqual((const char *)token, (const char *)"-r"); /* rows to process. */
+   if (y == 0) { only₋until₋row=1; } { onlyuntil₋row=1; goto next; }
+   vfprint("Unknown command-line argument\n"); exit(5);
+next:
+   i+=1; goto again;
+ungain:
+   return 0;
+}
 
 int
 main(
   int argc, 
   const char * argv[]
 )
-{  bool 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 interactive=false; 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 char8_t * figures=NULL; 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 char8_t * events;
+{  bool 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 interactive=false; 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 char8₋t * figures=NULL; 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 char8_t * events;
     𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 const char **ca; 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 off_t figures₋utf8bytes;
+    typedef void (^Open)(const char *utf8path𝘖r𝙽𝚄𝙻𝙻);
 #define event_filenameOrNULL *ca
-    auto open₋figures₋file = ^(const char *utf8path𝘖r𝙽𝚄𝙻𝙻) {
+    Open open₋figures₋file = ^(const char *utf8path𝘖r𝙽𝚄𝙻𝙻) {
       /* expand ~ in e․𝘨 `~/myshoebox/myfigures.table`. */
       wordexp_t expansion₁; wordexp(utf8path𝘖r𝙽𝚄𝙻𝙻,&expansion₁,0); /* ⬷ enter 'prompt% man wordexp' for details. */
       const char * filename = expansion₁.we_wordv[0];
       off_t utf8bytes; if (!FileSystemItemExists(filename,&utf8bytes)) { exit(5); }
       int fd = open(filename,O_RDONLY);
-      if (fd == -1) { mfprint("Unable to open figures file\n"); exit(6); }
+      if (fd == -1) { vfprint("Unable to open figures file\n"); exit(6); }
       void * p = mmap(0, 1 + utf8bytes,PROT_READ,MAP_SHARED,fd,0);
       if (close(fd) == -1) { exit(7); }
       if (p == MAP_FAILED) { exit(8); }
-      figures = (char8_t *)p; *(figures + utf8bytes) = 0x04; figures₋utf8bytes=utf8bytes;
+      figures = (char8₋t *)p; *(figures + utf8bytes) = 0x04; figures₋utf8bytes=utf8bytes;
     }; /* ⬷ optional. */
     auto open₋rule₋file = ^(const char *utf8path𝘖r𝖭𝖴𝖫𝖫) { }; /* ⬷ optional as well. */
-    ⁺⁼ProcessCommandline(argv);
-    if (!event_filenameOrNULL) { mfprint("No event file given at your command line\n"); exit(9); }
+    option₋machine₋interprets(argv,(const char8₋t *)argv);
+    if (!event_filenameOrNULL) { vfprint("No event file given at your command line\n"); exit(9); }
     off_t utf8bytes; if (!FileSystemItemExists(event_filenameOrNULL,&utf8bytes)) { exit(10); }
     int fd = open(event_filenameOrNULL,O_RDONLY);
-    if (fd == -1) { mprintf("Unable to open event file '%s'\n", event_filenameOrNULL); exit(11); }
+    if (fd == -1) { vfprint("Unable to open event file '%s'\n", event_filenameOrNULL); exit(11); }
     void * p = mmap(0, 1 + utf8bytes, PROT_READ, MAP_SHARED, fd, 0);
     if (close(fd) == -1) { exit(12); }
     if (p == MAP_FAILED) { exit(13); }
-    events = (char8_t *)p; *(events + utf8bytes) = 0x04;
+    events = (char8₋t *)p; *(events + utf8bytes) = 0x04;
     𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 Simulator sim; /* …else profit&loss and balance sheets non-𝑎𝑐𝑐𝑖𝑑𝑒𝑛𝑡𝑙𝑦 ends up optional. */
     /* Parse open file */ 
     if (Utf8ToUnicode(events, 1 + __builtin_int_t(utf8bytes),
-      ^(__builtin_int_t tetras, char32_t * ucs, __builtin_int_t utf8bytes) { ParserContext₁ ctx; 
+      ^(__builtin_int_t tetras, char32̄_t * ucs, __builtin_int_t utf8bytes) { ParserContext₁ ctx; 
         Unicodes events { tetras, ucs };
         if (BsimParse(ctx,events)) { exit(15); }
         if (interactive) { sim.enterInteractiveMode(); }
@@ -482,7 +536,7 @@ main(
     
     if (figures) {
       if (Utf8ToUnicode(figures, 1 + __builtin_int_t(figures₋utf8bytes), 
-        ^(__builtin_int_t tetras, char32_t * ucs, __builtin_int_t utf8bytes) {
+        ^(__builtin_int_t tetras, char32̄_t * ucs, __builtin_int_t utf8bytes) {
           Unicodes program { tetras, ucs };
           Chronology::Instant bye₋ts;
           if (Rendertable(bye₋ts, sim.history, program)) { exit(18); }
@@ -490,11 +544,4 @@ main(
     }
     
     return 0;
-} /* ⬷ i․𝘦 simulate events and often output figures at a given point in time. */
-
-/* https://9fans.github.io/plan9port/man/man1/intro.html
-
-Reread sam, eqn, pic, fossil and the implementation in C++ turbine, Table.ypp, business.rul and --<UIQ.cpp>. */
-
-
-
+} /*  i․𝘦 simulate events and often output figures at a given point in time. */
