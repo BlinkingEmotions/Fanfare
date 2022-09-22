@@ -7,10 +7,9 @@ builtin typeset MISCELLANEOUS='-fblocks -fno-signed-char -fno-builtin -fno-forma
 builtin typeset CCARG_MAC="$INITIAL $GIT $MISCELLANEOUS $MACINTOSH"
 
 builtin typeset progname=$0
-# builtin typeset -a sku_keys         # array
-builtin typeset -a sku_sequence
+builtin typeset -a sku_sequence # array
 builtin typeset debugger
-builtin typeset -A components       # associative a․𝘬․a 'sources'.
+builtin typeset -A components # associative a․𝘬․a 'sources'.
 builtin typeset -A output
 
 # sku_keys are retros-compi, c-maskin, turbin, parent-kabinett, intel-hex, uql and friends.
@@ -18,7 +17,7 @@ builtin typeset -A output
 components=(
   'retros-compi' '􀐒 retros-compi.c'
   'c-maskin' '􀖆 ⒞-maskin.c'
-  'turbin' '􀖆 turbin.cpp'
+  'turbin-āttika' '􀖆 turbin.c'
   'parent-kabinett' '􀖆 parent-kabinett.c'
   'intel-hex' '🥽 Intelhex.cpp'
   'uql-gen' '🥽⋆UQL.cpp 🥽⋆UQL₂.cpp'
@@ -29,7 +28,7 @@ components=(
 output=(
   'retros-compi' 'run-link'
   'c-maskin' 'helixsh'
-  'turbin' 'turbin'
+  'turbin-āttika' 'turbin'
   'parent-kabinett' 'patent'
   'intel-hex' 'intelhex'
   'uql-gen' "question"
@@ -85,7 +84,7 @@ function compile_and_run()
 {
    for sku_key ($sku_sequence) {
      builtin typeset text="-o $output[$sku_key] ${CCARG_MAC}"
-     builtin command clang -fmodule-map-file=🚦.modules $text "$components[$sku_key]"
+     builtin command clang -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules $text "$components[$sku_key]"
      if [[ -n "$debugger" ]]; then
        builtin command xcrun lldb $output[$sku_key]
      fi
