@@ -1,6 +1,6 @@
-/*  turbin a․𝘬․a Plan-9 | modellers' traveller companion. (CORP. EDITION.) */
+/*  turbin-normal a․𝘬․a Plan-9 | modellers' traveller companion. (CORP. EDITION.) */
 
-import Twinbeam; /* ⬷ he is sitting in a box 𝘦․𝘨 T-FOR-D and De-la-v-all. */
+import Twinbeam; /*  he is sitting in a box 𝘦․𝘨 T-FOR-D and De-la-v-all. */
 
 /* ./retro-mac.sh turbin-āttika to compile. */
 
@@ -37,7 +37,7 @@ typedef struct {
    END₋OF₋TRANSMISSION, report, opt₋bold };
   typedef enum { initial, singleline₋comment, multiline₋comment, 
    quoted₋text } mode=initial;
-} ᵀAST; /* ⬷ a․𝘬․a 'table₋parser' and terminals-and-nonterminals․ */
+} ᵀAST; /*  a․𝘬․a 'table₋parser' and terminals-and-nonterminals․ */
 
 typedef struct {
   __builtin_int_t linenumber₋first=1,linenumber₋last=1, 
@@ -45,7 +45,7 @@ typedef struct {
   
   fifo order₋and₋memory; Structa symbol₋stack;
   
-} language₋context; /* ⬷ a․𝘬․a 'verificate₋parser' and token-i-sa-tio-n. */
+} language₋context; /*  a․𝘬․a 'verificate₋parser' and token-i-sa-tio-n. */
 
 Regularset languageᵀ,languageⱿ;
 
@@ -65,7 +65,7 @@ int context₋init(
    return 0;
 }
 
-inexorable int scan₋sequence₋of₋evidence₋and₋absorb( /* it. verificare */
+inexorable int scan₋sequence₋of₋evidence₋and₋absorb( /* it. verificare. */
   __builtin_int_t symbols, char32̄_t text[])
 {
    
@@ -270,7 +270,7 @@ inexorable int Rendertable(Chronology::Instant when, History& history, Unicodes 
 again:
      if (beam >= program.tetras) { goto unagain; }
      c = *(beam + program.unicodes);
-     if (c == 0x0000) { goto unagain; } /* ⬷ c𝘧․ END₋OF₋TRANSMISSION. */
+     if (c == 0x0000) { goto unagain; } /*  c𝘧․ END₋OF₋TRANSMISSION. */
      switch (state) {
      case found::ed₋start: if (counting₋newline(c)) { found₋newline(); }
        else if (whitespace(c)) { /* do nothing */ }
@@ -306,7 +306,7 @@ again:
      }
 unagain:
      return ᵀAST::END₋OF₋TRANSMISSION;
-   }; /* ⬷ a․𝘬․a 'crypto₋lex' (req. 256-bit leafs to symbol tree). Reads 'program' 
+   }; /*  a․𝘬․a 'crypto₋lex' (req. 256-bit leafs to symbol tree). Reads 'program' 
  and refreshes 'beam'. Requires 'still-token(char32_t)' and 'ws ends token'. Often 
  expressed as ''. */
    
@@ -405,33 +405,33 @@ unagain:
    }
    /* parser finished */
    return 0;
-} /* ⬷ a․𝘬․a 'Parse-and-render-tabular'. */
+} /*  a․𝘬․a 'Parse-and-render-tabular'. */
 
-#pragma - event parser front-end
+#pragma recto event parser front-end
 
 struct AstNode { };
 struct Expression : public AstNode { };
 struct Statement : public AstNode { };
-struct Statementsequence { }; /* ⬷ a․𝘬․a 'timestamped₋Statement₋sequence'. */
-struct Sequences { }; /* ⬷ a․𝘬․a 'timestamped₋statement₋Sequncences'. */
-/* ⬷ 𝘤𝘧․ anglo-saxian 'modelling', scandinavian 'nogsamhet' and 'likely-surely'. */
+struct Statementsequence { }; /*  a․𝘬․a 'timestamped₋Statement₋sequence'. */
+struct Sequences { }; /*  a․𝘬․a 'timestamped₋statement₋Sequncences'. */
+/*  𝘤𝘧․ anglo-saxian 'modelling', scandinavian 'nogsamhet' and 'likely-surely'. */
 
 struct ParserContext₁ { Sequences * root; };
 
 inexorable int BsimParse(ParserContext₁& ctx, Unicodes events) { return 0; }
-/* ⬷ a․𝘬․a scandinavian 'torr-sim'. */
+/*  a․𝘬․a scandinavian 'torr-sim'. */
 
-#include "ⓔ-Frontend.cxx" /* ⬷ either interval, possibly distribution function. */
+#include "ⓔ-Frontend.cxx" /*  either interval, possibly distribution function. */
 
-#pragma - Simulator
+#pragma recto simulator
 
-struct Simulator { History history; Version version=101L; 
-  Simulator() : history(version) { }
-  void enterInteractiveMode() { }
-  int simulate(Sequences * s) { return 0; }
-};
+struct Simulator { History history; Version version=101L; };
 
-#include "ⓔ-Simulator.cxx" /* ⬷ variance and sums of normally distributed variables. */
+void EnterInteractiveMode(struct Simulator * S) { }
+
+int Simulate(Sequences * s, struct Simulator * S) { return 0; }
+
+#include "ⓔ-Simulator.cxx" /*  variance and sums of normally distributed variables. */
 
 #pragma recto command line
 
@@ -441,106 +441,135 @@ struct Simulator { History history; Version version=101L;
 #include <stdio.h> /* ...and `fprintf`, `FILE`, `fopen`, `fread`, 
  `fseek`, `fclose`, `SEEK_SET`, `stdout` and `stderr`… */
 #include <stdlib.h> /* …together with `malloc` and `exit`. */
-#include <wordexp.h> /* and of course: bootloader path ~ expansion. */
+#include <wordexp.h> /* and of course: figures file path ~ expansion. */
 #include <sys/stat.h>
 #include <sys/mman.h>
 #include <unistd.h>
 #include <fcntl.h>
 
-int FileSystemItemExists(const char * u8path, __builtin_int_t * bytes) { struct stat st; 
- int y=stat(u8path,&st); if (y==0) { *bytes = (__builtin_int_t)(st.st_size); return 1; } 
- else { return 0; } }
+char8₋t * figures₋material₋and₋path=ΨΛΩ;  /*  figures file and implicit DISPLAY TABLE at end-of-file. */
 
-#define ⁺⁼ProcessCommandline(ARGV)                                              \
-auto process_commandline = ^(const char * argv[]) {                             \
-  auto scan_option = ^(const char * arg) {                                      \
-    switch (*arg) {                                                             \
-    case 'h': vfprint("Usage: ⬚ [-f <figures.table file>] [-g] "                \
-      "<event file>\n", argv[0]); exit(1);                                      \
-    case 'f': ++ca; if (ca) { open_figures_file(*ca); } else { exit(2); } return; \
-    case 'g': interactive = true; return;                                       \
-    case 'v': vfprint("⬚s version: ⬚\n", argv[0], "0x" STRINGIFY(SHA1GIT));     \
-      exit(3);                                                                  \
-    default: vfprint("Unknown command-line argument\n"); exit(4); }             \
-  }; /* argv[argc] == NULL, so: */                                              \
-  for (ca = argv + 1; *ca && (*ca)[0] == '-'; ++ca) scan_option(1 + *ca);       \
-  if (!*ca) scan_option("h"); /* 'No args' ∧ 'ends with argument'. */           \
-}; process_commandline(ARGV) /* Implicits in lambda expression: `ca`, `interactive` and `SHA1GIT`. */
+char8₋t * rules₋material₋and₋path=ΨΛΩ; /*  rules file when not included in upper half of event file. */
+
+int interactive=0;  /*  end with bye when file is read and report is written. */
+
+int read₋until₋row=0;  /*  parse-interpret only start of file. */
+
+struct collection filepaths₋sequence; /* with 'char8-t *'. */
+
+unicode₋shatter figures, rules, events;  /*  unicodes with program text. */
+
+Simulator sim; /* other-case profit & loss and balance sheets non-𝑎𝑐𝑐𝑖𝑑𝑒𝑛𝑡𝑙𝑦 ends up optional. */
+
+int FileSystemItemExists(const char * u8path, __builtin_int_t * bytes)
+{ struct stat st; int y = stat(u8path,&st);
+   if (y == 0) { *bytes = (__builtin_int_t)(st.st_size); }
+   return y == 0 ? 1 : 0;
+}
+
+void append₋reference(void * pointer)
+{
+   if (copy₋append₋items(1,&pointer,&filepaths₋sequence,Heap₋alloc)) { return; }
+}
 
 int option₋machine₋interprets(int argc, const char8₋t ** argv)
-{ int i=0,y,figures₋filepath=0,char8₋t * token;
+{ int i=0,y,figures₋filepath=0,rules₋filepath=0,only₋until₋row=0; char8₋t * token;
 again:
    if (i>=argc) { goto unagain; }
    token = *(argv + i);
-   if (figures₋filepath) { figures₋filepath=0; goto next; }
+   if (figures₋filepath) { figures₋material₋and₋path=token; figures₋filepath=0; goto next; }
+   if (rules₋filepath) { rules₋material₋and₋path=token; rules₋filepath=0; goto next; }
+   if (only₋until₋row) { read₋until₋row=atoi(token); only₋until₋row=0; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-h");
    if (y == 0) { vfprint("Usage ⬚ [-f <figures.table file>] [-g] " 
     "<event file>\n", argv[0]); exit(2); }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-f");
    if (y == 0) { figures₋filepath=1; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-g");
-   if (y == 0) { interactive = true; goto next; }
+   if (y == 0) { interactive=1; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-v");
-   if (y == 0) { vfprint("⬚ version ⬚\n", argv[0], "0x" STRIGIFY(SHA1GIT)); goto next; }
+   if (y == 0) { vfprint("⬚ version ⬚\n", argv[0], "0x" QUOTE(SHA1GIT)); goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-r"); /* rows to process. */
-   if (y == 0) { only₋until₋row=1; } { onlyuntil₋row=1; goto next; }
-   vfprint("Unknown command-line argument\n"); exit(5);
+   if (y == 0) { only₋until₋row=1; goto next; }
+   y = IsPrefixOrEqual((const char *)token, (const char *)"-");
+   if (y > 0) { vfprint("Unknown command-line argument\n"); exit(5); }
+   append₋reference(token);
 next:
    i+=1; goto again;
 ungain:
    return 0;
 }
 
+void open₋rule₋file()
+{
+   const char * u8path𝘖r𝙽𝚄𝙻𝙻 = figures₋material₋and₋path;
+} /*  optional and upper half of event file. */
+
+void open₋figures₋file()
+{
+   /* expand ~ in e․𝘨 `~/myshoebox/myfigures.table`. */
+   const char * u8path𝘖r𝙽𝚄𝙻𝙻 = rules₋material₋and₋path;
+   wordexp_t expansion₁; wordexp(u8path𝘖r𝙽𝚄𝙻𝙻,&expansion₁,0); /*  enter 'prompt% man wordexp' for details. */
+   const char * filename = expansion₁.we_wordv[0];
+   __builtin_int_t u8bytes; if (!FileSystemItemExists(filename,&u8bytes)) { exit(5); }
+   int fd = open(filename,O_RDONLY);
+   if (fd == -1) { vfprint("Unable to open figures file\n"); exit(6); }
+   void * p = mmap(0, 1 + u8bytes,PROT_READ,MAP_SHARED,fd,0);
+   if (close(fd) == -1) { exit(7); }
+   if (p == MAP_FAILED) { exit(8); }
+   figures = (char8₋t *)p; *(figures + u8bytes) = 0x04; figures₋u8bytes=u8bytes;
+} /*  optional. */
+
 int
 main(
   int argc, 
   const char * argv[]
 )
-{  bool 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 interactive=false; 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 char8₋t * figures=NULL; 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 char8_t * events;
-    𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 const char **ca; 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 off_t figures₋utf8bytes;
-    typedef void (^Open)(const char *utf8path𝘖r𝙽𝚄𝙻𝙻);
-#define event_filenameOrNULL *ca
-    Open open₋figures₋file = ^(const char *utf8path𝘖r𝙽𝚄𝙻𝙻) {
-      /* expand ~ in e․𝘨 `~/myshoebox/myfigures.table`. */
-      wordexp_t expansion₁; wordexp(utf8path𝘖r𝙽𝚄𝙻𝙻,&expansion₁,0); /* ⬷ enter 'prompt% man wordexp' for details. */
-      const char * filename = expansion₁.we_wordv[0];
-      off_t utf8bytes; if (!FileSystemItemExists(filename,&utf8bytes)) { exit(5); }
-      int fd = open(filename,O_RDONLY);
-      if (fd == -1) { vfprint("Unable to open figures file\n"); exit(6); }
-      void * p = mmap(0, 1 + utf8bytes,PROT_READ,MAP_SHARED,fd,0);
-      if (close(fd) == -1) { exit(7); }
-      if (p == MAP_FAILED) { exit(8); }
-      figures = (char8₋t *)p; *(figures + utf8bytes) = 0x04; figures₋utf8bytes=utf8bytes;
-    }; /* ⬷ optional. */
-    auto open₋rule₋file = ^(const char *utf8path𝘖r𝖭𝖴𝖫𝖫) { }; /* ⬷ optional as well. */
+{   char8₋t * figures=ΨΛΩ; __builtin_int_t figures₋u8bytes;
+    char8₋t * rules=ΨΛΩ; __builtin_int_t rules₋u8bytes;
+    char8₋t * events=ΨΛΩ; __builtin_int_t events₋u8bytes;
+    if (collection₋init(sizeof(char8₋t *),4096,&filepaths₋sequence)) { exit(1); }
     option₋machine₋interprets(argv,(const char8₋t *)argv);
-    if (!event_filenameOrNULL) { vfprint("No event file given at your command line\n"); exit(9); }
-    off_t utf8bytes; if (!FileSystemItemExists(event_filenameOrNULL,&utf8bytes)) { exit(10); }
-    int fd = open(event_filenameOrNULL,O_RDONLY);
-    if (fd == -1) { vfprint("Unable to open event file '%s'\n", event_filenameOrNULL); exit(11); }
-    void * p = mmap(0, 1 + utf8bytes, PROT_READ, MAP_SHARED, fd, 0);
+    if (figures₋material₋and₋path) { open_figures_file(); }
+    if (rules₋material₋and₋path) { open_rules_file(); }
+    if (collection₋count(&filepaths₋sequence) == 0) {
+      vfprint("No event file given at your command line.\n"); exit(9);
+    }
+    if (rules₋material₋and₋path) {
+      rules = (unicode₋shatter)Heap₋alloc(rules₋u8bytes);
+      char32̄_t ucs[rules₋u8bytes]; __builtin_int_t tetras;
+      if (Utf8ToUnicode(1+rules₋u8bytes,rules,ucs,&tetras)) { exit(); }
+    } __builtin_int_t idx=0; void * p; int fd;
+    
+again:
+    
+    events = (char8₋t *)collection₋relative(idx,&filepaths₋sequence);
+    if (!FileSystemItemExists(events,&events₋u8bytes)) { exit(10); }
+    fd = open((const char *)events,O_RDONLY);
+    if (fd == -1) { vfprint("Unable to open event file '⬚'.\n", events); exit(11); }
+    p = mmap(0, 1 + events₋u8bytes, PROT_READ, MAP_SHARED, fd, 0);
     if (close(fd) == -1) { exit(12); }
     if (p == MAP_FAILED) { exit(13); }
-    events = (char8₋t *)p; *(events + utf8bytes) = 0x04;
-    𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 Simulator sim; /* …else profit&loss and balance sheets non-𝑎𝑐𝑐𝑖𝑑𝑒𝑛𝑡𝑙𝑦 ends up optional. */
-    /* Parse open file */ 
-    if (Utf8ToUnicode(events, 1 + __builtin_int_t(utf8bytes),
-      ^(__builtin_int_t tetras, char32̄_t * ucs, __builtin_int_t utf8bytes) { ParserContext₁ ctx; 
-        Unicodes events { tetras, ucs };
-        if (BsimParse(ctx,events)) { exit(15); }
-        if (interactive) { sim.enterInteractiveMode(); }
-        if (sim.simulate(ctx.root)) { exit(16); }
-      }
-    )) { exit(14); }
+    events = (char8₋t *)p; *(events + events₋u8bytes) = 0x04;
+    char32̄_t ucs[events₋u8bytes]; __builtin_int_t tetras;
+    if (Utf8ToUnicode(1+events₋u8bytes,events,ucs,&tetras)) { exit(14); }
+    ParserContext₁ ctx; Unicodes events { tetras, ucs };
+    if (BsimParse(ctx,events)) { exit(15); }
+    if (interactive) { EnterInteractiveMode(&sim); }
+    if (Simulate(ctx.root,&sim)) { exit(16); }
+    idx+=1; goto again;
     
-    if (figures) {
-      if (Utf8ToUnicode(figures, 1 + __builtin_int_t(figures₋utf8bytes), 
-        ^(__builtin_int_t tetras, char32̄_t * ucs, __builtin_int_t utf8bytes) {
-          Unicodes program { tetras, ucs };
-          Chronology::Instant bye₋ts;
-          if (Rendertable(bye₋ts, sim.history, program)) { exit(18); }
-        })) { exit(17); }
+unagain:
+    
+    if (figures₋material₋and₋path) {
+      char32̄_t ucs[figures₋u8bytes]; __builtin_int_t tetras;
+      figures = (unicode₋shatter)Heap₋alloc(figures₋u8bytes);
+      tetras = figures₋u8bytes;
+      if (Utf8ToUnicode(1+figures₋u8bytes,figures₋material₋and₋path,figures,&tetras)) { exit(17); }
+      Unicodes program { tetras, ucs }; chronology₋instant bye₋ts;
+      if (Rendertable(bye₋ts, sim.history, program)) { exit(18); }
     }
     
     return 0;
-} /*  i․𝘦 simulate events and often output figures at a given point in time. */
+} /*  simulate events and often output figures at a given point in time. */
+
