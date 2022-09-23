@@ -509,13 +509,14 @@ unicode₋shatter open₋and₋decode(char8₋t * textfile, int expand₋tilde, 
 {
    const char * u8path𝘖r𝙽𝚄𝙻𝙻 = (const char *)textfile;
    if (expand₋tilde) { wordexp_t expansion₂; 
-      wordexp(u8path𝘖r𝙽𝚄𝙻𝙻,&expansion₂,0); /*  enter 'prompt% man wordexp' for details. */
-      u8path𝘖r𝙽𝚄𝙻𝙻 = expansion₂.we_wordv[0];
+     if (wordexp(u8path𝘖r𝙽𝚄𝙻𝙻,&expansion₂,0)) { *err=1; return ΨΛΩ; } /*  enter 
+      'prompt% man wordexp' for details. */
+     u8path𝘖r𝙽𝚄𝙻𝙻 = expansion₂.we_wordv[0];
    }
    __builtin_int_t u8bytes,symbols;
    if (!FileSystemItemOpenable(u8path𝘖r𝙽𝚄𝙻𝙻,&u8bytes)) { *err=2; return ΨΛΩ; }
    int fd = open(u8path𝘖r𝙽𝚄𝙻𝙻,O_RDONLY);
-   if (fd == -1) { vfprint("Unable to open figures file\n"); *err=3; return ΨΛΩ; }
+   if (fd == -1) { *err=3; return ΨΛΩ; }
    /* void * p = mmap(0, 1 + u8bytes,PROT_READ,MAP_SHARED,fd,0);
     the abstraction 'mmap' is too descriptive. */
    char8₋t * material = (char8₋t *)Heap₋alloc(u8bytes + 1);
@@ -533,11 +534,14 @@ unicode₋shatter open₋and₋decode(char8₋t * textfile, int expand₋tilde, 
 void open₋rule₋file()
 { int err;
    rules = open₋and₋decode(rules₋material₋and₋path,false,&err);
+   Argᴾ one = ﹟s8(rules₋material₋and₋path);
    switch (err) {
-   case 1: break;
-   case 2: vfprint("No rule file named '⬚'\n", ﹟s8(rules₋material₋and₋path)); break;
-   case 3: vfprint("Unable to open rule file named '⬚'\n", ﹟s8(rules₋material₋and₋path)); break;
-   case 4: break;
+   case 1: vfprint("Expansion rejected on '⬚'\n", one); break;
+   case 2: vfprint("No rule file named '⬚'\n", one); break;
+   case 3: vfprint("Unable to open rule file named '⬚'\n", one); break;
+   case 5: vfprint("Partially read rule file '⬚'.\n", one); break;
+   case 7: vfprint("Lingering relat from '⬚'.\n", one); break;
+   case 8: vfprint("Incomprehensible encoding in '⬚'.\n", one); break;
    }
    if (rules == ΨΛΩ) { exit(5); }
 } /*  optional and upper half of event file. */
@@ -546,11 +550,14 @@ void open₋figures₋file()
 { int err;
    /* expand ~ in e․𝘨 `~/myshoebox/myfigures.table`. */
    figures = open₋and₋decode(figures₋material₋and₋path,true,&err);
+   Argᴾ one = ﹟s8(figures₋material₋and₋path);
    switch (err) {
-   case 1: break;
-   case 2: break;
-   case 3: break;
-   case 4: break;
+   case 1: vfprint("Expansion rejected on '⬚'\n", one); break;
+   case 2: vfprint("No rule file named '⬚'\n", one); break;
+   case 3: vfprint("Unable to open rule file named '⬚'\n", one); break;
+   case 5: vfprint("Partially read rule file '⬚'.\n", one); break;
+   case 7: vfprint("Lingering relat from '⬚'.\n", one); break;
+   case 8: vfprint("Incomprehensible encoding in '⬚'.\n", one); break;
    }
    if (figures == ΨΛΩ) { exit(7); }
 } /*  optional. */
