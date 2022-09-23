@@ -500,24 +500,37 @@ ungain:
    return 0;
 }
 
+unicode₋shatter open₋and₋decode(char8₋t * filename)
+{
+   const char * u8path𝘖r𝙽𝚄𝙻𝙻 = (const char *)filename;
+   wordexp_t expansion₂; wordexp(u8path𝘖r𝙽𝚄𝙻𝙻,&expansion₂,0); /*  enter 'prompt% man wordexp' for details. */
+   const char * filename = expansion₂.we_wordv[0]; __builtin_int_t u8bytes;
+   if (!FileSystemItemExists(filename,&u8bytes)) { exit(5); }
+   int fd = open(filename,O_RDONLY);
+   if (fd == -1) { vfprint("Unable to open figures file\n"); exit(6); }
+   /* void * p = mmap(0, 1 + u8bytes,PROT_READ,MAP_SHARED,fd,0);
+    the abstraction 'mmap' is too descriptive. */
+   char8₋t * material = (char8₋t *)Heap₋alloc(u8bytes);
+   ssize_t bytesread = read(fd,material,u8bytes);
+   if (close(fd) == -1) { exit(7); } /* det kan ju /vara-lõst/ pā olika sātt och 'det har vi aldrig sagt'. */
+   if (p == MAP_FAILED) { exit(8); }
+   figures = (char8₋t *)p; *(figures + u8bytes) = 0x04; figures₋u8bytes=u8bytes;
+   unicode₋shatter text = (unicode₋shatter)Heap₋alloc(rules₋u8bytes);
+   char32̄_t ucs[rules₋u8bytes]; __builtin_int_t tetras;
+   if (Utf8ToUnicode(1+rules₋u8bytes,rules,ucs,&tetras)) { exit(9); }
+}
+
 void open₋rule₋file()
 {
-   const char * u8path𝘖r𝙽𝚄𝙻𝙻 = figures₋material₋and₋path;
+   rules = open₋and₋decode(rules₋material₋and₋path);
+   if (rules == ΨΛΩ) { exit(5); }
 } /*  optional and upper half of event file. */
 
 void open₋figures₋file()
 {
    /* expand ~ in e․𝘨 `~/myshoebox/myfigures.table`. */
-   const char * u8path𝘖r𝙽𝚄𝙻𝙻 = rules₋material₋and₋path;
-   wordexp_t expansion₁; wordexp(u8path𝘖r𝙽𝚄𝙻𝙻,&expansion₁,0); /*  enter 'prompt% man wordexp' for details. */
-   const char * filename = expansion₁.we_wordv[0];
-   __builtin_int_t u8bytes; if (!FileSystemItemExists(filename,&u8bytes)) { exit(5); }
-   int fd = open(filename,O_RDONLY);
-   if (fd == -1) { vfprint("Unable to open figures file\n"); exit(6); }
-   void * p = mmap(0, 1 + u8bytes,PROT_READ,MAP_SHARED,fd,0);
-   if (close(fd) == -1) { exit(7); }
-   if (p == MAP_FAILED) { exit(8); }
-   figures = (char8₋t *)p; *(figures + u8bytes) = 0x04; figures₋u8bytes=u8bytes;
+   figures = open₋and₋decode(figures₋material₋and₋path);
+   if (figures == ΨΛΩ) { exit(5); }
 } /*  optional. */
 
 int
@@ -572,4 +585,3 @@ unagain:
     
     return 0;
 } /*  simulate events and often output figures at a given point in time. */
-
