@@ -5,7 +5,7 @@ import Twinbeam; /*  he is sitting in a box 𝘦․𝘨 T-FOR-D and De-la-v-all.
 /* ./retro-mac.sh reconnaissance-turbin to compile. */
 
 typedef int64_t     Integer;
-typedef Sequenta    Real; /* ⬷ here we attempt base two and ten hardware 
+typedef Sequenta    Real; /*  here we attempt base two and ten hardware 
  Ieee754 and software arithmetics. */
 
 enum /* Common₋language */ {
@@ -13,20 +13,20 @@ enum /* Common₋language */ {
   DIV_SYMBOL
 };
 
-enum /* Streck₋language */ {
+enum /* streck₋language */ {
   REGULAR=100, MONETARY, FUNCTION_KEYWORD, INSTANT, 
   BOOKKEEP_KEYWORD, DEBET_KEYWORD, CREDIT_KEYWORD, COMMENT_KEYWORD, 
-  PRINT_KEYWORD, BREAK_KEYWORD, SET_KEYWORD, VAR_KEYWORD, RETURN_KEYWORD, 
+  VAR_KEYWORD, PRINT_KEYWORD, BREAK_KEYWORD, SET_KEYWORD, RETURN_KEYWORD, 
   DO_KEYWORD, IF_KEYWORD, THEN_KEYWORD, ELSE_KEYWORD, END_KEYWORD, 
   BEFORE_KEYWORD, AND_SYMBOLS, OR_SYMBOLS, NOT_SYMBOL, XOR_SYMBOL, 
   ENTITY_KEYWORD, ACCOUNT_KEYWORD, TABLE_KEYWORD, DISPLAY_KEYWORD, 
   FROM_KEYWORD, CREATE_KEYWORD, NAMED_KEYWORD, TRADING_KEYWORD, IN_KEYWORD, 
   RESIDENT_KEYWORD, WITH_KEYWORD, IS_KEYWORD, TO_KEYWORD, SCHEDULE_KEYWORD, 
   STARTING_KEYWORD, OCCURING_KEYWORD, ENDING_KEYWORD, DROP₋SCHEDULE_KEYWORD, 
-  EXCHANGE_KEYWORD, RATE_KEYWORD, CURRENCY_KEYWORD, L₋BRACKET, R₋BRACKET
+  EXCHANGE_KEYWORD, RATE_KEYWORD, CURRENCY_KEYWORD, LEFT₋BRACKET, RIGHT₋BRACKET
 };
 
-enum /* Table₋language */ {
+enum /* table₋language */ {
   POP_KEYWORD=1000, SWAP_KEYWORD, DUP_KEYWORD, 
   REPORT_KEYWORD, BOLD_KEYWORD, report, opt₋bold
 };
@@ -71,15 +71,43 @@ void Diagnos(int type, int bye, const char * sevenbit₋utf8, ...)
 
 #pragma recto event parser front-end
 
-struct AstNode { };
-struct Expression { struct AstNode ast; };
-struct Statement { struct AstNode ast; };
-struct Stmtsequence { }; /*  a․𝘬․a 'timestamped₋Statement₋sequence'. */
+struct Expression *;
+typedef struct { Expression *left,*right; } logical₋or;
+typedef struct { Expression *left,*right; } logical₋and;
+typedef struct { Expression * actu; } logical₋not;
+typedef struct { struct Unicodes word; __builtin_int_t u8offset; } token;
+union Proposionals {
+  logical₋or or;
+  logical₋and and;
+  logical₋not not;
+  token regular;
+};
+
+typedef struct { Expression *left,*right; } arithmetic₋add;
+typedef struct { Expression *left,*right; } arithmetic₋sub;
+typedef struct { Expression *left,*right; } arithmetic₋mul;
+/* typedef struct { Expression *actu; } arithmetic₋rec; */
+typedef struct { Expression *left,*right; } arithmetic₋div;
+typedef struct { Expression *left,*right; } arithmetic₋neg;
+typedef struct { uint64_t bits; } 🅩₋literal;
+union Arithmetic {
+  arithmetic₋add add;
+  arithmetic₋sub sub;
+  arithmetic₋mul mul;
+  arithmetic₋div div;
+  arithmetic₋neg neg;
+  🅩₋literal constant;
+};
+struct Expression { union Proposionals e; __builtin_int_t kind; };
+typedef struct { Expression *condition; Statement *then, *else₋condition; } programming₋if;
+typedef struct { Expression * summar; } programming₋return;
+struct Statement {
+  programming₋if if;
+  programming₋return return;
+};
+struct statement₋sequence { }; /*  a․𝘬․a 'timestamped₋Statement₋sequence'. */
 struct Sequences { }; /*  a․𝘬․a 'timestamped₋statement₋Sequncences'. */
 /*  𝘤𝘧․ anglo-saxian 'modelling', scandinavian 'nogsamhet' and 'likely-surely'. */
-
-/* ╳╳ northern 'således' tran-sact-ions and veri-fi-c-at-es ╳╳ */
-/* ╳╳ computation two tables: 'annual return' and 'profit and loss' ╳╳ */
 
 typedef struct {
   
@@ -90,6 +118,8 @@ typedef struct {
 } ᵀAST; /*  a․𝘬․a 'table₋parser' and terminals-and-nonterminals․ */
 
 Regularset languageᵀ,languageᵸ;
+
+#pragma recto northern 'således' tran-sact-ions and veri-fi-c-at-es
 
 struct ParserContext₁ { Sequences * root; };
 
@@ -107,6 +137,8 @@ extern void EnterInteractiveMode(Simulator * S);
 extern int Simulate(Sequences * s, Simulator * S);
 
 #include "ⓔ-Simulator.cxx" /*  variance and sums of normally distributed variables. */
+
+#pragma recto computation two tables 'annual return' and 'profit and loss'
 
 extern int Rendertable(chronology₋instant when, History * history, Unicodes computation₋program);
 
