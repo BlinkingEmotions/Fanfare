@@ -17,7 +17,7 @@ builtin typeset -A output
 components=(
   'retros-compi' '􀐒 retros-compi.c'
   'c-maskin' '􀖆 ⒞-maskin.c'
-  'turbin-āttika' '􀖆 turbin.c'
+  'reconnaissance-turbin' '􀖆 turbin-normal.c'
   'parent-kabinett' '􀖆 parent-kabinett.c'
   'intel-hex' '🥽 Intelhex.cpp'
   'uql-gen' '🥽⋆UQL.cpp 🥽⋆UQL₂.cpp'
@@ -28,7 +28,7 @@ components=(
 output=(
   'retros-compi' 'run-link'
   'c-maskin' 'helixsh'
-  'turbin-āttika' 'turbin'
+  'reconnaissance-turbin' 'turbin'
   'parent-kabinett' 'patent'
   'intel-hex' 'intelhex'
   'uql-gen' "question"
