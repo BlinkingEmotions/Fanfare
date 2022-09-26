@@ -122,7 +122,6 @@ extern int Rendertable(chronology₋instant when, History * history, Unicodes co
 #include <stdlib.h> /* …together with `malloc` and `exit`. */
 #include <wordexp.h> /* and of course: figures file path ~ expansion. */
 #include <sys/stat.h>
-#include <sys/mman.h>
 #include <unistd.h>
 #include <fcntl.h>
 
