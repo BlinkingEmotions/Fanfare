@@ -134,29 +134,31 @@ union single₋statement {
 struct Statement { union single₋statement stmt; __builtin_int_t kind; 
  struct location there; };
 
-struct Sequence { chronology₋instant ts; struct collection /* Statement * */ statements; };
+struct Sequence { chronology₋instant ts; Casette /* Statement * */ statements; };
 
-struct Sequences { struct collection /* Sequence * */ sequences; };
+struct Sequences { Casette /* Sequence * */ sequences; };
 
 #pragma recto northern 'således' tran-sact-ions and veri-fi-c-at-es
 
 /* a․𝘬․a bokföringssed, custom and recollect. 𝘤𝘧․ anglo-saxian 'modelling', scandinavian 
  'nogsamhet' and 'likely-surely'. And a․𝘬․a 'table₋parser' and terminals-and-nonterminals․ */
 
-struct ParserContext₁ { struct Sequences * root; };
+struct ParserContext₁ { struct Sequences * root; chronology₋instant last; };
 
-extern int BsimParse(struct ParserContext₁ * ctx, struct Unicodes events₋program);
+extern int BsimParse(struct language₋context * ctxt, struct Unicodes events₋program);
 
 #include "ⓔ-Frontend.cxx" /* either interval, possibly distribution function. */
 
 #pragma recto simulator
 
-fostrat₋defi Simulator { History history; Version version; } Simulator;
+/* #include <Additions/History.h> */ typedef struct History { } History; 
 
-extern int Zebra(int count, chronology₋instant * toggles, double * out);
-/*  sometime uniform and normal not same time. */
+fostrat₋defi Simulator { History history; version₋ts revision; } Simulator;
+
 extern void EnterInteractiveMode(Simulator * 🅢);
 extern int Simulate(struct Sequences * 🆂, Simulator * 🅢);
+/* extern int Zebra(int count, chronology₋instant * toggles, double * out);
+  sometime uniform and normal not same time. */
 
 #include "ⓔ-Simulator.cxx" /* variance and sums of normally distributed variables. */
 
@@ -188,9 +190,11 @@ int interactive=0;  /*  end with bye when file is read and report is written. */
 
 int read₋until₋row=0;  /*  parse-interpret only start of file. */
 
-struct collection filepaths₋sequence; /* with 'char8-t *'. */
+Casette filepaths₋sequence; /* with 'char8-t *' pointing on the .event files from command-line. */
 
 unicode₋shatter figures, rules, events;  /*  unicodes with program text. */
+
+struct language₋context streck₋ctxt;
 
 Simulator sim; /* other-case profit & loss and balance sheets non-𝑎𝑐𝑐𝑖𝑑𝑒𝑛𝑡𝑙𝑦 ends up optional. */
 
@@ -295,7 +299,8 @@ main(
   int argc, 
   const char * argv[]
 )
-{
+{ struct ParserContext₁ machine₋ctxt;
+    error₋panel.diagnosis₋count = 0;
     if (collection₋init(sizeof(char8₋t *),4096,&filepaths₋sequence)) { exit(1); }
     option₋machine₋interprets(argc,(const char8₋t **)argv);
     if (figures₋material₋and₋path) { branch₋figures₋file(); } /*  optional. */
@@ -303,26 +308,29 @@ main(
     if (collection₋count(&filepaths₋sequence) == 0)
     {
       vfprint("No event file given at command line.\n"); exit(2);
-    } __builtin_int_t idx=0,fd,symbols; char8₋t * ref; int err;
+    } __builtin_int_t idx=0,fd,symbols; char8₋t * file₋ref; int err;
     
 again:
     
-    ref = (char8₋t *)collection₋relative(idx,&filepaths₋sequence);
-    events = open₋and₋decode(ref,true,&err);
+    if (idx >= argc) { goto unagain; }
+    file₋ref = (char8₋t *)collection₋relative(idx,&filepaths₋sequence);
+    events = open₋and₋decode(file₋ref,true,&err);
     symbols = Heap₋object₋size(events);
-    struct ParserContext₁ ctx; struct Unicodes events = { symbols, events };
-    if (BsimParse(&ctx,events)) { exit(10); }
-    if (interactive) { EnterInteractiveMode(&sim); }
-    if (Simulate(ctx.root,&sim)) { exit(12); }
-    idx+=1; goto again;
+    struct Unicodes program = { symbols, events };
+    if (Init₋context(file₋ref,&streck₋ctxt)) { exit(10); }
+    if (BsimParse(&streck₋ctxt,program)) { exit(10); }
+    Fallow(events); idx+=1; goto again;
     
 unagain:
+    
+    if (interactive) { EnterInteractiveMode(&sim); }
+    if (Simulate(machine₋ctxt.root,&sim)) { exit(12); }
     
     if (figures₋material₋and₋path)
     { chronology₋instant bye₋ts; /* e.g 'rendered 2022-09-23 17:05'. */
       symbols = Heap₋object₋size(figures)/4;
       struct Unicodes program = { symbols, figures };
-      if (Rendertable(bye₋ts,sim.history,program)) { exit(13); }
+      if (Rendertable(bye₋ts,&sim.history,program)) { exit(13); }
     }
     
     return 0;
