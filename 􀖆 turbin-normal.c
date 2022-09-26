@@ -229,7 +229,7 @@ again:
    append₋reference(token);
 next:
    i+=1; goto again;
-ungain:
+unagain:
    return 0;
 }
 
@@ -255,7 +255,7 @@ unicode₋shatter ᐝ open₋and₋decode(char8₋t * textfile, int expand₋til
    /* if (p == MAP_FAILED) { exit(8); } */
    *(material + u8bytes) = 0x04;
    unicode₋shatter text = (unicode₋shatter)Heap₋alloc(4*(u8bytes + 1));
-   if (Utf8ToUnicode(1+rules₋u8bytes,rules,text,&symbols)) { *err=8; return ΨΛΩ; }
+   if (Utf8ToUnicode(1+u8bytes,material,text,&symbols)) { *err=8; return ΨΛΩ; }
    return text;
 }
 
@@ -297,13 +297,13 @@ main(
 )
 {
     if (collection₋init(sizeof(char8₋t *),4096,&filepaths₋sequence)) { exit(1); }
-    option₋machine₋interprets(argv,(const char8₋t *)argv);
+    option₋machine₋interprets(argc,(const char8₋t **)argv);
     if (figures₋material₋and₋path) { branch₋figures₋file(); } /*  optional. */
-    if (rules₋material₋and₋path) { branch₋rules₋file(); }/*  optional and upper half of event file. */
+    if (rules₋material₋and₋path) { branch₋rule₋file(); }/*  optional and upper half of event file. */
     if (collection₋count(&filepaths₋sequence) == 0)
     {
       vfprint("No event file given at command line.\n"); exit(2);
-    } __builtin_int_t idx=0,err,fd,symbols; char8₋t * ref;
+    } __builtin_int_t idx=0,fd,symbols; char8₋t * ref; int err;
     
 again:
     
