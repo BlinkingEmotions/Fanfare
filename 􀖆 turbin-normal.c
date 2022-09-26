@@ -43,6 +43,7 @@ struct language₋context
   char8₋t * source₋path;
   struct fifo order₋and₋memory;
   struct collection symbol₋stack;
+  int negative;
 }; /*  a․𝘬․a 'verificate₋parser' and token-i-sa-tio-n. */
 
 struct { __builtin_uint_t diagnosis₋count; } error₋panel;
@@ -50,18 +51,18 @@ struct { __builtin_uint_t diagnosis₋count; } error₋panel;
 int Init₋context(char8₋t * program, struct language₋context * ctxt)
 {
    ctxt->state=initial;
-   ctxt->tip₋unicode=0
+   ctxt->tip₋unicode=0;
    ctxt->linenumber₋first=1;
    ctxt->linenumber₋last=1;
    ctxt->column₋first=1;
    ctxt->column₋last=1;
    ctxt->negative=0;
    ctxt->source₋path = program;
-   if (ctxt->sourcepath==ΨΛΩ) return -1;
+   if (ctxt->source₋path==ΨΛΩ) return -1;
    return 0;
 }
 
-int Deinit₋context(struct language₋context * ctxt) { Fallow(ctxt); }
+int Deinit₋context(struct language₋context * ctxt) { Fallow(ctxt); return 0; }
 
 void Diagnos(int type, int bye, const char * sevenbit₋utf8, ...)
 {  va_prologue(sevenbit₋utf8);
@@ -71,7 +72,7 @@ void Diagnos(int type, int bye, const char * sevenbit₋utf8, ...)
 
 #pragma recto event parser front-end
 
-struct Expression;
+struct Expression; typedef struct Expression Expression;
 
 struct location { __builtin_int_t u8offset₋start,lineno₋first,linecount,
  first₋column,last₋column,ucs₋offset; char8₋t * source₋path; };
@@ -93,9 +94,9 @@ union Arithmetics {
   arithmetic₋mul mul;
   arithmetic₋div div;
   arithmetic₋neg neg;
-  🅩₋literal constant;
-  🅡₋literal constant;
-  text₋literal constant;
+  🅩₋literal constant₁;
+  🅡₋literal constant₂;
+  text₋literal constant₃;
   token regular;
 };
 
@@ -109,11 +110,14 @@ union Proposionals {
   union Arithmetics computat;
 };
 
+struct Statement; typedef struct Statement Statement;
+
 typedef Casette /* __uint128_t */ formal₋arguments;
 typedef struct { __uint128_t regular₋ident; formal₋arguments list; int is₋procedure; 
  Casette /* Statement * */ statements; } programming₋def;
 typedef struct { __uint128_t regular₋ident; Expression *expr,*unit; } programming₋let;
-typedef struct { __uint128_t regular₋ident; struct actual₋argument actuals; } programming₋call;
+typedef Casette /* Expression * */ actual₋arguments;
+typedef struct { __uint128_t regular₋ident; actual₋arguments actuals; } programming₋call;
 typedef struct { Expression *condition; Statement *then, *optional₋else; } programming₋if;
 typedef struct { Expression * summar; } programming₋return;
 
@@ -127,7 +131,8 @@ union single₋statement {
   programming₋return record;
 };
 
-struct Statement { union single₋statement stmt; __builtin_int_t kind; struct location there; };
+struct Statement { union single₋statement stmt; __builtin_int_t kind; 
+ struct location there; };
 
 struct Sequence { chronology₋instant ts; struct collection /* Statement * */ statements; };
 
@@ -138,26 +143,27 @@ struct Sequences { struct collection /* Sequence * */ sequences; };
 /* a․𝘬․a bokföringssed, custom and recollect. 𝘤𝘧․ anglo-saxian 'modelling', scandinavian 
  'nogsamhet' and 'likely-surely'. And a․𝘬․a 'table₋parser' and terminals-and-nonterminals․ */
 
-struct ParserContext₁ { Sequences * root; };
+struct ParserContext₁ { struct Sequences * root; };
 
-extern int BsimParse(ParserContext₁& ctx, Unicodes events₋program);
+extern int BsimParse(struct ParserContext₁ * ctx, struct Unicodes events₋program);
 
 #include "ⓔ-Frontend.cxx" /* either interval, possibly distribution function. */
 
 #pragma recto simulator
 
-fostrat₋defi Simulator { History history; Version version=101L; } Simulator;
+fostrat₋defi Simulator { History history; Version version; } Simulator;
 
 extern int Zebra(int count, chronology₋instant * toggles, double * out);
 /*  sometime uniform and normal not same time. */
 extern void EnterInteractiveMode(Simulator * 🅢);
-extern int Simulate(Sequences * 🆂, Simulator * 🅢);
+extern int Simulate(struct Sequences * 🆂, Simulator * 🅢);
 
 #include "ⓔ-Simulator.cxx" /* variance and sums of normally distributed variables. */
 
 #pragma recto computation two tables 'annual return' and 'profit and loss'
 
-extern int Rendertable(chronology₋instant when, History * history, Unicodes computation₋program);
+extern int Rendertable(chronology₋instant when, History * history, struct 
+ Unicodes computation₋program);
 
 #include "ⓔ-Table.cxx"
 
@@ -203,10 +209,10 @@ int option₋machine₋interprets(int argc, const char8₋t ** argv)
 { int i=0,y,figures₋filepath=0,rules₋filepath=0,only₋until₋row=0; char8₋t * token;
 again:
    if (i>=argc) { goto unagain; }
-   token = *(argv + i);
+   token = (char8₋t *)*(argv + i);
    if (figures₋filepath) { figures₋material₋and₋path=token; figures₋filepath=0; goto next; }
    if (rules₋filepath) { rules₋material₋and₋path=token; rules₋filepath=0; goto next; }
-   if (only₋until₋row) { read₋until₋row=atoi(token); only₋until₋row=0; goto next; }
+   if (only₋until₋row) { read₋until₋row=atoi((char *)token); only₋until₋row=0; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-h");
    if (y == 0) { vfprint("Usage ⬚ [-f <figures.table file>] [-g] " 
     "<event file>\n", argv[0]); exit(2); }
@@ -227,7 +233,7 @@ ungain:
    return 0;
 }
 
-unicode₋shatter open₋and₋decode(char8₋t * textfile, int expand₋tilde, int * err)
+unicode₋shatter ᐝ open₋and₋decode(char8₋t * textfile, int expand₋tilde, int * err)
 {
    const char * u8path𝘖r𝙽𝚄𝙻𝙻 = (const char *)textfile;
    if (expand₋tilde) { wordexp_t expansion₂; 
@@ -304,8 +310,8 @@ again:
     ref = (char8₋t *)collection₋relative(idx,&filepaths₋sequence);
     events = open₋and₋decode(ref,true,&err);
     symbols = Heap₋object₋size(events);
-    ParserContext₁ ctx; Unicodes events { symbols, events };
-    if (BsimParse(ctx,events)) { exit(10); }
+    struct ParserContext₁ ctx; struct Unicodes events = { symbols, events };
+    if (BsimParse(&ctx,events)) { exit(10); }
     if (interactive) { EnterInteractiveMode(&sim); }
     if (Simulate(ctx.root,&sim)) { exit(12); }
     idx+=1; goto again;
@@ -315,7 +321,7 @@ unagain:
     if (figures₋material₋and₋path)
     { chronology₋instant bye₋ts; /* e.g 'rendered 2022-09-23 17:05'. */
       symbols = Heap₋object₋size(figures)/4;
-      Unicodes program { symbols, figures };
+      struct Unicodes program = { symbols, figures };
       if (Rendertable(bye₋ts,sim.history,program)) { exit(13); }
     }
     
