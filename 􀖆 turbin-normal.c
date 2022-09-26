@@ -8,12 +8,12 @@ typedef int64_t     Integer;
 typedef Sequenta    Real; /*  here we attempt base two and ten hardware 
  Ieee754 and software arithmetics. */
 
-enum /* Common₋language */ {
+enum /* common language */ {
   END₋OF₋TRANSMISSION, QUOTED₋TEXT, PLUS_SYMBOL, MINUS_SYMBOL, MULT_SYMBOL, 
   DIV_SYMBOL
 };
 
-enum /* streck₋language */ {
+enum /* streck language */ {
   REGULAR=100, MONETARY, FUNCTION_KEYWORD, INSTANT, 
   BOOKKEEP_KEYWORD, DEBET_KEYWORD, CREDIT_KEYWORD, COMMENT_KEYWORD, 
   VAR_KEYWORD, PRINT_KEYWORD, BREAK_KEYWORD, SET_KEYWORD, RETURN_KEYWORD, 
@@ -26,7 +26,7 @@ enum /* streck₋language */ {
   EXCHANGE_KEYWORD, RATE_KEYWORD, CURRENCY_KEYWORD, LEFT₋BRACKET, RIGHT₋BRACKET
 };
 
-enum /* table₋language */ {
+enum /* table language */ {
   POP_KEYWORD=1000, SWAP_KEYWORD, DUP_KEYWORD, 
   REPORT_KEYWORD, BOLD_KEYWORD, report, opt₋bold
 };
@@ -67,29 +67,25 @@ void Diagnos(int type, int bye, const char * sevenbit₋utf8, ...)
 {  va_prologue(sevenbit₋utf8);
    va_epilogue;
    if (bye) { exit(1); } else { error₋panel.diagnosis₋count += 1; }
-}
+} /* type determines void, info, warning, error, internal in sevenbit. */
 
 #pragma recto event parser front-end
 
-struct Expression *;
-typedef struct { Expression *left,*right; } logical₋or;
-typedef struct { Expression *left,*right; } logical₋and;
-typedef struct { Expression * actu; } logical₋not;
-typedef struct { struct Unicodes word; __builtin_int_t u8offset; } token;
-union Proposionals {
-  logical₋or or;
-  logical₋and and;
-  logical₋not not;
-  token regular;
-};
+struct Expression;
 
+struct location { __builtin_int_t u8offset₋start; char8₋t * source₋path; };
 typedef struct { Expression *left,*right; } arithmetic₋add;
 typedef struct { Expression *left,*right; } arithmetic₋sub;
 typedef struct { Expression *left,*right; } arithmetic₋mul;
 /* typedef struct { Expression *actu; } arithmetic₋rec; */
 typedef struct { Expression *left,*right; } arithmetic₋div;
 typedef struct { Expression *left,*right; } arithmetic₋neg;
+typedef struct { __uint128_t token₋regular; } token;
+typedef struct { __uint128_t text₋token; } text₋literal;
 typedef struct { uint64_t bits; } 🅩₋literal;
+typedef struct { double figure; } 🅡₋literal;
+typedef struct { Expression * param; } string₋to₋🅽;
+typedef struct { Expression * param; } 🅩₋to₋🅡;
 union Arithmetic {
   arithmetic₋add add;
   arithmetic₋sub sub;
@@ -97,29 +93,48 @@ union Arithmetic {
   arithmetic₋div div;
   arithmetic₋neg neg;
   🅩₋literal constant;
+  🅡₋literal constant;
+  text₋literal constant;
+  token regular;
 };
-struct Expression { union Proposionals e; __builtin_int_t kind; };
-typedef struct { Expression *condition; Statement *then, *else₋condition; } programming₋if;
+
+typedef struct { Expression *left,*right; } logical₋or;
+typedef struct { Expression *left,*right; } logical₋and;
+typedef struct { Expression * actu; } logical₋not;
+union Proposionals {
+  logical₋or or;
+  logical₋and and;
+  logical₋not not;
+  union Arithmetic computat;
+};
+
+typedef struct { } formal₋arguments;
+typedef struct { __uint128_t regular₋ident; formal₋arguments formals; int is₋procedure; 
+ Casette /* Statement * */ statements; } programming₋def;
+typedef struct { __uint128_t regular₋ident; Expression *expr,*unit; } programming₋let;
+typedef struct { __uint128_t regular₋ident; struct actual₋argument actuals; } programming₋call;
+typedef struct { Expression *condition; Statement *then, *optional₋else; } programming₋if;
 typedef struct { Expression * summar; } programming₋return;
-struct Statement {
-  programming₋if if;
-  programming₋return return;
+
+struct Expression { union Proposionals e; __builtin_int_t kind; };
+
+union single₋statement {
+  programming₋def definition;
+  programming₋let let;
+  programming₋call call;
+  programming₋if compare;
+  programming₋return record;
 };
-struct statement₋sequence { }; /*  a․𝘬․a 'timestamped₋Statement₋sequence'. */
-struct Sequences { }; /*  a․𝘬․a 'timestamped₋statement₋Sequncences'. */
+
+struct Statement { union single₋statement stmt; __builtin_int_t kind; };
+
+struct Sequence { chronology₋instant ts; struct collection /* Statement * */ statements; };
+
+struct Sequences { struct collection /* Sequence * */ sequences; };
+
 /*  𝘤𝘧․ anglo-saxian 'modelling', scandinavian 'nogsamhet' and 'likely-surely'. */
 
-typedef struct {
-  
-} ᵸAST; /*  a․𝘬․a bokföringssed, custom and recollect. */
-
-typedef struct {
-  
-} ᵀAST; /*  a․𝘬․a 'table₋parser' and terminals-and-nonterminals․ */
-
-Regularset languageᵀ,languageᵸ;
-
-#pragma recto northern 'således' tran-sact-ions and veri-fi-c-at-es
+#pragma recto northern 'således' tran-sact-ions and veri-fi-c-at-es a․𝘬․a bokföringssed, custom and recollect.
 
 struct ParserContext₁ { Sequences * root; };
 
@@ -138,7 +153,7 @@ extern int Simulate(Sequences * s, Simulator * S);
 
 #include "ⓔ-Simulator.cxx" /*  variance and sums of normally distributed variables. */
 
-#pragma recto computation two tables 'annual return' and 'profit and loss'
+#pragma recto computation two tables 'annual return' and 'profit and loss' a․𝘬․a 'table₋parser' and terminals-and-nonterminals․
 
 extern int Rendertable(chronology₋instant when, History * history, Unicodes computation₋program);
 
