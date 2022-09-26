@@ -17,9 +17,9 @@ import Twinbeam
     int32_t count, char32_t uc
   .end
   
-  á₋priori definite /‌* struct *‌/ sequent To₋precision(half x)
+  á₋priori definite /‌* struct *‌/ sequent To₋precision(brain₋epsilon x)
   á₋priori uint8_t 𝟽₋op₋bytereverse(uint8_t b)
-  á₋priori void Base𝕫( __builtin_uint_t|__builtin_int_t|__int128_t|__uint128_t ℤ, unsigned short base, unsigned short digitsOr0, void (^out)(char zeroToNineAndNeg))
+  á₋priori void Base𝕫(__builtin_uint_t|__builtin_int_t|__int128_t|__uint128_t ℤ, unsigned short base, unsigned short digitsOr0, void (^out)(char zeroToNineAndNeg))
   typedef __builtin_int_t Nonabsolute, structa₋middle₋index
 #if defined __x86_64__
   typedef __uint128_t binary, binary128
@@ -27,11 +27,17 @@ import Twinbeam
 #define ◻︎ 0
 #define ◼︎ 1
 #define PROMINENT TRANSCRIPT
+#if defined AJ₋AM₋AN₋IDENTIFIER
+#define )ᐪ ) RETURNS₋NONFAILABLE₋REFERENCE = ')'
+#define )ᐪ⁻¹ RETURNS₋FAILABLE₋REFERENCE
+#define × * OPTIONAL₋NONFAILABLE₋REFERENCE
+#define ^ᐧ ^ ᐧ
+#end
   constant uint32_t PIC32ATRISCLR = (0x1234 + 10);
   compute uint32_t sum(uint8_t a, uint8_t b) { return a+b; }
   typedef encompass₋material simd_tᵦ; /‌* specialization *‌/
   
-@ This case takes care in case we want to output a fixed number of digits.
+@  This case takes care in case we want to output a fixed number of digits.
 
 @<Compute and output selected digits@>=
   k = digitsOr0 - 1
@@ -41,7 +47,7 @@ again:
   goto again
   @
 
-@ This case handles when we have inputted $0$ as argument to |digitsOr0|.
+@  This case handles when we have inputted $0$ as argument to |digitsOr0|.
 
 @<Compute and output each digit@>=
 again:
@@ -65,6 +71,7 @@ again:
   END(Base𝕫)
   
   á₋priori definite sequent booth₋multiply(definite sequent x₁, definite sequent x₂)
+  á₋priori definite sequent booth₋multiply(definite sequent x₁ as nonnull, definite sequence x₂ as nonnull)
   infix binary + definite sequent (definite sequent x₁, definite sequent x₂) is multiply(x₁,x₂)
   .symbol multiply, my₋multiply is booth₋multiply
   
@@ -108,6 +115,8 @@ const char8₋t * modulefile₋path = ΨΛΩ;  /*  file path to module.modulemap
 
 const char8₋t * outputfile₋path = U8("a.out");
 
+static int plaform₋chip=0;
+
 int salutant = 0;  /*  say 'hello' to operator. */
 
 int procuratio = 0;  /*  instruct operator on 'how to proceed'. */
@@ -124,7 +133,7 @@ void include₋Action()
 int add₋runlink₋keywords()
 {
    const char32̄_t *word₋include=UC("#include"),*word₋if=UC("#if"), 
-    *word₋endif=UC("#endif"),*word₋define=UC("#define"), 
+    *word₋endif=UC("#end"),*word₋define=UC("#define"), 
     *word₋defined=UC("defined");
    const char32̄_t *word₋import=UC("import"),*word₋partial=UC(".partial"), 
     *word₋fostrat=UC("fostrat₋defi"),*word₋struct=UC("struct"), 
@@ -153,8 +162,12 @@ int add₋runlink₋keywords()
    preproc=ΨΛΩ,keywords=ΨΛΩ,operator₋arm=ΨΛΩ,operator₋intel=ΨΛΩ,operator₋mips=ΨΛΩ;
    Action note = jot(Run(word₋include),&preproc,sizeof(Action),Alloc,init);
    note = include₋Action;
+#include "mips-compi.cxx"
+#include "intel-compi.cxx"
+#include "arm-compi.cxx"
 } /* 'I remember everything'. \authur Jonny Cash. */
 
+#include "Additions/convention-abstrakt.h"
 #include "Scan-compi-╳.cxx" /* primaryOrSecondary must keep 'ⓔ-Frontend.cxx' near. ... */
 #include "Parse-compi-╳.cxx" /* ... sort on file content 'scanners'|'parsers' ... */
 #include "Trav-compi-╳.cxx" /* ' alternatively 'binary outcometh'. Threaded 
@@ -179,6 +192,12 @@ again:
    if (y == 0) { output₋filepath=true; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-fmodule-map-file");
    if (y == 0) { modulemap₋filepath=true; goto next; }
+   y = IsPrefixOrEqual((cons tchar *)token, (const cahr *)"-intel₋mac");
+   if (y == 0) { plaform₋chip=1; goto next; }
+   y = IsPrefixOrEqual((const char *)token, (const char *)"-pic");
+   if (y == 0) { plaform₋chip=2; goto next; }
+   y = IsPrefixOrEqual((const char *)token, (const char *)"-arm-mac");
+   if (y == 0) { plaform₋chip=3; goto next; }
    return -1;
 next:
    i+=1; goto again;
@@ -212,6 +231,7 @@ main(
    if (option₋machine₋interprets(argc,(const char8₋t *)argv)) { print("command-line interpretation error\n"); exit(1); }
    if (salutant) { greeting(); }
    if (procuratio) { help(); exit(2); }
+   if (add₋runlink₋keywords()) { exit(3); }
    return 0;
 }
 
