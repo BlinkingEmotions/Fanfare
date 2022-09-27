@@ -68,6 +68,9 @@ struct token₋detail
 
 struct { __builtin_uint_t diagnosis₋count; } error₋panel;
 
+struct location { __builtin_int_t u8offset₋start,lineno₋first,lineno₋last, 
+ first₋column,last₋column,ucs₋offset; char8₋t * source₋path; };
+
 int Init₋context(char8₋t * program, struct language₋context * ctxt) ⓣ
 {
    ctxt->state=initial;
@@ -82,14 +85,27 @@ int Init₋context(char8₋t * program, struct language₋context * ctxt) ⓣ
    return 0;
 }
 
-void Diagnos(int type, int bye, const char * sevenbit₋utf8, ...)
+void Diagnos(int type, void * langctxt₋alt₋location, int bye, const char * sevenbit₋utf8, ...)
 {  va_prologue(sevenbit₋utf8); char8₋t * src₋path;
    __builtin_int_t lineno₋first,linecount,column₋first,column₋last;
-   if (type == 2) { /* parsed_ctxt */ }
-   else if (type == 1) { /* language_ctxt */ }
+   if (type == 2) {
+     struct location * l = (struct location *)langctxt₋alt₋location;
+     lineno₋first = l->lineno₋first;
+     linecount = l->lineno₋last - l->lineno₋first + 1;
+     column₋first = l->first₋column;
+     column₋last = l->last₋column;
+     src₋path = l->source₋path;
+   } else if (type == 1) {
+     struct language₋context * ctxt = (struct language₋context *)langctxt₋alt₋location;
+     lineno₋first = ctxt->lineno₋first;
+     linecount = ctxt->lineno₋last - ctxt->lineno₋first + 1;
+     column₋last = ctxt->column₋last;
+     column₋first = ctxt->column₋first;
+     src₋path = ctxt->source₋path;
+   }
    vfprint("⬚ (⬚) ⫶ ⬚—⬚ ⬚.", ﹟s8(src₋path), ﹟d(lineno₋first), 
     ﹟d(column₋last), ﹟d(column₋last));
-   vfprint(" ( ⬚ line", ﹟d(linecount));
+   vfprint(" (⬚ line", ﹟d(linecount));
    if (linecount != 1) { vfprint("s"); }
    vfprint(")\n");
    va_epilogue;
@@ -117,8 +133,7 @@ void append₋reference(void * pointer, struct collection * 🅰);
 
 struct Expression; typedef struct Expression Expression;
 
-struct location { __builtin_int_t u8offset₋start,lineno₋first,linecount,
- first₋column,last₋column,ucs₋offset; char8₋t * source₋path; };
+
 typedef struct { Expression *left,*right; } arithmetic₋add;
 typedef struct { Expression *left,*right; } arithmetic₋sub;
 typedef struct { Expression *left,*right; } arithmetic₋mul;
@@ -177,7 +192,7 @@ union single₋statement {
 struct Statement { union single₋statement stmt; __builtin_int_t kind; 
  struct location there; };
 
-struct Sequence { chronology₋instant ts; Casette /* Statement * */ statements; };
+struct Sequence { chronology₋instant instant; Casette /* Statement * */ statements; };
 
 typedef Casette /* Sequence * */ Sequences;
 
@@ -186,18 +201,18 @@ typedef Casette /* Sequence * */ Sequences;
 /* a․𝘬․a bokföringssed, custom and recollect. 𝘤𝘧․ anglo-saxian 'modelling', scandinavian 
  'nogsamhet' and 'likely-surely'. And a․𝘬․a 'table₋parser' and terminals-and-nonterminals․ */
 
-struct parsed₋context₁ { Sequences root; chronology₋instant last; };
+struct virtu₋context { Sequences program; chronology₋instant last; };
 
-int Init₋context(struct parsed₋context₁ * ctxt) ⓣ
+int Init₋context(struct virtu₋context * ctxt) ⓣ
 {
-  if (collection₋init(sizeof(struct Sequences *),4096,&ctxt->root)) { return -1; }
+  if (collection₋init(sizeof(struct Sequences *),4096,&ctxt->program)) { return -1; }
   return 0;
 }
 
-int Deinit₋context(struct parsed₋context₁ * ctxt) ⓣ { return 0; }
+int Deinit₋context(struct virtu₋context * ctxt) ⓣ { return 0; }
 
 extern int BsimParse(struct language₋context * ctxt, struct Unicodes 
- events₋program, struct parsed₋context₁ * ctxt₋out);
+ events₋program, struct virtu₋context * ctxt₋out);
 
 #include "ⓔ-Frontend.cxx"
 
@@ -208,7 +223,7 @@ extern int BsimParse(struct language₋context * ctxt, struct Unicodes
 fostrat₋defi Simulator { History history; version₋ts revision; } Simulator;
 
 extern void EnterInteractiveMode(Simulator * 🅢);
-extern int Simulate(struct parsed₋context₁ * 🆂, Simulator * 🅢);
+extern int Simulate(struct virtu₋context * 🆂, Simulator * 🅢);
 /* extern int Zebra(int count, chronology₋instant toggles[], chronology₋instant now, double * out);
   sometime uniform and normal not same time. */
 
@@ -355,7 +370,7 @@ main(
 )
 { Simulator sim; unicode₋shatter events;
    struct language₋context streck₋ctxt;
-    struct parsed₋context₁ machine₋ctxt;
+    struct virtu₋context machine₋ctxt;
     error₋panel.diagnosis₋count = 0;
     Init₋context(&machine₋ctxt);
     if (collection₋init(sizeof(char8₋t *),4096,&filepaths₋sequence)) { exit(1); }
