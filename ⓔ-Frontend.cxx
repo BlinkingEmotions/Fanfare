@@ -45,7 +45,7 @@ char * tokenname(int token)
    case NOT_SYMBOL: return "not";
    case XOR_SYMBOL: return "xor";
    case ENTITY_KEYWORD: return "entity";
-   case ACCOUNT_KEYOWORD: return "account";
+   case ACCOUNT_KEYWORD: return "account";
    case TABLE_KEYWORD: return "table";
    case DISPLAY_KEYWORD: return "display";
    case FROM_KEYWORD: return "from";
@@ -59,8 +59,8 @@ char * tokenname(int token)
    case TO_KEYWORD: return "to";
    case SCHEDULE_KEYWORD: return "schedule";
    case STARTING_KEYWORD: return "starting";
-   case OCCURRING_KEYWORD: return "occurring";
-   case ENDING_KEYWORD: return "ending"
+   case OCCURING_KEYWORD: return "occurring";
+   case ENDING_KEYWORD: return "ending";
    case DROP₋SCHEDULE_KEYWORD: return "drop₋schedule";
    case EXCHANGE_KEYWORD: return "exchange";
    case RATE_KEYWORD: return "rate";
