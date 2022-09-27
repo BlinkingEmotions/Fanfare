@@ -39,8 +39,8 @@ enum Scanner₋mode {
 struct language₋context
 {
   enum Scanner₋mode state;
-  __builtin_int_t tip₋unicode,linenumber₋first,
-   linenumber₋last,column₋first,column₋last;
+  __builtin_int_t tip₋unicode,lineno₋first,
+   lineno₋last,column₋first,column₋last;
   char8₋t * source₋path;
   struct fifo order₋and₋memory;
   struct collection symbol₋stack;
@@ -57,7 +57,7 @@ union token₋store
 struct token₋detail
 {
   union token₋store store;
-  int kind;
+  int kind,token;
   __builtin_int_t lineno₋first,column₋first,column₋last,lineno₋last;
   struct language₋context * predecessor₋src;
 };
@@ -68,8 +68,8 @@ int Init₋context(char8₋t * program, struct language₋context * ctxt) ⓣ
 {
    ctxt->state=initial;
    ctxt->tip₋unicode=0;
-   ctxt->linenumber₋first=1;
-   ctxt->linenumber₋last=1;
+   ctxt->lineno₋first=1;
+   ctxt->lineno₋last=1;
    ctxt->column₋first=1;
    ctxt->column₋last=1;
    ctxt->negative=0;
