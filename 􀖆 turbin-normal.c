@@ -8,8 +8,9 @@ typedef int64_t     Integer;
 typedef Sequenta    Real; /*  here we attempt base two and ten hardware 
  Ieee754 and software arithmetics. */
 
-#define TRACE₋TOKENS /*  while reading .streck and .table files, print-out token on stderr. */
-#define TRACE₋ENCODING /* after decoding utf-8 output the decoded Unicodes to stderr. */
+#define TRACE₋TOKENS /*  while reading .streck and .table files, print-out token on stdout. */
+#define TRACE₋ENCODING /* after decoding utf-8 output the decoded Unicodes to stdout. */
+#define TRACE₋SYNTAX /* after parsing .streck files, print the indented syntax tree on stdout. */
 
 enum /* common language */ {
   END₋OF₋TRANSMISSION, QUOTED₋TEXT, PLUS_SYMBOL, MINUS_SYMBOL, MULT_SYMBOL, 
