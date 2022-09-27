@@ -3,12 +3,31 @@
 int next₋token₁(struct language₋context * ctxt, 
  struct token₋detail * detail₋out)
 {
+   
+   return 0;
+}
+
+int recur₋descent(struct token₋detail * primary, struct token₋detail * lookahead)
+{
    return 0;
 }
 
 int BsimParse(struct language₋context * ctxt, 
  struct Unicodes events₋program, struct parsed₋context₁ * ctxt₋out)
-{
+{ struct token₋detail primary₋piece,lookahead; char * name;
+   if (next₋token₁(ctxt,&primary₋piece)) { print("one-token program\n"); goto unagain; }
+again:
+   if (next₋token₁(ctxt,&lookahead)) { goto unagain; }
+   if (recur₋descent(&primary₋piece,&lookahead)) { goto unagain; }
+   char * tokenname(int);
+   name = tokenname(primary₋piece.token);
+   print("⬚ (⬚ ⬚ ⬚ ⬚ ⬚)\n", ﹟s7(name), ﹟d(primary₋piece.column₋first), 
+    ﹟d(primary₋piece.column₋last), ﹟d(primary₋piece.lineno₋first), 
+    ﹟d(primary₋piece.lineno₋last), 
+    ﹟s8(primary₋piece.predecessor₋src->source₋path));
+   primary₋piece=lookahead; goto again;
+unagain:
+   print("\n");
    return 0;
 }
 
