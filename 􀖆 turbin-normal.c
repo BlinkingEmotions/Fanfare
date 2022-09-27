@@ -160,16 +160,20 @@ struct Statement { union single₋statement stmt; __builtin_int_t kind;
 
 struct Sequence { chronology₋instant ts; Casette /* Statement * */ statements; };
 
-struct Sequences { Casette /* Sequence * */ sequences; };
+typedef Casette /* Sequence * */ Sequences;
 
 #pragma recto parsing northern 'således' tran-sact-ions and veri-fi-c-at-es
 
 /* a․𝘬․a bokföringssed, custom and recollect. 𝘤𝘧․ anglo-saxian 'modelling', scandinavian 
  'nogsamhet' and 'likely-surely'. And a․𝘬․a 'table₋parser' and terminals-and-nonterminals․ */
 
-struct parsed₋context₁ { struct Sequences * root; chronology₋instant last; };
+struct parsed₋context₁ { Sequences root; chronology₋instant last; };
 
-int Init₋context(struct parsed₋context₁ * ctxt) ⓣ { return 0; }
+int Init₋context(struct parsed₋context₁ * ctxt) ⓣ
+{
+  if (collection₋init(sizeof(struct Sequences *),4096,&ctxt->root)) { return -1; }
+  return 0;
+}
 
 int Deinit₋context(struct parsed₋context₁ * ctxt) ⓣ { return 0; }
 
@@ -324,10 +328,9 @@ main(
   int argc, 
   const char * argv[]
 )
-{   struct language₋context streck₋ctxt;
+{ Simulator sim; unicode₋shatter events;
+   struct language₋context streck₋ctxt;
     struct parsed₋context₁ machine₋ctxt;
-    Simulator sim; /* other-case profit & loss and balance sheets non-𝑎𝑐𝑐𝑖𝑑𝑒𝑛𝑡𝑙𝑦 ends up optional. */
-    unicode₋shatter events;
     error₋panel.diagnosis₋count = 0;
     Init₋context(&machine₋ctxt);
     if (collection₋init(sizeof(char8₋t *),4096,&filepaths₋sequence)) { exit(1); }
@@ -365,5 +368,5 @@ unagain:
     Deinit₋context(&machine₋ctxt);
     
     return 0;
-} /*  simulate events and often output figures at a given point in time. */
+} /*  simulate events and output figures often at end-of-simulation. */
 
