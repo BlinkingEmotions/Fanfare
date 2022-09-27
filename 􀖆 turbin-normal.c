@@ -8,6 +8,9 @@ typedef int64_t     Integer;
 typedef Sequenta    Real; /*  here we attempt base two and ten hardware 
  Ieee754 and software arithmetics. */
 
+#define TRACE₋TOKENS /*  while reading .streck and .table files, print-out token on stderr. */
+#define TRACE₋ENCODING /* after decoding utf-8 output the decoded Unicodes to stderr. */
+
 enum /* common language */ {
   END₋OF₋TRANSMISSION, QUOTED₋TEXT, PLUS_SYMBOL, MINUS_SYMBOL, MULT_SYMBOL, 
   DIV_SYMBOL
@@ -83,14 +86,29 @@ void Diagnos(int type, int bye, const char * sevenbit₋utf8, ...)
    __builtin_int_t lineno₋first,linecount,column₋first,column₋last;
    if (type == 2) { /* parsed_ctxt */ }
    else if (type == 1) { /* language_ctxt */ }
-   print("⬚ (⬚) ⫶ ⬚—⬚ ⬚.", ﹟s8(src₋path), ﹟d(lineno₋first), 
+   vfprint("⬚ (⬚) ⫶ ⬚—⬚ ⬚.", ﹟s8(src₋path), ﹟d(lineno₋first), 
     ﹟d(column₋last), ﹟d(column₋last));
-   print(" ( ⬚ line", ﹟d(linecount));
-   if (linecount != 1) { print("s"); }
-   print(")\n");
+   vfprint(" ( ⬚ line", ﹟d(linecount));
+   if (linecount != 1) { vfprint("s"); }
+   vfprint(")\n");
    va_epilogue;
    if (bye) { exit(1); } else { error₋panel.diagnosis₋count += 1; }
 } /* type determines void, sevenbit text starts with 'info', 'warning', 'error', 'internal'. */
+
+void print₋decoded₋text(struct Unicodes ucs)
+{ char32̄_t uc;
+   __builtin_int_t ext₋count=0,i=0;
+again:
+   if (i >= ucs.tetras) { goto unagain; }
+   uc = *(i + ucs.unicodes);
+   print("U+");
+   Base𝕟((__builtin_uint_t)uc,16,4,^(char zero₋to₋nine) { 
+     print("⬚", ﹟c7(zero₋to₋nine));
+   });
+   if (uc & 0xffff0000) { ext₋count += 1; print("⌜"); } else { print(" "); }
+unagain:
+   print("(ext₋count=⬚)\n", ﹟d(ext₋count));
+}
 
 void append₋reference(void * pointer, struct collection * 🅰);
 
@@ -197,12 +215,12 @@ extern int Simulate(struct parsed₋context₁ * 🆂, Simulator * 🅢);
 
 #pragma recto computation two tables 'annual return' and 'profit and loss'
 
-extern int Rendertable(chronology₋instant when, History * history, struct 
- Unicodes computation₋program);
+extern int Rendertable(struct language₋context * ctxt, History * history, 
+ struct Unicodes computation₋program, chronology₋instant when);
 
 #include "ⓔ-Table.cxx"
 
-#pragma recto command line (zsh and Minimum)
+#pragma recto command line (zsh compsys and Minimum)
 
 #pragma recto startup and optional report at end
 
@@ -215,9 +233,9 @@ extern int Rendertable(chronology₋instant when, History * history, struct
 #include <unistd.h>
 #include <fcntl.h>
 
-char8₋t * figures₋material₋and₋path=ΨΛΩ;  /*  figures file and implicit DISPLAY TABLE at end-of-file. */
+char8₋t * figures₋path=ΨΛΩ;  /*  figures file and implicit DISPLAY TABLE at end-of-file. */
 
-char8₋t * rules₋material₋and₋path=ΨΛΩ; /*  rules file when not included in upper half of event file. */
+char8₋t * rule₋path=ΨΛΩ; /*  rules file when not included in upper half of event file. */
 
 int interactive=0;  /*  end with bye when file is read and report is written. */
 
@@ -239,23 +257,25 @@ void append₋reference(void * pointer, struct collection * 🅰)
 }
 
 int option₋machine₋interprets(int argc, char8₋t *ᐧ* argv)
-{ int i=0,y,figures₋filepath=0,rules₋filepath=0,only₋until₋row=0; char8₋t * token;
+{ int i=0,y,figures₋option=0,rule₋option=0,only₋until₋row=0; char8₋t * token;
 again:
    if (i>=argc) { goto unagain; }
    token = (char8₋t *)*(argv + i);
-   if (figures₋filepath) { figures₋material₋and₋path=token; figures₋filepath=0; goto next; }
-   if (rules₋filepath) { rules₋material₋and₋path=token; rules₋filepath=0; goto next; }
+   if (figures₋option) { figures₋path=token; figures₋option=0; goto next; }
+   if (rule₋option) { rule₋path=token; rule₋option=0; goto next; }
    if (only₋until₋row) { read₋until₋row=atoi((char *)token); only₋until₋row=0; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-h");
-   if (y == 0) { vfprint("Usage ⬚ [-f <figures.table file>] [-g] " 
+   if (y == 0) { vfprint("Usage ⬚ [-r <business.rule file>] [-f <figures.table file>] [-g] [-l] " 
     "<event file>\n", ﹟s8(argv[0])); exit(2); }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-f");
-   if (y == 0) { figures₋filepath=1; goto next; }
+   if (y == 0) { figures₋option=1; goto next; }
+   y = IsPrefixOrEqual((const char *)token, (const char *)"-r");
+   if (y == 0) { rule₋option=1; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-g");
    if (y == 0) { interactive=1; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-v");
    if (y == 0) { vfprint("⬚ version ⬚\n", argv[0], "0x" QUOTE(SHA1GIT)); goto next; }
-   y = IsPrefixOrEqual((const char *)token, (const char *)"-r"); /* rows to process. */
+   y = IsPrefixOrEqual((const char *)token, (const char *)"-l"); /* rows to process. */
    if (y == 0) { only₋until₋row=1; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-");
    if (y > 0) { vfprint("Unknown command-line argument\n"); exit(3); }
@@ -289,13 +309,17 @@ unicode₋shatter ᐝ open₋and₋decode(char8₋t * textfile, int expand₋til
    *(material + u8bytes) = 0x04;
    unicode₋shatter text = (unicode₋shatter)Heap₋alloc(4*(u8bytes + 1));
    if (Utf8ToUnicode(1+u8bytes,material,text,&symbols)) { *err=8; return ΨΛΩ; }
+#if defined TRACE₋ENCODING
+   struct Unicodes debug₋text = { symbols, text };
+   print₋decoded₋text(debug₋text);
+#endif
    return text;
 }
 
 void branch₋rule₋file()
 { int err;
-   rules = open₋and₋decode(rules₋material₋and₋path,false,&err);
-   Argᴾ one = ﹟s8(rules₋material₋and₋path);
+   rules = open₋and₋decode(rule₋path,false,&err);
+   Argᴾ one = ﹟s8(rule₋path);
    switch (err) {
    case 1: vfprint("Expansion rejected on '⬚'\n", one); break;
    case 2: vfprint("No rule file named '⬚'\n", one); break;
@@ -310,8 +334,8 @@ void branch₋rule₋file()
 void branch₋figures₋file()
 { int err;
    /* expand ~ in e․𝘨 `~/myshoebox/myfigures.table`. */
-   figures = open₋and₋decode(figures₋material₋and₋path,true,&err);
-   Argᴾ one = ﹟s8(figures₋material₋and₋path);
+   figures = open₋and₋decode(figures₋path,true,&err);
+   Argᴾ one = ﹟s8(figures₋path);
    switch (err) {
    case 1: vfprint("Expansion rejected on '⬚'\n", one); break;
    case 2: vfprint("No figure file named '⬚'\n", one); break;
@@ -335,12 +359,19 @@ main(
     Init₋context(&machine₋ctxt);
     if (collection₋init(sizeof(char8₋t *),4096,&filepaths₋sequence)) { exit(1); }
     option₋machine₋interprets(argc,(char8₋t *ᐧ*)argv);
-    if (figures₋material₋and₋path) { branch₋figures₋file(); } /*  optional. */
-    if (rules₋material₋and₋path) { branch₋rule₋file(); }/*  optional and upper half of event file. */
+    if (figures₋path) { branch₋figures₋file(); } /*  optional. */
+    if (rule₋path) { branch₋rule₋file(); }/*  optional and upper half of event file. */
     if (collection₋count(&filepaths₋sequence) == 0)
     {
       vfprint("No event file given at command line.\n"); exit(2);
     } __builtin_int_t idx=0,fd,symbols; char8₋t * file₋ref; int err;
+    
+    if (rule₋path) {
+      if (Init₋context(rule₋path,&streck₋ctxt)) { exit(10); }
+      symbols = Heap₋object₋size(rules);
+      struct Unicodes program = { symbols, rules };
+      if (BsimParse(&streck₋ctxt,program,&machine₋ctxt)) { exit(12); }
+    }
     
 again:
     
@@ -358,11 +389,13 @@ unagain:
     if (interactive) { EnterInteractiveMode(&sim); }
     if (Simulate(&machine₋ctxt,&sim)) { exit(13); }
     
-    if (figures₋material₋and₋path)
-    { chronology₋instant bye₋ts; /* e.g 'rendered 2022-09-23 17:05'. */
+    if (figures₋path)
+    { chronology₋instant bye₋ts; /* 𝘦․𝘨 'material ending 2019-12-24 23:59:59 rendered 2022-09-23 17:05'. */
       symbols = Heap₋object₋size(figures)/4;
       struct Unicodes program = { symbols, figures };
-      if (Rendertable(bye₋ts,&sim.history,program)) { exit(17); }
+      struct language₋context table₋ctxt;
+      if (Init₋context(figures₋path,&table₋ctxt)) { exit(15); }
+      if (Rendertable(&table₋ctxt,&sim.history,program,bye₋ts)) { exit(17); }
     }
     
     Deinit₋context(&machine₋ctxt);
