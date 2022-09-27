@@ -176,9 +176,7 @@ int Deinit₋context(struct parsed₋context₁ * ctxt) ⓣ { return 0; }
 extern int BsimParse(struct language₋context * ctxt, struct Unicodes 
  events₋program, struct parsed₋context₁ * ctxt₋out);
 
-extern char * tokenname(int token);
-
-#include "ⓔ-Frontend.cxx" /* either interval, possibly distribution function. */
+#include "ⓔ-Frontend.cxx"
 
 #pragma recto stochastic and deterministic simulation
 
@@ -191,7 +189,7 @@ extern int Simulate(struct parsed₋context₁ * 🆂, Simulator * 🅢);
 /* extern int Zebra(int count, chronology₋instant toggles[], chronology₋instant now, double * out);
   sometime uniform and normal not same time. */
 
-#include "ⓔ-Simulator.cxx" /* variance and sums of normally distributed variables. */
+#include "ⓔ-Simulator.cxx"
 
 #pragma recto computation two tables 'annual return' and 'profit and loss'
 
