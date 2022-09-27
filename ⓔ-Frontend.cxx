@@ -12,7 +12,7 @@ int recur₋descent₋streck(struct token₋detail * primary, struct token₋det
 }
 
 int BsimParse(struct language₋context * ctxt, 
- struct Unicodes events₋program, struct parsed₋context₁ * ctxt₋out)
+ struct Unicodes events₋program, struct virtu₋context * ctxt₋out)
 { struct token₋detail primary₋piece,lookahead; char * name;
    if (next₋token₁(ctxt,&primary₋piece)) { print("zero-to-one-token program\n"); goto unagain; }
 again:
