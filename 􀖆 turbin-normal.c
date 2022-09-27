@@ -23,7 +23,8 @@ enum /* streck language */ {
   FROM_KEYWORD, CREATE_KEYWORD, NAMED_KEYWORD, TRADING_KEYWORD, IN_KEYWORD, 
   RESIDENT_KEYWORD, WITH_KEYWORD, IS_KEYWORD, TO_KEYWORD, SCHEDULE_KEYWORD, 
   STARTING_KEYWORD, OCCURING_KEYWORD, ENDING_KEYWORD, DROP₋SCHEDULE_KEYWORD, 
-  EXCHANGE_KEYWORD, RATE_KEYWORD, CURRENCY_KEYWORD, LEFT₋BRACKET, RIGHT₋BRACKET
+  EXCHANGE_KEYWORD, RATE_KEYWORD, CURRENCY_KEYWORD, LEFT₋BRACKET, 
+  RIGHT₋BRACKET
 };
 
 enum /* table language */ {
@@ -46,9 +47,24 @@ struct language₋context
   int negative;
 }; /*  a․𝘬․a 'verificate₋parser' and token-i-sa-tio-n. */
 
+union token₋store
+{
+  struct Unicodes regular₋ident;
+  double figure₋1;
+  int64_t figure₋2;
+};
+
+struct token₋detail
+{
+  union token₋store store;
+  int kind;
+  __builtin_int_t lineno₋first,column₋first,column₋last,lineno₋last;
+  struct language₋context * predecessor₋src;
+};
+
 struct { __builtin_uint_t diagnosis₋count; } error₋panel;
 
-int Init₋context(char8₋t * program, struct language₋context * ctxt)
+int Init₋context(char8₋t * program, struct language₋context * ctxt) ⓣ
 {
    ctxt->state=initial;
    ctxt->tip₋unicode=0;
@@ -62,15 +78,23 @@ int Init₋context(char8₋t * program, struct language₋context * ctxt)
    return 0;
 }
 
-int Deinit₋context(struct language₋context * ctxt) { Fallow(ctxt); return 0; }
-
 void Diagnos(int type, int bye, const char * sevenbit₋utf8, ...)
-{  va_prologue(sevenbit₋utf8);
+{  va_prologue(sevenbit₋utf8); char8₋t * src₋path;
+   __builtin_int_t lineno₋first,linecount,column₋first,column₋last;
+   if (type == 2) { /* parsed_ctxt */ }
+   else if (type == 1) { /* language_ctxt */ }
+   print("⬚ (⬚) ⫶ ⬚—⬚ ⬚.", ﹟s8(src₋path), ﹟d(lineno₋first), 
+    ﹟d(column₋last), ﹟d(column₋last));
+   print(" ( ⬚ line", ﹟d(linecount));
+   if (linecount != 1) { print("s"); }
+   print(")\n");
    va_epilogue;
    if (bye) { exit(1); } else { error₋panel.diagnosis₋count += 1; }
 } /* type determines void, sevenbit text starts with 'info', 'warning', 'error', 'internal'. */
 
-#pragma recto event parser front-end
+void append₋reference(void * pointer, struct collection * 🅰);
+
+#pragma recto outcome from reading events
 
 struct Expression; typedef struct Expression Expression;
 
@@ -138,26 +162,33 @@ struct Sequence { chronology₋instant ts; Casette /* Statement * */ statements;
 
 struct Sequences { Casette /* Sequence * */ sequences; };
 
-#pragma recto northern 'således' tran-sact-ions and veri-fi-c-at-es
+#pragma recto parsing northern 'således' tran-sact-ions and veri-fi-c-at-es
 
 /* a․𝘬․a bokföringssed, custom and recollect. 𝘤𝘧․ anglo-saxian 'modelling', scandinavian 
  'nogsamhet' and 'likely-surely'. And a․𝘬․a 'table₋parser' and terminals-and-nonterminals․ */
 
-struct ParserContext₁ { struct Sequences * root; chronology₋instant last; };
+struct parsed₋context₁ { struct Sequences * root; chronology₋instant last; };
 
-extern int BsimParse(struct language₋context * ctxt, struct Unicodes events₋program);
+int Init₋context(struct parsed₋context₁ * ctxt) ⓣ { return 0; }
+
+int Deinit₋context(struct parsed₋context₁ * ctxt) ⓣ { return 0; }
+
+extern int BsimParse(struct language₋context * ctxt, struct Unicodes 
+ events₋program, struct parsed₋context₁ * ctxt₋out);
+
+extern char * tokenname(int token);
 
 #include "ⓔ-Frontend.cxx" /* either interval, possibly distribution function. */
 
-#pragma recto simulator
+#pragma recto stochastic and deterministic simulation
 
-/* #include <Additions/History.h> */ typedef struct History { } History; 
+/* #include <Additions/History.h> */ typedef struct History { } History;
 
 fostrat₋defi Simulator { History history; version₋ts revision; } Simulator;
 
 extern void EnterInteractiveMode(Simulator * 🅢);
-extern int Simulate(struct Sequences * 🆂, Simulator * 🅢);
-/* extern int Zebra(int count, chronology₋instant * toggles, double * out);
+extern int Simulate(struct parsed₋context₁ * 🆂, Simulator * 🅢);
+/* extern int Zebra(int count, chronology₋instant toggles[], chronology₋instant now, double * out);
   sometime uniform and normal not same time. */
 
 #include "ⓔ-Simulator.cxx" /* variance and sums of normally distributed variables. */
@@ -169,9 +200,9 @@ extern int Rendertable(chronology₋instant when, History * history, struct
 
 #include "ⓔ-Table.cxx"
 
-#pragma recto command line
+#pragma recto command line (zsh and Minimum)
 
-#pragma recto startup and reporting
+#pragma recto startup and optional report at end
 
 #include <stddef.h> /* For `size_t`… */
 #include <stdio.h> /* ...and `fprintf`, `FILE`, `fopen`, `fread`, 
@@ -192,11 +223,7 @@ int read₋until₋row=0;  /*  parse-interpret only start of file. */
 
 Casette filepaths₋sequence; /* with 'char8-t *' pointing on the .event files from command-line. */
 
-unicode₋shatter figures, rules, events;  /*  unicodes with program text. */
-
-struct language₋context streck₋ctxt;
-
-Simulator sim; /* other-case profit & loss and balance sheets non-𝑎𝑐𝑐𝑖𝑑𝑒𝑛𝑡𝑙𝑦 ends up optional. */
+unicode₋shatter figures, rules;  /*  unicodes with program text. */
 
 int FileSystemItemOpenable(const char * u8path, __builtin_int_t * bytes)
 { struct stat st; int y = stat(u8path,&st);
@@ -204,12 +231,12 @@ int FileSystemItemOpenable(const char * u8path, __builtin_int_t * bytes)
    return y == 0 ? 1 : 0;
 }
 
-void append₋reference(void * pointer)
+void append₋reference(void * pointer, struct collection * 🅰)
 {
-   if (copy₋append₋items(1,&pointer,&filepaths₋sequence,Heap₋alloc)) { return; }
+   if (copy₋append₋items(1,&pointer,🅰,Heap₋alloc)) { return; }
 }
 
-int option₋machine₋interprets(int argc, const char8₋t ** argv)
+int option₋machine₋interprets(int argc, char8₋t *ᐧ* argv)
 { int i=0,y,figures₋filepath=0,rules₋filepath=0,only₋until₋row=0; char8₋t * token;
 again:
    if (i>=argc) { goto unagain; }
@@ -219,7 +246,7 @@ again:
    if (only₋until₋row) { read₋until₋row=atoi((char *)token); only₋until₋row=0; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-h");
    if (y == 0) { vfprint("Usage ⬚ [-f <figures.table file>] [-g] " 
-    "<event file>\n", argv[0]); exit(2); }
+    "<event file>\n", ﹟s8(argv[0])); exit(2); }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-f");
    if (y == 0) { figures₋filepath=1; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-g");
@@ -229,8 +256,8 @@ again:
    y = IsPrefixOrEqual((const char *)token, (const char *)"-r"); /* rows to process. */
    if (y == 0) { only₋until₋row=1; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-");
-   if (y > 0) { vfprint("Unknown command-line argument\n"); exit(5); }
-   append₋reference(token);
+   if (y > 0) { vfprint("Unknown command-line argument\n"); exit(3); }
+   append₋reference(token,&filepaths₋sequence);
 next:
    i+=1; goto again;
 unagain:
@@ -299,10 +326,14 @@ main(
   int argc, 
   const char * argv[]
 )
-{ struct ParserContext₁ machine₋ctxt;
+{   struct language₋context streck₋ctxt;
+    struct parsed₋context₁ machine₋ctxt;
+    Simulator sim; /* other-case profit & loss and balance sheets non-𝑎𝑐𝑐𝑖𝑑𝑒𝑛𝑡𝑙𝑦 ends up optional. */
+    unicode₋shatter events;
     error₋panel.diagnosis₋count = 0;
+    Init₋context(&machine₋ctxt);
     if (collection₋init(sizeof(char8₋t *),4096,&filepaths₋sequence)) { exit(1); }
-    option₋machine₋interprets(argc,(const char8₋t **)argv);
+    option₋machine₋interprets(argc,(char8₋t *ᐧ*)argv);
     if (figures₋material₋and₋path) { branch₋figures₋file(); } /*  optional. */
     if (rules₋material₋and₋path) { branch₋rule₋file(); }/*  optional and upper half of event file. */
     if (collection₋count(&filepaths₋sequence) == 0)
@@ -318,20 +349,22 @@ again:
     symbols = Heap₋object₋size(events);
     struct Unicodes program = { symbols, events };
     if (Init₋context(file₋ref,&streck₋ctxt)) { exit(10); }
-    if (BsimParse(&streck₋ctxt,program)) { exit(10); }
+    if (BsimParse(&streck₋ctxt,program,&machine₋ctxt)) { exit(12); }
     Fallow(events); idx+=1; goto again;
     
 unagain:
     
     if (interactive) { EnterInteractiveMode(&sim); }
-    if (Simulate(machine₋ctxt.root,&sim)) { exit(12); }
+    if (Simulate(&machine₋ctxt,&sim)) { exit(13); }
     
     if (figures₋material₋and₋path)
     { chronology₋instant bye₋ts; /* e.g 'rendered 2022-09-23 17:05'. */
       symbols = Heap₋object₋size(figures)/4;
       struct Unicodes program = { symbols, figures };
-      if (Rendertable(bye₋ts,&sim.history,program)) { exit(13); }
+      if (Rendertable(bye₋ts,&sim.history,program)) { exit(17); }
     }
+    
+    Deinit₋context(&machine₋ctxt);
     
     return 0;
 } /*  simulate events and often output figures at a given point in time. */
