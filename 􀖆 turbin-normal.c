@@ -132,8 +132,6 @@ void append₋reference(void * pointer, struct collection * 🅰);
 #pragma recto outcome from reading events
 
 struct Expression; typedef struct Expression Expression;
-
-
 typedef struct { Expression *left,*right; } arithmetic₋add;
 typedef struct { Expression *left,*right; } arithmetic₋sub;
 typedef struct { Expression *left,*right; } arithmetic₋mul;
