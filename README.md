@@ -2,21 +2,12 @@ To compile and debug one of the mac programs, write
 
 ```
 ./retro-mac.sh -d intel-hex
-```
-
-alternatively
-
-to compile and debug one of the mac programs, write
-
-```
-xcrun clang @ccargs_mac -o Contours '🥽⋆Rävvägen.cpp'
-lldb 
-file ./Contours
 b main
 r
 s
-````
-to load the mac-debugger with your program and set a breakpoint when its `main` function is called.
+```
+
+(The debugger will stop the program before `main` is processed.)
 
 ### Prototyping and embedded systems
 
