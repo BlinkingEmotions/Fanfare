@@ -1,23 +1,43 @@
 /*  ⓔ-Frontend.cxx | with interval and the zebra distribution. */
 
-int next₋token₁(struct language₋context * ctxt, 
+int next₋token₁(struct language₋context * ctxt, struct Unicodes program₋events, 
  struct token₋detail * detail₋out)
+{ __builtin_int_t i,symbols=program₋events.tetras;
+   
+   🧵(regular,monetary,error,completion)
+   {
+   case regular: return 0;
+   case monetary: return 0;
+   case completion: return -1;
+   case error: return -2;
+   }
+   
+again:
+   i = ctxt->tip₋unicode; ctxt->tip₋unicode += 1;
+
+   goto again;
+}
+
+inexorable void parse₋statement(struct token₋detail * primary, struct token₋detail * lookahead)
 {
-   return 0;
+   
 }
 
 int recur₋descent₋streck(struct token₋detail * primary, struct token₋detail * lookahead)
 {
+   parse₋statement(primary,lookahead);
    return 0;
 }
 
 int BsimParse(struct language₋context * ctxt, 
  struct Unicodes events₋program, struct virtu₋context * ctxt₋out)
-{ struct token₋detail primary₋piece,lookahead; char * name;
-   if (next₋token₁(ctxt,&primary₋piece)) { print("zero-to-one-token program\n"); goto unagain; }
+{ struct token₋detail primary₋piece,lookahead; char * name; int i,j;
+   if (next₋token₁(ctxt,events₋program,&primary₋piece)) { print("zero-to-one-token program error\n"); goto unagain; }
 again:
-   if (next₋token₁(ctxt,&lookahead)) { goto unagain; }
-   if (recur₋descent₋streck(&primary₋piece,&lookahead)) { goto unagain; }
+   i = next₋token₁(ctxt,events₋program,&lookahead);
+   if (i == -1 || i == -2) { goto unagain; }
+   j = recur₋descent₋streck(&primary₋piece,&lookahead);
+   if (i == -1 || i == -2) { goto unagain; }
 #if defined TRACE₋TOKENS
    char * tokenname(int);
    name = tokenname(primary₋piece.token);
