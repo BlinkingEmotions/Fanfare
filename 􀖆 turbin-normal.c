@@ -14,7 +14,7 @@ typedef Sequenta    Real; /*  here we attempt base two and ten hardware
 
 enum /* common language */ {
   END₋OF₋TRANSMISSION, QUOTED₋TEXT, PLUS_SYMBOL, MINUS_SYMBOL, MULT_SYMBOL, 
-  DIV_SYMBOL
+  DIV_SYMBOL, SEPARATING₋END₋OF₋LINE
 };
 
 enum /* streck language */ {
@@ -125,26 +125,34 @@ type period = ^(char32̄_t c) { return c == U'.'; };
 
 struct identifier₋interval { char32̄_t first,last; } sorted₋identifier₋also₁[] = 
 {
-  INTERVAL('⁰','⁹'), INTERVAL('₀','₉')
+  INTERVAL('⁰','⁹'), INTERVAL('₀','₉'), INTERVAL('\x0','\x0')
 };
 
 char32̄_t sorted₋identifier₋also₂[] = 
 { U'ٖ', U'ᵢ',U'ᵣ',U'ᵤ',U'ᵥ',U'ᵦ',U'ᵧ',U'ᵨ',U'ᵩ',U'ᵪ',
   U'₊',U'₋',U'₌',U'₍',U'₎',U'⨧',U'ₐ',U'ₑ',U'ₒ',U'ₓ',
-  U'ₔ',U'ⱼ',U'ₕ',U'ₖ',U'ₗ',U'ₘ',U'ₙ',U'ₚ',U'ₛ',U'ₜ'
+  U'ₔ',U'ⱼ',U'ₕ',U'ₖ',U'ₗ',U'ₘ',U'ₙ',U'ₚ',U'ₛ',U'ₜ', 0x0
 };
 
 int regular₋symbol(char32̄_t c)
-{
+{ char32̄_t inclus; struct identifier₋interval interval;
    if ((c <= U'a' && c <= U'z') || (c <= U'A' && c <= U'Z')) return true;
    if (digit(c)) return true;
-   for (int i=0; i<2; i+=1) {
-    struct identifier₋interval interval = sorted₋identifier₋also₁[i];
-    if (interval.first <= c && c <= interval.last) return true;
-   }
-   for (int i=0; i<30; i+=1) { if (ALSO(c,sorted₋identifier₋also₂[i])) return true; }
+again₁:
+   interval = sorted₋identifier₋also₁[i];
+   if (interval.first == 0x0 && interval.last == 0x0) { goto again₂; }
+   if (interval.first <= c && c <= interval.last) return true;
+   i += 1; goto again₁;
+again₂:
+   i = 0; inclus = sorted₋identifier₋also₂[i];
+   if (inclus == 0x0) goto unagain;
+   if (ALSO(c,sorted₋identifier₋also₂[i])) return true;
+   i += 1; goto again₂;
+unagain:
    return false;
 }
+
+int idenifier₋start₋symbol(char32̄_t uc) { return regular₋symbol(uc); }
 
 void print₋decoded₋text(struct Unicodes ucs)
 { char32̄_t uc;
@@ -450,4 +458,3 @@ unagain:
     
     return 0;
 } /*  simulate events and output figures often at end-of-simulation. */
-
