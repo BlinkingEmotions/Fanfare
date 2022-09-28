@@ -1,5 +1,10 @@
 /*  ⓔ-Frontend.cxx | with interval and the zebra distribution. */
 
+inexorable void reset(struct language₋context * ctxt)
+{
+   ctxt->mode=mode₋initial;
+}
+
 int next₋token₁(struct language₋context * ctxt, struct Unicodes program₋events, 
  struct token₋detail * detail₋out)
 { __builtin_int_t i,symbols=program₋events.tetras;
@@ -13,8 +18,9 @@ int next₋token₁(struct language₋context * ctxt, struct Unicodes program₋
    }
    
 again:
-   i = ctxt->tip₋unicode; ctxt->tip₋unicode += 1;
-
+   i=ctxt->tip₋unicode; ctxt->tip₋unicode+=1;
+   if (i >= symbols && STATE(mode₋initial)) { confess(completion); }
+   else confess(error);
    goto again;
 }
 
@@ -46,6 +52,7 @@ again:
     ﹟d(primary₋piece.lineno₋last), 
     ﹟s8(primary₋piece.predecessor₋src->source₋path));
 #endif
+   if (primary₋piece.token == END₋OF₋TRANSMISSION) { goto unagain; }
    primary₋piece=lookahead; goto again;
 unagain:
 #if defined TRACE₋TOKENS
