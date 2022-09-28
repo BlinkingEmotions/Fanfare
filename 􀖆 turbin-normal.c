@@ -112,6 +112,40 @@ void Diagnos(int type, void * langctxt₋alt₋location, int bye, const char * s
    if (bye) { exit(1); } else { error₋panel.diagnosis₋count += 1; }
 } /* type determines void, sevenbit text starts with 'info', 'warning', 'error', 'internal'. */
 
+typedef int (^type)(char32̄_t);
+type digit = ^(char32̄_t c) { return U'0' <= c && c <= U'9'; };
+type derender₋newline = ^(char32̄_t c) { return c == U'\xa'; };
+type newline = ^(char32̄_t c) { return derender₋newline(c) || c == U'\xd'; };
+type whitespace = ^(char32̄_t c) { return c == U' ' || U'\t' == c || newline(c); };
+type period = ^(char32̄_t c) { return c == U'.'; };
+#define STATE(s) (s == ctxt->mode)
+#define NEXT(s) ctxt->mode = s
+#define INTERVAL(l,u) { U##l, U##u }
+#define ALSO(c,UC) (c == UC)
+
+struct identifier₋interval { char32̄_t first,last; } sorted₋identifier₋also₁[] = 
+{
+  INTERVAL('⁰','⁹'), INTERVAL('₀','₉')
+};
+
+char32̄_t sorted₋identifier₋also₂[] = 
+{ U'ٖ', U'ᵢ',U'ᵣ',U'ᵤ',U'ᵥ',U'ᵦ',U'ᵧ',U'ᵨ',U'ᵩ',U'ᵪ',
+  U'₊',U'₋',U'₌',U'₍',U'₎',U'⨧',U'ₐ',U'ₑ',U'ₒ',U'ₓ',
+  U'ₔ',U'ⱼ',U'ₕ',U'ₖ',U'ₗ',U'ₘ',U'ₙ',U'ₚ',U'ₛ',U'ₜ'
+};
+
+int regular₋symbol(char32̄_t c)
+{
+   if ((c <= U'a' && c <= U'z') || (c <= U'A' && c <= U'Z')) return true;
+   if (digit(c)) return true;
+   for (int i=0; i<2; i+=1) {
+    struct identifier₋interval interval = sorted₋identifier₋also₁[i];
+    if (interval.first <= c && c <= interval.last) return true;
+   }
+   for (int i=0; i<30; i+=1) { if (ALSO(c,sorted₋identifier₋also₂[i])) return true; }
+   return false;
+}
+
 void print₋decoded₋text(struct Unicodes ucs)
 { char32̄_t uc;
    __builtin_int_t ext₋count=0,i=0;
@@ -163,7 +197,7 @@ union Proposionals {
   logical₋or or;
   logical₋and and;
   logical₋not not;
-  union Arithmetics computat;
+  union Arithmetics comput₋at;
 };
 
 struct Statement; typedef struct Statement Statement;
@@ -279,7 +313,7 @@ again:
    if (rule₋option) { rule₋path=token; rule₋option=0; goto next; }
    if (only₋until₋row) { read₋until₋row=atoi((char *)token); only₋until₋row=0; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-h");
-   if (y == 0) { vfprint("Usage ⬚ [-r <business.rule file>] [-f <figures.table file>] [-g] [-l] " 
+   if (y == 0) { vfprint("Usage ⬚ [-f <figures.table file>] [-r <business.rule file>] [-g] [-l] " 
     "<event file>\n", ﹟s8(argv[0])); exit(2); }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-f");
    if (y == 0) { figures₋option=1; goto next; }
