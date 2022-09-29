@@ -68,12 +68,12 @@ struct token₋detail
 
 struct translation₋context { struct token₋detail primary₋piece, lookahead; };
 
-struct { __builtin_uint_t diagnosis₋count; } error₋panel;
+struct { __builtin_uint_t diagnosis₋count,bitmap; } error₋panel;
 
 struct location { __builtin_int_t u8offset₋start,lineno₋first,lineno₋last, 
  first₋column,last₋column,ucs₋offset; char8₋t * source₋path; };
 
-int Init₋context(char8₋t * program, struct language₋context * ctxt) ⓣ
+int Prepare₋reread(char8₋t * program, struct language₋context * ctxt) ⓣ
 {
    ctxt->state=mode₋initial;
    ctxt->tip₋unicode=0;
@@ -245,7 +245,7 @@ typedef Casette /* Sequence * */ Sequences;
 
 struct virtu₋context { Sequences program; chronology₋instant last; };
 
-int Init₋context(struct virtu₋context * ctxt) ⓣ
+int Apparatus(struct virtu₋context * ctxt) ⓣ
 {
   if (collection₋init(sizeof(struct Sequences *),4096,&ctxt->program)) { return -1; }
   return 0;
@@ -417,7 +417,7 @@ main(
    struct language₋context streck₋ctxt;
     struct virtu₋context machine₋ctxt;
     error₋panel.diagnosis₋count = 0;
-    Init₋context(&machine₋ctxt);
+    Apparatus(&machine₋ctxt);
     if (collection₋init(sizeof(char8₋t *),4096,&filepaths₋sequence)) { exit(1); }
     option₋machine₋interprets(argc,(char8₋t *ᐧ*)argv);
     if (figures₋path) { branch₋figures₋file(); } /*  optional. */
@@ -428,7 +428,7 @@ main(
     } __builtin_int_t idx=0,fd,symbols; char8₋t * file₋ref; int err;
     
     if (rule₋path) {
-      if (Init₋context(rule₋path,&streck₋ctxt)) { exit(10); }
+      if (Prepare₋reread(rule₋path,&streck₋ctxt)) { exit(10); }
       symbols = Heap₋object₋size(rules);
       struct Unicodes program = { symbols, rules };
       if (BsimParse(&streck₋ctxt,program,&machine₋ctxt)) { exit(12); }
@@ -441,7 +441,7 @@ again:
     events = open₋and₋decode(file₋ref,true,&err);
     symbols = Heap₋object₋size(events);
     streck₋ctxt->text₋program = { symbols, events };
-    if (Init₋context(file₋ref,&streck₋ctxt)) { exit(10); }
+    if (Prepare₋reread(file₋ref,&streck₋ctxt)) { exit(10); }
 #if defined TRACE₋TOKENS
     tokenize₋streck(&streck₋ctxt,program);
 #endif
@@ -458,7 +458,7 @@ unagain:
       symbols = Heap₋object₋size(figures)/4;
       struct Unicodes program = { symbols, figures };
       struct language₋context table₋ctxt;
-      if (Init₋context(figures₋path,&table₋ctxt)) { exit(15); }
+      if (Prepare₋reread(figures₋path,&table₋ctxt)) { exit(15); }
       if (Rendertable(&table₋ctxt,&sim.history,program,bye₋ts)) { exit(17); }
     }
     
