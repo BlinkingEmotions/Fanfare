@@ -69,7 +69,7 @@ inexorable int query₋match(int expected₋token, int conditional₋token,
  struct translation₋contex * trans, struct language₋context * ctxt)
 {
    int proceed = trans->primary₋piece == expected₋token && trans₋lookahead == conditional₋token;
-   if (proceed) { }
+   if (proceed) { guard₋match(trans,ctxt); }
 }
 
 inexorable void parse₋statement(struct token₋detail * primary₋piece, struct token₋detail * lookahead)
