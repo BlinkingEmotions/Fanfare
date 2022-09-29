@@ -57,13 +57,21 @@ inexorable void guard₋match(int lookahead₋token, int expected₋token,
    if (lookahead₋token == expected₋token) {
      int y = advance₋through₋text(trans,ctxt);
    } else {
-    char * tokenname(int);
     char * expected₋name = tokenname(expected₋token);
     char * actual₋name = tokenname(lookahead₋token);
     Diagnos(1,trans,0,"error: syntax expected ⬚ token and read a ⬚ token", 
      ﹟s7(expected₋name), ﹟s7(actual₋name));
-    error₋panel.bitmap != recovery;
+#define SYMBOL₋ALTERNATIVELY₋DROPOUT₋OCCURRED 0b1<<13 /* RECOVERED */
+    error₋panel.bitmap |= RECOVERED₋ERROR₋OCCURRED;
    }
+}
+
+inexorable void Exhausted₋grammar(struct translation₋context * trans)
+{
+   Argᴾ token = ﹟s7(tokenname(trans->lookahead.token));
+   Diagnos(1,trans,1,"error: exhausted syntactic envelop in token ⬚", token);
+   /* "error: symbol ⬚ unwelcome syntactically" */
+   /* "error: token ⬚ is off topic" */
 }
 
 inexorable int query₋match(int expected₋token, int conditional₋token, 
@@ -77,33 +85,25 @@ inexorable int query₋match(int expected₋token, int conditional₋token,
    if (early) { Exhausted₋grammar(trans); }
 }
 
-inexorable void Exhausted₋grammar(struct translation₋context * trans)
-{
-   Argᴾ token = s7(tokenname(trans->lookahead.token));
-   Diagnos(1,trans,1,"error: exhausted syntactic envelop in token ⬚", token);
-   /* "error: symbol ⬚ unwelcomed syntactically" */
-   /* "error: token ⬚ is off topic" */
-}
-
 inexorable void parse₋statement(struct translation₋context * trans, struct language₋context * ctxt)
 {
-   if (query₋match()) { }
-   else if (query₋match()) { }
-   else { }
+   if (query₋match(VAR_KEYWORD,REGULAR,trans,ctxt)) { }
+   else if (query₋match(IF_KEYWORD,boolean₋expr,trans,ctxt)) { }
+   else { Exhausted₋grammar(trans); }
 }
 
 int recur₋descent₋streck(struct translation₋context * trans, struct language₋context * ctxt)
 {
-   parse₋statement(primary₋piece,lookahead);
+   parse₋statement(trans,ctxt);
    return 0;
 }
 
-int BsimParse(struct language₋context * ctxt, struct virtu₋context * ctxt₋out)
-{
+EMBOSSED int BsimParse(struct language₋context * ctxt, struct virtu₋context * ctxt₋out)
+{ struct Unicodes events₋program=ctxt->text₋program;
    struct translation₋context read₋ctxt;
-   if (next₋token₁(ctxt,events₋program,&read₋ctxt->primary₋piece)) { vfprint("zero token conversionalist error\n"); return -1; }
-   if (next₋token₁(ctxt,events₋program,&read₋ctxt->lookahead)) { vfprint("one token conversionalist error\n"); return -2; }
-   int i = recur₋descent₋streck(&trans₋ctxt,ctxt);
+   if (next₋token₁(ctxt,&read₋ctxt.primary₋piece)) { vfprint("zero token conversionalist error\n"); return -1; }
+   if (next₋token₁(ctxt,&read₋ctxt.lookahead)) { vfprint("one token conversionalist error\n"); return -2; }
+   int i = recur₋descent₋streck(&read₋ctxt,ctxt);
    switch (i)
    {
    case -1: vfprint("parsed ok.\n"); return 0; break;
@@ -112,13 +112,11 @@ int BsimParse(struct language₋context * ctxt, struct virtu₋context * ctxt₋
    return -1;
 }
 
-void tokenize₋streck(struct language₋context * ctxt, 
- struct Unicodes events₋program)
+void tokenize₋streck(struct language₋context * ctxt)
 { struct token₋detail isolation; char * name; int i;
 again:
-   i = next₋token₁(ctxt,events₋program,&isolation);
+   i = next₋token₁(ctxt,&isolation);
    if (i == -1 || i == -2) { goto unagain; }
-   extern char * tokenname(int);
    name = tokenname(isolation.token);
    print("⬚ (⬚ ⬚ ⬚ ⬚ ⬚)\n", ﹟s7(name), ﹟d(isolation.column₋first), 
     ﹟d(isolation.column₋last), ﹟d(isolation.lineno₋first), 
