@@ -260,9 +260,7 @@ int Deinit₋context(struct virtu₋context * ctxt) ⓣ { return 0; }
 
 extern int BsimParse(struct language₋context * ctxt, struct virtu₋context * 
  ctxt₋out);
-
 extern void tokenize₋streck(struct language₋context * ctxt);
-
 extern char * tokenname(int token);
 
 #include "ⓔ-Frontend.cxx"
