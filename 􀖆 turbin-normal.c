@@ -37,19 +37,19 @@ enum /* table language */ {
 };
 
 enum Scanner₋mode {
-  initial, singline₋comment, multiline₋comment, quoted₋text
+  mode₋initial, singline₋comment, multiline₋comment, quoted₋text
 };
 
 struct language₋context
 {
-  enum Scanner₋mode state;
-  __builtin_int_t tip₋unicode,lineno₋first,
+  enum Scanner₋mode state; int negative;
+  __builtin_int_t symbols₋in₋regular,symbols₋in₋frac;
+  __builtin_int_t tip₋unicode,lineno₋first, 
    lineno₋last,column₋first,column₋last;
+  struct sequent ongoing₋real;
+  struct Unicodes text₋program;
   char8₋t * source₋path;
-  struct fifo order₋and₋memory;
-  struct collection symbol₋stack;
-  int negative;
-}; /*  a․𝘬․a 'verificate₋parser' and token-i-sa-tio-n. */
+}; /*  a․𝘬․a 'verificate₋parser and token-i-sa-tio-n. */
 
 union token₋store
 {
@@ -73,7 +73,7 @@ struct location { __builtin_int_t u8offset₋start,lineno₋first,lineno₋last,
 
 int Init₋context(char8₋t * program, struct language₋context * ctxt) ⓣ
 {
-   ctxt->state=initial;
+   ctxt->state=mode₋initial;
    ctxt->tip₋unicode=0;
    ctxt->lineno₋first=1;
    ctxt->lineno₋last=1;
@@ -118,8 +118,8 @@ type derender₋newline = ^(char32̄_t c) { return c == U'\xa'; };
 type newline = ^(char32̄_t c) { return derender₋newline(c) || c == U'\xd'; };
 type whitespace = ^(char32̄_t c) { return c == U' ' || U'\t' == c || newline(c); };
 type period = ^(char32̄_t c) { return c == U'.'; };
-#define STATE(s) (s == ctxt->mode)
-#define NEXT(s) ctxt->mode = s
+#define STATE(s) (s == ctxt->state)
+#define NEXT(s) ctxt->state = s
 #define INTERVAL(l,u) { U##l, U##u }
 #define ALSO(c,UC) (c == UC)
 
@@ -129,13 +129,13 @@ struct identifier₋interval { char32̄_t first,last; } sorted₋identifier₋al
 };
 
 char32̄_t sorted₋identifier₋also₂[] = 
-{ U'ٖ', U'ᵢ',U'ᵣ',U'ᵤ',U'ᵥ',U'ᵦ',U'ᵧ',U'ᵨ',U'ᵩ',U'ᵪ',
-  U'₊',U'₋',U'₌',U'₍',U'₎',U'⨧',U'ₐ',U'ₑ',U'ₒ',U'ₓ',
+{ U'ٖ', U'ᵢ',U'ᵣ',U'ᵤ',U'ᵥ',U'ᵦ',U'ᵧ',U'ᵨ',U'ᵩ',U'ᵪ', 
+  U'₊',U'₋',U'₌',U'₍',U'₎',U'⨧',U'ₐ',U'ₑ',U'ₒ',U'ₓ', 
   U'ₔ',U'ⱼ',U'ₕ',U'ₖ',U'ₗ',U'ₘ',U'ₙ',U'ₚ',U'ₛ',U'ₜ', 0x0
 };
 
 int regular₋symbol(char32̄_t c)
-{ char32̄_t inclus; struct identifier₋interval interval;
+{ char32̄_t inclus; struct identifier₋interval interval; int i;
    if ((c <= U'a' && c <= U'z') || (c <= U'A' && c <= U'Z')) return true;
    if (digit(c)) return true;
 again₁:
@@ -144,7 +144,7 @@ again₁:
    if (interval.first <= c && c <= interval.last) return true;
    i += 1; goto again₁;
 again₂:
-   i = 0; inclus = sorted₋identifier₋also₂[i];
+   i=0; inclus = sorted₋identifier₋also₂[i];
    if (inclus == 0x0) goto unagain;
    if (ALSO(c,sorted₋identifier₋also₂[i])) return true;
    i += 1; goto again₂;
@@ -152,7 +152,7 @@ unagain:
    return false;
 }
 
-int idenifier₋start₋symbol(char32̄_t uc) { return regular₋symbol(uc); }
+int identifier₋start₋symbol(char32̄_t uc) { return regular₋symbol(uc); }
 
 void print₋decoded₋text(struct Unicodes ucs)
 { char32̄_t uc;
@@ -254,6 +254,9 @@ int Deinit₋context(struct virtu₋context * ctxt) ⓣ { return 0; }
 extern int BsimParse(struct language₋context * ctxt, struct Unicodes 
  events₋program, struct virtu₋context * ctxt₋out);
 
+extern void tokenize₋streck(struct language₋context * ctxt, 
+ struct Unicodes events₋program);
+
 #include "ⓔ-Frontend.cxx"
 
 #pragma recto stochastic and deterministic simulation
@@ -277,6 +280,12 @@ extern int Rendertable(struct language₋context * ctxt, History * history,
 #include "ⓔ-Table.cxx"
 
 #pragma recto command line (zsh compsys and Minimum)
+
+/* file-open (⌘O), file-save (⌘S), find (⌘F), emoj and symbols (⌘E) completion . */
+
+/* show completions ^ Space, record macro ^ Q, playback macro ^ ⇧ Q. */
+
+/* zsh is not popover. */ /* P(E|F)=P(E∩F)/P(F) */
 
 #pragma recto startup and optional report at end
 
@@ -435,8 +444,11 @@ again:
     file₋ref = (char8₋t *)collection₋relative(idx,&filepaths₋sequence);
     events = open₋and₋decode(file₋ref,true,&err);
     symbols = Heap₋object₋size(events);
-    struct Unicodes program = { symbols, events };
+    streck₋ctxt->text₋program = { symbols, events };
     if (Init₋context(file₋ref,&streck₋ctxt)) { exit(10); }
+#if defined TRACE₋TOKENS
+    tokenize₋streck(&streck₋ctxt,program);
+#endif
     if (BsimParse(&streck₋ctxt,program,&machine₋ctxt)) { exit(12); }
     Fallow(events); idx+=1; goto again;
     
@@ -458,3 +470,4 @@ unagain:
     
     return 0;
 } /*  simulate events and output figures often at end-of-simulation. */
+
