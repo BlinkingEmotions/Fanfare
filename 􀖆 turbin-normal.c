@@ -285,7 +285,7 @@ extern int Rendertable(struct language₋context * ctxt, History * history,
 
 #include "ⓔ-Table.cxx"
 
-#pragma recto command line (zsh compsys and Minimum)
+#pragma recto command line (zsh compsys and Minimum completion)
 
 #pragma recto startup and optional report at end
 
