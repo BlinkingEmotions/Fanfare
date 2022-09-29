@@ -1,13 +1,32 @@
-/*  ⓔ-Frontend.cxx | with interval and the zebra distribution. */
+/*  ⓔ-Frontend.cxx | interval and the zebra distribution. */
+
+inexorable void append₋to₋fraction(char32̄_t uc, struct language₋context * ctxt)
+{
+   
+}
+
+inexorable void append₋to₋regular(char32̄_t uc, struct language₋context * ctxt)
+{
+   
+}
+
+inexorable void prolong₋window(struct language₋context * ctxt, 
+ struct token₋detail * detail₋out)
+{
+   detail₋out->lineno₋first = ctxt->lineno₋first;
+}
 
 inexorable void reset(struct language₋context * ctxt)
 {
-   ctxt->mode=mode₋initial;
+   ctxt->state=mode₋initial;
+   ctxt->symbols₋in₋regular=0;
+   ctxt->ongoing₋real = accumulative₋zero();
+   ctxt->symbols₋in₋frac=0;
 }
 
-int next₋token₁(struct language₋context * ctxt, struct Unicodes program₋events, 
- struct token₋detail * detail₋out)
-{ __builtin_int_t i,symbols=program₋events.tetras;
+int next₋token₁(struct language₋context * ctxt, struct token₋detail * detail₋out)
+{ __builtin_int_t i,symbols=ctxt->text₋program.tetras;
+   struct Unicodes program=ctxt->text₋program;
    
    🧵(regular,monetary,error,completion)
    {
@@ -18,47 +37,82 @@ int next₋token₁(struct language₋context * ctxt, struct Unicodes program₋
    }
    
 again:
+   
    i=ctxt->tip₋unicode; ctxt->tip₋unicode+=1;
    if (i >= symbols && STATE(mode₋initial)) { confess(completion); }
    else confess(error);
    goto again;
 }
 
-inexorable void parse₋statement(struct token₋detail * primary, struct token₋detail * lookahead)
+inexorable int advance₋through₋text(struct translation₋context * trans, 
+ struct language₋context * ctxt)
+{
+   trans->primary₋piece = trans->lookahead;
+   return next₋token₁(ctxt,ctxt->text₋program,&trans->lookahead);
+}
+
+inexorable void guard₋match(int lookahead₋token, int expected₋token, 
+ struct translation₋context * trans, struct language₋context * ctxt)
+{
+   if (lookahead == expected₋token) {
+     int y = advance₋through₋text(trans,ctxt);
+   } else {
+    char * tokenname(int);
+    char * expected₋token = tokenname(expected₋token);
+    char * actual₋token = tokenname(lookahead₋token);
+    Diagnos(1,"error: syntax expected ⬚ and read ⬚\n", 
+     ﹟s7(expected₋token), ﹟s7(actual₋token));
+   }
+}
+
+inexorable int query₋match(int expected₋token, int conditional₋token, 
+ struct translation₋contex * trans, struct language₋context * ctxt)
+{
+   if ()
+}
+
+inexorable void parse₋statement(struct token₋detail * primary₋piece, struct token₋detail * lookahead)
 {
    
 }
 
-int recur₋descent₋streck(struct token₋detail * primary, struct token₋detail * lookahead)
+int recur₋descent₋streck(struct token₋detail * primary₋piece, struct token₋detail * lookahead)
 {
-   parse₋statement(primary,lookahead);
+   parse₋statement(primary₋piece,lookahead);
    return 0;
 }
 
 int BsimParse(struct language₋context * ctxt, 
  struct Unicodes events₋program, struct virtu₋context * ctxt₋out)
-{ struct token₋detail primary₋piece,lookahead; char * name; int i,j;
-   if (next₋token₁(ctxt,events₋program,&primary₋piece)) { print("zero-to-one-token program error\n"); goto unagain; }
+{
+   struct tusee₋context rctx;
+   if (next₋token₁(ctxt,events₋program,&rctx->primary₋piece)) { print("zero token error\n"); return -1; }
+   if (next₋token₁(ctxt,events₋program,&rctx->lookahead)) { print("one token error\n"); return -2; }
+   int i = recur₋descent₋streck(&primary₋piece,&lookahead);
+   switch (i)
+   {
+   case -1: print("parsed ok.\n"); break;
+   case -2: print("parse error.\n"); break;
+   }
+}
+
+void tokenize₋streck(struct language₋context * ctxt, 
+ struct Unicodes events₋program)
+{ struct token₋detail isolation; char * name; int i;
 again:
-   i = next₋token₁(ctxt,events₋program,&lookahead);
+   i = next₋token₁(ctxt,events₋program,&isolation);
    if (i == -1 || i == -2) { goto unagain; }
-   j = recur₋descent₋streck(&primary₋piece,&lookahead);
-   if (i == -1 || i == -2) { goto unagain; }
-#if defined TRACE₋TOKENS
-   char * tokenname(int);
-   name = tokenname(primary₋piece.token);
-   print("⬚ (⬚ ⬚ ⬚ ⬚ ⬚)\n", ﹟s7(name), ﹟d(primary₋piece.column₋first), 
-    ﹟d(primary₋piece.column₋last), ﹟d(primary₋piece.lineno₋first), 
-    ﹟d(primary₋piece.lineno₋last), 
-    ﹟s8(primary₋piece.predecessor₋src->source₋path));
-#endif
-   if (primary₋piece.token == END₋OF₋TRANSMISSION) { goto unagain; }
-   primary₋piece=lookahead; goto again;
+   extern char * tokenname(int);
+   name = tokenname(isolation.token);
+   print("⬚ (⬚ ⬚ ⬚ ⬚ ⬚)\n", ﹟s7(name), ﹟d(isolation.column₋first), 
+    ﹟d(isolation.column₋last), ﹟d(isolation.lineno₋first), 
+    ﹟d(isolation.lineno₋last), 
+    ﹟s8(isolation.predecessor₋src->source₋path));
+   if (isolation.token == END₋OF₋TRANSMISSION) { goto unagain; }
+   goto again;
 unagain:
-#if defined TRACE₋TOKENS
    print("\n");
-#endif
-   return 0;
+   ctxt->tip₋unicode=0;
 }
 
 char * tokenname(int token)
