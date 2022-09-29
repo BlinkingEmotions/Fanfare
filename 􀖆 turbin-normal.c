@@ -281,12 +281,6 @@ extern int Rendertable(struct language₋context * ctxt, History * history,
 
 #pragma recto command line (zsh compsys and Minimum)
 
-/* file-open (⌘O), file-save (⌘S), find (⌘F), emoj and symbols (⌘E) completion . */
-
-/* show completions ^ Space, record macro ^ Q, playback macro ^ ⇧ Q. */
-
-/* zsh is not popover. */ /* P(E|F)=P(E∩F)/P(F) */
-
 #pragma recto startup and optional report at end
 
 #include <stddef.h> /* For `size_t`… */
