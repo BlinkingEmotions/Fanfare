@@ -28,7 +28,7 @@ enum /* streck language */ {
   RESIDENT_KEYWORD, WITH_KEYWORD, IS_KEYWORD, TO_KEYWORD, SCHEDULE_KEYWORD, 
   STARTING_KEYWORD, OCCURING_KEYWORD, ENDING_KEYWORD, DROP₋SCHEDULE_KEYWORD, 
   EXCHANGE_KEYWORD, RATE_KEYWORD, CURRENCY_KEYWORD, LEFT₋BRACKET, 
-  RIGHT₋BRACKET
+  RIGHT₋BRACKET, boolean₋expr
 };
 
 enum /* table language */ {
@@ -109,6 +109,11 @@ void Diagnos(int type, void * langctxt₋alt₋location, int bye, const char * s
     ﹟d(column₋last), ﹟d(column₋last));
    vfprint(" (⬚ line", ﹟d(linecount));
    if (linecount != 1) { vfprint("s"); }
+   typedef void (^Output)(char8₋t * u8s, __builtin_int_t bytes);
+   extern int print﹟(Output,const char *,__builtin_va_list);
+   extern int write(int,const void *,int);
+   Output output = ^(char8₋t * u8s, __builtin_int_t bytes) { write(2,(const void *)u8s,bytes); };
+   print﹟(output,sevenbit₋utf8,__various);
    vfprint(")\n");
    va_epilogue;
    if (bye) { exit(1); } else { error₋panel.diagnosis₋count += 1; }
@@ -253,11 +258,12 @@ int Apparatus(struct virtu₋context * ctxt) ⓣ
 
 int Deinit₋context(struct virtu₋context * ctxt) ⓣ { return 0; }
 
-extern int BsimParse(struct language₋context * ctxt, struct Unicodes 
- events₋program, struct virtu₋context * ctxt₋out);
+extern int BsimParse(struct language₋context * ctxt, struct virtu₋context * 
+ ctxt₋out);
 
-extern void tokenize₋streck(struct language₋context * ctxt, 
- struct Unicodes events₋program);
+extern void tokenize₋streck(struct language₋context * ctxt);
+
+extern char * tokenname(int token);
 
 #include "ⓔ-Frontend.cxx"
 
@@ -431,7 +437,8 @@ main(
       if (Prepare₋reread(rule₋path,&streck₋ctxt)) { exit(10); }
       symbols = Heap₋object₋size(rules);
       struct Unicodes program = { symbols, rules };
-      if (BsimParse(&streck₋ctxt,program,&machine₋ctxt)) { exit(12); }
+      streck₋ctxt.text₋program = program;
+      if (BsimParse(&streck₋ctxt,&machine₋ctxt)) { exit(12); }
     }
     
 again:
@@ -440,12 +447,13 @@ again:
     file₋ref = (char8₋t *)collection₋relative(idx,&filepaths₋sequence);
     events = open₋and₋decode(file₋ref,true,&err);
     symbols = Heap₋object₋size(events);
-    streck₋ctxt->text₋program = { symbols, events };
+    struct Unicodes program = { symbols, events };
+    streck₋ctxt.text₋program = program;
     if (Prepare₋reread(file₋ref,&streck₋ctxt)) { exit(10); }
 #if defined TRACE₋TOKENS
-    tokenize₋streck(&streck₋ctxt,program);
+    tokenize₋streck(&streck₋ctxt);
 #endif
-    if (BsimParse(&streck₋ctxt,program,&machine₋ctxt)) { exit(12); }
+    if (BsimParse(&streck₋ctxt,&machine₋ctxt)) { exit(12); }
     Fallow(events); idx+=1; goto again;
     
 unagain:
