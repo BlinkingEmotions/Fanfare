@@ -10,7 +10,7 @@ inexorable int append₋to₋regular(char32̄_t uc, struct language₋context * 
    return 0;
 }
 
-inexorable void prolong₋window(struct language₋context * ctxt, 
+inexorable void resize₋window(struct language₋context * ctxt, 
  struct token₋detail * detail₋out)
 {
    detail₋out->lineno₋first = ctxt->lineno₋first;
@@ -58,43 +58,58 @@ inexorable void guard₋match(int lookahead₋token, int expected₋token,
      int y = advance₋through₋text(trans,ctxt);
    } else {
     char * tokenname(int);
-    char * expected₋token = tokenname(expected₋token);
-    char * actual₋token = tokenname(lookahead₋token);
-    Diagnos(1,"error: syntax expected ⬚ and read ⬚\n", 
-     ﹟s7(expected₋token), ﹟s7(actual₋token));
+    char * expected₋name = tokenname(expected₋token);
+    char * actual₋name = tokenname(lookahead₋token);
+    Diagnos(1,trans,0,"error: syntax expected ⬚ token and read a ⬚ token", 
+     ﹟s7(expected₋name), ﹟s7(actual₋name));
+    error₋panel.bitmap != recovery;
    }
 }
 
 inexorable int query₋match(int expected₋token, int conditional₋token, 
- struct translation₋contex * trans, struct language₋context * ctxt)
+ struct translation₋context * trans, struct language₋context * ctxt)
 {
-   int proceed = trans->primary₋piece == expected₋token && trans₋lookahead == conditional₋token;
-   if (proceed) { guard₋match(trans,ctxt); }
+   int old = trans->primary₋piece.token == expected₋token;
+   int young = trans->lookahead.token == conditional₋token;
+   int proceed = old && young;
+   int early = old && !young;
+   if (proceed) { guard₋match(_,_,trans,ctxt); }
+   if (early) { Exhausted₋grammar(trans); }
 }
 
-inexorable void parse₋statement(struct token₋detail * primary₋piece, struct token₋detail * lookahead)
+inexorable void Exhausted₋grammar(struct translation₋context * trans)
 {
-   
+   Argᴾ token = s7(tokenname(trans->lookahead.token));
+   Diagnos(1,trans,1,"error: exhausted syntactic envelop in token ⬚", token);
+   /* "error: symbol ⬚ unwelcomed syntactically" */
+   /* "error: token ⬚ is off topic" */
 }
 
-int recur₋descent₋streck(struct token₋detail * primary₋piece, struct token₋detail * lookahead)
+inexorable void parse₋statement(struct translation₋context * trans, struct language₋context * ctxt)
+{
+   if (query₋match()) { }
+   else if (query₋match()) { }
+   else { }
+}
+
+int recur₋descent₋streck(struct translation₋context * trans, struct language₋context * ctxt)
 {
    parse₋statement(primary₋piece,lookahead);
    return 0;
 }
 
-int BsimParse(struct language₋context * ctxt, 
- struct Unicodes events₋program, struct virtu₋context * ctxt₋out)
+int BsimParse(struct language₋context * ctxt, struct virtu₋context * ctxt₋out)
 {
-   struct tusee₋context rctx;
-   if (next₋token₁(ctxt,events₋program,&rctx->primary₋piece)) { print("zero token error\n"); return -1; }
-   if (next₋token₁(ctxt,events₋program,&rctx->lookahead)) { print("one token error\n"); return -2; }
-   int i = recur₋descent₋streck(&primary₋piece,&lookahead);
+   struct translation₋context read₋ctxt;
+   if (next₋token₁(ctxt,events₋program,&read₋ctxt->primary₋piece)) { vfprint("zero token conversionalist error\n"); return -1; }
+   if (next₋token₁(ctxt,events₋program,&read₋ctxt->lookahead)) { vfprint("one token conversionalist error\n"); return -2; }
+   int i = recur₋descent₋streck(&trans₋ctxt,ctxt);
    switch (i)
    {
-   case -1: print("parsed ok.\n"); break;
-   case -2: print("parse error.\n"); break;
+   case -1: vfprint("parsed ok.\n"); return 0; break;
+   case -2: vfprint("parse error.\n"); return -2; break;
    }
+   return -1;
 }
 
 void tokenize₋streck(struct language₋context * ctxt, 
