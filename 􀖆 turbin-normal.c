@@ -73,7 +73,7 @@ struct { __builtin_uint_t diagnosis₋count,bitmap; } error₋panel;
 struct location { __builtin_int_t u8offset₋start,lineno₋first,lineno₋last, 
  first₋column,last₋column,ucs₋offset; char8₋t * source₋path; };
 
-int Prepare₋reread(char8₋t * program, struct language₋context * ctxt) ⓣ
+int Prepare₋read(char8₋t * program, struct language₋context * ctxt) ⓣ
 {
    ctxt->state=mode₋initial;
    ctxt->tip₋unicode=0;
@@ -434,7 +434,7 @@ main(
     } __builtin_int_t idx=0,fd,symbols; char8₋t * file₋ref; int err;
     
     if (rule₋path) {
-      if (Prepare₋reread(rule₋path,&streck₋ctxt)) { exit(10); }
+      if (Prepare₋read(rule₋path,&streck₋ctxt)) { exit(10); }
       symbols = Heap₋object₋size(rules);
       struct Unicodes program = { symbols, rules };
       streck₋ctxt.text₋program = program;
@@ -449,7 +449,7 @@ again:
     symbols = Heap₋object₋size(events);
     struct Unicodes program = { symbols, events };
     streck₋ctxt.text₋program = program;
-    if (Prepare₋reread(file₋ref,&streck₋ctxt)) { exit(10); }
+    if (Prepare₋read(file₋ref,&streck₋ctxt)) { exit(10); }
 #if defined TRACE₋TOKENS
     tokenize₋streck(&streck₋ctxt);
 #endif
@@ -466,7 +466,7 @@ unagain:
       symbols = Heap₋object₋size(figures)/4;
       struct Unicodes program = { symbols, figures };
       struct language₋context table₋ctxt;
-      if (Prepare₋reread(figures₋path,&table₋ctxt)) { exit(15); }
+      if (Prepare₋read(figures₋path,&table₋ctxt)) { exit(15); }
       if (Rendertable(&table₋ctxt,&sim.history,program,bye₋ts)) { exit(17); }
     }
     
