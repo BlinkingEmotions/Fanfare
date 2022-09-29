@@ -1,13 +1,13 @@
 /*  ⓔ-Frontend.cxx | interval and the zebra distribution. */
 
-inexorable void append₋to₋fraction(char32̄_t uc, struct language₋context * ctxt)
+inexorable int append₋to₋fraction(char32̄_t uc, struct language₋context * ctxt)
 {
-   
+   return 0;
 }
 
-inexorable void append₋to₋regular(char32̄_t uc, struct language₋context * ctxt)
+inexorable int append₋to₋regular(char32̄_t uc, struct language₋context * ctxt)
 {
-   
+   return 0;
 }
 
 inexorable void prolong₋window(struct language₋context * ctxt, 
@@ -48,13 +48,13 @@ inexorable int advance₋through₋text(struct translation₋context * trans,
  struct language₋context * ctxt)
 {
    trans->primary₋piece = trans->lookahead;
-   return next₋token₁(ctxt,ctxt->text₋program,&trans->lookahead);
+   return next₋token₁(ctxt,&trans->lookahead);
 }
 
 inexorable void guard₋match(int lookahead₋token, int expected₋token, 
  struct translation₋context * trans, struct language₋context * ctxt)
 {
-   if (lookahead == expected₋token) {
+   if (lookahead₋token == expected₋token) {
      int y = advance₋through₋text(trans,ctxt);
    } else {
     char * tokenname(int);
@@ -68,7 +68,8 @@ inexorable void guard₋match(int lookahead₋token, int expected₋token,
 inexorable int query₋match(int expected₋token, int conditional₋token, 
  struct translation₋contex * trans, struct language₋context * ctxt)
 {
-   if ()
+   int proceed = trans->primary₋piece == expected₋token && trans₋lookahead == conditional₋token;
+   if (proceed) { }
 }
 
 inexorable void parse₋statement(struct token₋detail * primary₋piece, struct token₋detail * lookahead)
