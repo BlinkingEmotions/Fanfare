@@ -66,6 +66,8 @@ struct token₋detail
   struct language₋context * predecessor₋src;
 };
 
+struct translation₋context { struct token₋detail primary₋piece, lookahead; };
+
 struct { __builtin_uint_t diagnosis₋count; } error₋panel;
 
 struct location { __builtin_int_t u8offset₋start,lineno₋first,lineno₋last, 
