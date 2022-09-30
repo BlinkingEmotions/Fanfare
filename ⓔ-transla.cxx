@@ -42,7 +42,7 @@ void expression(struct translation₋context * trans, struct language₋context 
 {
    term(trans,ctxt);
 again:
-   if (token != PLUS_SYMBOL && token != MINUS_SYMBOL) { return; }
+   if (trans->primary₋piece.token != PLUS_SYMBOL && trans->primary₋piece.token != MINUS_SYMBOL) { return; }
    match(trans->primary₋piece.token,trans,ctxt);
    term(trans,ctxt);
    goto again;
@@ -52,7 +52,7 @@ void term(struct translation₋context * trans, struct language₋context * ctxt
 {
    factor(trans,ctxt);
 again:
-   if (trans->primary₋piece.token != MULT_SUMBOL && token != DIV_SYMBOL) { return; }
+   if (trans->primary₋piece.token != MULT_SUMBOL && trans->primary₋piece.token != DIV_SYMBOL) { return; }
    match(trans->primary₋piece.token,trans,ctxt);
    factor(trans,ctxt);
    goto again;
