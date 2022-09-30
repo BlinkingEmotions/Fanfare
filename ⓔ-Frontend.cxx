@@ -80,21 +80,22 @@ inexorable int query₋match(int expected₋token, int conditional₋token,
    int old = trans->primary₋piece.token == expected₋token;
    int young = trans->lookahead.token == conditional₋token;
    int proceed = old && young;
-   int early = old && !young;
    if (proceed) { guard₋match(_,_,trans,ctxt); }
-   if (early) { Exhausted₋grammar(trans); }
+   /* int early = old && !young;
+   if (early) { Exhausted₋grammar(trans); } */
 }
 
-inexorable void parse₋statement(struct translation₋context * trans, struct language₋context * ctxt)
-{
-   if (query₋match(VAR_KEYWORD,REGULAR,trans,ctxt)) { }
-   else if (query₋match(IF_KEYWORD,boolean₋expr,trans,ctxt)) { }
-   else { Exhausted₋grammar(trans); }
-}
+#include "ⓔ-transla.cxx"
 
 int recur₋descent₋streck(struct translation₋context * trans, struct language₋context * ctxt)
 {
-   parse₋statement(trans,ctxt);
+   if (query₋match(VAR_KEYWORD,REGULAR,trans,ctxt)) { assignment(trans,ctxt); }
+   else if (query₋match(IF_KEYWORD,boolean₋expr,trans,ctxt)) { condition(trans.ctxt); } /* Scandinavian 'utifall-att'. */
+   else if (query₋match(PRINT_KEYWORD,text₋expr,trans₋ctxt)) { interac(trans.ctxt); }
+   else if (query₋match(BREAK_KEYWORD,text₋expr,trans₋ctxt)) { rejuvena(trans,ctxt); }
+   else if (query₋match(BOOKKEEP_KEYWORD,text₋expr,trans₋ctxt)) { account₋detail(trans,ctxt); }
+   else if (query₋match(FUNCTION_KEYWORD,text₋expr,trans₋ctxt)) { organisa(trans,ctxt); }
+   else { Exhausted₋grammar(trans); }
    return 0;
 }
 
