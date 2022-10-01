@@ -304,7 +304,7 @@ again:
 
 void greeting()
 {
-   __builtin_int_t cores = std::thread::hardware_concurrency();
+   __builtin_int_t cores = sysconf("_SC_NPROCESSORS_ONLN");
    print("the helixshell, revision ⬚\nfor ⬚ on ⬚ virtual cpu core⬚.\n\n", 
     ﹟s7(SHA1GIT), ﹟s7("Macbook Pro"), ﹟d(cores), 
     ﹟s7(cores > 1 ? ﹟s7("s") : ﹟s7("")));
