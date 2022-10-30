@@ -1,4 +1,4 @@
-/*  turbin-normal a․𝘬․a Plan-9 | modellers' traveller companion. (CORP. EDITION.) */
+/*  turbin-normal | modellers' traveller companion. (CORP. EDITION.) */
 
 import Twinbeam; /*  he is sitting in a box 𝘦․𝘨 T-FOR-D and De-la-v-all. */
 
@@ -8,7 +8,7 @@ typedef int64_t     Integer;
 typedef Sequenta    Real; /*  here we attempt base two and ten hardware 
  Ieee754 and software arithmetics. */
 
-#define TRACE₋TOKENS /*  while reading .streck and .table files, print-out token on stdout. */
+/* #define TRACE₋TOKENS  while reading .streck and .table files, print-out token on stdout. */
 #define TRACE₋ENCODING /* after decoding utf-8 output the decoded Unicodes to stdout. */
 #define TRACE₋SYNTAX /* after parsing .streck files, print the indented syntax tree on stdout. */
 
@@ -28,7 +28,8 @@ enum /* streck language */ {
   RESIDENT_KEYWORD, WITH_KEYWORD, IS_KEYWORD, TO_KEYWORD, SCHEDULE_KEYWORD, 
   STARTING_KEYWORD, OCCURING_KEYWORD, ENDING_KEYWORD, DROP₋SCHEDULE_KEYWORD, 
   EXCHANGE_KEYWORD, RATE_KEYWORD, CURRENCY_KEYWORD, LEFT₋BRACKET, 
-  RIGHT₋BRACKET, boolean₋expr
+  RIGHT₋BRACKET, PERIOD₋SYMBOL, LEFT₋PAREN, RIGHT₋PAREN, LEQ₋SYMBOLS, 
+  GEQ₋SYMBOLS, LT₋SYMBOL, GT₋SYMBOL, EQUAL₋SYMBOL, SEMICOLON₋SYMBOL
 };
 
 enum /* table language */ {
@@ -49,7 +50,7 @@ struct language₋context
   struct sequent ongoing₋real;
   struct Unicodes text₋program;
   char8₋t * source₋path;
-}; /*  a․𝘬․a 'verificate₋parser and token-i-sa-tio-n. */
+} Ctxt; /*  a․𝘬․a 'verificate₋parser and token-i-sa-tio-n. */
 
 union token₋store
 {
@@ -66,14 +67,14 @@ struct token₋detail
   struct language₋context * predecessor₋src;
 };
 
-struct translation₋context { struct token₋detail primary₋piece, lookahead; };
+struct translation₋context { struct token₋detail primary₋piece, lookahead /*, reminicent₋plan, distant */; };
 
 struct { __builtin_uint_t diagnosis₋count,bitmap; } error₋panel;
 
 struct location { __builtin_int_t u8offset₋start,lineno₋first,lineno₋last, 
  first₋column,last₋column,ucs₋offset; char8₋t * source₋path; };
 
-int Prepare₋read(char8₋t * program, struct language₋context * ctxt) ⓣ
+int Prepared(char8₋t * program, struct language₋context * ctxt) ⓣ
 {
    ctxt->state=mode₋initial;
    ctxt->tip₋unicode=0;
@@ -117,7 +118,7 @@ void Diagnos(int type, void * langctxt₋alt₋location, int bye, const char * s
    vfprint(")\n");
    va_epilogue;
    if (bye) { exit(1); } else { error₋panel.diagnosis₋count += 1; }
-} /* type determines void, sevenbit text starts with 'info', 'warning', 'error', 'internal'. */
+} /* type determines void, sevenbit text starts with 'info', 'warning', 'error', 'intern'. */
 
 typedef int (^type)(char32̄_t);
 type digit = ^(char32̄_t c) { return U'0' <= c && c <= U'9'; };
@@ -217,11 +218,11 @@ union Proposionals {
 
 struct Statement; typedef struct Statement Statement;
 
-typedef Casette /* __uint128_t */ formal₋arguments;
+typedef struct collection /* __uint128_t */ formal₋arguments;
 typedef struct { __uint128_t regular₋ident; formal₋arguments list; int is₋procedure; 
- Casette /* Statement * */ statements; } programming₋def;
+ struct collection /* Statement * */ statements; } programming₋def;
 typedef struct { __uint128_t regular₋ident; Expression *expr,*unit; } programming₋let;
-typedef Casette /* Expression * */ actual₋arguments;
+typedef struct collection /* Expression * */ actual₋arguments;
 typedef struct { __uint128_t regular₋ident; actual₋arguments actuals; } programming₋call;
 typedef struct { Expression *condition; Statement *then, *optional₋else; } programming₋if;
 typedef struct { Expression * summar; } programming₋return;
@@ -239,9 +240,9 @@ union single₋statement {
 struct Statement { union single₋statement stmt; __builtin_int_t kind; 
  struct location there; };
 
-struct Sequence { chronology₋instant instant; Casette /* Statement * */ statements; };
+struct Sequence { chronology₋instant instant; struct collection /* Statement * */ statements; };
 
-typedef Casette /* Sequence * */ Sequences;
+typedef struct collection /* Sequence * */ Sequences;
 
 #pragma recto parsing northern 'således' tran-sact-ions and veri-fi-c-at-es
 
@@ -283,9 +284,15 @@ extern int Simulate(struct virtu₋context * 🆂, Simulator * 🅢);
 extern int Rendertable(struct language₋context * ctxt, History * history, 
  struct Unicodes computation₋program, chronology₋instant when);
 
-#include "ⓔ-Table.cxx"
+#include "ⓔ-table-grammar.cxx"
 
 #pragma recto command line (zsh compsys and Minimum completion)
+
+/* file-open (⌘O), file-save (⌘S), find (⌘F), emoj and symbols (⌘E) completion . */
+
+/* show completions ^ Space, record macro ^ Q, playback macro ^ ⇧ Q. */
+
+/* zsh is not popover. */ /* P(E|F)=P(E∩F)/P(F) */
 
 #pragma recto startup and optional report at end
 
@@ -432,7 +439,7 @@ main(
     } __builtin_int_t idx=0,fd,symbols; char8₋t * file₋ref; int err;
     
     if (rule₋path) {
-      if (Prepare₋read(rule₋path,&streck₋ctxt)) { exit(10); }
+      if (Prepared(rule₋path,&streck₋ctxt)) { exit(10); }
       symbols = Heap₋object₋size(rules);
       struct Unicodes program = { symbols, rules };
       streck₋ctxt.text₋program = program;
@@ -447,7 +454,7 @@ again:
     symbols = Heap₋object₋size(events);
     struct Unicodes program = { symbols, events };
     streck₋ctxt.text₋program = program;
-    if (Prepare₋read(file₋ref,&streck₋ctxt)) { exit(10); }
+    if (Prepared(file₋ref,&streck₋ctxt)) { exit(10); }
 #if defined TRACE₋TOKENS
     tokenize₋streck(&streck₋ctxt);
 #endif
@@ -459,12 +466,12 @@ unagain:
     if (interactive) { EnterInteractiveMode(&sim); }
     if (Simulate(&machine₋ctxt,&sim)) { exit(13); }
     
-    if (figures₋path)
+    if (figures₋path) /* ta-bell. */
     { chronology₋instant bye₋ts; /* 𝘦․𝘨 'material ending 2019-12-24 23:59:59 rendered 2022-09-23 17:05'. */
       symbols = Heap₋object₋size(figures)/4;
       struct Unicodes program = { symbols, figures };
       struct language₋context table₋ctxt;
-      if (Prepare₋read(figures₋path,&table₋ctxt)) { exit(15); }
+      if (Prepared(figures₋path,&table₋ctxt)) { exit(15); }
       if (Rendertable(&table₋ctxt,&sim.history,program,bye₋ts)) { exit(17); }
     }
     
