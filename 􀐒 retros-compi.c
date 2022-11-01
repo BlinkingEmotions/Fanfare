@@ -107,7 +107,7 @@ int₋to₋sequent:
     dereference₋and₋swap(px,py)
   END(attempth₋progress)
 
-  / *. compile with tablett example~1.detail 🚦.modules and the constant 'GITSHA1' is predefined. * /
+  / *. compile with tablett example~1.detail 🚦.modules and the constant 'SHA1GIT' is predefined. * /
 
 */
 
