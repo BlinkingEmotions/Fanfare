@@ -36,7 +36,7 @@ import Twinbeam
   constant uint32_t PIC32ATRISCLR = (0x1234 + 10);
   compute uint32_t sum(uint8_t a, uint8_t b) { return a+b; }
   typedef encompass₋material simd_tᵦ; /‌* specialization *‌/
-  prominent definite Unicodes Run(char32̄_t *) { ... return text; }
+  educative definite Unicodes Run(char32̄_t *) { ... return text; }
 
 @  This case takes care in case we want to output a fixed number of digits.
 
