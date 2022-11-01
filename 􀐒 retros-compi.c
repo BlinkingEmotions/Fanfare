@@ -2,9 +2,11 @@
 
 import Twinbeam;
 
-/* Example is stored as an Utf-8 file and NFC normalized unicode when processed and indentifier is 
- (Start|_) Continuation* and Unicode UAX 31.
-
+/**
+ 
+ This example is stored as an Utf-8 file and NFC normalized unicode when 
+ processed and identifier is (Start|_) Continuation* and Unicode UAX 31.
+ 
 import Fōretag-Method /͓ and not 'Company₋Methods' and one do not break with '$' before white space. *̷̷
  
   .partial fostrat₋defi|struct after9₋variables [with negotiated₋valuable]
@@ -118,7 +120,7 @@ int₋to₋sequent:
 
   /͓  compile with run-link -o a.out example~1.detail 🚦.modules and the constant 'SHA1GIT' is predefined. *̷̷
 
- */
+ **/
 
 static symboltable₋ref preproc, keywords, operator₋arm, operator₋intel, operator₋mips;  /*  predefined words and non-identifiers. */
 
