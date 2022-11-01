@@ -211,7 +211,7 @@ unagain:
 
 void help()
 { const char * text = 
-"usage run-link [options] <.detail including .incl input files>\n\n"
+"usage run-link [options] <.detail and .modules input files>\n\n"
 " -fmodule-map-file = <path and file>\n"
 " -c \n"
 " -o <path and file>";
