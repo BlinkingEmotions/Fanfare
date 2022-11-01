@@ -5,7 +5,7 @@ import Twinbeam;
 /* Example is stored as an Utf-8 file and NFC normalized unicode when processedand indentifier is 
  (Start|_) Continuation* and Unicode UAX 31.
 
-import Twinbeam
+import Company-Methods / * and Company₋Methods * /
  
   .partial fostrat₋defi|struct after9₋variables
   .end
