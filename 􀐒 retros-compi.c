@@ -116,17 +116,21 @@ int₋to₋sequent:
       Ks/MacOSX.sdk/usr/include/unistd.h"
   }
 
-  /͓  compile with run-link -o a.out example~1.detail macos.modules and the constant 'SHA1GIT' is predefined. *̷̷
+  /͓  compile with run-link -o a.out example~1.detail 🚦.modules and the constant 'SHA1GIT' is predefined. *̷̷
 
  */
 
 static symboltable₋ref preproc, keywords, operator₋arm, operator₋intel, operator₋mips;  /*  predefined words and non-identifiers. */
 
-static collection /* char8₋t * */ filepathssequence;  /*  a․𝘬․a pointer₋sequence. */
+static collection /* char8₋t * */ filepaths;
 
-const char8₋t * modulefile₋path = ΨΛΩ;  /*  file path to module.modulemap file with no default name. */
+static collection /* char8₋t * */  modulefiles;
 
-const char8₋t * outputfile₋path = U8("a.out");
+const char8₋t * cumpani₋path = ΨΛΩ;  /*  file path to cumpani-file with no default name. */
+
+const char8₋t * outputfile₋path = U8("a.out"); /* object collection and index-header at end. 'objs.assort' precompiled, executable och deliverable-without source */
+
+/* predefine-placeAndName executable-companion and without-sourceAndSymbols. */
 
 static int plaform₋chip=0;
 
@@ -222,6 +226,7 @@ void help()
 { const char * text = 
 "usage run-link [options] <.detail and .modules input files>\n\n"
 " -c \n"
+" -g \n" /* emits a 'correspondence file' with basic blocks and assembly */
 " -o <path and file>";
    print(text);
 }
