@@ -106,9 +106,10 @@ int₋to₋sequent:
     *px=21,*py=13;
     dereference₋and₋swap(px,py)
   END(attempth₋progress)
- 
+
   / *. compile with tablett example~1.detail 🚦.modules and the constant 'GITSHA1' is predefined. * /
- */
+
+*/
 
 static symboltable₋ref preproc, keywords, operator₋arm, operator₋intel, operator₋mips;  /*  predefined words and non-identifiers. */
 
