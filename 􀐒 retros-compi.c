@@ -118,7 +118,7 @@ int₋to₋sequent:
       Ks/MacOSX.sdk/usr/include/unistd.h"
   }
 
-  /͓  compile with run-link -o a.out example~1.detail 🚦.modules and the constant 'SHA1GIT' is predefined. *̷̷
+  /͓  compile with run-link -o a.out example~1.detail macos.modules and the constant 'SHA1GIT' is predefined. *̷̷
 
  **/
 
