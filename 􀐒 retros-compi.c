@@ -11,13 +11,13 @@ import Fōretag-Method /͓ and not 'Company₋Methods' and one do not break with
   .end
   
   .definite big₋endian struct 4kbframe /͓  \also .definit *̷̷
-  .end /‌/ 'direct definite' equals 'passed as a shallow copy' and 'voluntary definite' equals 'is never null'.
+  .end /͓ 'direct definite' equals 'passed as a shallow copy' and 'voluntary definite' equals 'is never null'. *̷̷
   
   .fluid Tetra𝘖rUnicode
     int32_t count, char32_t uc
   .end
   
-  á₋priori definite /͓  struct *̷̷ sequent To₋precision(brain₋epsilon x)
+  á₋priori definite /͓ struct *̷̷ sequent To₋precision(brain₋epsilon x)
   á₋priori uint8_t 𝟽₋op₋bytereverse(uint8_t b)
   á₋priori void Base𝕫(__builtin_uint_t|__builtin_int_t|__int128_t|__uint128_t ℤ, unsigned short base, unsigned short digitsOr0, void (^out)(char zeroToNineAndNeg))
   typedef __builtin_int_t Nonabsolute, structa₋middle₋index
@@ -107,7 +107,7 @@ int₋to₋sequent:
     dereference₋and₋swap(px,py)
   END(attempth₋progress)
 
-  / * macos.modules * /
+  /͓  macos.modules *̷̷
   module GalliumArsenide {
     module Intel_Simd { requires ssd2
       header "/Library/Developer/CommandLineTools/usr/lib/clang/14.0.0/include/emmintrin.h"
@@ -116,7 +116,7 @@ int₋to₋sequent:
       Ks/MacOSX.sdk/usr/include/unistd.h"
   }
 
-  / *  compile with run-link -o a.out example~1.detail 🚦.modules and the constant 'SHA1GIT' is predefined. * /
+  /͓  compile with run-link -o a.out example~1.detail 🚦.modules and the constant 'SHA1GIT' is predefined. *̷̷
 
  */
 
