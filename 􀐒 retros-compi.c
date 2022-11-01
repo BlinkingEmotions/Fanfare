@@ -1,4 +1,4 @@
-/*  retros-compi.c | trans-l .pct and .detail and .inc and llvm-assembly files. */
+/*  retros-compi.c | trans-l .pct and .detail and .incl and llvm-assembly files. */
 
 import Twinbeam;
 
@@ -211,7 +211,7 @@ unagain:
 
 void help()
 { const char * text = 
-"usage run-link [options] <.detail including .inclus input files>\n\n"
+"usage run-link [options] <.detail including .incl input files>\n\n"
 " -fmodule-map-file = <path and file>\n"
 " -c \n"
 " -o <path and file>";
