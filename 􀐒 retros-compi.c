@@ -126,11 +126,11 @@ static collection /* char8₋t * */ filepaths;
 
 static collection /* char8₋t * */  modulefiles;
 
-const char8₋t * cumpani₋path = ΨΛΩ;  /*  file path to cumpani-file with no default name. */
+const char8₋t * cumpani₋path = ΨΛΩ;  /*  file path to cumpani-file with no default name. (object collection and index-header at end.) */
 
-const char8₋t * outputfile₋path = U8("a.out"); /* object collection and index-header at end. 'objs.assort' precompiled, executable och deliverable-without source */
+const char8₋t * outputfile₋path = U8("a.out");
 
-/* predefine-placeAndName executable-companion and without-sourceAndSymbols. */
+/* predefined-placeAndName executable-withCompanion and without-sourceAndSymbols. */
 
 static int plaform₋chip=0;
 
