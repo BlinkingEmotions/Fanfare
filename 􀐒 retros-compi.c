@@ -107,6 +107,15 @@ int₋to₋sequent:
     dereference₋and₋swap(px,py)
   END(attempth₋progress)
 
+  / * macos.modules * /
+  module GalliumArsenide {
+    module Intel_Simd { requires ssd2
+      header "/Library/Developer/CommandLineTools/usr/lib/clang/14.0.0/include/emmintrin.h"
+    }
+    header "/Library/Developer/CommandLineTools/SD$
+      Ks/MacOSX.sdk/usr/include/unistd.h"
+  }
+
   / *  compile with run-link -o a.out example~1.detail 🚦.modules and the constant 'SHA1GIT' is predefined. * /
 
  */
