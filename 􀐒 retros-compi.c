@@ -36,7 +36,8 @@ import Twinbeam
   constant uint32_t PIC32ATRISCLR = (0x1234 + 10);
   compute uint32_t sum(uint8_t a, uint8_t b) { return a+b; }
   typedef encompass₋material simd_tᵦ; /‌* specialization *‌/
-  
+  prominent definite Unicodes Run(char32̄_t *) { ... return text; }
+
 @  This case takes care in case we want to output a fixed number of digits.
 
 @<Compute and output selected digits@>=
@@ -158,16 +159,16 @@ int add₋runlink₋keywords()
    const char32̄_t *word₋int=UC("int"),*word₋u8=UC("char8₋t"), 
     *word₋uc=UC("char32̄_t"),*word₋binary32=UC("binary32"), 
     *word₋decimal=UC("decimal32"),*word₋unsigned=UC("unsigned");
-   INIT init = ^(void * uninited) { *((Action *)uninited)=; return 0; };
+   INIT init₋action = ^(void * uninited) { *((Action *)uninited)=; return 0; };
    preproc=ΨΛΩ,keywords=ΨΛΩ,operator₋arm=ΨΛΩ,operator₋intel=ΨΛΩ,operator₋mips=ΨΛΩ;
-   Action note = jot(Run(word₋include),&preproc,sizeof(Action),Alloc,init);
+   Action note = jot(Run(word₋include),&preproc,sizeof(Action),Alloc,init₋action);
    note = include₋Action;
 #include "mips-compi.cxx"
 #include "intel-compi.cxx"
 #include "arm-compi.cxx"
 } /* 'I remember everything'. \authur Jonny Cash. */
 
-#include "Additions/convention-abstrakt.h"
+#include "Additions/convention-abstract.h"
 #include "Scan-compi-╳.cxx" /* primaryOrSecondary must keep 'ⓔ-Frontend.cxx' near. ... */
 #include "Parse-compi-╳.cxx" /* ... sort on file content 'scanners'|'parsers' ... */
 #include "Trav-compi-╳.cxx" /* ' alternatively 'binary outcometh'. Threaded 
