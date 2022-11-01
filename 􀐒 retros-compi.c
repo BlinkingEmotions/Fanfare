@@ -2,7 +2,7 @@
 
 import Twinbeam;
 
-/* Example is stored as an Utf-8 file and NFC normalized unicode when processedand indentifier is 
+/* Example is stored as an Utf-8 file and NFC normalized unicode when processed and indentifier is 
  (Start|_) Continuation* and Unicode UAX 31.
 
 import Fōretag-Method / * and Company₋Methods * /
