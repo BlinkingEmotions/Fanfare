@@ -10,7 +10,7 @@ import Fōretag-Method / * and Company₋Methods * /
   .partial fostrat₋defi|struct after9₋variables
   .end
   
-  .definite big₋endian struct 4kbframe
+  .definite big₋endian struct 4kbframe / * \also .definit * /
   .end /‌/ 'direct definite' equals 'passed as a shallow copy' and 'voluntary definite' equals 'is never null'.
   
   .fluid Tetra𝘖rUnicode
