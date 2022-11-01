@@ -1,4 +1,4 @@
-/*  retros-compi.c | transla-tor .pct and .detail and .inclu and llvm-assembly files. */
+/*  retros-compi.c | transla-tor .pct and .detail and .inc and llvm-assembly files. */
 
 import Twinbeam;
 
