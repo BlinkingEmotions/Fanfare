@@ -107,9 +107,9 @@ int₋to₋sequent:
     dereference₋and₋swap(px,py)
   END(attempth₋progress)
 
-  / *. compile with tablett example~1.detail 🚦.modules and the constant 'SHA1GIT' is predefined. * /
+  / *  compile with tablett -o run-link example~1.detail 🚦.modules and the constant 'SHA1GIT' is predefined. * /
 
-*/
+ */
 
 static symboltable₋ref preproc, keywords, operator₋arm, operator₋intel, operator₋mips;  /*  predefined words and non-identifiers. */
 
@@ -241,8 +241,5 @@ main(
 
 /* run-link may equal bandit-criminal by link and "clang -o run-link '􀐒 retros-compi.c' ". */
 
-/* bandit-criminal -fmodule-map-file=/Users/<myname>/module.modulemap app.detail gives an 'a.out'. */
-
-/*  xcrun clang @ccargs_mac -DSHA1GIT=`git log -1 '--pretty=format:%h'` \
- -o run-link '􀐒 retros-compi.c'
+/* ./retro-mac.sh retros-compi */
 
