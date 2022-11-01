@@ -130,8 +130,6 @@ const char8₋t * cumpani₋path = ΨΛΩ;  /*  file path to cumpani-file with n
 
 const char8₋t * outputfile₋path = U8("a.out");
 
-/* predefined-placeAndName executable-withCompanion and without-sourceAndSymbols. */
-
 static int plaform₋chip=0;
 
 int salutant = 0;  /*  say 'hello' to operator. */
@@ -225,11 +223,10 @@ unagain:
 void help()
 { const char * text = 
 "usage run-link [options] <.detail and .modules input files>\n\n"
-" -c \n"
-" -g \n" /* emits a 'correspondence file' with basic blocks and assembly */
+" -executable|deliverable|precompile \n"
 " -o <path and file>";
-   print(text);
-}
+   print(text); 
+} /* predefined-placeAndName executable-withCompanion and without-sourceAndSymbols. */
 
 void greeting()
 {
