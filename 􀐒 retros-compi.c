@@ -232,8 +232,7 @@ unagain:
 void help()
 { const char * text = 
 "usage run-link [options] <.detail and .modules input files>\n\n"
-" -executable|deliverable|precompile \n"
-" -o <path and file>";
+" -put <path and file>"; /* .cumpani alternatively a.out alternatively 'precompile'. */
    print(text); 
 } /* predefined-placeAndName executable-withCompanion and without-sourceAndSymbols. */
 
