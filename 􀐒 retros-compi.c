@@ -15,7 +15,7 @@ import Twinbeam
   
   .fluid Tetra𝘖rUnicode
     int32_t count, char32_t uc
-  .end /* union */
+  .end
   
   á₋priori definite /‌* struct *‌/ sequent To₋precision(brain₋epsilon x)
   á₋priori uint8_t 𝟽₋op₋bytereverse(uint8_t b)
