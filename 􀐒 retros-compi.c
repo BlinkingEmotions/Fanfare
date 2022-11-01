@@ -5,7 +5,7 @@ import Twinbeam;
 /* Example is stored as an Utf-8 file and NFC normalized unicode when processed and indentifier is 
  (Start|_) Continuation* and Unicode UAX 31.
 
-import Fōretag-Method / * and Company₋Methods * /
+import Fōretag-Method / * and Company₋Methods * / / * one do not break with '$' before white space. * /
  
   .partial fostrat₋defi|struct after9₋variables [with negotiated₋valuable]
   .end
