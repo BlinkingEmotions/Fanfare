@@ -26,6 +26,7 @@ import Twinbeam
 #endif
 #define ◻︎ 0
 #define ◼︎ 1
+#define COROUT₋PROMINENT COROUT
 #define PROMINENT TRANSCRIPT
 #if defined AJ₋AM₋AN₋IDENTIFIER
 #define )ᐪ ) RETURNS₋NONFAILABLE₋REFERENCE = ')'
