@@ -7,7 +7,7 @@ import Twinbeam;
 
 import Fōretag-Method / * and Company₋Methods * /
  
-  .partial fostrat₋defi|struct after9₋variables
+  .partial fostrat₋defi|struct after9₋variables [with negotiated₋valuable]
   .end
   
   .definite big₋endian struct 4kbframe / * \also .definit * /
