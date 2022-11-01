@@ -107,6 +107,7 @@ int₋to₋sequent:
     dereference₋and₋swap(px,py)
   END(attempth₋progress)
  
+  / *. compile with tablett example~1.detail 🚦.modules * /
  */
 
 static symboltable₋ref preproc, keywords, operator₋arm, operator₋intel, operator₋mips;  /*  predefined words and non-identifiers. */
