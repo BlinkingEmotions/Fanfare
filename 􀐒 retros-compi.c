@@ -83,7 +83,7 @@ booth₋multiply:
 again:
   END(booth₋multiply)
   
-#include "goldschmidt-division.inclu"
+#include "goldschmidt-division.inc"
   
   à₋priori void int₋to₋sequent(int64_t ℤ, indirect definite sequent ℝ) /‌* definite sequent * *‌/
   TRANSCRIPT(int₋to₋sequent)
