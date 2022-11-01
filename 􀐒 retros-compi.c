@@ -13,9 +13,9 @@ import Twinbeam
   .definite big₋endian struct 4kbframe
   .end /‌/ 'direct definite' equals 'passed as a shallow copy' and 'voluntary definite' equals 'is never null'.
   
-  .union Tetra𝘖rUnicode
+  .fluid Tetra𝘖rUnicode
     int32_t count, char32_t uc
-  .end
+  .end /* union */
   
   á₋priori definite /‌* struct *‌/ sequent To₋precision(brain₋epsilon x)
   á₋priori uint8_t 𝟽₋op₋bytereverse(uint8_t b)
