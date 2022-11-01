@@ -220,7 +220,7 @@ void help()
 
 void greeting()
 {
-   __builtin_int_t cores = sysconf("_SC_NPROCESSORS_ONLN"); /* SYSTEM_INFO and GetSystemInfo on Windows. */
+   __builtin_int_t cores = sysconf("_SC_NPROCESSORS_ONLN");
    print("run-link, revision ⬚ for ⬚ on ⬚ virtual cpu core⬚.\n\n", 
     ﹟s7(SHA1GIT), ﹟s7("Macbook Pro"), ﹟d((__builtin_int_t)cores), 
     ﹟s7(cores == 1 ? "" : "s"));
