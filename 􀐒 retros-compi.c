@@ -118,6 +118,9 @@ int₋to₋sequent:
     module Intel_Simd { requires ssd2
       header "/Library/Developer/CommandLineTools/usr/lib/clang/14.0.0/include/emmintrin.h"
     }
+    module Arm_Simd { requires neon
+      header "/Library/Developer/CommandLineTools/usr/lib/clang/14.0.0/include/arm_acle.h"
+    }
     header "/Library/Developer/CommandLineTools/SD$
       Ks/MacOSX.sdk/usr/include/unistd.h"
   }
