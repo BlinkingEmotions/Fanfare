@@ -93,6 +93,10 @@ again:
 int₋to₋sequent:
    additions neg as int16_t
    compare ℤ < 0 { ℤ = -ℤ; LI16 neg, 0; SEH neg }
+   sw $sp, 0($a0) /͓ relative and absolute *̷̷
+   lw $sp, 0($a0)
+   mov 8(%rdx),%rsp
+   mov $rsp,24(%rax)
   END(int₋to₋sequent)
   
   à₋priori void dereference₋and₋swap(indirect traditional₋material x₁, indirect traditional₋material x₂)
@@ -118,7 +122,7 @@ int₋to₋sequent:
       Ks/MacOSX.sdk/usr/include/unistd.h"
   }
 
-  /͓  compile with run-link -o a.out example~1.detail macos.modules and the constant 'SHA1GIT' is predefined. *̷̷
+  /͓  compile with run-link -o a.out example~1.detail 🚦.modules and the constant 'SHA1GIT' is predefined. *̷̷
 
  **/
 
