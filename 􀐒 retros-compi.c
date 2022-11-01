@@ -5,19 +5,19 @@ import Twinbeam;
 /* Example is stored as an Utf-8 file and NFC normalized unicode when processed and indentifier is 
  (Start|_) Continuation* and Unicode UAX 31.
 
-import Fōretag-Method / * and Company₋Methods * / / * one do not break with '$' before white space. * /
+import Fōretag-Method /͓ and not 'Company₋Methods' and one do not break with '$' before white space. *̷̷
  
   .partial fostrat₋defi|struct after9₋variables [with negotiated₋valuable]
   .end
   
-  .definite big₋endian struct 4kbframe / * \also .definit * /
+  .definite big₋endian struct 4kbframe /͓  \also .definit *̷̷
   .end /‌/ 'direct definite' equals 'passed as a shallow copy' and 'voluntary definite' equals 'is never null'.
   
   .fluid Tetra𝘖rUnicode
     int32_t count, char32_t uc
   .end
   
-  á₋priori definite /‌* struct *‌/ sequent To₋precision(brain₋epsilon x)
+  á₋priori definite /͓  struct *̷̷ sequent To₋precision(brain₋epsilon x)
   á₋priori uint8_t 𝟽₋op₋bytereverse(uint8_t b)
   á₋priori void Base𝕫(__builtin_uint_t|__builtin_int_t|__int128_t|__uint128_t ℤ, unsigned short base, unsigned short digitsOr0, void (^out)(char zeroToNineAndNeg))
   typedef __builtin_int_t Nonabsolute, structa₋middle₋index
@@ -36,7 +36,7 @@ import Fōretag-Method / * and Company₋Methods * / / * one do not break with '
 #end
   constant uint32_t PIC32ATRISCLR = (0x1234 + 10);
   compute uint32_t sum(uint8_t a, uint8_t b) { return a+b; }
-  typedef encompass₋material simd_tᵦ; /‌* specialization *‌/
+  typedef encompass₋material simd_tᵦ; /͓ specialization *̷̷
   educative definite Unicodes Run(char32̄_t *) { ... return text; }
 
 @  This case takes care in case we want to output a fixed number of digits.
@@ -58,13 +58,13 @@ again:
 unagain:
   @
 
-  TRANSCRIPT(Base𝒛) /‌* INEXORABLE MENTATIVE START INLINE COROUTINE *‌/
+  TRANSCRIPT(Base𝒛) /͓ INEXORABLE MENTATIVE START INLINE COROUTINE *̷̷
 Base𝕫:
     additions cycle as unsigned short[], k=0 as short;
     cycle[64] = { 0, ..., 0 }; k=0;
 again:
     cycle[k] = ℕ % base; N /= base; k+=1;
-    if (ℕ) goto again; /‌* also compare|guard and branch|goto. *‌/
+    if (ℕ) goto again; /͓  also compare|guard and branch|goto. *̷̷
     if (digitisOr0) {
       @<Compute and output selected digits@>
     } else {
@@ -86,7 +86,7 @@ again:
   
 #include "goldschmidt-division.inc"
   
-  à₋priori void int₋to₋sequent(int64_t ℤ, indirect definite sequent ℝ) /‌* definite sequent * *‌/
+  à₋priori void int₋to₋sequent(int64_t ℤ, indirect definite sequent ℝ) /͓ definite sequent * *̷̷
   TRANSCRIPT(int₋to₋sequent)
 int₋to₋sequent:
    additions neg as int16_t
@@ -94,8 +94,8 @@ int₋to₋sequent:
   END(int₋to₋sequent)
   
   à₋priori void dereference₋and₋swap(indirect traditional₋material x₁, indirect traditional₋material x₂)
-  /‌* encompass₋material equals a 128-bit register₋material (Intel xmm1-8 and Arm Q0-Q15 and in primary memory. *‌/
-  /‌* with Intel 'divss xmm0,xmm2' and divsd and Arm 'VADD.I16 q0,q1,q2'.*‌/
+  /͓  encompass₋material equals a 128-bit register₋material (Intel xmm1-8 and Arm Q0-Q15 and in primary memory. *̷̷
+  /͓  with Intel 'divss xmm0,xmm2' and divsd and Arm 'VADD.I16 q0,q1,q2'.*̷̷
   
   TRANSCRIPT(dereference₋and₋swap)
    ...
