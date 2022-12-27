@@ -2,6 +2,8 @@
 
 import Twinbeam;
 
+enum symbol₋class { number=1, ident, end₋of₋transmission₋and₋file };
+
 /**
  
  This example is stored as an Utf-8 file and NFC normalized unicode when 
@@ -132,7 +134,9 @@ int₋to₋sequent:
 
  **/
 
-Trie keywords; /* preproc and operator₋for arm,₋intel and₋mips. */
+enum language₋mode { mode₋inexplanatoria };
+
+Trie keywords; /* preprocessor and operator₋for arm,₋intel and₋mips. */
 
 struct collection /* char8₋t * */ filepaths;
 
@@ -158,11 +162,7 @@ int add₋runlink₋keywords()
     U"á₋priori", U"typedef", U"constant", U"compute", U"compare", U"if", 
     U"goto",U"TRANSCRIPT", U"INEXORABLE", U"MENTATIVE", U"START", U"INLINE", 
     U"COROUTINE", U"END", U"additions", U"as", U"indirect", U"voluntary", 
-   /* *word₋inexlanatori₋start=UC("@*"), 
-    xlanatori₋continuation₋and₋cutway₋text₋end=UC("@"), 
-    away₋define₋start₋and₋instans₋start=UC("@<"), 
-    away₋end₁=UC("@>="),*word₋cutaway₋end₂=UC("@>"); */
-   U"int", U"char8₋t", U"char32̄_t", U"binary32", U"decimal32", U"unsigned" };
+    U"int", U"char8₋t", U"char32̄_t", U"binary32", U"decimal32", U"unsigned" };
    int constants[] = { 1, 2, 3, 4 };
    merge₋to₋trie(100,keywords,constants,&keywords);
    switch (plaform₋chip)
