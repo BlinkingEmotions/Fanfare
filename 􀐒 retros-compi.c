@@ -144,7 +144,7 @@ struct collection /* char8₋t * */ filepaths;
 
 struct collection /* char8₋t * */  modulefiles;
 
-const char8₋t * cumpani₋path = ΨΛΩ;  /*  file path to cumpani-file with no default name. (object collection and index-header at end.) */
+const char8₋t * module₋mappath = ΨΛΩ;  /*  file path to cumpani-file with no default name. (object collection and index-header at end.) */
 
 const char8₋t * outputfile₋path = U8("a.out");
 
@@ -203,7 +203,7 @@ again:
    if (i>=argc) { goto unagain; }
    token = *(argv + i);
    if (output₋filepath) { vfprint("output is ⬚\n", ﹟s8(token)); outputfile₋path=token; output₋filepath=0; goto next; }
-   if (modulemap₋filepath) { vfprint("modulemap is ⬚\n", ﹟s8(token)); modulemap₋filepath=token; modulemap₋filepath=0; goto next; }
+   if (modulemap₋filepath) { vfprint("modulemap is ⬚\n", ﹟s8(token)); module₋mappath=token; modulemap₋filepath=0; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-v");
    if (y == 0) { salutant=true; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-h");
@@ -239,7 +239,7 @@ void help()
 void greeting()
 {
    __builtin_int_t cores = sysconf(_SC_NPROCESSORS_ONLN);
-   const char * Identity; Identity₋Tb(&Identity);
+   char * Identity; Identity₋Tb(&Identity);
    print("run-link, revision ⬚ and tb-⬚ for ⬚ on ⬚ virtual cpu core⬚.\n\n", 
     ﹟s7(SHA1GIT), ﹟s7(Identity), ﹟s7("Macbook Pro"), ﹟d((__builtin_int_t)cores), 
     ﹟s7(cores == 1 ? "" : "s"));
@@ -265,7 +265,8 @@ main(
  ./retro-mac.sh retros-compi 
  
  clang -g -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules       \
-  '􀐒 retros-compi.c' ../Apps/Source/Releases/libTwinbeam-x86_64.a 
+  -DSHA1GIT=\"`git log -1 '--pretty=format:%h'`\"                            \
+  '􀐒 retros-compi.c' ../Apps/Source/Releases/libTwinbeam-x86_64.a          \
    ../Apps/Additions/monolith-sequent.c
  
 */
