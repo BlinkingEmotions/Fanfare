@@ -5,7 +5,7 @@ import Twinbeam;
 /**
  
  This example is stored as an Utf-8 file and NFC normalized unicode when 
- processed and identifier is (Start|_) Continuation* and Unicode UAX 31.
+ processed and identifier is similar to Unicode UAX 31.
  
 import Fōretag-Method /͓ and not 'Company₋Methods' and one do not break with '$' before white space. *̷̷
  
@@ -26,10 +26,12 @@ import Fōretag-Method /͓ and not 'Company₋Methods' and one do not break with
 #if defined __x86_64__
   typedef __uint128_t binary, binary128
 #endif
+  typedef e.g 'struct variable₋bag *' refers
 #define ◻︎ 0
 #define ◼︎ 1
 #define COROUT₋PROMINENT COROUTINE
 #define PROMINENT TRANSCRIPT
+#define PROCEDUR₋E TRANSCRIPT
 #if defined AJ₋AM₋AN₋IDENTIFIER
 #define )ᐪ ) RETURNS₋NONFAILABLE₋REFERENCE = ')'
 #define )ᐪ⁻¹ RETURNS₋FAILABLE₋REFERENCE
@@ -93,6 +95,7 @@ again:
 int₋to₋sequent:
    additions neg as int16_t
    compare ℤ < 0 { ℤ = -ℤ; LI16 neg, 0; SEH neg }
+   / * car->next=form when not₋first else ΨΛΩ * /
    sw $sp, 0($a0) /͓ relative and absolute *̷̷
    lw $sp, 0($a0)
    mov 8(%rdx),%rsp
@@ -129,83 +132,74 @@ int₋to₋sequent:
 
  **/
 
-static symboltable₋ref preproc, keywords, operator₋arm, operator₋intel, operator₋mips;  /*  predefined words and non-identifiers. */
+Trie keywords; /* preproc and operator₋for arm,₋intel and₋mips. */
 
-static collection /* char8₋t * */ filepaths;
+struct collection /* char8₋t * */ filepaths;
 
-static collection /* char8₋t * */  modulefiles;
+struct collection /* char8₋t * */  modulefiles;
 
 const char8₋t * cumpani₋path = ΨΛΩ;  /*  file path to cumpani-file with no default name. (object collection and index-header at end.) */
 
 const char8₋t * outputfile₋path = U8("a.out");
 
-static int plaform₋chip=0;
+int plaform₋chip=0;
 
 int salutant = 0;  /*  say 'hello' to operator. */
 
 int procuratio = 0;  /*  instruct operator on 'how to proceed'. */
 
-int do₋not₋link = 0;  /*  only compile to assembly listing, do not produce binary file. */
-
-typedef void (*Action)();
-
-void include₋Action()
-{
-   print("include-action\n");
-}
+int do₋not₋link = 0;  /*  only compile to assembly listing. Do not produce binary file. */
 
 int add₋runlink₋keywords()
 {
-   const char32̄_t *word₋include=UC("#include"),*word₋if=UC("#if"), 
-    *word₋endif=UC("#end"),*word₋define=UC("#define"), 
-    *word₋defined=UC("defined");
-   const char32̄_t *word₋import=UC("import"),*word₋partial=UC(".partial"), 
-    *word₋fostrat=UC("fostrat₋defi"),*word₋struct=UC("struct"), 
-    *word₋end(".end"),*word₋definite=UC(".definite"), 
-    *word₋bigendian=UC("big₋endian"),*word₋littleendian=UC("little₋endian"), 
-    *word₋union=UC(".union"),*word₋ápriori=UC("á₋priori"), 
-    *word₋typedef=UC("typedef"),*word₋constant=UC("constant"), 
-    *word₋comp=UC("compute"),*word₋compare=UC("compare"),*word₋if=UC("if"), 
-    *word₋goto=UC("goto"),*word₋transcript=UC("TRANSCRIPT"), 
-    *word₋inexorable=UC("INEXORABLE"),*word₋mentantiv=UC("MENTATIVE"), 
-    *word₋start=UC("START"),*word₋inline=UC("INLINE"), 
-    *word₋coroutine=UC("COROUTINE"),*word₋End=UC("END"), 
-    *word₋additions=UC("additions"),word₋as=UC("as"), 
-    *word₋indirect=UC("indirect"),*word₋voluntary=UC("voluntary"), 
-    *word₋and=UC("&&"),*word₋or=UC("||"),*word₋not=UC("!"),*word₋lparen=UC("("), 
-    *word₋rparen=UC(")"),word₋add=UC("+"),*word₋sub=UC("-"),*word₋star=UC("*"), 
-    *word₋div=UC("/"),*word₋bitor=UC("|"),*word₋bitand=UC("&"), 
-    *word₋bitinv=UC("~"),*word₋inexlanatori₋start=UC("@*"), 
-    *word₋inexlanatori₋continuation₋and₋cutway₋text₋end=UC("@"), 
-    *word₋cutaway₋define₋start₋and₋instans₋start=UC("@<"), 
-    *word₋cutaway₋end₁=UC("@>="),*word₋cutaway₋end₂=UC("@>");
-   const char32̄_t *word₋int=UC("int"),*word₋u8=UC("char8₋t"), 
-    *word₋uc=UC("char32̄_t"),*word₋binary32=UC("binary32"), 
-    *word₋decimal=UC("decimal32"),*word₋unsigned=UC("unsigned");
-   INIT init₋action = ^(void * uninited) { *((Action *)uninited)=; return 0; };
-   preproc=ΨΛΩ,keywords=ΨΛΩ,operator₋arm=ΨΛΩ,operator₋intel=ΨΛΩ,operator₋mips=ΨΛΩ;
-   Action note = jot(Run(word₋include),&preproc,sizeof(Action),Alloc,init₋action);
-   note = include₋Action;
-#include "mips-compi.cxx"
-#include "intel-compi.cxx"
-#include "arm-compi.cxx"
-} /* 'I remember everything'. \authur Jonny Cash. */
+   char32̄_t * keywords[] = { U".INCLUDE.", U".IF.", U".END.", U".DEFINE.", 
+    U"defined", U"import", U".partial", U"fostrat₋defi", U"struct", 
+    U".end", U".definite", U"big₋endian", U"little₋endian", U".union", 
+    U"á₋priori", U"typedef", U"constant", U"compute", U"compare", U"if", 
+    U"goto",U"TRANSCRIPT", U"INEXORABLE", U"MENTATIVE", U"START", U"INLINE", 
+    U"COROUTINE", U"END", U"additions", U"as", U"indirect", U"voluntary", 
+   /* *word₋inexlanatori₋start=UC("@*"), 
+    xlanatori₋continuation₋and₋cutway₋text₋end=UC("@"), 
+    away₋define₋start₋and₋instans₋start=UC("@<"), 
+    away₋end₁=UC("@>="),*word₋cutaway₋end₂=UC("@>"); */
+   U"int", U"char8₋t", U"char32̄_t", U"binary32", U"decimal32", U"unsigned" };
+   int constants[] = { 1, 2, 3, 4 };
+   merge₋to₋trie(100,keywords,constants,&keywords);
+   switch (plaform₋chip)
+   {
+   case 1:
+     extern int arm₋keyword₋count(); extern char32̄_t ** arm₋keyword₋list(); extern arm₋constant₋list();
+     merge₋to₋trie(arm₋constant₋count(),arm₋keyword₋list(),arm₋constant₋list(),&keywords);
+     break;
+   case 2:
+     extern int intel₋keyword₋count(); extern char32̄_t ** intel₋keyword₋list(); extern int ** intel₋constant₋list();
+     merge₋to₋trie(intel₋keyword₋count(),intel₋keyword₋list(),intel₋constant₋list(),&keywords);
+     break;
+   case 3:
+     extern int mips₋keyword₋count(); extern char32̄_t ** mips₋keyword₋list(); extern int ** mips₋constant₋list();
+     merge₋to₋trie(mips₋keyword₋count(),mips₋keyword₋list(),mips₋constant₋list(),&keywords);
+     break;
+   }
+   return 0;
+}
 
-#include "Additions/convention-abstract.h"
-#include "Scan-compi-╳.cxx" /* primaryOrSecondary must keep 'ⓔ-Frontend.cxx' near. ... */
-#include "Parse-compi-╳.cxx" /* ... sort on file content 'scanners'|'parsers' ... */
-#include "Trav-compi-╳.cxx" /* ' alternatively 'binary outcometh'. Threaded 
+/* #include "╳-intel-keyword.cxx" */
+#include "╳-arm-keyword.cxx"
+/* #include "╳-mips-keyword.cxx" */
+#include "╳-disjunct-scan.cxx" /* primaryOrSecondary must keep 'ⓔ-Frontend.cxx' near. ... */
+#include "╳-hierar-parse.cxx" /* ... sort on file content 'scanners'|'parsers' ... */
+#include "╳-special-color.cxx" /* ' alternatively 'binary outcometh'. Threaded 
  dual-name les can be grouped by selecting primary and secondary thread when 
  presenting a tree table. (ASSOCIATE-RUNLINK) */
-#include "Linear-compi-╳.cxx" /* is big- or little endian for two points. */
+#include "╳-art-linear-arm.cxx" /* is big- or little endian for two points. */
 
 int option₋machine₋interprets(int argc, const char8₋t ** argv)
 { int i=0,y,output₋filepath=0,modulemap₋filepath=0; char8₋t * token;
 again:
    if (i>=argc) { goto unagain; }
    token = *(argv + i);
-   if (output₋filepath) { print("output is ⬚\n", ﹟s8(token)); outputfile₋path=token; output₋filepath=0; goto next; }
-   if (modulemap₋filepath) { print("modulemap is ⬚\n", ﹟s8(token)); modulefile₋path=token; modulemap₋filepath=0; goto next; }
+   if (output₋filepath) { vfprint("output is ⬚\n", ﹟s8(token)); outputfile₋path=token; output₋filepath=0; goto next; }
+   if (modulemap₋filepath) { vfprint("modulemap is ⬚\n", ﹟s8(token)); modulefile₋path=token; modulemap₋filepath=0; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-v");
    if (y == 0) { salutant=true; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-h");
@@ -217,11 +211,11 @@ again:
    y = IsPrefixOrEqual((const char *)token, (const char *)"-fmodule-map-file");
    if (y == 0) { modulemap₋filepath=true; goto next; }
    y = IsPrefixOrEqual((cons tchar *)token, (const cahr *)"-intel₋mac");
-   if (y == 0) { plaform₋chip=1; goto next; }
-   y = IsPrefixOrEqual((const char *)token, (const char *)"-pic");
    if (y == 0) { plaform₋chip=2; goto next; }
-   y = IsPrefixOrEqual((const char *)token, (const char *)"-arm-mac");
+   y = IsPrefixOrEqual((const char *)token, (const char *)"-pic-mips");
    if (y == 0) { plaform₋chip=3; goto next; }
+   y = IsPrefixOrEqual((const char *)token, (const char *)"-arm-mac");
+   if (y == 0) { plaform₋chip=1; goto next; }
    return -1;
 next:
    i+=1; goto again;
@@ -232,15 +226,18 @@ unagain:
 void help()
 { const char * text = 
 "usage run-link [options] <.detail and .modules input files>\n\n"
-" -put <path and file>"; /* .cumpani alternatively a.out alternatively 'precompile'. */
+" -library\n"
+" -deliverable\n"
+" -put <path and file>"; /* .cumpani alternatively a.out. */
    print(text); 
 } /* predefined-placeAndName executable-withCompanion and without-sourceAndSymbols. */
 
 void greeting()
 {
    __builtin_int_t cores = sysconf("_SC_NPROCESSORS_ONLN");
-   print("run-link, revision ⬚ for ⬚ on ⬚ virtual cpu core⬚.\n\n", 
-    ﹟s7(SHA1GIT), ﹟s7("Macbook Pro"), ﹟d((__builtin_int_t)cores), 
+   const char * Identity; Identity₋Tb(&Identity);
+   print("run-link, revision ⬚ and tb-⬚ for ⬚ on ⬚ virtual cpu core⬚.\n\n", 
+    ﹟s7(SHA1GIT), ﹟s7(Identity), ﹟s7("Macbook Pro"), ﹟d((__builtin_int_t)cores), 
     ﹟s7(cores == 1 ? "" : "s"));
 }
 
@@ -250,7 +247,7 @@ main(
   const char * argv[]
 )
 {
-   if (option₋machine₋interprets(argc,(const char8₋t *)argv)) { print("command-line interpretation error\n"); exit(1); }
+   if (option₋machine₋interprets(argc,(const char8₋t *)argv)) { vfprint("command-line interpretation error\n"); exit(1); }
    if (salutant) { greeting(); }
    if (procuratio) { help(); exit(2); }
    if (add₋runlink₋keywords()) { exit(3); }
@@ -259,5 +256,13 @@ main(
 
 /* run-link may equal bandit-criminal by link and "clang -o run-link '􀐒 retros-compi.c' ". */
 
-/* ./retro-mac.sh retros-compi */
+/* compile with 
+ 
+ ./retro-mac.sh retros-compi 
+ 
+ clang -g -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules       \
+  '􀐒 retros-compi.c' ../Apps/Source/Releases/libTwinbeam-x86_64.a 
+   ../Apps/Additions/monolith-sequent.c
+ 
+*/
 
