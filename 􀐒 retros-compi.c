@@ -2,7 +2,9 @@
 
 import Twinbeam;
 
-enum symbol₋class { number=1, ident, end₋of₋transmission₋and₋file };
+enum symbol₋class { number=1, ident, preproc₋include, preproc₋if, preproc₋end, 
+ preproc₋defined, importsym, partialsym, fostratdefisym, structsym, endsym, 
+ end₋of₋transmission₋and₋file };
 
 /**
  
@@ -136,7 +138,7 @@ int₋to₋sequent:
 
 enum language₋mode { mode₋inexplanatoria };
 
-Trie keywords; /* preprocessor and operator₋for arm,₋intel and₋mips. */
+Trie keyword₋set; /* preprocessor and operator₋for arm,₋intel and₋mips. */
 
 struct collection /* char8₋t * */ filepaths;
 
@@ -156,28 +158,29 @@ int do₋not₋link = 0;  /*  only compile to assembly listing. Do not produce b
 
 int add₋runlink₋keywords()
 {
-   char32̄_t * keywords[] = { U".INCLUDE.", U".IF.", U".END.", U".DEFINE.", 
+   char32̄_t * keyword₋text[] = { U".INCLUDE.", U".IF.", U".END.", U".DEFINE.", 
     U"defined", U"import", U".partial", U"fostrat₋defi", U"struct", 
     U".end", U".definite", U"big₋endian", U"little₋endian", U".union", 
     U"á₋priori", U"typedef", U"constant", U"compute", U"compare", U"if", 
     U"goto",U"TRANSCRIPT", U"INEXORABLE", U"MENTATIVE", U"START", U"INLINE", 
     U"COROUTINE", U"END", U"additions", U"as", U"indirect", U"voluntary", 
     U"int", U"char8₋t", U"char32̄_t", U"binary32", U"decimal32", U"unsigned" };
-   int constants[] = { 1, 2, 3, 4 };
-   merge₋to₋trie(100,keywords,constants,&keywords);
+   int keyword₋constant[] = { preproc₋include, preproc₋if, preproc₋end, 
+    preproc₋defined, importsym, partialsym, fostratdefisym, structsym, endsym };
+   merge₋to₋trie(9,keyword₋text,keyword₋constant,&keyword₋set);
+   extern int arm₋keyword₋count(); extern char32̄_t ** arm₋keyword₋list(); extern int * arm₋constant₋list();
+   extern int intel₋keyword₋count(); extern char32̄_t ** intel₋keyword₋list(); extern int * intel₋constant₋list();
+   extern int mips₋keyword₋count(); extern char32̄_t ** mips₋keyword₋list(); extern int * mips₋constant₋list();
    switch (plaform₋chip)
    {
    case 1:
-     extern int arm₋keyword₋count(); extern char32̄_t ** arm₋keyword₋list(); extern arm₋constant₋list();
-     merge₋to₋trie(arm₋constant₋count(),arm₋keyword₋list(),arm₋constant₋list(),&keywords);
+     merge₋to₋trie(arm₋keyword₋count(),arm₋keyword₋list(),arm₋constant₋list(),&keyword₋set);
      break;
    case 2:
-     extern int intel₋keyword₋count(); extern char32̄_t ** intel₋keyword₋list(); extern int ** intel₋constant₋list();
-     merge₋to₋trie(intel₋keyword₋count(),intel₋keyword₋list(),intel₋constant₋list(),&keywords);
+     merge₋to₋trie(intel₋keyword₋count(),intel₋keyword₋list(),intel₋constant₋list(),&keyword₋set);
      break;
    case 3:
-     extern int mips₋keyword₋count(); extern char32̄_t ** mips₋keyword₋list(); extern int ** mips₋constant₋list();
-     merge₋to₋trie(mips₋keyword₋count(),mips₋keyword₋list(),mips₋constant₋list(),&keywords);
+     merge₋to₋trie(mips₋keyword₋count(),mips₋keyword₋list(),mips₋constant₋list(),&keyword₋set);
      break;
    }
    return 0;
@@ -185,21 +188,22 @@ int add₋runlink₋keywords()
 
 /* #include "╳-intel-keyword.cxx" */
 #include "╳-arm-keyword.cxx"
-/* #include "╳-mips-keyword.cxx" */
-#include "╳-disjunct-scan.cxx" /* primaryOrSecondary must keep 'ⓔ-Frontend.cxx' near. ... */
-#include "╳-hierar-parse.cxx" /* ... sort on file content 'scanners'|'parsers' ... */
-#include "╳-special-color.cxx" /* ' alternatively 'binary outcometh'. Threaded 
+/* #include "╳-mips-keyword.cxx"
+#include "╳-disjunct-scan.cxx"
+#include "╳-hierar-parse.cxx"
+#include "╳-special-color.cxx" / * ' alternatively 'binary outcometh'. Threaded 
  dual-name les can be grouped by selecting primary and secondary thread when 
- presenting a tree table. (ASSOCIATE-RUNLINK) */
-#include "╳-art-linear-arm.cxx" /* is big- or little endian for two points. */
+ presenting a tree table. (ASSOCIATE-RUNLINK) * /
+#include "╳-art-linear-arm.cxx" / * is big- or little endian for two points. */
+#include <unistd.h>
 
-int option₋machine₋interprets(int argc, const char8₋t ** argv)
+int option₋machine₋interprets(int argc, char8₋t ** argv)
 { int i=0,y,output₋filepath=0,modulemap₋filepath=0; char8₋t * token;
 again:
    if (i>=argc) { goto unagain; }
    token = *(argv + i);
    if (output₋filepath) { vfprint("output is ⬚\n", ﹟s8(token)); outputfile₋path=token; output₋filepath=0; goto next; }
-   if (modulemap₋filepath) { vfprint("modulemap is ⬚\n", ﹟s8(token)); modulefile₋path=token; modulemap₋filepath=0; goto next; }
+   if (modulemap₋filepath) { vfprint("modulemap is ⬚\n", ﹟s8(token)); modulemap₋filepath=token; modulemap₋filepath=0; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-v");
    if (y == 0) { salutant=true; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-h");
@@ -210,7 +214,7 @@ again:
    if (y == 0) { output₋filepath=true; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-fmodule-map-file");
    if (y == 0) { modulemap₋filepath=true; goto next; }
-   y = IsPrefixOrEqual((cons tchar *)token, (const cahr *)"-intel₋mac");
+   y = IsPrefixOrEqual((const char *)token, (const char *)"-intel₋mac");
    if (y == 0) { plaform₋chip=2; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-pic-mips");
    if (y == 0) { plaform₋chip=3; goto next; }
@@ -234,7 +238,7 @@ void help()
 
 void greeting()
 {
-   __builtin_int_t cores = sysconf("_SC_NPROCESSORS_ONLN");
+   __builtin_int_t cores = sysconf(_SC_NPROCESSORS_ONLN);
    const char * Identity; Identity₋Tb(&Identity);
    print("run-link, revision ⬚ and tb-⬚ for ⬚ on ⬚ virtual cpu core⬚.\n\n", 
     ﹟s7(SHA1GIT), ﹟s7(Identity), ﹟s7("Macbook Pro"), ﹟d((__builtin_int_t)cores), 
@@ -247,7 +251,7 @@ main(
   const char * argv[]
 )
 {
-   if (option₋machine₋interprets(argc,(const char8₋t *)argv)) { vfprint("command-line interpretation error\n"); exit(1); }
+   if (option₋machine₋interprets(argc,(char8₋t **)argv)) { vfprint("command-line interpretation error\n"); exit(1); }
    if (salutant) { greeting(); }
    if (procuratio) { help(); exit(2); }
    if (add₋runlink₋keywords()) { exit(3); }
