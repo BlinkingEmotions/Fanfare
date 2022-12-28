@@ -8,12 +8,12 @@ enum symbol₋class { number=1, ident, preproc₋include, preproc₋if, preproc�
 
 /**
  
- This example is stored as an Utf-8 file and NFC normalized unicode when 
+ This example is stored as an Utf-8 file and 'NFC normalized unicode' when 
  processed and identifier is similar to Unicode UAX 31.
  
 import Fōretag-Method /͓ and not 'Company₋Methods' and one do not break with '$' before white space. *̷̷
  
-  .partial fostrat₋defi|struct after9₋variables [with negotiated₋valuable]
+  .partial fostrat₋defi|struct diffractive₋glass₋variables [with negotiated₋valuable]
   .end
   
   .definite big₋endian struct 4kbframe /͓  \also .definit *̷̷
@@ -138,7 +138,7 @@ int₋to₋sequent:
 
 enum language₋mode { mode₋inexplanatoria };
 
-Trie keyword₋set; /* preprocessor and operator₋for arm,₋intel and₋mips. */
+Trie keyword₋set; /* preprocessor and operator for arm, intel and mips. */
 
 struct collection /* char8₋t * */ filepaths;
 
@@ -186,15 +186,17 @@ int add₋runlink₋keywords()
    return 0;
 }
 
-/* #include "╳-intel-keyword.cxx" */
+#include "╳-intel-keyword.cxx"
 #include "╳-arm-keyword.cxx"
-/* #include "╳-mips-keyword.cxx"
-#include "╳-disjunct-scan.cxx"
-#include "╳-hierar-parse.cxx"
-#include "╳-special-color.cxx" / * ' alternatively 'binary outcometh'. Threaded 
- dual-name les can be grouped by selecting primary and secondary thread when 
- presenting a tree table. (ASSOCIATE-RUNLINK) * /
-#include "╳-art-linear-arm.cxx" / * is big- or little endian for two points. */
+#include "╳-mips-keyword.cxx"
+#include "╳-lexical-disjunct.cxx"
+#include "╳-parse-hierar.cxx"
+#include "╳-color-special.cxx"
+#include "╳-binary-outcometh.cxx"
+/*. Threaded dual-name les can be grouped by selecting primary and secondary thread when 
+ presenting a tree table. (ASSOCIATE-RUNLINK) */
+#include "╳-art-linear-arm.cxx"
+#include "╳-sorcerer-vegetar.cxx" /* 'is big- or little endian for two points'. */
 #include <unistd.h>
 
 int option₋machine₋interprets(int argc, char8₋t ** argv)
