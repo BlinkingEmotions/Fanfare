@@ -146,9 +146,9 @@ struct collection /* char8₋t * */  modulefiles;
 
 const char8₋t * module₋mappath = ΨΛΩ;  /*  file path to cumpani-file with no default name. (object collection and index-header at end.) */
 
-const char8₋t * outputfile₋path = U8("a.out");
+const char8₋t * outputfile₋path = U8("oiu"); /* formerly 'a.out', 'a.o'.  */
 
-int plaform₋chip=0;
+int platform₋chip=0;
 
 int salutant = 0;  /*  say 'hello' to operator. */
 
@@ -158,7 +158,7 @@ int do₋not₋link = 0;  /*  only compile to assembly listing. Do not produce b
 
 int add₋runlink₋keywords()
 {
-   char32̄_t * keyword₋text[] = { U".INCLUDE.", U".IF.", U".END.", U".DEFINE.", 
+   char32̄_t * keyword₋text[] = { U"/INCLUDE/", U"/IF/", U"/END/", U"/DEFINE/", 
     U"defined", U"import", U".partial", U"fostrat₋defi", U"struct", 
     U".end", U".definite", U"big₋endian", U"little₋endian", U".union", 
     U"á₋priori", U"typedef", U"constant", U"compute", U"compare", U"if", 
@@ -166,12 +166,18 @@ int add₋runlink₋keywords()
     U"COROUTINE", U"END", U"additions", U"as", U"indirect", U"voluntary", 
     U"int", U"char8₋t", U"char32̄_t", U"binary32", U"decimal32", U"unsigned" };
    int keyword₋constant[] = { preproc₋include, preproc₋if, preproc₋end, 
-    preproc₋defined, importsym, partialsym, fostratdefisym, structsym, endsym };
+    preproc₋defined, importsym, partialsym, fostratdefisym, structsym, 
+    end₋with₋dotsym, definitesym, big₋endiansym, little₋endiansym, unionsym, 
+    apriorisym, typedefsym, constantsym, computesym, comparesym, ifsym, 
+    gotosym, transcriptsym, inexorablesym, mentativesym, startsym, inlinesym, 
+    coroutinesym, endsym, additionssym, assym, indirectsym, voluntarysym, 
+    intsym, char8₋tsym, char32̄_tsym, binary32sym, decimal32sym, tertary32sym, unsignedsym };
    merge₋to₋trie(9,keyword₋text,keyword₋constant,&keyword₋set);
    extern int arm₋keyword₋count(); extern char32̄_t ** arm₋keyword₋list(); extern int * arm₋constant₋list();
    extern int intel₋keyword₋count(); extern char32̄_t ** intel₋keyword₋list(); extern int * intel₋constant₋list();
    extern int mips₋keyword₋count(); extern char32̄_t ** mips₋keyword₋list(); extern int * mips₋constant₋list();
-   switch (plaform₋chip)
+   extern int kirkbridge₋keyword₋count(); extern char32̄_t ** kirkbridge₋keyword₋list(); extern int * keyword₋constant₋list();
+   switch (platform₋chip)
    {
    case 1:
      merge₋to₋trie(arm₋keyword₋count(),arm₋keyword₋list(),arm₋constant₋list(),&keyword₋set);
@@ -182,6 +188,9 @@ int add₋runlink₋keywords()
    case 3:
      merge₋to₋trie(mips₋keyword₋count(),mips₋keyword₋list(),mips₋constant₋list(),&keyword₋set);
      break;
+   case 4:
+     merge₋to₋trie(kirkbridge₋keyword₋count(),kirkbridge₋keyword₋list(),kirbridge₋constant₋list(),&keyword₋set);
+     break;
    }
    return 0;
 }
@@ -189,7 +198,8 @@ int add₋runlink₋keywords()
 #include "╳-intel-keyword.cxx"
 #include "╳-arm-keyword.cxx"
 #include "╳-mips-keyword.cxx"
-#include "╳-lexical-disjunct.cxx"
+#include "╳-kirkbridge-keyword.cxx"
+#include "╳-lexi-disjunct.cxx"
 #include "╳-parse-hierar.cxx"
 #include "╳-color-special.cxx"
 #include "╳-binary-outcometh.cxx"
@@ -217,11 +227,11 @@ again:
    y = IsPrefixOrEqual((const char *)token, (const char *)"-fmodule-map-file");
    if (y == 0) { modulemap₋filepath=true; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-intel₋mac");
-   if (y == 0) { plaform₋chip=2; goto next; }
+   if (y == 0) { platform₋chip=2; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-pic-mips");
-   if (y == 0) { plaform₋chip=3; goto next; }
+   if (y == 0) { platform₋chip=3; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-arm-mac");
-   if (y == 0) { plaform₋chip=1; goto next; }
+   if (y == 0) { platform₋chip=1; goto next; }
    return -1;
 next:
    i+=1; goto again;
@@ -234,7 +244,7 @@ void help()
 "usage run-link [options] <.detail and .modules input files>\n\n"
 " -library\n"
 " -deliverable\n"
-" -put <path and file>"; /* .cumpani alternatively a.out. */
+" -put <path and file>"; /* .cumpani alternatively a.out alternatively 'ess-pe'. */
    print(text); 
 } /* predefined-placeAndName executable-withCompanion and without-sourceAndSymbols. */
 
