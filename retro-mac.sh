@@ -15,6 +15,7 @@ components=(
   'parent-kabinett' '􀖆 parent-kabinett.c'
   'intel-hex' '🥽 Intelhex.cpp'
   'uql-gen' '🥽⋆UQL.cpp 🥽⋆UQL₂.cpp'
+  'micro-parse' '􀦸 µ-parse.c'
   'linguistics-epi' '􀥳 lingustics-epi.c'
   'enforce-beskow' '􁕊 enforce-beskow.c'
 )
@@ -25,7 +26,8 @@ output=(
   'reconnaissance-turbin' 'turbin'
   'parent-kabinett' 'patent'
   'intel-hex' 'intelhex'
-  'uql-gen' "question"
+  'uql-gen' 'question'
+  'micro-parse' 'expression'
   'linguistics-epi' 'x86_epitom-7'
   'enforce-beskow' 'beskow'
   'nut-f1-schweiz' 'non-bell' # for inspector and intendent and not higher-ranked police.
