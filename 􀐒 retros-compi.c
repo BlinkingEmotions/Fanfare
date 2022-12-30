@@ -205,7 +205,7 @@ int add₋runlink₋keywords()
 #include "╳-arm-keyword.cxx"
 #include "╳-mips-keyword.cxx"
 #include "╳-kirkbridge-keyword.cxx"
-#include "╳-lexi-disjunct.cxx"
+#include "╳-lexic-disjunct.cxx"
 #include "╳-parse-hierar.cxx"
 #include "╳-color-special.cxx"
 #include "╳-binary-outcometh.cxx"
