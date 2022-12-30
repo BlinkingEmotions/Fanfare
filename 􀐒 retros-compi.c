@@ -3,7 +3,12 @@
 import Twinbeam;
 
 enum symbol₋class { number=1, ident, preproc₋include, preproc₋if, preproc₋end, 
- preproc₋defined, importsym, partialsym, fostratdefisym, structsym, endsym, 
+ preproc₋defined, importsym, partialsym, fostratdefisym, structsym, 
+ end₋with₋dotsym, definitesym, big₋endiansym, little₋endiansym, unionsym, 
+ apriorisym, typedefsym, constantsym, computesym, comparesym, ifsym, gotosym, 
+ transcriptsym, inexorablesym, mentativesym, startsym, inlinesym, coroutinesym, 
+ endsym, additionssym, assym, indirectsym, voluntarysym, intsym, char8₋tsym, 
+ char32̄_tsym, binary32sym, decimal32sym, tertary32sym, unsignedsym, 
  end₋of₋transmission₋and₋file };
 
 /**
@@ -158,7 +163,7 @@ int do₋not₋link = 0;  /*  only compile to assembly listing. Do not produce b
 
 int add₋runlink₋keywords()
 {
-   char32̄_t * keyword₋text[] = { U"/INCLUDE/", U"/IF/", U"/END/", U"/DEFINE/", 
+   char32̄_t * keyword₋text[] = { U".INCLUDE.", U".IF.", U".END.", U".DEFINE.", 
     U"defined", U"import", U".partial", U"fostrat₋defi", U"struct", 
     U".end", U".definite", U"big₋endian", U"little₋endian", U".union", 
     U"á₋priori", U"typedef", U"constant", U"compute", U"compare", U"if", 
@@ -171,12 +176,13 @@ int add₋runlink₋keywords()
     apriorisym, typedefsym, constantsym, computesym, comparesym, ifsym, 
     gotosym, transcriptsym, inexorablesym, mentativesym, startsym, inlinesym, 
     coroutinesym, endsym, additionssym, assym, indirectsym, voluntarysym, 
-    intsym, char8₋tsym, char32̄_tsym, binary32sym, decimal32sym, tertary32sym, unsignedsym };
+    intsym, char8₋tsym, char32̄_tsym, binary32sym, decimal32sym, tertary32sym, 
+    unsignedsym };
    merge₋to₋trie(9,keyword₋text,keyword₋constant,&keyword₋set);
    extern int arm₋keyword₋count(); extern char32̄_t ** arm₋keyword₋list(); extern int * arm₋constant₋list();
    extern int intel₋keyword₋count(); extern char32̄_t ** intel₋keyword₋list(); extern int * intel₋constant₋list();
    extern int mips₋keyword₋count(); extern char32̄_t ** mips₋keyword₋list(); extern int * mips₋constant₋list();
-   extern int kirkbridge₋keyword₋count(); extern char32̄_t ** kirkbridge₋keyword₋list(); extern int * keyword₋constant₋list();
+   extern int kirkbridge₋keyword₋count(); extern char32̄_t ** kirkbridge₋keyword₋list(); extern int * kirkbridge₋constant₋list();
    switch (platform₋chip)
    {
    case 1:
@@ -189,7 +195,7 @@ int add₋runlink₋keywords()
      merge₋to₋trie(mips₋keyword₋count(),mips₋keyword₋list(),mips₋constant₋list(),&keyword₋set);
      break;
    case 4:
-     merge₋to₋trie(kirkbridge₋keyword₋count(),kirkbridge₋keyword₋list(),kirbridge₋constant₋list(),&keyword₋set);
+     merge₋to₋trie(kirkbridge₋keyword₋count(),kirkbridge₋keyword₋list(),kirkbridge₋constant₋list(),&keyword₋set);
      break;
    }
    return 0;
