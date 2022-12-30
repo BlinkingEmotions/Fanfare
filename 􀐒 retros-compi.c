@@ -2,14 +2,7 @@
 
 import Twinbeam;
 
-enum symbol₋class { number=1, ident, preproc₋include, preproc₋if, preproc₋end, 
- preproc₋defined, importsym, partialsym, fostratdefisym, structsym, 
- end₋with₋dotsym, definitesym, big₋endiansym, little₋endiansym, unionsym, 
- apriorisym, typedefsym, constantsym, computesym, comparesym, ifsym, gotosym, 
- transcriptsym, inexorablesym, mentativesym, startsym, inlinesym, coroutinesym, 
- endsym, additionssym, assym, indirectsym, voluntarysym, intsym, char8₋tsym, 
- char32̄_tsym, binary32sym, decimal32sym, tertary32sym, unsignedsym, 
- end₋of₋transmission₋and₋file };
+#include "╳-runlink-symbols.cxx"
 
 /**
  
@@ -212,7 +205,7 @@ int add₋runlink₋keywords()
 /*. Threaded dual-name les can be grouped by selecting primary and secondary thread when 
  presenting a tree table. (ASSOCIATE-RUNLINK) */
 #include "╳-art-linear-arm.cxx"
-#include "╳-sorcerer-vegetar.cxx" /* 'is big- or little endian for two points'. */
+#include "╳-sourcer-vegetar.cxx" /* 'is big- or little endian for two points'. */
 #include <unistd.h>
 
 int option₋machine₋interprets(int argc, char8₋t ** argv)
