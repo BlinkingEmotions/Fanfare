@@ -131,8 +131,9 @@ int₋to₋sequent:
   }
 
   begin₋assumption Terminalfun₋villkorat
-  location "/Library/Developer/CommandLineTolls/usr/lib/include/unistdard.h"
-  when ssd "/Library/Developer/CommandLineTools/isr/clang/14.0.0./include/arm_acle.h"
+  location "/Library/Developer/CommandLineTools/SDKs/AmcOSX.sdk/usr/include/unistd.h"
+  when ssd "/Library/Developer/CommandLineTools/usr/lib/clang/14.0.0/include/arm_acle.h"
+  includes₋assumption elsewhere₋defined
   end₋assumption
 
   /͓  compile with run-link -o a.out example~1.detail macos.modules and the constant 'SHA1GIT' is predefined. *̷̷
