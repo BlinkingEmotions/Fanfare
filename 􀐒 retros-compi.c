@@ -130,6 +130,11 @@ int₋to₋sequent:
       Ks/MacOSX.sdk/usr/include/unistd.h"
   }
 
+  begin₋assumption Terminalfun₋villkorat
+  location "/Library/Developer/CommandLineTolls/usr/lib/include/unistdard.h"
+  when ssd "/Library/Developer/CommandLineTools/isr/clang/14.0.0./include/arm_acle.h"
+  end₋assumption
+
   /͓  compile with run-link -o a.out example~1.detail macos.modules and the constant 'SHA1GIT' is predefined. *̷̷
 
  **/
