@@ -144,6 +144,28 @@ enum language₋mode { mode₋inexplanatoria };
 
 Trie keyword₋set; /* preprocessor and operator for arm, intel and mips. */
 
+typedef int64_t NoteRef; /* A.k.a Note₋idx. */
+
+struct not₋e {
+  union { } material;
+  int32_t kind;
+};
+
+int Spawn₋replik(char8₋t * filepath, struct not₋e * 🅵, struct collection * 🅰)
+{ __builtin_int_t ﹟₋segment=5;
+again:
+   if (i >= ﹟₋segments) { return 0; }
+   goto again;
+   return 0;
+}
+
+int Load(char8₋t * filepath, struct not₋e * 🅵, struct collection * 🅰)
+{
+
+}
+
+struct collection notes₋ess;
+
 struct collection /* char8₋t * */ filepaths;
 
 struct collection /* char8₋t * */  modulefiles;
@@ -246,7 +268,7 @@ unagain:
 
 void help()
 { const char * text = 
-"usage run-link [options] <.detail and .modules input files>\n\n"
+"usage run-link [options] <.detail and .modules and .modulemap input files>\n\n"
 " -library\n"
 " -deliverable\n"
 " -put <path and file>"; /* .cumpani alternatively a.out alternatively 'ess-pe'. */
