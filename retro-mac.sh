@@ -80,8 +80,8 @@ function compile_and_run()
 {
    for sku_key ($sku_sequence) {
      builtin command clang -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules \
-      $flag_and_debugger -std=c2x -DSHA1GIT=\"`git log -1 '--pretty=format:%h'`\" "$components[$sku_key]"   \
-      -fblocks -fno-signed-char -fno-builtin                                            \
+      $flag_and_debugger -std=c2x -DSHA1GIT=\"`git log -1 '--pretty=format:%h'`\"       \
+      "$components[$sku_key]" -fblocks -fno-signed-char -fno-builtin                    \
       ../Apps/Source/Releases/libTwinbeam-x86_64.a                                      \
       ../Apps/Additions/monolith-sequent.c -o $output[$sku_key]
      if [[ -n "$flag_and_debugger" ]]; then
