@@ -1,13 +1,7 @@
-/*  ⓒ-maskin.cpp | arabic and numeric keyput, non-rectangular non-fixative 
- completion from command-line. */
+/*  ⓒ-maskin.cpp | arabic and numeric keyput, non-rectangular non-
+ fixative completion from command-line. */
 
 import Twinbeam;
-import CppThread; /* ⬷ formerly #include<thread>. */
-import CString;
-import After_9;
-
-/* compile with xcrun clang @ccargs_mac -o helixsh                           \
- -DSHA1GIT=`git log -1 '--pretty=format:%h'` '􀖆 ⒞-maskin.cpp'. */
 
 /**
    
@@ -31,90 +25,84 @@ import After_9;
    A graph-path beginning with '~' is assumed to be absolute.
    
    mkv vertex_11 vertex_12 @ 2022-07-21 19:41:31.123
-   
+
  */
 
 /* #define SCIENTIFIC₋FLAVOURS ⬷ three decimals and '+' alternatively '-'  
  and  '±' with '.' before and after fractional records. */
 
 const char32̄_t * gpl₋keywords[] = {
-  UC("ENCRYPT"), UC("EDGE"), UC("VERTEX"), UC("SUBGRAPH"), 
-  UC("ADD"), UC("NAMED"), UC("FROM"), UC("TO"), UC("COMMIT"), 
-  UC("AND"), UC("BETWEEN"), UC("ROLLBACK"), UC("SELECT"), 
-  UC("DIFFERENCE"), UC("CREATE"), UC("UPDATE"), UC("DELTA"), 
-  UC("GET"), UC("FOR"), UC("AFTER"), UC("BEFORE"), UC("KEY"), 
-  UC("WITH"), UC("FIRST"), UC("SECOND"), UC("VALUE"), UC("OF"), 
-  UC("INTEGER"), UC("FLOAT"), UC("DECIMAL"), UC("TRIBOOL"), 
-  UC("REMOVE"), UC("IN"), UC("AS"), UC("SUBSCRIBE"), 
-  UC("DEFINE"), UC("RETURN"), UC("IF"), UC("THEN"), UC("ELSE"), 
-  UC("END"), UC("STRING"), UC("INSTANT"), UC("EXPRESSION"), 
-  UC("ATTRIBUTE"), UC("LAMBDA"), UC("SERVER"), UC("DEPLOY"), 
-  UC("SUM"), UC("COUNT"), UC("AVG"), UC("VARIANCE"), UC("STDDEV"), 
-  UC("MIN"), UC("MAX"), UC("MEDIAN"), ΨΛΩ
+  U"ENCRYPT", U"EDGE", U"VERTEX", U"SUBGRAPH", 
+  U"ADD", U"NAMED", U"FROM", U"TO", U"COMMIT", 
+  U"AND", U"BETWEEN", U"ROLLBACK", U"SELECT", 
+  U"DIFFERENCE", U"CREATE", U"UPDATE", U"DELTA", 
+  U"GET", U"FOR", U"AFTER", U"BEFORE", U"KEY", 
+  U"WITH", U"FIRST", U"SECOND", U"VALUE", U"OF", 
+  U"INTEGER", U"FLOAT", U"DECIMAL", U"TRIBOOL", 
+  U"REMOVE", U"IN", U"AS", U"SUBSCRIBE", 
+  U"DEFINE", U"RETURN", U"IF", U"THEN", U"ELSE", 
+  U"END", U"STRING", U"INSTANT", U"EXPRESSION", 
+  U"ATTRIBUTE", U"LAMBDA", U"SERVER", U"DEPLOY", 
+  U"SUM", U"COUNT", U"AVG", U"VARIANCE", U"STDDEV", 
+  U"MIN", U"MAX", U"MEDIAN", ΨΛΩ
 };
 
 /*
  *  a reference to a default and unique prompt allows us to quickly identify 
- *. the shell we (sometimes accidently) entered.
+ *  the shell we (sometimes accidently) entered.
  */
 
-const char32̄_t * initial₋prompt          = UC("helixsh> ");
+char32̄_t * initial₋prompt          = UC("helixsh> ");
 
 /*
  *  this prompt is presented when user has ended a line with a backslash 
  *  character.
  */
 
-const char32̄_t * multiline₋prompt        = UC("> ");
+char32̄_t * multiline₋prompt        = UC("> ");
 
 /*
  *  individual path components are base-64 encoded and 'recorded/stored' 
  *  somewhere in the heap.
  */
 
-static unicode₋string /* a․𝘬․a 'vector<char32̄_t>' */ current₋graphpath;
+struct Unicodes current₋graphpath;
 
 /*
  *  stack that records all graph paths pushed and popped via 'popd' and 
  *  'pushd'.
  */
 
-static remmingway graphpath₋stack;
+struct collection /* char32̄_t */ graphpath₋stack, graphpath₋indices;
 
 /*
  *  associative map catalogue with all substitutions created with the 
  * 'alias'  command. Both 'key' and 'value' is in the heap.
  */
 
-static thesaurus aliases;
+thesaurus₋ref aliases;
 
 /*
  *  a reference to each file entered at the command line to be processed. 
  *  (.helixsh, .gpl and .gpl.enc file-endings.)
  */
 
-static vector<char8₋t *> filepaths₋sequence; /* ⬷ a․𝘬․a sequence and ˢConvoj. */
+struct collection /* char8₋t * */ filepath₋sequence; /*  a․𝘬․a pointer₋sequence. */
 
 /*
  *  reference to file path to cryptology bag and with its default relative 
  *  file name given.
  */
 
-const char8₋t * pkcs12₋filename = U8("./passwords.p12");
+char8₋t * pkcs12₋filename = U8("./please.p12");
 
 /*
  *  file path to a complex when currently known and checked in via a 
- *  system("git add my₋journal.gpl") call. Note that completion entering 
+ *  Order("git add my₋journal.gpl") call. Note that completion entering 
  *  'git add my-deleted-file' for z-shell currently is non-operational.
  */
 
-const char8₋t * journal₋filename = ΨΛΩ;
-
-/*
- *  determines if terminal is outputting details on its operations.
- */
-
-int trace₋enabled = 0;
+char8₋t * journal₋filename = ΨΛΩ;
 
 /*
  *  indicates if cerificates not rooted in a certificate authority is 
@@ -122,24 +110,33 @@ int trace₋enabled = 0;
  */
 
 int allows₋selfsigning = 0;
- 
-int start₋interactive₋loop()
-{
-   print("command-line error. Run helixsh with the -h flag to get help.");
-   return 0;
-}
 
-#include "⒞-gpl-parser.cxx" /* evaluate₋gpl₋files(int count, char8₋t filepaths[]) */
-#include "⒞-commandline-completion.cxx" /* refresh₋command₋completion₋state() */
+/*
+ *  instruct operator on 'how to proceed'.
+ */
+
+int procuratio = 0;
+
+/*
+ *  determines if terminal is outputting details on its operations.
+ */
+
+int trace₋enabled = 0;
+
+extern int evaluate₋gpl₋files(struct collection /* char8₋t * */ filepaths);
+#include "⒞-gpl-parser.cxx"
+
+#include "⒞-line-completion.cxx" /* refresh₋command₋completion₋state() */
 /* also: open-clone-init-enclosing-repository, reenter-filename, 
  specific-filename, includable, renameable, deleteable, included, 
  renamed, deleted, coagulate-with-a-commit, exclude. */
 /* completion with multiple/multiple line and tablettes. */
 
 int start₋interactive₋loop()
-{
+{ int quit=0;
 again:
-   if () { return 0; }
+   if (quit) { return 0; }
+   print("command-line error. Run helixsh with the -h flag to get help.\n");
    goto again;
 }
 
@@ -156,7 +153,7 @@ enum shell₋command₋type {
 /* Find new abstraction to enhance clarity compared to '#include'. */
 /* transmissions alternatively nätelement. */
 /* Consider 'includes' and 'preclude'. */
- command₋preclude, /* ⬷ a․𝘬․a 'parent⁻¹', possibly 'command₋indirect' alternatively 
+ command₋preclude, /*  a․𝘬․a 'parent⁻¹', possibly 'command₋indirect' alternatively 
  'command₋direct' possibly with a 'weak'and 'strong' components of a directed graph. */
  /* 
  Notice ARM big.Little and earlier 'virtual/sandbox'. */
@@ -166,61 +163,69 @@ enum shell₋command₋type {
  command₋stddev,       command₋median,        command₋difference, 
  command₋max,          command₋min,           command₋count, 
  command₋create₋alias, command₋list₋alias,    command₋unalias, 
- command₋quit,         command₋program
+ command₋quit,         command₋program,       command₋publish, /* material in plain-text suitable for copy-paste to inte-r-net */
+ command₋steganographic₋rewrite
 };
+
+typedef int (*Feature)(int argc, const char * argv[]);
 
 struct shell₋command {
    int count;
-   const char32̄_t * names[];
-   const char32̄_t * arguments;
-   const char32̄_t * text;
-   int (**feature)(int argc, const char * argv[]);
-   enum shell₋command₋type types[];
+   char32̄_t * names[9]; char32̄_t *arguments,*text;
+   Feature feature[9];
+   enum shell₋command₋type types[9];
 } commands[] = {
-  { 1, { UC("help") }, UC(""), UC("display this help"), 
+  { 1, { U"help" }, U"", U"display this help", 
                                                 { ΨΛΩ }, { command₋help } }, 
-  { 1, { UC("load") }, UC(""), UC("load a .gpl or a .gpl.enc program"), 
+  { 1, { U"load" }, U"", U"load a .gpl or a .gpl.enc program", 
                                                 { ΨΛΩ }, { command₋load } }, 
-  { 1, { UC("ls") }, UC("<graph path>"), UC("list the content at a "
-   "location in the complex"),                  { ΨΛΩ }, { command₋list } }, 
-  { 1, { UC("pwd") }, UC(""), UC("list current location in a complex"), 
+  { 1, { U"ls" }, U"<graph path>", U"list the content at a "
+   "location in the complex",                   { ΨΛΩ }, { command₋list } }, 
+  { 1, { U"pwd" }, U"", U"list current location in a complex", 
                                                 { ΨΛΩ }, { command₋goto } }, 
-  { 1, { UC("mksg") }, UC("<regular token>"), UC("create a new sub graph"), 
+  { 1, { U"mksg" }, U"<regular token>", U"create a new sub graph", 
                                                 { ΨΛΩ }, { command₋mksg } }, 
-  { 1, { UC("mkv") }, UC("<regular token>"), UC("create a new vectice"), 
+  { 1, { U"mkv" }, U"<regular token>", U"create a new vectice", 
                                                 { ΨΛΩ }, { command₋mkv } }, 
-  { 1, { UC("bridge-to") }, UC("<regular token> <vertex graph path>"), 
+  { 1, { U"bridge-to" }, U"<regular token> <vertex graph path>", U"", 
                                                 { ΨΛΩ }, { command₋bridge } }, 
-  { 1, { UC("mkkey") }, UC("<regular token>"), UC(""), 
+  { 1, { U"mkkey" }, U"<regular token>", U"", 
                                                 { ΨΛΩ }, { command₋mkkey } }, 
-  { 1, { UC("delta") }, UC("<single or double value>"), UC(""), 
+  { 1, { U"delta" }, U"<single or double value>", U"", 
                                                 { ΨΛΩ }, { command₋delta } }, 
-  { 1, { UC("commit") }, UC("<optional instant>"), UC(""), 
+  { 1, { U"commit" }, U"<optional instant>", U"", 
                                                 { ΨΛΩ }, { command₋commit } }, 
-  { 1, { UC("rollback") }, UC(""), UC(""),      { ΨΛΩ }, { command₋rollback } }, 
-  { 1, { UC("peek") }, UC(""), UC(""),          { ΨΛΩ }, { command₋peek } }, 
-  { 1, { UC("samplea") }, UC(""), UC(""),       { ΨΛΩ }, { command₋sample₋after } }, 
-  { 1, { UC("sampleb") }, UC(""), UC(""),       { ΨΛΩ }, { command₋sample₋before } }, 
-  { 9, { UC("sum"), UC("average"), UC("variance"), UC("stddev"), 
-   UC("median"), UC("difference"), UC("max"), UC("min"), 
-   UC("count") }, UC("<closed beg.> <open end>"), 
-   UC("aggregate a key from [closed beg., open end)]"), 
+  { 1, { U"rollback" }, U"", U"",      { ΨΛΩ }, { command₋rollback } }, 
+  { 1, { U"peek" }, U"", U"",          { ΨΛΩ }, { command₋peek } }, 
+  { 1, { U"samplea" }, U"", U"",       { ΨΛΩ }, { command₋sample₋after } }, 
+  { 1, { U"sampleb" }, U"", U"",       { ΨΛΩ }, { command₋sample₋before } },
+  { 9, { U"sum", U"average", U"variance", U"stddev", 
+   U"median", U"difference", U"max", U"min", 
+   U"count" }, U"<closed beg.> <open end>", 
+   U"aggregate a key from [closed beg., open end)]", 
                                                 { ΨΛΩ }, { command₋sum, command₋average, 
     command₋variance, command₋stddev, command₋median, command₋difference, command₋max, 
     command₋min, command₋count } }, 
-  { 1, { UC("pushd") }, UC(""), UC("add the current location to the top "
-   "of the directory stack"),                   { ΨΛΩ }, { command₋pushd } }, 
-  { 1, { UC("popd") }, UC(""), UC("go to the path stored on the top of "
-   "the dicrectory stack"),                     { ΨΛΩ }, { command₋popd } }, 
-  { 1, { UC("alibi") }, UC("<name> <definition>"), UC("introduce a string "          /* formerly 'alias', later 'shortform'. */
-   "substitution"),                             { ΨΛΩ }, { command₋create₋alias } }, 
-  { 1, { UC("alibis") }, UC(""), UC("list all string substitutions"), 
+  { 1, { U"pushd" }, U"", U"add the current location to the top "
+   "of the directory stack",                    { ΨΛΩ }, { command₋pushd } }, 
+  { 1, { U"popd" }, U"", U"go to the path stored on the top of "
+   "the dicrectory stack",                      { ΨΛΩ }, { command₋popd } }, 
+  { 1, { U"alibi" }, U"<name> <definition>", U"introduce a string "          /* formerly 'alias', later 'shortform'. */
+   "substitution",                              { ΨΛΩ }, { command₋create₋alias } }, 
+  { 1, { U"alibis" }, U"", U"list all string substitutions", 
                                                 { ΨΛΩ }, { command₋list₋alias } }, 
-  { 1, { UC("unalibi") }, UC("<name>"), UC("remove a previously added alias") }, 
+  { 1, { U"unalibi" }, U"<name>", U"remove a previously added alias", 
                                                 { ΨΛΩ }, { command₋unalias } }, 
-  { 1, { UC("quit") }, UC(""), UC("exit the shell"), 
+  { 1, { U"quit" }, U"", U"exit the shell", 
                                                 { ΨΛΩ }, { command₋quit } }
 };
+
+#include <unistd.h>
+
+int IsFileSuffix(const char * suffix, char8₋t * text)
+{ return 0; }
+
+void keyput₋rewrite(char8₋t * utf8) { }
 
 int option₋machine₋interprets(int argc, char8₋t ** argv)
 { int i=1,y₁,y₂,pkcs12₋filepath=0,password=0,journal₋filepath=0; 
