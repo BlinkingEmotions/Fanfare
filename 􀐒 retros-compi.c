@@ -236,6 +236,18 @@ int add₋runlink₋keywords()
 #include "╳-sourcer-vegetar.cxx" /* 'is big- or little endian for two points'. */
 #include <unistd.h>
 
+int IsFileSuffix(const char * suffix, char8₋t * one₋filepath)
+{ __builtin_int_t u8bytes=Utf8BytesUntilZero(one₋filepath,BUILTIN₋INT₋MAX);
+  char32̄_t ucs[4*u8bytes],uc; __builtin_int_t pathtetras;
+   if (Utf8ToUnicode(u8bytes,one₋filepath,ucs,&pathtetras)) { return 0; }
+   int suffix₋length=strlen(suffix),i=0;
+again:
+   uc = *(suffix + suffix₋length - i - 1);
+   if (i == suffix₋length) { return 1; }
+   if (ucs[i] != uc) { return 0; }
+   i+=1; goto again;
+}
+
 int option₋machine₋interprets(int argc, char8₋t ** argv)
 { int i=0,y,output₋filepath=0,modulemap₋filepath=0; char8₋t * token; char * msg="";
 again:
