@@ -240,11 +240,13 @@ int IsFileSuffix(const char * suffix, char8₋t * one₋filepath)
 { __builtin_int_t u8bytes=Utf8BytesUntilZero(one₋filepath,BUILTIN₋INT₋MAX);
   char32̄_t ucs[4*u8bytes],uc; __builtin_int_t pathtetras;
    if (Utf8ToUnicode(u8bytes,one₋filepath,ucs,&pathtetras)) { return 0; }
-   int suffix₋length=strlen(suffix),i=0;
+   int suffix₋length=strlen(suffix),i=0,identic=1;
+   if (pathtetras < suffix₋length) { return false; } /* path shorter than suffix. */
 again:
+   if (i == suffix₋length) { return identic; } /* equal length. */
+   if (suffix₋length < pathtetras && i == suffix₋length) { return identic; } /* suffix shorter than path. */
    uc = *(suffix + suffix₋length - i - 1);
-   if (i == suffix₋length) { return 1; }
-   if (ucs[i] != uc) { return 0; }
+   if (ucs[i] != uc) { identic=0;  }
    i+=1; goto again;
 }
 
