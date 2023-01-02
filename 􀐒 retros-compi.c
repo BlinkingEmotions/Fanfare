@@ -237,7 +237,7 @@ int add₋runlink₋keywords()
 #include <unistd.h>
 
 int option₋machine₋interprets(int argc, char8₋t ** argv)
-{ int i=0,y,output₋filepath=0,modulemap₋filepath=0; char8₋t * token;
+{ int i=0,y,output₋filepath=0,modulemap₋filepath=0; char8₋t * token; char * msg="";
 again:
    if (i>=argc) { goto unagain; }
    token = *(argv + i);
@@ -261,14 +261,17 @@ again:
    if (y == 0) { platform₋chip=3; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-arm-mac");
    if (y == 0) { platform₋chip=1; goto next; }
-   if (IsSuffix(".detail",token)) { if (copy₋append₋items(1,token,filepaths,Alloc)) { goto error; } goto next; }
-   if (IsSuffix(".modulemap",token)) { if (copy₋append₋items(1,token,modulemap₋files,Alloc)) { goto error; } goto next; }
-   if (IsSuffix(".modules",token)) { if (copy₋append₋items(1,token,modules₋files,Alloc)) { goto error; } goto next; }
+   if (IsSuffix(".detail",token)) { if (copy₋append₋items(1,token,&filepaths,Alloc)) { goto generic₋error; } goto next; }
+   if (IsSuffix(".modulemap",token)) { if (copy₋append₋items(1,token,&modulemap₋files,Alloc)) { goto generic₋error; } goto next; }
+   if (IsSuffix(".modules",token)) { if (copy₋append₋items(1,token,&modules₋files,Alloc)) { goto generic₋error; } goto next; }
    goto error;
 next:
    i+=1; goto again;
-error:
-   vfprint("Command-line interpretation error ⬚\n", ﹟s7());
+descriptive₋error:
+   vfprint("Command-line interpretation error '⬚'\n",﹟s7(msg));
+   return -1;
+generic₋error:
+   vfprint("Command-line interpretation error\n");
    return -1;
 unagain:
    return 0;
