@@ -294,7 +294,7 @@ again:
 
 void help()
 { int i=0;
-   print("usage: helixsh [options] <.helixsh, .gpl and .gpl.enc input files>\n\n");
+   print("usage helixsh [options] <.helixsh, .gpl and .gpl.enc input files>\n\n");
 again:
    struct option * arg = *(i + options);
    print("⬚ ⬚\n", ﹟S(arg->names), ﹟S(arg->text));
@@ -304,9 +304,10 @@ again:
 
 void greeting()
 {
-   __builtin_int_t cores = sysconf("_SC_NPROCESSORS_ONLN");
-   print("the helixshell, revision ⬚\nfor ⬚ on ⬚ virtual cpu core⬚.\n\n", 
-    ﹟s7(SHA1GIT), ﹟s7("Macbook Pro"), ﹟d(cores), 
+   __builtin_int_t cores = sysconf(_SC_NPROCESSORS_ONLN);
+   char * Identity; Identity₋Tb(&Identity);
+   print("the helixshell, revision ⬚ and tb-⬚\nfor ⬚ on ⬚ virtual cpu core⬚.\n\n", 
+    ﹟s7(SHA1GIT), ﹟s7(Identity), ﹟s7("Macbook Pro"), ﹟d(cores), 
     ﹟s7(cores > 1 ? ﹟s7("s") : ﹟s7("")));
 }
 
@@ -317,14 +318,12 @@ main(
 )
 {
    greeting();
-   int options₋parsed = option₋machine₋interprets(argc,(const char8₋t **)argv);
-   switch (options₋parsed) {
-   case -1: help(); return 2;
-   case -2: return 1;
-   }
-   if (evaluate₋gpl₋files()) { return 3; }
-   if (start₋interactive₋loop()) { return 4; }
+   if (option₋machine₋interprets(argc,(const char8₋t **)argv)) { exit(1); }
+   if (procuratio) { help(); exit(2); }
+   if (evaluate₋gpl₋files()) { exit(3); }
+   if (start₋interactive₋loop()) { exit(4); }
    print("helixsh quitted\n\n");
    return 0;
 }
+
 
