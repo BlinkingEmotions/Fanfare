@@ -239,67 +239,74 @@ struct option {
  { ΨΛΩ, UC(".gpl and .gpl.enc and .helixsh input files"),      path₋last₋arguments }
 };
 
-int keyput₋equal(const char8₋t * src, const char * text, const char * fulltext)
-{
-   const char * keyput = (const char *)src;
-   return strstr(keyput,text) == 0 || strstr(keyput,fulltext) == 0;
-}
-
-int filepath₋next(int argc, const char8₋t * argv[], int curr₋argc, 
- const char8₋t **filepath)
-{ struct stat st; const char8₋t * token;
-   if (curr₋argc + 1 >= argc) { return -1; }
-   else { token = argv[curr₋argc]; }
-   if (stat((const char *)token,&st) != 0) {
-     print("the file '⬚' does not exisits. Did not process any files.\n", ﹟s8(token)); 
-     return -1;
-   }
+int option₋machine₋interprets(int argc, char8₋t ** argv)
+{ int i=1,y₁,y₂,pkcs12₋filepath=0,password=0,journal₋filepath=0; 
+   char8₋t * token, *msg = U8("");
+again:
+   if (i>=argc) { goto unagain; }
+   token = *(i + argv);
+   keyput₋rewrite(token);
+   if (pkcs12₋filepath) { pkcs12₋filepath=0; goto next; }
+   if (password) { password=0; goto next; }
+   if (journal₋filepath) { journal₋filepath=0; goto next; }
+   y₁ = IsPrefixOrEqual((const char *)token,"-h");
+   y₂ = IsPrefixOrEqual((const char *)token,"--help");
+   if (y₁ || y₂) { procuratio=true; goto next; }
+   y₁ = IsPrefixOrEqual((const char *)token,"-f");
+   y₂ = IsPrefixOrEqual((const char *)token,"--pkcs12-file");
+   if (y₁ || y₂) { pkcs12₋filepath=1; goto next; }
+   y₁ = IsPrefixOrEqual((const char *)token,"-p");
+   y₂ = IsPrefixOrEqual((const char *)token,"--password");
+   if (y₁ || y₂) { password=1; goto next; }
+   y₁ = IsPrefixOrEqual((const char *)token,"-s");
+   y₂ = IsPrefixOrEqual((const char *)token,"--selfsigning-allowed");
+   if (y₁ || y₂) { allows₋selfsigning=1; goto next; }
+   y₁ = IsPrefixOrEqual((const char *)token,"-j");
+   y₂ = IsPrefixOrEqual((const char *)token,"--journal");
+   if (y₁ || y₂) { journal₋filepath=1; goto next; }
+   y₁ = IsPrefixOrEqual((const char *)token, "-t");
+   y₂ = IsPrefixOrEqual((const char *)token, "--trace");
+   if (y₁ == 0 || y₂ == 0) { trace₋enabled=1; goto next; }
+   if (IsFileSuffix(".helixsh",token)) { goto next; }
+   if (IsFileSuffix(".gpl",token)) { goto next; }
+   if (IsFileSuffix(".gpl.enc",token)) { goto next; }
+   goto generic₋error;
+next:
+   i+=1; goto again;
+generic₋error:
+   vfprint("Abridged command-line interpretation error\n");
+   return -1;
+descriptive₋error:
+   vfprint("Command-line interpretation error '⬚'\n", ﹟s8(msg));
+   return -1;
+unagain:
+   if (pkcs12₋filepath) { msg=U8("no pkcs12 file given"); goto descriptive₋error; }
+   if (password) { msg=U8("no password given"); goto descriptive₋error; }
+   if (journal₋filepath) { msg=U8("no journal file given"); goto descriptive₋error; }
    return 0;
 }
 
-int regular₋next(int argc, const char8₋t * argv[], int curr₋argc, 
- const char8₋t **argument)
-{
-  if (curr₋argc + 1 >= argc) { return -1; }
-  *argument = argv[curr₋argc];
-  return 0;
-}
-
-int option₋machine₋interprets(int argc, const char8₋t * argv[])
-{ int i=1, input₋files₋ahead=0; const char8₋t *token, next₋token;
-   if (argc <= 1) { return -1; }
-again:
-   if (argc <= i) { return 0; }
-   token = argv[i];
-   if (token[0] != '-') { input₋files₋ahead=true; }
-   if (input₋files₋ahead) { 
-     if (filepath₋next(argc,argv,token,&next₋token)) { return -2; }
-     else { filepath₋sequence.append(next₋token); }
-   } else if (keyput₋equal(token, "-h", "--help")) { return -1; }
-   else if (keyput₋equal(token, "-f", "--pkcs12-file")) {
-     if (filepath₋next(argc,argv,i,&v)) { print("pkcs12 file path not given\n"); 
-     return -2; } }
-   else if (keyput₋equal(token, "-p", "--password")) {
-     if (regular₋next(argc,argv,i,&x)) { print("password not given\n");
-     return -2; } }
-   else if (keyput₋equal(token, "-s", "--selfsigning-allowed")) {
-     allows₋selfsigning=1; }
-   else if (keyput₋equal(token, "-j", "--journal")) {
-     if (filepath₋next(argc,argv,i,&z)) { print("journal file path not given\n"); 
-     return -2; } }
-   else if (keyput₋equal(token, "-t", "--trace")) { trace₋enabled=1; }
-   else { return -1; }
-   goto again;
-}
+struct commandline₋option {
+  char * names; char * text;
+} options[] = {
+ { "--help,-h", "print help message" }, 
+ { "--pkcs12-file,-f", "pkcs#12 file path" }, 
+ { "--password,-p", "password for a Pkcs#12 file" }, 
+ { "--selfsigning-allowed,-s", "allow non-rooted "
+       "certificate chains inside a pkcs#12 file" }, 
+ { "--journal,-j", ".journal or .journal.enc file path" }, 
+ { "--trace,-t", "print helixstore diagnostic messages" }, 
+ { ΨΛΩ, ".gpl and .gpl.enc and .helixsh input files" }
+};
 
 void help()
-{ int i=0;
-   print("usage helixsh [options] <.helixsh, .gpl and .gpl.enc input files>\n\n");
+{ int i=0; struct commandline₋option parameter;
+   print("usage helixsh [options] <optional .helixsh, .gpl and .gpl.enc input files>\n\n");
 again:
-   struct option * arg = *(i + options);
-   print("⬚ ⬚\n", ﹟S(arg->names), ﹟S(arg->text));
-   if (arg->names == ΨΛΩ) { print("\n"); return; }
-   i += 1; goto again;
+   parameter = *(i + options);
+   print("⬚ ⬚\n", ﹟s7(parameter.names), ﹟s7(parameter.text));
+   if (parameter.names == ΨΛΩ) { print("\n"); return; }
+   i+=1; goto again;
 }
 
 void greeting()
@@ -308,7 +315,7 @@ void greeting()
    char * Identity; Identity₋Tb(&Identity);
    print("the helixshell, revision ⬚ and tb-⬚\nfor ⬚ on ⬚ virtual cpu core⬚.\n\n", 
     ﹟s7(SHA1GIT), ﹟s7(Identity), ﹟s7("Macbook Pro"), ﹟d(cores), 
-    ﹟s7(cores > 1 ? ﹟s7("s") : ﹟s7("")));
+    ﹟s7(cores > 1 ? "s" : ""));
 }
 
 int
@@ -318,12 +325,18 @@ main(
 )
 {
    greeting();
-   if (option₋machine₋interprets(argc,(const char8₋t **)argv)) { exit(1); }
+   if (option₋machine₋interprets(argc,(char8₋t **)argv)) { exit(1); }
    if (procuratio) { help(); exit(2); }
-   if (evaluate₋gpl₋files()) { exit(3); }
+   if (evaluate₋gpl₋files(filepath₋sequence)) { exit(3); }
    if (start₋interactive₋loop()) { exit(4); }
    print("helixsh quitted\n\n");
    return 0;
 }
 
+/*  compile with ./retro-mac.sh c-maskin 
+ 
+ xcrun clang -g -fmodule-ts -fimplicit-modules -fmodule-map-file=🚦.modules  \
+  -o helixsh -DSHA1GIT=\"`git log -1 '--pretty=format:%h'`"\"                \
+  '􀖆 ⒞-maskin.cpp' ../Apps/Source/Releases/libTwinbeam-x86_64.a            \
+  ../Apps/Addions/monolith-sequence.c */
 
