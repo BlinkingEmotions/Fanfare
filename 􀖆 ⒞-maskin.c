@@ -222,23 +222,6 @@ struct shell₋command {
                                                 { ΨΛΩ }, { command₋quit } }
 };
 
-enum option₋type { no₋argument, path₋argument, path₋last₋arguments, regular₋argument };
-
-struct option {
-  const char32̄_t * names;
-  const char32̄_t * text;
-  enum argument₋type unused₋option₋type;
-} options[] = {
- { UC("--help,-h"), UC("print help message"),                    no₋argument       }, 
- { UC("--pkcs12-file,-f"), UC("pkcs#12 file path"),              path₋argument     }, 
- { UC("--password,-p"), UC("password for a Pkcs#12 file"),       regular₋argument  }, 
- { UC("--selfsigning-allowed,-s"), UC("allow non-rooted "
-       "certificate chains inside a pkcs#12 file"),              no₋argument       }, 
- { UC("--journal,-j"), UC(".journal or .journal.enc file path"), path₋argument     }, 
- { UC("--trace,-t"), UC("print helixstore diagnostic messages"), no₋argument       }, 
- { ΨΛΩ, UC(".gpl and .gpl.enc and .helixsh input files"),      path₋last₋arguments }
-};
-
 int option₋machine₋interprets(int argc, char8₋t ** argv)
 { int i=1,y₁,y₂,pkcs12₋filepath=0,password=0,journal₋filepath=0; 
    char8₋t * token, *msg = U8("");
