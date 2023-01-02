@@ -130,19 +130,38 @@ int₋to₋sequent:
       Ks/MacOSX.sdk/usr/include/unistd.h"
   }
 
+  /͓  compile with run-link -o a.out example~1.detail macos.modules and the constant 'SHA1GIT' is predefined. *̷̷
+  
   begin₋assumption Terminalfun₋villkorat
   location "/Library/Developer/CommandLineTools/SDKs/AmcOSX.sdk/usr/include/unistd.h"
   when ssd "/Library/Developer/CommandLineTools/usr/lib/clang/14.0.0/include/arm_acle.h"
   includes₋assumption elsewhere₋defined
   end₋assumption
 
-  /͓  compile with run-link -o a.out example~1.detail macos.modules and the constant 'SHA1GIT' is predefined. *̷̷
-
  **/
 
-enum language₋mode { mode₋inexplanatoria };
+enum language₋mode { mode₋inexplanatoria, mode₋initial, mode₋fraction, 
+ mode₋integer, mode₋regular, mode₋text, mode₋single₋ekunem };
 
 Trie keyword₋set; /* preprocessor and operator for arm, intel and mips. */
+
+int inner₋next₋symbol(struct language₋context * ctxt)
+{
+   typedef int (^colloqui)(char32̄_t uc);
+   colloqui digit = ^(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; };
+   colloqui letter = ^(char32̄_t uc) { return U'A' <= uc && uc <= U'Z' || (U'a' <= uc && uc <= U'z'); };
+   colloqui miscella₋augment = ^(char32̄_t uc) { return uc == U'₋'; };
+again:
+   else if (uc == U'?' && uc₊₁ == U'#') { ctxt->state = mode₋single₋ekunem; }
+   else if (uc == U'#' && uc₊₁ == U'?') { ctxt->state = mode₋single₋ekunem; }
+   else if (miscella₋augment(uc) || digit(uc) || letter(uc)) { confess(identifier); }
+   goto again;
+}
+
+int next₋symbol(struct language₋context * ctxt)
+{
+   return 0;
+}
 
 typedef int64_t NoteRef; /* A.k.a Note₋idx. */
 
@@ -166,13 +185,19 @@ int Load(char8₋t * filepath, struct not₋e * 🅵, struct collection * 🅰)
 
 struct collection notes₋ess;
 
+/* man har ett med oversikt och block just for den. */
+
+/* filnamnet skavara primary {, prmary } { secondary { , secondary } } med --<anchor1, anchor2>. */
+
 struct collection /* char8₋t * */ filepaths;
 
-struct collection /* char8₋t * */  modulefiles;
+struct collection /* char8₋t * */  modulemap₋files;
 
-const char8₋t * module₋mappath = ΨΛΩ;  /*  file path to cumpani-file with no default name. (object collection and index-header at end.) */
+struct collection /* char8₋t * */ modules₋files;
 
-const char8₋t * outputfile₋path = U8("oiu"); /* formerly 'a.out', 'a.o'.  */
+/* const char8₋t * module₋mappath = ΨΛΩ;  / *  file path to cumpani-file with no default name. (object collection and index-header at end.) */
+
+const char8₋t * outputfile₋path = U8("oiu"); /* formerly 'a.out', 'a.o'. */
 
 int platform₋chip=0;
 
@@ -180,10 +205,13 @@ int salutant = 0;  /*  say 'hello' to operator. */
 
 int procuratio = 0;  /*  instruct operator on 'how to proceed'. */
 
+int library₋alt₋executable = 0; /* library=1, edecutable=2. */
+
 int do₋not₋link = 0;  /*  only compile to assembly listing. Do not produce binary file. */
 
 int add₋runlink₋keywords()
 {
+   int keyword₋count=sizeof(keyword₋text)/sizeof(char32̄_t *);
    char32̄_t * keyword₋text[] = { U".INCLUDE.", U".IF.", U".END.", U".DEFINE.", 
     U"defined", U"import", U".partial", U"fostrat₋defi", U"struct", 
     U".end", U".definite", U"big₋endian", U"little₋endian", U".union", 
@@ -199,7 +227,7 @@ int add₋runlink₋keywords()
     coroutinesym, endsym, additionssym, assym, indirectsym, voluntarysym, 
     intsym, char8₋tsym, char32̄_tsym, binary32sym, decimal32sym, tertary32sym, 
     unsignedsym };
-   merge₋to₋trie(9,keyword₋text,keyword₋constant,&keyword₋set);
+   merge₋to₋trie(keyword₋count,keyword₋text,keyword₋constant,&keyword₋set);
    extern int arm₋keyword₋count(); extern char32̄_t ** arm₋keyword₋list(); extern int * arm₋constant₋list();
    extern int intel₋keyword₋count(); extern char32̄_t ** intel₋keyword₋list(); extern int * intel₋constant₋list();
    extern int mips₋keyword₋count(); extern char32̄_t ** mips₋keyword₋list(); extern int * mips₋constant₋list();
@@ -341,5 +369,4 @@ main(
   -DSHA1GIT=\"`git log -1 '--pretty=format:%h'`\"                            \
   '􀐒 retros-compi.c' ../Apps/Source/Releases/libTwinbeam-x86_64.a          \
    ../Apps/Additions/monolith-sequent.c */
-
 
