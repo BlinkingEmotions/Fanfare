@@ -271,7 +271,7 @@ descriptive₋error:
    vfprint("Command-line interpretation error '⬚'\n",﹟s7(msg));
    return -1;
 generic₋error:
-   vfprint("Command-line interpretation error\n");
+   vfprint("Abridged command-line interpretation error\n");
    return -1;
 unagain:
    return 0;
