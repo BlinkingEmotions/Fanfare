@@ -249,30 +249,46 @@ again:
    if (y == 0) { salutant=true; procuratio=true; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-c");
    if (y == 0) { do₋not₋link=true; goto next; }
-   y = IsPrefixOrEqual((const char *)token, (const char *)"-o");
+   y = IsPrefixOrEqual((const char *)token, (const char *)"-library");
+   if (y == 0) { library₋alt₋executable=1; goto next; }
+   y = IsPrefixOrEqual((const char *)token, (const char *)"-deliverable");
+   if (y == 0) { library₋alt₋executable=2; goto next; }
+   y = IsPrefixOrEqual((const char *)token, (const char *)"-put");
    if (y == 0) { output₋filepath=true; goto next; }
-   y = IsPrefixOrEqual((const char *)token, (const char *)"-fmodule-map-file");
-   if (y == 0) { modulemap₋filepath=true; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-intel₋mac");
    if (y == 0) { platform₋chip=2; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-pic-mips");
    if (y == 0) { platform₋chip=3; goto next; }
    y = IsPrefixOrEqual((const char *)token, (const char *)"-arm-mac");
    if (y == 0) { platform₋chip=1; goto next; }
-   return -1;
+   if (IsSuffix(".detail",token)) { if (copy₋append₋items(1,token,filepaths,Alloc)) { goto error; } goto next; }
+   if (IsSuffix(".modulemap",token)) { if (copy₋append₋items(1,token,modulemap₋files,Alloc)) { goto error; } goto next; }
+   if (IsSuffix(".modules",token)) { if (copy₋append₋items(1,token,modules₋files,Alloc)) { goto error; } goto next; }
+   goto error;
 next:
    i+=1; goto again;
+error:
+   vfprint("Command-line interpretation error ⬚\n", ﹟s7());
+   return -1;
 unagain:
    return 0;
 }
 
 void help()
 { const char * text = 
-"usage run-link [options] <.detail and .modules and .modulemap input files>\n\n"
-" -library\n"
-" -deliverable\n"
-" -put <path and file>"; /* .cumpani alternatively a.out alternatively 'ess-pe'. */
-   print(text); 
+"usage run-link [options] <.detail and .modules and .modulemap input files>\n"
+"\noptions\n\n"
+" -v  verbose output\n"
+" -h  display help\n"
+" -c  do not link\n"
+" -library  build library and not executable\n"
+" -deliverable  build not library but executable\n"
+" -put <path and file>\n"; /* .cumpani alternatively a.out alternatively 'ess-pe'. */
+"\nplatforms\n\n"
+" -intel-mac\n"
+" -pic-mips\n"
+" -arm-mac\n"
+   print(text);
 } /* predefined-placeAndName executable-withCompanion and without-sourceAndSymbols. */
 
 void greeting()
@@ -290,7 +306,7 @@ main(
   const char * argv[]
 )
 {
-   if (option₋machine₋interprets(argc,(char8₋t **)argv)) { vfprint("command-line interpretation error\n"); exit(1); }
+   if (option₋machine₋interprets(argc,(char8₋t **)argv)) { exit(1); }
    if (salutant) { greeting(); }
    if (procuratio) { help(); exit(2); }
    if (add₋runlink₋keywords()) { exit(3); }
