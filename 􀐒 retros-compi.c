@@ -248,46 +248,49 @@ again:
    uc = *(suffix + suffix₋length - i - 1);
    if (ucs[i] != uc) { identic=0;  }
    i+=1; goto again;
-}
+} /* normaizatization and naturalization non-identic. */
+
+void keyput₋rewrite(char8₋t * utf8) { }
 
 int option₋machine₋interprets(int argc, char8₋t ** argv)
-{ int i=0,y,output₋filepath=0,modulemap₋filepath=0; char8₋t * token; char * msg="";
+{ int i=1,y,output₋filepath=0; char8₋t * token, *msg = "";
 again:
    if (i>=argc) { goto unagain; }
    token = *(argv + i);
+   keyput₋rewrite(token);
    if (output₋filepath) { vfprint("output is ⬚\n", ﹟s8(token)); outputfile₋path=token; output₋filepath=0; goto next; }
-   if (modulemap₋filepath) { vfprint("modulemap is ⬚\n", ﹟s8(token)); module₋mappath=token; modulemap₋filepath=0; goto next; }
-   y = IsPrefixOrEqual((const char *)token, (const char *)"-v");
+   y = IsPrefixOrEqual((const char *)token,"-v");
    if (y == 0) { salutant=true; goto next; }
-   y = IsPrefixOrEqual((const char *)token, (const char *)"-h");
+   y = IsPrefixOrEqual((const char *)token,"-h");
    if (y == 0) { salutant=true; procuratio=true; goto next; }
-   y = IsPrefixOrEqual((const char *)token, (const char *)"-c");
+   y = IsPrefixOrEqual((const char *)token,"-c");
    if (y == 0) { do₋not₋link=true; goto next; }
-   y = IsPrefixOrEqual((const char *)token, (const char *)"-library");
+   y = IsPrefixOrEqual((const char *)token,"-library");
    if (y == 0) { library₋alt₋executable=1; goto next; }
-   y = IsPrefixOrEqual((const char *)token, (const char *)"-deliverable");
+   y = IsPrefixOrEqual((const char *)token,"-deliverable");
    if (y == 0) { library₋alt₋executable=2; goto next; }
-   y = IsPrefixOrEqual((const char *)token, (const char *)"-put");
+   y = IsPrefixOrEqual((const char *)token,"-put");
    if (y == 0) { output₋filepath=true; goto next; }
-   y = IsPrefixOrEqual((const char *)token, (const char *)"-intel₋mac");
+   y = IsPrefixOrEqual((const char *)token,"-intel₋mac");
    if (y == 0) { platform₋chip=2; goto next; }
-   y = IsPrefixOrEqual((const char *)token, (const char *)"-pic-mips");
+   y = IsPrefixOrEqual((const char *)token,"-pic-mips");
    if (y == 0) { platform₋chip=3; goto next; }
-   y = IsPrefixOrEqual((const char *)token, (const char *)"-arm-mac");
+   y = IsPrefixOrEqual((const char *)token,"-arm-mac");
    if (y == 0) { platform₋chip=1; goto next; }
-   if (IsSuffix(".detail",token)) { if (copy₋append₋items(1,token,&filepaths,Alloc)) { goto generic₋error; } goto next; }
-   if (IsSuffix(".modulemap",token)) { if (copy₋append₋items(1,token,&modulemap₋files,Alloc)) { goto generic₋error; } goto next; }
-   if (IsSuffix(".modules",token)) { if (copy₋append₋items(1,token,&modules₋files,Alloc)) { goto generic₋error; } goto next; }
-   goto error;
+   if (IsFileSuffix(".detail",token)) { if (copy₋append₋items(1,token,&filepaths,Alloc)) { goto generic₋error; } goto next; }
+   if (IsFileSuffix(".modulemap",token)) { if (copy₋append₋items(1,token,&modulemap₋files,Alloc)) { goto generic₋error; } goto next; }
+   if (IsFileSuffix(".modules",token)) { if (copy₋append₋items(1,token,&modules₋files,Alloc)) { goto generic₋error; } goto next; }
+   goto generic₋error;
 next:
    i+=1; goto again;
 descriptive₋error:
-   vfprint("Command-line interpretation error '⬚'\n",﹟s7(msg));
+   vfprint("Command-line interpretation error '⬚'\n",﹟s8(msg));
    return -1;
 generic₋error:
-   vfprint("Abridged command-line interpretation error\n");
+   vfprint("Abridged command-line interpretation error\n"); /* Summary-general */
    return -1;
 unagain:
+   if (output₋filepath) { msg="no output filepath given"; goto descriptive₋error; }
    return 0;
 }
 
@@ -300,7 +303,7 @@ void help()
 " -c  do not link\n"
 " -library  build library and not executable\n"
 " -deliverable  build not library but executable\n"
-" -put <path and file>\n"; /* .cumpani alternatively a.out alternatively 'ess-pe'. */
+" -put <path and .asm file>\n"; /* .cumpani alternatively a.out alternatively 'ess-pe'. */
 "\nplatforms\n\n"
 " -intel-mac\n"
 " -pic-mips\n"
@@ -313,7 +316,7 @@ void greeting()
    __builtin_int_t cores = sysconf(_SC_NPROCESSORS_ONLN);
    char * Identity; Identity₋Tb(&Identity);
    print("run-link, revision ⬚ and tb-⬚ for ⬚ on ⬚ virtual cpu core⬚.\n\n", 
-    ﹟s7(SHA1GIT), ﹟s7(Identity), ﹟s7("Macbook Pro"), ﹟d((__builtin_int_t)cores), 
+    ﹟s7(SHA1GIT), ﹟s7(Identity), ﹟s7("Macbook Pro"), ﹟d(cores), 
     ﹟s7(cores == 1 ? "" : "s"));
 }
 
@@ -332,14 +335,11 @@ main(
 
 /* run-link may equal bandit-criminal by link and "clang -o run-link '􀐒 retros-compi.c' ". */
 
-/* compile with 
- 
- ./retro-mac.sh retros-compi 
+/*  compile with ./retro-mac.sh retros-compi 
  
  clang -g -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules       \
   -DSHA1GIT=\"`git log -1 '--pretty=format:%h'`\"                            \
   '􀐒 retros-compi.c' ../Apps/Source/Releases/libTwinbeam-x86_64.a          \
-   ../Apps/Additions/monolith-sequent.c
- 
-*/
+   ../Apps/Additions/monolith-sequent.c */
+
 
