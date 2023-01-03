@@ -21,6 +21,11 @@ import Fōretag-Method /͓ and not 'Company₋Methods' and one do not break with
     int32_t count, char32_t uc
   .end
   
+  schema components=(
+    "retros-compi" - "🥽⋆᛭Solenoid.cpp" "c++20" "../Apps/Additions/monolith-sequent.c" "c2x"
+    "c-maskin" - "🥽⋆⁻¹Fetus.cpp" "c++20" "../Apps/Additions/monolith-sequent.c" "c2x"
+  )
+  
   á₋priori definite /͓ struct *̷̷ sequent To₋precision(brain₋epsilon x)
   á₋priori uint8_t 𝟽₋op₋bytereverse(uint8_t b)
   á₋priori void Base𝕫(__builtin_uint_t|__builtin_int_t|__int128_t|__uint128_t ℤ, unsigned short base, unsigned short digitsOr0, void (^out)(char zeroToNineAndNeg))
@@ -170,7 +175,7 @@ struct not₋e {
   int32_t kind;
 };
 
-int Spawn₋replik(char8₋t * filepath, struct not₋e * 🅵, struct collection * 🅰)
+int Spawn₋replik(struct Unicodes filepath, struct not₋e * 🅵, struct collection * 🅰)
 { __builtin_int_t ﹟₋segment=5;
 again:
    if (i >= ﹟₋segments) { return 0; }
@@ -178,7 +183,7 @@ again:
    return 0;
 }
 
-int Load(char8₋t * filepath, struct not₋e * 🅵, struct collection * 🅰)
+int Load(struct Unicodes filepath, struct not₋e * 🅵, struct collection * 🅰)
 {
 
 }
@@ -218,7 +223,8 @@ int add₋runlink₋keywords()
     U"á₋priori", U"typedef", U"constant", U"compute", U"compare", U"if", 
     U"goto",U"TRANSCRIPT", U"INEXORABLE", U"MENTATIVE", U"START", U"INLINE", 
     U"COROUTINE", U"END", U"additions", U"as", U"indirect", U"voluntary", 
-    U"int", U"char8₋t", U"char32̄_t", U"binary32", U"decimal32", U"unsigned" };
+    U"int", U"char8₋t", U"char32̄_t", U"binary32", U"decimal32", U"unsigned", 
+    U"schema" };
    int keyword₋constant[] = { preproc₋include, preproc₋if, preproc₋end, 
     preproc₋defined, importsym, partialsym, fostratdefisym, structsym, 
     end₋with₋dotsym, definitesym, big₋endiansym, little₋endiansym, unionsym, 
@@ -226,7 +232,7 @@ int add₋runlink₋keywords()
     gotosym, transcriptsym, inexorablesym, mentativesym, startsym, inlinesym, 
     coroutinesym, endsym, additionssym, assym, indirectsym, voluntarysym, 
     intsym, char8₋tsym, char32̄_tsym, binary32sym, decimal32sym, tertary32sym, 
-    unsignedsym };
+    unsignedsym, schemasym };
    merge₋to₋trie(keyword₋count,keyword₋text,keyword₋constant,&keyword₋set);
    extern int arm₋keyword₋count(); extern char32̄_t ** arm₋keyword₋list(); extern int * arm₋constant₋list();
    extern int intel₋keyword₋count(); extern char32̄_t ** intel₋keyword₋list(); extern int * intel₋constant₋list();
