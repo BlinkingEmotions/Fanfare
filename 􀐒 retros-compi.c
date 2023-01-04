@@ -26,6 +26,8 @@ import Fōretag-Method /͓ and not 'Company₋Methods' and one do not break with
     "c-maskin" - "🥽⋆⁻¹Fetus.cpp" "c++20" "../Apps/Additions/monolith-sequent.c" "c2x"
   )
   
+  / * table short₋text 5 = ("lorem","ipsum","dolor","sit","amet","consecteur") * /
+  
   á₋priori definite /͓ struct *̷̷ sequent To₋precision(brain₋epsilon x)
   á₋priori uint8_t 𝟽₋op₋bytereverse(uint8_t b)
   á₋priori void Base𝕫(__builtin_uint_t|__builtin_int_t|__int128_t|__uint128_t ℤ, unsigned short base, unsigned short digitsOr0, void (^out)(char zeroToNineAndNeg))
@@ -145,18 +147,42 @@ int₋to₋sequent:
 
  **/
 
+struct token₋detail { };
+
 enum language₋mode { mode₋inexplanatoria, mode₋initial, mode₋fraction, 
  mode₋integer, mode₋regular, mode₋text, mode₋single₋ekunem };
 
-Trie keyword₋set; /* preprocessor and operator for arm, intel and mips. */
+struct language₋context {
+  struct Unicodes text;
+  __builtin_int_t tip₋unicode;
+  enum language₋mode state;
+};
+
+Trie keyword₋set; /* the preprocessor, keywords and the operations for one selected processor. */
+
+typedef struct Symbolinterval { short symbols; char32̄_t * start; } Symbolinterval;
+
+typedef struct Symbol { enum symbol₋class item; struct token₋detail gritty; } Symbol;
+
+#define STATE(s) (s == ctxt->state)
 
 int inner₋next₋symbol(struct language₋context * ctxt)
-{
-   typedef int (^colloqui)(char32̄_t uc);
-   colloqui digit = ^(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; };
-   colloqui letter = ^(char32̄_t uc) { return U'A' <= uc && uc <= U'Z' || (U'a' <= uc && uc <= U'z'); };
-   colloqui miscella₋augment = ^(char32̄_t uc) { return uc == U'₋'; };
+{ char32̄_t uc₊₁,uc,uc₊₂; int lift₋count=0; __builtin_int_t idx,symbols=ctxt->text.tetras;
+   typedef int (^non₋coalescent)(char32̄_t uc);
+   non₋coalescent digit = ^(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; };
+   non₋coalescent letter = ^(char32̄_t uc) { return U'A' <= uc && uc <= U'Z' || (U'a' <= uc && uc <= U'z'); };
+   non₋coalescent miscella₋augment = ^(char32̄_t uc) { return uc == U'₋'; };
+   🧵(identifier,trouble,completion) {
+   case identifier: return 0;
+   case completion: return 0;
+   case trouble: return -1;
+   }
 again:
+   
+   if (idx >= symbols) { confess(completion); }
+   if (idx == symbols - 1) { lift₋count=2; }
+   if (idx == symbols - 2) { lift₋count=1; }
+   if (STATE(mode₋initial) && uc == U'\xa') { }
    else if (uc == U'?' && uc₊₁ == U'#') { ctxt->state = mode₋single₋ekunem; }
    else if (uc == U'#' && uc₊₁ == U'?') { ctxt->state = mode₋single₋ekunem; }
    else if (miscella₋augment(uc) || digit(uc) || letter(uc)) { confess(identifier); }
@@ -168,7 +194,7 @@ int next₋symbol(struct language₋context * ctxt)
    return 0;
 }
 
-typedef int64_t NoteRef; /* A.k.a Note₋idx. */
+typedef int64_t NoteRef; /* A.k.a 'Note₋idx'. */
 
 struct not₋e {
   union { } material;
@@ -176,7 +202,7 @@ struct not₋e {
 };
 
 int Spawn₋replik(struct Unicodes filepath, struct not₋e * 🅵, struct collection * 🅰)
-{ __builtin_int_t ﹟₋segment=5;
+{ __builtin_int_t ﹟₋segments=5,i;
 again:
    if (i >= ﹟₋segments) { return 0; }
    goto again;
@@ -185,14 +211,14 @@ again:
 
 int Load(struct Unicodes filepath, struct not₋e * 🅵, struct collection * 🅰)
 {
-
+   return 0;
 }
 
 struct collection notes₋ess;
 
 /* man har ett med oversikt och block just for den. */
 
-/* filnamnet skavara primary {, prmary } { secondary { , secondary } } med --<anchor1, anchor2>. */
+/* filnamnet ska vara primary {, primary } { secondary { , secondary } } med --<anchor1, anchor2>. */
 
 struct collection /* char8₋t * */ filepaths;
 
@@ -216,8 +242,8 @@ int do₋not₋link = 0;  /*  only compile to assembly listing. Do not produce b
 
 int add₋runlink₋keywords()
 {
-   int keyword₋count=sizeof(keyword₋text)/sizeof(char32̄_t *);
-   char32̄_t * keyword₋text[] = { U".INCLUDE.", U".IF.", U".END.", U".DEFINE.", 
+   
+   char32̄_t * keyword₋texts[] = { U".INCLUDE.", U".IF.", U".END.", U".DEFINE.", 
     U"defined", U"import", U".partial", U"fostrat₋defi", U"struct", 
     U".end", U".definite", U"big₋endian", U"little₋endian", U".union", 
     U"á₋priori", U"typedef", U"constant", U"compute", U"compare", U"if", 
@@ -233,7 +259,8 @@ int add₋runlink₋keywords()
     coroutinesym, endsym, additionssym, assym, indirectsym, voluntarysym, 
     intsym, char8₋tsym, char32̄_tsym, binary32sym, decimal32sym, tertary32sym, 
     unsignedsym, schemasym };
-   merge₋to₋trie(keyword₋count,keyword₋text,keyword₋constant,&keyword₋set);
+   int keyword₋count=sizeof(keyword₋texts)/sizeof(char32̄_t *);
+   merge₋to₋trie(keyword₋count,keyword₋texts,keyword₋constant,&keyword₋set);
    extern int arm₋keyword₋count(); extern char32̄_t ** arm₋keyword₋list(); extern int * arm₋constant₋list();
    extern int intel₋keyword₋count(); extern char32̄_t ** intel₋keyword₋list(); extern int * intel₋constant₋list();
    extern int mips₋keyword₋count(); extern char32̄_t ** mips₋keyword₋list(); extern int * mips₋constant₋list();
@@ -260,15 +287,24 @@ int add₋runlink₋keywords()
 #include "╳-arm-keyword.cxx"
 #include "╳-mips-keyword.cxx"
 #include "╳-kirkbridge-keyword.cxx"
-#include "╳-lexic-disjunct.cxx"
+#include "╳-lexer-disjunct.cxx"
 #include "╳-parse-hierar.cxx"
 #include "╳-color-special.cxx"
-#include "╳-binary-outcometh.cxx"
 /*. Threaded dual-name les can be grouped by selecting primary and secondary thread when 
  presenting a tree table. (ASSOCIATE-RUNLINK) */
 #include "╳-art-linear-arm.cxx"
 #include "╳-sourcer-vegetar.cxx" /* 'is big- or little endian for two points'. */
 #include <unistd.h>
+
+int compile₋source₋files(int (*module)())
+{
+   return 0;
+}
+
+int compile₋import₋module()
+{
+   return 0;
+}
 
 int IsFileSuffix(const char * suffix, char8₋t * one₋filepath)
 { __builtin_int_t u8bytes=Utf8BytesUntilZero(one₋filepath,BUILTIN₋INT₋MAX);
@@ -282,7 +318,7 @@ again:
    uc = *(suffix + suffix₋length - i - 1);
    if (ucs[i] != uc) { identic=0;  }
    i+=1; goto again;
-} /* normaizatization and naturalization non-identic. */
+} /* normalization and naturalization non-identic. */
 
 void keyput₋rewrite(char8₋t * utf8) { }
 
@@ -364,6 +400,7 @@ main(
    if (salutant) { greeting(); }
    if (procuratio) { help(); exit(2); }
    if (add₋runlink₋keywords()) { exit(3); }
+   if (compile₋source₋files(compile₋source₋module)) { exit(4); }
    return 0;
 }
 
@@ -375,4 +412,5 @@ main(
   -DSHA1GIT=\"`git log -1 '--pretty=format:%h'`\"                            \
   '􀐒 retros-compi.c' ../Apps/Source/Releases/libTwinbeam-x86_64.a          \
    ../Apps/Additions/monolith-sequent.c */
+
 
