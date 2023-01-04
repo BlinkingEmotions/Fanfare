@@ -218,17 +218,15 @@ struct collection notes₋ess;
 
 /* man har ett med oversikt och block just for den. */
 
-/* filnamnet ska vara primary {, primary } { secondary { , secondary } } med --<anchor1, anchor2>. */
-
 struct collection /* char8₋t * */ filepaths;
 
 struct collection /* char8₋t * */  modulemap₋files;
 
 struct collection /* char8₋t * */ modules₋files;
 
-/* const char8₋t * module₋mappath = ΨΛΩ;  / *  file path to cumpani-file with no default name. (object collection and index-header at end.) */
+char8₋t * cumpani₋filepath = ΨΛΩ;  /*  file path to cumpani-file with no default name. (object collection and index-header at end.) */
 
-const char8₋t * outputfile₋path = U8("oiu"); /* formerly 'a.out', 'a.o'. */
+char8₋t * output₋filepath = U8("oiu"); /* formerly 'a.out', 'a.o'. */
 
 int platform₋chip=0;
 
