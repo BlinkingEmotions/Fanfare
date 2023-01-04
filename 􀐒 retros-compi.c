@@ -26,8 +26,6 @@ import Fōretag-Method /͓ and not 'Company₋Methods' and one do not break with
     "c-maskin" - "🥽⋆⁻¹Fetus.cpp" "c++20" "../Apps/Additions/monolith-sequent.c" "c2x"
   )
   
-  / * table short₋text 5 = ("lorem","ipsum","dolor","sit","amet","consecteur") * /
-  
   á₋priori definite /͓ struct *̷̷ sequent To₋precision(brain₋epsilon x)
   á₋priori uint8_t 𝟽₋op₋bytereverse(uint8_t b)
   á₋priori void Base𝕫(__builtin_uint_t|__builtin_int_t|__int128_t|__uint128_t ℤ, unsigned short base, unsigned short digitsOr0, void (^out)(char zeroToNineAndNeg))
