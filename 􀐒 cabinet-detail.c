@@ -13,7 +13,7 @@ thesaurus₋ref regular₋and₋secondary,regular₋and₋primary=ΨΛΩ; /* per
 regular₋ref opened₋files=ΨΛΩ; /* not persisted on ssd. */
 
 typedef struct guid openfile₋guid;
-typedef struct openfile₋guid openfile₋id;
+typedef openfile₋guid openfile₋id;
 
 union guid₋shim { struct guid composite; __uint128_t machine; };
 
@@ -28,6 +28,7 @@ int create₋file(struct Unicodes primary, struct Unicodes secondary, openfile�
    union guid₋shim fineprint = { .composite=Guid() };
    int * material = (int *)Alloc(sizeof(int)); *material=fd;
    struct w₋node * node = impression₋store(opened₋files,fineprint.machine,material,Alloc);
+   Copy8Memory((ByteAlignedRef)regular,(ByteAlignedRef)&fineprint,sizeof(struct guid));
    return 0;
 }
 
@@ -48,7 +49,7 @@ int list₋files(struct Unicodes expression, void (^list)(int count, struct
 }
 
 int solve(struct Unicodes expression, struct Unicodes * secondary, struct 
- Unicodes * primary, openfile₋id * regular)
+ Unicodes * primary, openfile₋id * regular) /* three arrays not scalars. */
 { int one₋nameext₋separator=0,multiple₋nameext₋separators=0, 
     primary₋secondary₋separator=0;
    int nameext₋count = Occurrence('.',expression);
@@ -60,7 +61,7 @@ int solve(struct Unicodes expression, struct Unicodes * secondary, struct
    *primary=Run(U"the primary name.txt");
    *secondary=Run(U"the secondary name.txt");
    __uint128_t fineprint = 1;
-   struct w₋node * node = impresssion₋seek(opened₋files,fineprint);
+   struct w₋node * node = impression₋seek(opened₋files,fineprint);
    if (node == ΨΛΩ) { return -1; }
    int fd = *(int *)(node->note);
    struct stat sb; if (fstat(fd,&sb)==-1) { return -1; }
@@ -75,27 +76,25 @@ int solve(struct Unicodes expression, struct Unicodes * secondary, struct
     ﹟d(device₋id), ﹟d(inode₋number), ﹟d(hard₋links), ﹟d(byte₋size), ﹟d(last₋access), 
     ﹟d(last₋change₋meta), ﹟d(last₋change₋material), ﹟d(userdef), ﹟d(file₋generation), 
     ﹟d(first₋created));
-   *regular = (openfile₋id)Guid();
+   struct guid uuid = Guid();
+   Copy8Memory((ByteAlignedRef)regular,(ByteAlignedRef)&uuid,sizeof(struct guid));
    return 0;
 }
 
 int open₋file(struct Unicodes expression, openfile₋id * regular)
-{ struct Unicodes secondary,primary; openfile₋id regular;
-   if (solve(expression,&secondary,&primary.&regular)) { vfprint("unable to solve expression into primary and secondary file names.\n"); return -1; }
-   if (Play(^(struct Unicodes serial) { *regular = Guid(); 
-     union guid₋shim conver = { .composite=*identity };
-     INIT init = ^(void * uninited) { return 0; };
-     if (Play(^(struct Unicodes serial) {
-       note₋ref material = Alloc(sizof(int));
-       opened₋files = impression₋store(opened₋files,conver.machine,material,Alloc); /* store descriptor for both files. */
-     },U"⬚",﹟leap(serial))) { return -1; }
-   }, U"⬚-⬚", ﹟S(primary), ﹟S(secondary))) { return -1; }
+{ struct Unicodes secondary,primary;
+   if (solve(expression,&secondary,&primary,regular)) { vfprint("unable to solve expression into primary and secondary file names.\n"); return -1; }
+   union guid₋shim fineprint = { .composite=Guid() };
+   note₋ref material = Alloc(sizeof(int));
+   opened₋files = impression₋store(opened₋files,fineprint.machine,material,Alloc);
+   Copy8Memory((ByteAlignedRef)regular,(ByteAlignedRef)&(fineprint.composite),sizeof(struct guid));
    return 0;
 }
 
-int close₋file(struct guid regular)
+int close₋file(openfile₋id regular)
 {
    union guid₋shim fineprint = { .composite=regular };
+   struct w₋node * node = impression₋seek(opened₋files,fineprint.machine);
    int fd1=secondary₋node->, fd2=primary₋node->;
    if (close(fd1) == -1) { return -1; }
    if (close(fd2) == -1) { return -1; }
@@ -213,15 +212,20 @@ uint8_t material2[7] = { 17, 16, 15, 14, 13, 13, 13 };
 
 int corout₋filing(coro_t * coro)
 {
-   coro_feedback(coro,5);
-   if (reconcile₋file(struct guid regular, int count, uint8_t ** offset, __builtin_int_t * bytes, __builtin_int_t * bytesactual)) { }
-   coro_feedback(coro,-1);
+   coro_feedback(coro,1);
+   struct Unicodes expression = Run(U"hello world.txt"); openfile₋id regular;
+   if (open₋file(expression,&regular)) { coro_feedback(coro,-1); }
+   uint8_t * offset[] = { material1, material2 };
+   __builtin_int_t bytes[] = { 5, 7 }, actual;
+   int count = sizeof(offset)/sizeof(uint8_t *);
+   if (reconcile₋file(regular,count,offset,bytes,&actual)) { coro_feedback(coro,-2); }
+   coro_feedback(coro,2);
    return 0;
 }
 
 int callback(removefile_state_t s, const char * path, void * ctx)
 {
-   vfprint("file deleted '⬚'\n",﹟s7(path));
+   vfprint("file deleted '⬚'\n",﹟s7((char *)path));
    return REMOVEFILE_PROCEED;
 }
 
@@ -241,21 +245,31 @@ int main()
    if (create₋file(primary,void₋path(),&regular)) { vfprint("error when create₋file.\n"); }
    uint8_t * offset[] = { material1,material2 }; __builtin_int_t bytes[] = { 5,7 },actual;
    int count = sizeof(offset)/sizeof(uint8_t *);
-   struct Unicodes identifier = Run(U"no-identifier");
-   if (reconcile₋file(identifier,count,offset,bytes,&actual)) { vfprint("error during reconcillation.\n"); }
-   struct Unicodes noexpression = Run(U"no-expression");
-   if (branch₋file(noexpression,count,offset,bytes,&actual)) { vfprint("error unable to branch.\n"); }
-   /* filing episodes and coroutine attempt . */
+   if (reconcile₋file(regular,count,offset,bytes,&actual)) { vfprint("error during reconcillation.\n"); }
+   if (close₋file(regular)) { vfprint("error at close.\n"); }
+   struct Unicodes expression = Run(U"one text.txt");
+   if (open₋file(expression,&regular)) { vfprint("unable to open file.\n"); }
+   if (branch₋file(regular,count,offset,bytes,&actual)) { vfprint("error unable to branch.\n"); }
+   if (close₋file(regular)) { vfprint("error when close.\n"); }
+   /* filing episodes and coroutine attempt. */
    coro_t * coro = coro_await(corout₋filing); int yield;
 again:
    yield = coro_resume(coro);
    if (yield == -1) { goto unagain; }
-   vfprint("filing coroutine returned ⬚.\n", ﹟d((__builtin_int_t_)yield));
+   vfprint("filing coroutine returned ⬚.\n", ﹟d((__builtin_int_t)yield));
    goto again;
 unagain:
    coro_free(coro);
    return 0;
 }
 
+/* compile with ./retro-mac.sh cabinet-detail 
+ 
+ xcrun clang -g -fmodule-ts -fimplicit-modules -fmodule-map-file=🚦.modules  \
+  -o cabinet-detail -DSHA1GIR="`git log -1 '--pretty=format:%h'`"\"          \
+  '􀐒 cabinet-detail.c' ../Apps/Source/Releases/libTwinbeam-x86_64.a        \
+  ../Apps/Additions/monolith-sequence.c */
+
 /* see 'man list' and 'man rbtree' and 'man dirent'. */
+
 
