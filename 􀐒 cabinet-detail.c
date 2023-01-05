@@ -9,7 +9,7 @@ import Twinbeam;
 
 struct Unicodes void₋path() { struct Unicodes epsilon = { 36, U"9E4A34A9-D501-41F6-9C1C-238F96A00CC2" }; return epsilon; }
 
-thesaurus₋ref regular₋and₋secondary,regular₋and₋primary=ΨΛΩ; /* persisted on ssd. */
+thesaurus₋ref regular₋and₋secondary,regular₋and₋primary=ΨΛΩ; /* persisted index on ssd. */
 regular₋ref opened₋files=ΨΛΩ; /* not persisted on ssd. */
 
 typedef struct guid openfile₋guid;
