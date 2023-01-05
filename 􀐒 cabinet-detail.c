@@ -4,11 +4,12 @@ import Twinbeam;
 
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/stat.h>
 
 struct Unicodes void₋path() { struct Unicodes epsilon = { 36, U"9E4A34A9-D501-41F6-9C1C-238F96A00CC2" }; return epsilon; }
 
-thesaurus₋ref identity₋and₋secondary,identity₋and₋primary=ΨΛΩ;
-identity₋ref opened₋files=ΨΛΩ;
+thesaurus₋ref identity₋and₋secondary,identity₋and₋primary=ΨΛΩ; /* persisted. */
+identity₋ref opened₋files=ΨΛΩ; /* unpersisted. */
 
 typedef struct guid openfile₋guid;
 typedef struct openfile₋guid openfile₋id;
@@ -20,24 +21,7 @@ int create₋file(struct Unicodes primary, struct Unicodes secondary, openfile�
    if (fd == -1) { return -1; }
    char8₋t prealloc₋secondary[secondary.tetras*4];
    if (UnicodeToUtf8(secondary.tetras,secondary.unicodes,prealloc₋secondary,&u8bytes)) { return -1; }
-   if (link((const char *)prealloc₋path,(const char *)prealloc₋secondary)) { return -1; 
-   
-   if (Play(^(struct Unicodes serial) {
-     __builtin_int_t note₋bytes = 100;
-     __uint128_t fineprint = FNV1b(4*serial.tetras,serial.unicodes);
-     
-    filename₋and₋guid = impression₋store(filename₋and₋guid,fineprint,material,Alloc);
-   }, U"⬚-⬚", ﹟S(primary), ﹟S(secondary))) { return -1; }
-   
-   *identity = Guid();
-   if (Play(^(struct Unicodes serial) {
-     
-   }, U"⬚",﹟leap(cover)) { return -1; }
-   if (form₋ōnymon(struct Unicodes key₋copy, struct Unicodes value₋copy,0,identity₋and₋primary,Alloc)) { return -1; }
-   if (form₋ōnymon(struct Unicodes key₋copy, struct Unicodes value₋copy,0,identity₋and₋secondary,Alloc)) { return -1; }
-   
-   struct w₋node { __int128_t key; note₋ref note; struct w₋node *left,*right; };
-   
+   if (link((const char *)prealloc₋path,(const char *)prealloc₋secondary)) { return -1; }
    return 0;
 }
 
@@ -61,14 +45,15 @@ int solve(struct Unicodes expression, struct Unicodes * secondary, struct
  Unicodes * primary, openfile₋id * identity)
 { int one₋nameext₋separator=0,multiple₋nameext₋separators=0, 
     primary₋secondary₋separator=0;
-   int nameext₋count = Occurrence(".",expression);
+   int nameext₋count = Occurrence('.',expression);
    if (nameext₋count==1) { one₋nameext₋separator=1; }
    if (nameext₋count!=0 && nameext₋count!=1) { multiple₋nameext₋separators=1; }
-   int separator₋count = Occurrence("-",expression);
+   int separator₋count = Occurrence('-',expression);
    if (separator₋count!=0 || separator₋count!=1) { return -1; }
    if (separator₋count==1) { primary₋secondary₋separator=1; }
    *primary=Run(U"the primary name.txt");
    *secondary=Run(U"the secondary name.txt");
+   int fd = ;
    struct stat sb; if (fstat(fd,sb)==-1) { return -1; }
    __builtin_int_t device₋id=sb.st_dev, inode₋number=sb.st_ino, 
     hard₋links=sb.st_nlink, byte₋size=sb.st_size, userdef=sb.st_flags, 
@@ -93,7 +78,7 @@ int open₋file(struct Unicodes expression, openfile₋id * identity)
      INIT init = ^(void * uninited) { return 0; };
      if (Play(^(struct Unicodes serial) {
        node₋ref material = Alloc(100);
-       filename₋and₋guid = impression₋store(filename₋and₋guid,conver.machine,material,Alloc);
+       filename₋and₋guid = impression₋store(filename₋and₋guid,conver.machine,material,Alloc); /* store descriptor for both files. */
      },U"⬚",﹟leap(serial))) { return -1; }
    }, U"⬚-⬚", ﹟S(primary), ﹟S(secondary))) { return -1; }
    return 0;
@@ -102,10 +87,9 @@ int open₋file(struct Unicodes expression, openfile₋id * identity)
 int close₋file(struct guid identity)
 {
    union shim { __uint128_t machine; struct guid identity; } fineprint = { .identity=identity };
-   struct w₋node * primary₋node = impresssion₋seek(identity₋and₋primary,fineprint.machine);
-   struct w₋node * secondary₋node = impresssion₋seek(identity₋and₋secondary,fineprint.machine);
+   int fd1=secondary₋node->, fd2=primary₋node->;
    if (close(fd1) == -1) { return -1; }
-   if (close(fd2) == -1 ) { return -1; }
+   if (close(fd2) == -1) { return -1; }
    return 0;
 }
 
@@ -146,7 +130,6 @@ int search₋and₋find(struct Unicodes filename, struct Unicodes filetype,
 
 #include <sys/types.h>
 #include <sys/uio.h>
-#include <sys/stat.h>
 
 ssize_t pwritev(int fd, const struct iovec *iov, int iovcnt, 
  off_t byteoffset)
