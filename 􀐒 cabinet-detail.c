@@ -49,7 +49,7 @@ int list₋files(struct Unicodes expression, void (^list)(int count, struct
 }
 
 int solve(struct Unicodes expression, struct Unicodes * secondary, struct 
- Unicodes * primary, openfile₋id * regular) /* three arrays not scalars. */
+ Unicodes * primary, openfile₋id * regular)
 { int one₋nameext₋separator=0,multiple₋nameext₋separators=0, 
     primary₋secondary₋separator=0;
    int nameext₋count = Occurrence('.',expression);
