@@ -15,21 +15,26 @@ regular₋ref opened₋files=ΨΛΩ; /* not persisted on ssd, only recorded in v
 typedef struct guid openfile₋guid;
 typedef openfile₋guid openfile₋id;
 
+char * repo = "/tmp/cabinet-petite";
+
 union guid₋shim { struct guid composite; __uint128_t machine; };
 
 int create₋file(struct Unicodes primary, struct Unicodes secondary, openfile₋id * regular)
-{ char8₋t prealloc₋path[primary.tetras*4]; __builtin_int_t u8bytes;
-   if (UnicodeToUtf8(primary.tetras,primary.unicodes,prealloc₋path,&u8bytes)) { return -1; }
-
-   int fd = open((const char *)prealloc₋path, O_CREAT | O_EXCL);
-   if (fd == -1) { return -1; }
-   char8₋t prealloc₋secondary[secondary.tetras*4];
-   if (UnicodeToUtf8(secondary.tetras,secondary.unicodes,prealloc₋secondary,&u8bytes)) { return -1; }
-   if (link((const char *)prealloc₋path,(const char *)prealloc₋secondary)) { return -1; }
+{ 
+   /* char8₋t stored₋secondary[secondary.tetras*4],stored₋primary[primary.tetras*4]; __builtin_int_t u8bytes;
+   if (UnicodeToUtf8(secondary.tetras,secondary.unicodes,stored₋secondary,&u8bytes)) { return -1; }
+   if (UnicodeToUtf8(primary.tetras,primary.unicodes,stored₋primary,&u8bytes)) { return -1; } */
+   char8₋t * primary₋path=U8(""),*secondary₋path=U8("");
+   int fd₋primary = open((const char *)primary₋path, O_EXCL | O_CREAT);
+   if (fd₋primary == -1) { return -1; }
+   if (link((const char *)primary₋path,(const char *)secondary₋path)) { return -1; }
+   int fd₋secondary = open((const char *)secondary₋path, O_SYMLINK);
+   if (fd₋secondary == -1) { return -1; }
    union guid₋shim fineprint = { .composite=Guid() };
-   int * material = (int *)Alloc(sizeof(int)); *material=fd;
-   struct w₋node * node = impression₋store(opened₋files,fineprint.machine,material,Alloc);
-   Copy8Memory((ByteAlignedRef)regular,(ByteAlignedRef)&fineprint,sizeof(struct guid));
+   int * material = (int *)Alloc(sizeof(int)+sizeof(int));
+   material[0]=fd₋primary; material[1]=fd₋secondary;
+   opened₋files = impression₋store(opened₋files,fineprint.machine,material,Alloc);
+   Copy8Memory((ByteAlignedRef)regular,(ByteAlignedRef)&(fineprint.composite),sizeof(openfile₋id));
    return 0;
 }
 
@@ -96,9 +101,10 @@ int close₋file(openfile₋id regular)
 {
    union guid₋shim fineprint = { .composite=regular };
    struct w₋node * node = impression₋seek(opened₋files,fineprint.machine);
-   int fd1=secondary₋node->, fd2=primary₋node->;
-   if (close(fd1) == -1) { return -1; }
-   if (close(fd2) == -1) { return -1; }
+   int * fds = (int *)(node->note);
+   int fd₋primary=fds[0],fd₋secondary=fds[1];
+   if (close(fd₋secondary) == -1) { return -1; }
+   if (close(fd₋primary) == -1) { return -1; }
    return 0;
 }
 
@@ -173,44 +179,48 @@ ssize_t preadv₋c(int fd, const struct iovec *iov, int iovcnt,
 int reconcile₋file(openfile₋id regular, int count, uint8_t ** offset, 
  __builtin_int_t * bytes, __builtin_int_t * bytesactual, coro_t * coro, 
  struct Act * feedback)
-{ char8₋t prealloc₋path[identifier.tetras*4]; __builtin_int_t u8bytes;
+{
    struct iovec stripes[count];
-   if (UnicodeToUtf8(identifier.tetras,identifier.unicodes,prealloc₋path,&u8bytes)) { return -1; }
-   int fd = open((const char *)prealloc₋path, O_WRONLY);
-   if (fd == -1) { return -1; } struct stat sb;
+   union guid₋shim fineprint = { .composite=regular };
+   struct w₋node * node = impression₋seek(opened₋files,fineprint.machine);
+   if (node == ΨΛΩ) { return -1; }
+   int * fds = (int *)(node->note);
+   if (fds[0] == -1) { return -1; } struct stat sb;
    if (feedback) { coro_feedback(coro,(int)monoton₋ordinal(ΨΛΩ,feedback)); }
-   if (fstat(fd,&sb) == -1) { goto err; }
+   if (fstat(fds[0],&sb) == -1) { goto err; }
    if (S_ISDIR(sb.st_mode)) { goto err; }
    if (S_ISLNK(sb.st_mode)) { goto err; } /* neither hard nor soft link. */
    if (feedback) { coro_feedback(coro,(int)monoton₋ordinal(ΨΛΩ,feedback)); }
    for (int i=0; i<count; i+=1) { stripes[i].iov_len=bytes[i]; stripes[i].iov_base=offset[i]; }
-   *bytesactual = pwritev₋c(fd,stripes,count,0,coro,feedback);
+   *bytesactual = pwritev₋c(fds[0],stripes,count,0,coro,feedback);
    if (feedback) { coro_feedback(coro,(int)monoton₋ordinal(ΨΛΩ,feedback)); }
    return 0;
 err:
-  if (close(fd) == -1) { return -2; }
+  if (close(fds[0]) == -1) { return -2; }
   return -1;
 }
 
 int branch₋file(openfile₋id regular, int count, uint8_t ** offset, 
  __builtin_int_t * bytes, __builtin_int_t * bytesactual, coro_t * coro, 
  struct Act * feedback)
-{ char8₋t prealloc₋path[expression.tetras*4]; __builtin_int_t u8bytes;
+{
    struct iovec stripes[count];
-   if (UnicodeToUtf8(expression.tetras,expression.unicodes,prealloc₋path,&u8bytes)) { return -1; }
-   int fd = open((const char *)prealloc₋path, O_RDONLY | O_EXCL);
-   if (fd == -1) { return -1; } struct stat sb;
+   union guid₋shim fineprint = { .composite=regular };
+   struct w₋node * node = impression₋seek(opened₋files,fineprint.machine);
+   if (node == ΨΛΩ) { return -1; }
+   int * fds = (int *)(node->note);
+   if (fds[0] == -1) { return -1; } struct stat sb;
    if (feedback) { coro_feedback(coro,(int)monoton₋ordinal(ΨΛΩ,feedback)); }
-   if (fstat(fd,&sb) == -1) { goto err; }
+   if (fstat(fds[0],&sb) == -1) { goto err; }
    if (S_ISDIR(sb.st_mode)) { goto err; }
    if (S_ISLNK(sb.st_mode)) { goto err; }
    if (feedback) { coro_feedback(coro,(int)monoton₋ordinal(ΨΛΩ,feedback)); }
    for (int i=0; i<count; i+=1) { stripes[i].iov_len=bytes[i]; stripes[i].iov_base=offset[i]; }
-   *bytesactual = preadv₋c(fd,stripes,count,0,coro,feedback);
+   *bytesactual = preadv₋c(fds[0],stripes,count,0,coro,feedback);
    if (feedback) { coro_feedback(coro,(int)monoton₋ordinal(ΨΛΩ,feedback)); }
    return 0;
 err:
-   if (close(fd) == -1) { return -2; }
+   if (close(fds[0]) == -1) { return -2; }
    return -1;
 }
 
@@ -218,7 +228,6 @@ err:
 
 struct Unicodes filename₋expression;
 
-char * repo = "/tmp/zz";
 
 uint8_t material1[5] = { 1, 2, 3, 4, 5 };
 uint8_t material2[7] = { 17, 16, 15, 14, 13, 13, 13 };
@@ -290,4 +299,5 @@ unagain:
   ../Apps/Additions/monolith-sequence.c */
 
 /* see 'man list' and 'man rbtree' and 'man dirent'. */
+
 
