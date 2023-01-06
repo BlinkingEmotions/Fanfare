@@ -9,15 +9,16 @@ builtin typeset -A output
 # sku_keys are retros-compi, c-maskin, turbin, parent-kabinett, intel-hex, uql and friends.
 
 components=(
-  'retros-compi' '􀐒 retros-compi.c'
-  'c-maskin' '􀖆 ⒞-maskin.c'
-  'reconnaissance-turbin' '􀖆 turbin-normal.c'
-  'parent-kabinett' '􀖆 parent-kabinett.c'
-  'intel-hex' '🥽 Intelhex.cpp'
-  'uql-gen' '🥽⋆UQL.cpp 🥽⋆UQL₂.cpp'
-  'micro-parse' '􀦸 µ-parse.c'
-  'linguistics-epi' '􀥳 lingustics-epi.c'
-  'enforce-beskow' '􁕊 enforce-beskow.c'
+  'retros-compi' '􀐒 retros-compi.c'               /* c2x */
+  'c-maskin' '􀖆 ⒞-maskin.c'                      /* c2x */
+  'reconnaissance-turbin' '􀖆 turbin-normal.c'     /* c2x */
+  'parent-kabinett' '􀖆 parent-kabinett.c'         /* c2x */
+  'intel-hex' '🥽 Intelhex.cpp'                    /* c++20 */
+  'uql-gen' '🥽⋆UQL.cpp 🥽⋆UQL₂.cpp'               /* c++20 */
+  'micro-parse' 'µ-parse.c' # '􀫭 µ-parse.c'       /* c2x */
+  'linguistics-epi' '􀥳 lingustics-epi.c'          /* c2x */
+  'enforce-beskow' '􁕊 enforce-beskow.c'           /* c2x */
+  'cabinet-detail' '􀐒 cabinet-detail.c'          /* c2x */
 )
 
 output=(
@@ -30,6 +31,7 @@ output=(
   'micro-parse' 'expression'
   'linguistics-epi' 'x86_epitom-7'
   'enforce-beskow' 'beskow'
+  'cabinet-detail' 'cabinet-detail'
   'nut-f1-schweiz' 'non-bell' # for inspector and intendent and not higher-ranked police.
 )
 
@@ -83,7 +85,11 @@ function compile_and_run()
       $flag_and_debugger -std=c2x -DSHA1GIT=\"`git log -1 '--pretty=format:%h'`\"       \
       "$components[$sku_key]" -fblocks -fno-signed-char -fno-builtin                    \
       ../Apps/Source/Releases/libTwinbeam-x86_64.a                                      \
-      ../Apps/Additions/monolith-sequent.c -o $output[$sku_key]
+      ../Apps/Additions/monolith-sequent.c                                              \
+      ../../Cox-route/context-1.S                                                       \
+      ../../Cox-route/context-2.c                                                       \
+      ../../Cox-route/coro-main.c                                                       \
+      -o $output[$sku_key]
      if [[ -n "$flag_and_debugger" ]]; then
        builtin command xcrun lldb $output[$sku_key]
      fi
