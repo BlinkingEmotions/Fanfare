@@ -21,9 +21,9 @@ union guid₋shim { struct guid composite; __uint128_t machine; };
 
 int create₋file(struct Unicodes primary, struct Unicodes secondary, openfile₋id * regular)
 { 
-   /* char8₋t stored₋secondary[secondary.tetras*4],stored₋primary[primary.tetras*4]; __builtin_int_t u8bytes;
+   char8₋t stored₋secondary[secondary.tetras*4],stored₋primary[primary.tetras*4]; __builtin_int_t u8bytes;
    if (UnicodeToUtf8(secondary.tetras,secondary.unicodes,stored₋secondary,&u8bytes)) { return -1; }
-   if (UnicodeToUtf8(primary.tetras,primary.unicodes,stored₋primary,&u8bytes)) { return -1; } */
+   if (UnicodeToUtf8(primary.tetras,primary.unicodes,stored₋primary,&u8bytes)) { return -1; }
    char8₋t * primary₋path=U8(""),*secondary₋path=U8("");
    int fd₋primary = open((const char *)primary₋path, O_EXCL | O_CREAT);
    if (fd₋primary == -1) { return -1; }
@@ -292,11 +292,13 @@ unagain:
 
 /* compile with ./retro-mac.sh cabinet-detail 
  
- xcrun clang -g -fmodule-ts -fimplicit-modules -fmodule-map-file=🚦.modules  \
-  -o cabinet-detail -DSHA1GIR="`git log -1 '--pretty=format:%h'`"\"          \
+ xcrun clang -g -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules \
+  -o cabinet-detail -DSHA1GIR=\"`git log -1 '--pretty=format:%h'`\"          \
   '􀐒 cabinet-detail.c' ../Apps/Source/Releases/libTwinbeam-x86_64.a        \
-  ../Apps/Additions/monolith-sequence.c */
+  ../Apps/Additions/monolith-sequent.c                                       \
+  ../../Cox-route/context-1.S                                                \
+  ../../Cox-route/context-2.c                                                \
+  ../../Cox-route/coro-main.c */
 
 /* see 'man list' and 'man rbtree' and 'man dirent'. */
-
 
