@@ -147,7 +147,7 @@ ssize_t pwrt₋c(int fd, const void *buf, size_t nbyte, off_t offset, struct Act
    vfprint("bytes written.\n");
 }
 
-ssize_t prd₋c(int fd, void *buf, size_t nbytem off_t offset, struct Act * as₋coroutine)
+ssize_t prd₋c(int fd, void *buf, size_t nbyte, off_t offset, struct Act * as₋coroutine)
 {
    vfprint("bytes read.\n");
 }
@@ -160,7 +160,7 @@ ssize_t pwritev₋c(int fd, const struct iovec *iov, int iovcnt,
      ssize_t byteswrite=pwrite(fd,dst,nbyte,byteoffset+acc);
      if (byteswrite<0) { return byteswrite; }
      acc+=byteswrite;
-     if (as₋coroutine) { coro_feedback((int)monoton₋ordinal(ΨΛΩ,as₋coroutine)); }
+     if (as₋coroutine) { coro_feedback(coro,(int)monoton₋ordinal(ΨΛΩ,as₋coroutine)); }
      /* if (byteswrite==0) { i=iovcnt; } */
    }
    return acc;
@@ -174,7 +174,7 @@ ssize_t preadv₋c(int fd, const struct iovec *iov, int iovcnt,
      ssize_t bytesread=pread(fd,dst,nbyte,byteoffset+acc,as₋coroutine);
      if (bytesread<0) { return bytesread; }
      acc+=bytesread;
-     if (as₋coroutine) { coro_feedback((int)monoton₋ordinal(ΨΛΩ,as₋coroutine)); }
+     if (as₋coroutine) { coro_feedback(coro,(int)monoton₋ordinal(ΨΛΩ,as₋coroutine)); }
      if (bytesread==0) { i=iovcnt; }
    }
    return acc;
@@ -187,14 +187,14 @@ int reconcile₋file(openfile₋id regular, int count, uint8_t ** offset,
    if (UnicodeToUtf8(identifier.tetras,identifier.unicodes,prealloc₋path,&u8bytes)) { return -1; }
    int fd = open((const char *)prealloc₋path, O_WRONLY);
    if (fd == -1) { return -1; } struct stat sb;
-   if (as₋coroutine) { coro_feedback((int)monoton₋ordinal(ΨΛΩ,act₋wr)); }
+   if (as₋coroutine) { coro_feedback(coro,(int)monoton₋ordinal(ΨΛΩ,act₋wr)); }
    if (fstat(fd,&sb) == -1) { goto err; }
    if (S_ISDIR(sb.st_mode)) { goto err; }
    if (S_ISLNK(sb.st_mode)) { goto err; } /* neither hard nor soft link. */
-   if (as₋coroutine) { coro_feedback((int)monoton₋ordinal(ΨΛΩ,act₋wr)); }
+   if (as₋coroutine) { coro_feedback(coro,(int)monoton₋ordinal(ΨΛΩ,act₋wr)); }
    for (int i=0; i<count; i+=1) { stripes[i].iov_len=bytes[i]; stripes[i].iov_base=offset[i]; }
    *bytesactual = pwritev₋c(fd,stripes,count,0,&act₋wr);
-   if (as₋coroutine) { coro_feedback((int)monoton₋ordinal(ΨΛΩ,act₋wr)); }
+   if (as₋coroutine) { coro_feedback(coro,(int)monoton₋ordinal(ΨΛΩ,act₋wr)); }
    return 0;
 err:
   if (close(fd) == -1) { return -2; }
@@ -208,14 +208,14 @@ int branch₋file(openfile₋id regular, int count, uint8_t ** offset,
    if (UnicodeToUtf8(expression.tetras,expression.unicodes,prealloc₋path,&u8bytes)) { return -1; }
    int fd = open((const char *)prealloc₋path, O_RDONLY | O_EXCL);
    if (fd == -1) { return -1; } struct stat sb;
-   if (as₋coroutine) { coro_feedback(int)monoton₋ordinal(ΨΛΩ,act₋rd)); }
+   if (as₋coroutine) { coro_feedback(coro,(int)monoton₋ordinal(ΨΛΩ,act₋rd)); }
    if (fstat(fd,&sb) == -1) { goto err; }
    if (S_ISDIR(sb.st_mode)) { goto err; }
    if (S_ISLNK(sb.st_mode)) { goto err; }
-   if (as₋coroutine) { coro_feedback((int)monoton₋ordinal(ΨΛΩ,act₋rd)); }
+   if (as₋coroutine) { coro_feedback(coro,(int)monoton₋ordinal(ΨΛΩ,act₋rd)); }
    for (int i=0; i<count; i+=1) { stripes[i].iov_len=bytes[i]; stripes[i].iov_base=offset[i]; }
    *bytesactual = preadv₋c(fd,stripes,count,&act₋rd);
-   if (as₋coroutine) { coro_feedback((int)monoton₋ordinal(ΨΛΩ,act₋rd)); }
+   if (as₋coroutine) { coro_feedback(coro,(int)monoton₋ordinal(ΨΛΩ,act₋rd)); }
    return 0;
 err:
    if (close(fd) == -1) { return -2; }
@@ -230,7 +230,7 @@ uint8_t material1[5] = { 1, 2, 3, 4, 5 };
 uint8_t material2[7] = { 17, 16, 15, 14, 13, 13, 13 };
 
 int corout₋filing(coro_t * coro)
-{
+{ struct Act act₋wr; init₋monton(&act₋wr,1);
    coro_feedback(coro,1); openfile₋id regular;
    if (open₋file(filename₋expression,&regular)) { coro_feedback(coro,-1); }
    uint8_t * offset[] = { material1, material2 };
