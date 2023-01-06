@@ -117,6 +117,8 @@ int₋to₋sequent:
    ...
   END(dereference₋and₋swap)
   
+struct Unicodes one₋filename = Run("twothree-random.c")
+  
   TRANSCRIPT(attempt₋progress)
     additions px,py as indirect traditional₋material
     *px=21,*py=13;
@@ -301,6 +303,7 @@ again:
    if (actual != bytes) { goto err; }
    ucs = Alloc(4*bytes);
    if (Utf8ToUnicode(u8bytes,u8text,ucs,&tetras)) { goto err; }
+   if (mprot(addr,tetras*4,PROT_READ)) { goto err; }
    Fallow(ucs);
    if (fclose(fd) == -1) { vfprint("unable to close '⬚'.\n"); goto unagain; }
    i+=1; goto again;
