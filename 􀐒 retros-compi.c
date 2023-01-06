@@ -283,22 +283,36 @@ int add₋runlink₋keywords()
 #include "╳-arm-keyword.cxx"
 #include "╳-mips-keyword.cxx"
 #include "╳-kirkbridge-keyword.cxx"
-#include "╳-lexer-disjunct.cxx"
-#include "╳-parse-hierar.cxx"
 #include "╳-color-special.cxx"
-/*. Threaded dual-name les can be grouped by selecting primary and secondary thread when 
- presenting a tree table. (ASSOCIATE-RUNLINK) */
 #include "╳-art-linear-arm.cxx"
-#include "╳-sourcer-vegetar.cxx" /* 'is big- or little endian for two points'. */
+#include <sys/stat.h>
 #include <unistd.h>
 
-int compile₋source₋files(int (*module)())
-{
+int compile₋source₋files(int (*module₋compile)(struct Unicodes))
+{ int fd; struct stat sb; __builtin_int_t actual,bytes,i=0; char8₋t * u8path;
+   __builtin_int_t count=collection₋count(&filepaths),tetras; char32̄_t * ucs;
+again:
+   if (i >= count) { goto unagain; }
+   u8path = (char8₋t *)collection₋relative(i,&filepaths);
+   fd = open((const char *)u8path, O_RDONLY | O_EXCL);
+   if (fstat(fd,&sb) == -1) { goto err; } bytes=sb.st_size;
+   ssize_t actual=read(fd,(const char *)u8path,bytes);
+   if (actual != bytes) { goto err; }
+   ucs = Alloc(4*bytes);
+   if (Utf8ToUnicode(u8bytes,u8text,ucs,&tetras)) { goto err; }
+   Fallow(ucs);
+   if (fclose(fd) == -1) { vfprint("unable to close '⬚'.\n"); goto unagain; }
+   i+=1; goto again;
+err:
+   vfprint("error when reading source file '⬚'.\n", s8(u8path));
+   if (fclose(fd) == -1) { return -1; }
+unagain:
    return 0;
 }
 
-int compile₋import₋module()
+int compile₋source₋module(struct Unicodes modulename)
 {
+   vfprint("find alternatively compile precompiled headers in module '⬚'.\n");
    return 0;
 }
 
@@ -319,7 +333,7 @@ again:
 void keyput₋rewrite(char8₋t * utf8) { }
 
 int option₋machine₋interprets(int argc, char8₋t ** argv)
-{ int i=1,y,output₋filepath=0; char8₋t * token, *msg = "";
+{ int i=1,y,output₋filepath=0; char8₋t * token, *msg = U8("");
 again:
    if (i>=argc) { goto unagain; }
    token = *(argv + i);
@@ -356,7 +370,7 @@ generic₋error:
    vfprint("Abridged command-line interpretation error\n"); /* Summary-general */
    return -1;
 unagain:
-   if (output₋filepath) { msg="no output filepath given"; goto descriptive₋error; }
+   if (output₋filepath) { msg=U8("no output filepath given"); goto descriptive₋error; }
    return 0;
 }
 
@@ -369,11 +383,11 @@ void help()
 " -c  do not link\n"
 " -library  build library and not executable\n"
 " -deliverable  build not library but executable\n"
-" -put <path and .asm file>\n"; /* .cumpani alternatively a.out alternatively 'ess-pe'. */
+" -put <path and .asm file>\n" /* .cumpani alternatively a.out alternatively 'ess-pe'. */
 "\nplatforms\n\n"
 " -intel-mac\n"
 " -pic-mips\n"
-" -arm-mac\n"
+" -arm-mac\n";
    print(text);
 } /* predefined-placeAndName executable-withCompanion and without-sourceAndSymbols. */
 
@@ -392,11 +406,14 @@ main(
   const char * argv[]
 )
 {
-   if (option₋machine₋interprets(argc,(char8₋t **)argv)) { exit(1); }
+   if (collection₋init(sizeof(char8₋t *),4096,&filepaths)) { exit(1); }
+   if (collection₋init(sizeof(char8₋t *),4096,&modulemap₋files)) { exit(1); }
+   if (collection₋init(sizeof(char8₋t *),4096,&modules₋files)) { exit(1); }
+   if (option₋machine₋interprets(argc,(char8₋t **)argv)) { exit(2); }
    if (salutant) { greeting(); }
-   if (procuratio) { help(); exit(2); }
-   if (add₋runlink₋keywords()) { exit(3); }
-   if (compile₋source₋files(compile₋source₋module)) { exit(4); }
+   if (procuratio) { help(); exit(3); }
+   if (add₋runlink₋keywords()) { exit(4); }
+   if (compile₋source₋files(compile₋source₋module)) { exit(5); }
    return 0;
 }
 
@@ -408,5 +425,4 @@ main(
   -DSHA1GIT=\"`git log -1 '--pretty=format:%h'`\"                            \
   '􀐒 retros-compi.c' ../Apps/Source/Releases/libTwinbeam-x86_64.a          \
    ../Apps/Additions/monolith-sequent.c */
-
 
