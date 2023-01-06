@@ -9,8 +9,8 @@ import Twinbeam;
 
 struct Unicodes void₋path() { struct Unicodes epsilon = { 36, U"9E4A34A9-D501-41F6-9C1C-238F96A00CC2" }; return epsilon; }
 
-thesaurus₋ref regular₋and₋secondary,regular₋and₋primary=ΨΛΩ; /* persisted index on ssd. */
-regular₋ref opened₋files=ΨΛΩ; /* not persisted on ssd. */
+thesaurus₋ref guid₋and₋secondary=ΨΛΩ,guid₋and₋primary=ΨΛΩ; /* persisted index on ssd and two inodes. */
+regular₋ref opened₋files=ΨΛΩ; /* not persisted on ssd, only recorded in virtual memory. */
 
 typedef struct guid openfile₋guid;
 typedef openfile₋guid openfile₋id;
@@ -20,6 +20,7 @@ union guid₋shim { struct guid composite; __uint128_t machine; };
 int create₋file(struct Unicodes primary, struct Unicodes secondary, openfile₋id * regular)
 { char8₋t prealloc₋path[primary.tetras*4]; __builtin_int_t u8bytes;
    if (UnicodeToUtf8(primary.tetras,primary.unicodes,prealloc₋path,&u8bytes)) { return -1; }
+
    int fd = open((const char *)prealloc₋path, O_CREAT | O_EXCL);
    if (fd == -1) { return -1; }
    char8₋t prealloc₋secondary[secondary.tetras*4];
@@ -141,27 +142,39 @@ int search₋and₋find(struct Unicodes filename, struct Unicodes filetype,
 #include <sys/types.h>
 #include <sys/uio.h>
 
+ssize_t pwrt₋c(int fd, const void *buf, size_t nbyte, off_t offset, struct Act * as₋coroutine)
+{
+   vfprint("bytes written.\n");
+}
+
+ssize_t prd₋c(int fd, void *buf, size_t nbytem off_t offset, struct Act * as₋coroutine)
+{
+   vfprint("bytes read.\n");
+}
+
 ssize_t pwritev₋c(int fd, const struct iovec *iov, int iovcnt, 
- off_t byteoffset, int as₋coroutine)
+ off_t byteoffset, struct Act * as₋coroutine)
 { __builtin_int_t acc=0;
    for (__builtin_int_t i=0; i<iovcnt; i+=1) {
      char * dst=iov[i].iov_base; size_t nbyte=iov[i].iov_len;
      ssize_t byteswrite=pwrite(fd,dst,nbyte,byteoffset+acc);
      if (byteswrite<0) { return byteswrite; }
      acc+=byteswrite;
+     if (as₋coroutine) { coro_feedback((int)monoton₋ordinal(ΨΛΩ,as₋coroutine)); }
      /* if (byteswrite==0) { i=iovcnt; } */
    }
    return acc;
 }
 
 ssize_t preadv₋c(int fd, const struct iovec *iov, int iovcnt, 
- off_t byteoffset, int as₋coroutine)
+ off_t byteoffset, struct Act * as₋coroutine)
 { __builtin_int_t acc=0;
    for (__builtin_int_t i=0; i<iovcnt; i+=1) {
      char * dst=iov[i].iov_base; size_t nbyte=iov[i].iov_len;
      ssize_t bytesread=pread(fd,dst,nbyte,byteoffset+acc,as₋coroutine);
      if (bytesread<0) { return bytesread; }
      acc+=bytesread;
+     if (as₋coroutine) { coro_feedback((int)monoton₋ordinal(ΨΛΩ,as₋coroutine)); }
      if (bytesread==0) { i=iovcnt; }
    }
    return acc;
@@ -170,15 +183,18 @@ ssize_t preadv₋c(int fd, const struct iovec *iov, int iovcnt,
 int reconcile₋file(openfile₋id regular, int count, uint8_t ** offset, 
  __builtin_int_t * bytes, __builtin_int_t * bytesactual, int as₋coroutine)
 { char8₋t prealloc₋path[identifier.tetras*4]; __builtin_int_t u8bytes;
-   struct iovec stripes[count];
+   struct iovec stripes[count]; struct Act act₋wr; init₋monoton(&act₋wr,1);
    if (UnicodeToUtf8(identifier.tetras,identifier.unicodes,prealloc₋path,&u8bytes)) { return -1; }
    int fd = open((const char *)prealloc₋path, O_WRONLY);
    if (fd == -1) { return -1; } struct stat sb;
+   if (as₋coroutine) { coro_feedback((int)monoton₋ordinal(ΨΛΩ,act₋wr)); }
    if (fstat(fd,&sb) == -1) { goto err; }
    if (S_ISDIR(sb.st_mode)) { goto err; }
-   if (S_ISLNK(sb.st_mode)) { goto err; }
+   if (S_ISLNK(sb.st_mode)) { goto err; } /* neither hard nor soft link. */
+   if (as₋coroutine) { coro_feedback((int)monoton₋ordinal(ΨΛΩ,act₋wr)); }
    for (int i=0; i<count; i+=1) { stripes[i].iov_len=bytes[i]; stripes[i].iov_base=offset[i]; }
-   *bytesactual = pwritev₋c(fd,stripes,count,0,as₋coroutine);
+   *bytesactual = pwritev₋c(fd,stripes,count,0,&act₋wr);
+   if (as₋coroutine) { coro_feedback((int)monoton₋ordinal(ΨΛΩ,act₋wr)); }
    return 0;
 err:
   if (close(fd) == -1) { return -2; }
@@ -188,15 +204,18 @@ err:
 int branch₋file(openfile₋id regular, int count, uint8_t ** offset, 
  __builtin_int_t * bytes, __builtin_int_t * bytesactual, int as₋coroutine)
 { char8₋t prealloc₋path[expression.tetras*4]; __builtin_int_t u8bytes;
-   struct iovec stripes[count];
+   struct iovec stripes[count]; struct Act act₋rd; init₋monoton(&act₋rd,1);
    if (UnicodeToUtf8(expression.tetras,expression.unicodes,prealloc₋path,&u8bytes)) { return -1; }
    int fd = open((const char *)prealloc₋path, O_RDONLY | O_EXCL);
    if (fd == -1) { return -1; } struct stat sb;
+   if (as₋coroutine) { coro_feedback(int)monoton₋ordinal(ΨΛΩ,act₋rd)); }
    if (fstat(fd,&sb) == -1) { goto err; }
    if (S_ISDIR(sb.st_mode)) { goto err; }
    if (S_ISLNK(sb.st_mode)) { goto err; }
+   if (as₋coroutine) { coro_feedback((int)monoton₋ordinal(ΨΛΩ,act₋rd)); }
    for (int i=0; i<count; i+=1) { stripes[i].iov_len=bytes[i]; stripes[i].iov_base=offset[i]; }
-   *bytesactual = preadv₋c(fd,stripes,count,0);
+   *bytesactual = preadv₋c(fd,stripes,count,&act₋rd);
+   if (as₋coroutine) { coro_feedback((int)monoton₋ordinal(ΨΛΩ,act₋rd)); }
    return 0;
 err:
    if (close(fd) == -1) { return -2; }
@@ -205,7 +224,7 @@ err:
 
 #pragma recto material and entry
 
-struct Unicodes filename₋expression = Run(U"hello world.txt");
+struct Unicodes filename₋expression;
 
 uint8_t material1[5] = { 1, 2, 3, 4, 5 };
 uint8_t material2[7] = { 17, 16, 15, 14, 13, 13, 13 };
@@ -240,6 +259,7 @@ void cleanup()
 
 int main()
 {
+   filename₋expression = Run(U"hello world.txt");
    /* cleanup(); */
    /* initial episode filing attempt with given file name. */
    openfile₋id regular;
