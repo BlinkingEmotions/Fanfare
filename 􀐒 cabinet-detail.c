@@ -4,7 +4,7 @@ import Twinbeam;
 
 #include <unistd.h>
 #include <fcntl.h>
-#define _POSIX_C_SOURCE
+#define _POSIX_C_SOURCE /* high-precision stat and the modern inode. */
 #include <sys/stat.h>
 
 struct Unicodes void₋path() { struct Unicodes epsilon = { 36, U"9E4A34A9-D501-41F6-9C1C-238F96A00CC2" }; return epsilon; }
@@ -141,8 +141,8 @@ int search₋and₋find(struct Unicodes filename, struct Unicodes filetype,
 #include <sys/types.h>
 #include <sys/uio.h>
 
-ssize_t pwritev(int fd, const struct iovec *iov, int iovcnt, 
- off_t byteoffset)
+ssize_t pwritev₋c(int fd, const struct iovec *iov, int iovcnt, 
+ off_t byteoffset, int as₋coroutine)
 { __builtin_int_t acc=0;
    for (__builtin_int_t i=0; i<iovcnt; i+=1) {
      char * dst=iov[i].iov_base; size_t nbyte=iov[i].iov_len;
@@ -154,12 +154,12 @@ ssize_t pwritev(int fd, const struct iovec *iov, int iovcnt,
    return acc;
 }
 
-ssize_t preadv(int fd, const struct iovec *iov, int iovcnt, 
- off_t byteoffset)
+ssize_t preadv₋c(int fd, const struct iovec *iov, int iovcnt, 
+ off_t byteoffset, int as₋coroutine)
 { __builtin_int_t acc=0;
    for (__builtin_int_t i=0; i<iovcnt; i+=1) {
      char * dst=iov[i].iov_base; size_t nbyte=iov[i].iov_len;
-     ssize_t bytesread=pread(fd,dst,nbyte,byteoffset+acc);
+     ssize_t bytesread=pread(fd,dst,nbyte,byteoffset+acc,as₋coroutine);
      if (bytesread<0) { return bytesread; }
      acc+=bytesread;
      if (bytesread==0) { i=iovcnt; }
@@ -167,7 +167,8 @@ ssize_t preadv(int fd, const struct iovec *iov, int iovcnt,
    return acc;
 }
 
-int reconcile₋file(openfile₋id regular, int count, uint8_t ** offset, __builtin_int_t * bytes, __builtin_int_t * bytesactual)
+int reconcile₋file(openfile₋id regular, int count, uint8_t ** offset, 
+ __builtin_int_t * bytes, __builtin_int_t * bytesactual, int as₋coroutine)
 { char8₋t prealloc₋path[identifier.tetras*4]; __builtin_int_t u8bytes;
    struct iovec stripes[count];
    if (UnicodeToUtf8(identifier.tetras,identifier.unicodes,prealloc₋path,&u8bytes)) { return -1; }
@@ -177,15 +178,15 @@ int reconcile₋file(openfile₋id regular, int count, uint8_t ** offset, __buil
    if (S_ISDIR(sb.st_mode)) { goto err; }
    if (S_ISLNK(sb.st_mode)) { goto err; }
    for (int i=0; i<count; i+=1) { stripes[i].iov_len=bytes[i]; stripes[i].iov_base=offset[i]; }
-   *bytesactual = pwritev(fd,stripes,count,0);
-   /* coro_feedback, coro_await, coro_resume and coro_free. */
+   *bytesactual = pwritev₋c(fd,stripes,count,0,as₋coroutine);
    return 0;
 err:
   if (close(fd) == -1) { return -2; }
   return -1;
 }
 
-int branch₋file(openfile₋id regular, int count, uint8_t ** offset, __builtin_int_t * bytes, __builtin_int_t * bytesactual)
+int branch₋file(openfile₋id regular, int count, uint8_t ** offset, 
+ __builtin_int_t * bytes, __builtin_int_t * bytesactual, int as₋coroutine)
 { char8₋t prealloc₋path[expression.tetras*4]; __builtin_int_t u8bytes;
    struct iovec stripes[count];
    if (UnicodeToUtf8(expression.tetras,expression.unicodes,prealloc₋path,&u8bytes)) { return -1; }
@@ -195,8 +196,7 @@ int branch₋file(openfile₋id regular, int count, uint8_t ** offset, __builtin
    if (S_ISDIR(sb.st_mode)) { goto err; }
    if (S_ISLNK(sb.st_mode)) { goto err; }
    for (int i=0; i<count; i+=1) { stripes[i].iov_len=bytes[i]; stripes[i].iov_base=offset[i]; }
-   /* coro_feedback, coro_await, coro_resume and coro_f. */
-   *bytesactual = preadv(fd,stripes,count,0);
+   *bytesactual = preadv₋c(fd,stripes,count,0);
    return 0;
 err:
    if (close(fd) == -1) { return -2; }
@@ -205,23 +205,24 @@ err:
 
 #pragma recto material and entry
 
-#include <removefile.h>
+struct Unicodes filename₋expression = Run(U"hello world.txt");
 
 uint8_t material1[5] = { 1, 2, 3, 4, 5 };
 uint8_t material2[7] = { 17, 16, 15, 14, 13, 13, 13 };
 
 int corout₋filing(coro_t * coro)
 {
-   coro_feedback(coro,1);
-   struct Unicodes expression = Run(U"hello world.txt"); openfile₋id regular;
-   if (open₋file(expression,&regular)) { coro_feedback(coro,-1); }
+   coro_feedback(coro,1); openfile₋id regular;
+   if (open₋file(filename₋expression,&regular)) { coro_feedback(coro,-1); }
    uint8_t * offset[] = { material1, material2 };
-   __builtin_int_t bytes[] = { 5, 7 }, actual;
+   __builtin_int_t bytes[] = { 5, 7 },actual;
    int count = sizeof(offset)/sizeof(uint8_t *);
-   if (reconcile₋file(regular,count,offset,bytes,&actual)) { coro_feedback(coro,-2); }
+   if (reconcile₋file(regular,count,offset,bytes,&actual,1)) { coro_feedback(coro,-2); }
    coro_feedback(coro,2);
    return 0;
 }
+
+#include <removefile.h>
 
 int callback(removefile_state_t s, const char * path, void * ctx)
 {
@@ -241,23 +242,25 @@ int main()
 {
    /* cleanup(); */
    /* initial episode filing attempt with given file name. */
-   struct Unicodes primary = Run(U"hello world.txt"); openfile₋id regular;
-   if (create₋file(primary,void₋path(),&regular)) { vfprint("error when create₋file.\n"); }
+   openfile₋id regular;
+   if (create₋file(filename₋expression,void₋path(),&regular)) { vfprint("error when create₋file.\n"); }
    uint8_t * offset[] = { material1,material2 }; __builtin_int_t bytes[] = { 5,7 },actual;
    int count = sizeof(offset)/sizeof(uint8_t *);
-   if (reconcile₋file(regular,count,offset,bytes,&actual)) { vfprint("error during reconcillation.\n"); }
+   if (reconcile₋file(regular,count,offset,bytes,&actual,0)) { vfprint("error during reconcillation.\n"); }
    if (close₋file(regular)) { vfprint("error at close.\n"); }
-   struct Unicodes expression = Run(U"one text.txt");
-   if (open₋file(expression,&regular)) { vfprint("unable to open file.\n"); }
-   if (branch₋file(regular,count,offset,bytes,&actual)) { vfprint("error unable to branch.\n"); }
+   if (open₋file(filename₋expression,&regular)) { vfprint("unable to open file.\n"); }
+   if (branch₋file(regular,count,offset,bytes,&actual,0)) { vfprint("error unable to branch.\n"); }
    if (close₋file(regular)) { vfprint("error when close.\n"); }
    /* filing episodes and coroutine attempt. */
    coro_t * coro = coro_await(corout₋filing); int yield;
 again:
    yield = coro_resume(coro);
-   if (yield == -1) { goto unagain; }
-   vfprint("filing coroutine returned ⬚.\n", ﹟d((__builtin_int_t)yield));
+   if (yield == 0) { goto unagain; }
+   if (yield <= -1) { goto err; }
+   vfprint("filing coroutine reported ⬚.\n", ﹟d((__builtin_int_t)yield));
    goto again;
+err:
+   vfprint("error while running coroutine ⬚.\n", ﹟d((__builtin_int_t)yield));
 unagain:
    coro_free(coro);
    return 0;
