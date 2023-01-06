@@ -295,7 +295,8 @@ again:
    if (i >= count) { goto unagain; }
    u8path = (char8₋t *)collection₋relative(i,&filepaths);
    fd = open((const char *)u8path, O_RDONLY | O_EXCL);
-   if (fstat(fd,&sb) == -1) { goto err; } bytes=sb.st_size;
+   if (fstat(fd,&sb) == -1) { goto err; }
+   if (S_ISDIR(sb.st_mode)) { goto err; } bytes=sb.st_size;
    ssize_t actual=read(fd,(const char *)u8path,bytes);
    if (actual != bytes) { goto err; }
    ucs = Alloc(4*bytes);
@@ -333,7 +334,7 @@ again:
 void keyput₋rewrite(char8₋t * utf8) { }
 
 int option₋machine₋interprets(int argc, char8₋t ** argv)
-{ int i=1,y,output₋filepath=0; char8₋t * token, *msg = U8("");
+{ int i=1,y,output₋filepath=0; char8₋t * token, *msg=U8("");
 again:
    if (i>=argc) { goto unagain; }
    token = *(argv + i);
