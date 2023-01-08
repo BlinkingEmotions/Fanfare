@@ -1,4 +1,4 @@
-/*  retros-compi.c | trans-l .pct and .detail and .incl and llvm-assembly files. */
+/*  retros-compi.c | cross-compile (as seen in sec 11.3) and does not bootstrap. */
 
 import Twinbeam;
 
@@ -9,7 +9,7 @@ import Twinbeam;
  This example is stored as an Utf-8 file and 'NFC normalized unicode' when 
  processed and identifier is similar to Unicode UAX 31.
  
-import Fōretag-Method /͓ and not 'Company₋Methods' and one do not break with '$' before white space. *̷̷
+import Fōretag-Method; /͓ and not 'Company₋Methods' and one do not break with '$' before white space. *̷̷
  
   .partial fostrat₋defi|struct diffractive₋glass₋variables [with negotiated₋valuable]
   .end
@@ -160,6 +160,8 @@ struct language₋context {
 
 Trie keyword₋set; /* the preprocessor, keywords and the operations for one selected processor. */
 
+struct language₋context l₋ctxt;
+
 typedef struct Symbolinterval { short symbols; char32̄_t * start; } Symbolinterval;
 
 typedef struct Symbol { enum symbol₋class item; struct token₋detail gritty; } Symbol;
@@ -171,7 +173,7 @@ int inner₋next₋symbol(struct language₋context * ctxt)
    typedef int (^non₋coalescent)(char32̄_t uc);
    non₋coalescent digit = ^(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; };
    non₋coalescent letter = ^(char32̄_t uc) { return U'A' <= uc && uc <= U'Z' || (U'a' <= uc && uc <= U'z'); };
-   non₋coalescent miscella₋augment = ^(char32̄_t uc) { return uc == U'₋'; };
+   non₋coalescent miscella₋augment = ^(char32̄_t uc) { return uc == U'₋' || uc == U'ᵦ'; };
    🧵(identifier,trouble,completion) {
    case identifier: return 0;
    case completion: return 0;
@@ -240,7 +242,6 @@ int do₋not₋link = 0;  /*  only compile to assembly listing. Do not produce b
 
 int add₋runlink₋keywords()
 {
-   
    char32̄_t * keyword₋texts[] = { U".INCLUDE.", U".IF.", U".END.", U".DEFINE.", 
     U"defined", U"import", U".partial", U"fostrat₋defi", U"struct", 
     U".end", U".definite", U"big₋endian", U"little₋endian", U".union", 
@@ -290,20 +291,22 @@ int add₋runlink₋keywords()
 #include <sys/stat.h>
 #include <unistd.h>
 
-int compile₋source₋files(int (*module₋compile)(struct Unicodes))
+int compile₋source₋files(int (*module₋compile)(struct Unicodes,char8₋t *))
 { int fd; struct stat sb; __builtin_int_t actual,bytes,i=0; char8₋t * u8path;
-   __builtin_int_t count=collection₋count(&filepaths),tetras; char32̄_t * ucs;
+   __builtin_int_t count=collection₋count(&filepaths),tetras; char32̄_t * ucs=
+    Ctxt->text;
 again:
    if (i >= count) { goto unagain; }
    u8path = (char8₋t *)collection₋relative(i,&filepaths);
    fd = open((const char *)u8path, O_RDONLY | O_EXCL);
    if (fstat(fd,&sb) == -1) { goto err; }
    if (S_ISDIR(sb.st_mode)) { goto err; } bytes=sb.st_size;
-   ssize_t actual=read(fd,(const char *)u8path,bytes);
+   ssize_t actual=read(fd,(const char *)u8path,bytes); /* \also cabinet-detail. */
    if (actual != bytes) { goto err; }
    ucs = Alloc(4*bytes);
    if (Utf8ToUnicode(u8bytes,u8text,ucs,&tetras)) { goto err; }
-   if (mprot(addr,tetras*4,PROT_READ)) { goto err; }
+   if (mprot(addr,tetras,PROT_READ)) { goto err; }
+   /* translation₋unit(); */
    Fallow(ucs);
    if (fclose(fd) == -1) { vfprint("unable to close '⬚'.\n"); goto unagain; }
    i+=1; goto again;
@@ -314,9 +317,15 @@ unagain:
    return 0;
 }
 
-int compile₋source₋module(struct Unicodes modulename)
+int compile₋source₋module(struct Unicodes modulename, char8₋t * source₋path)
 {
-   vfprint("find alternatively compile precompiled headers in module '⬚'.\n");
+   typedef void (^Complete)(ditriaconta);
+   typedef void (^Touch)(int *);
+   Touch touch = ^(int *) { };
+   Complete complete = (ditriaconta digest) { };
+   uint8_t * source₋path; __builtin_int_t bytes = Utf8BytesUntilZero(source₋path,BUILTIN₋INT₋MAX);
+   if (Hash(source₋path,bytes,touch,complete)) { return -1; }
+   vfprint("find .pct alternatively translate and store precompiled headers in module '⬚'.\n");
    return 0;
 }
 
@@ -380,7 +389,7 @@ unagain:
 
 void help()
 { const char * text = 
-"usage run-link [options] <.detail and .modules and .modulemap input files>\n"
+"usage run-link [options] <.detail, .incl, .S, .modules and .modulemap input files>\n" /* llvm '.S' files. */
 "\noptions\n\n"
 " -v  verbose output\n"
 " -h  display help\n"
