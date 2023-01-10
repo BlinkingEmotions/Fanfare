@@ -34,9 +34,11 @@ void location₋nextline(struct source₋location * l) {
 
 struct language₋context {
   __builtin_int_t tip₋unicode;
-  int carrier; /* 'retrospect did purge newline' and 'retrospect₋detail and 
+  int carrier₁,carrier₂; /* 'retrospect did purge newline' and 'retrospect₋detail and 
    retrospect₋summar differs' and 'summar is always ahead'. */
-  /* next token is identifier,'call','begin','if','while', then from lexer insert semicolon. */
+  /* retrospect is identifier,'call','begin','if','while' and while reading 
+   into 'symbol' we passed a (in case of multiple, thelast) 'carriage return' 
+   then from lexer insert semicolon. */
   enum language₋mode state;
   char32̄_t regular[2048];
   short syms₋in₋regular;
@@ -122,7 +124,7 @@ int copy₋number(struct language₋context * ctxt, Symbol * out, int type)
 
 int next₋token₋inner(struct language₋context * ctxt, Symbol * out)
 { __builtin_int_t i,symbols=text.tetras; char32̄_t uc,uc₊₁,uc₊2; int lift₋count=0,sym;
-   typedef int (^type)(char32̄_t);
+   typedef int (^type)(char32̄_t); ctxt->carrier₁=0;
    type digit = ^(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; };
    type letter = ^(char32̄_t uc) { return U'a' <= uc && uc <= U'z'; };
    🧵(identifier,integer₋constant,keyword,trouble,completion) {
@@ -141,12 +143,8 @@ again:
    uc₊₁ = lift₋count >= 2 ? U' ' : *(text.unicodes + i + 1);
    uc₊2 = lift₋count >= 1 ? U' ' : *(text.unicodes + i + 2);
    if (STATE(mode₋initial) && uc == U'\xa') {
-    /* if (ctxt->carrier) {
-      print("termirender equal to semicolon enabled and carriage passed as semicolon occurred\n");
-      assign₋symbol(semicolon,out);
-      ctxt->carrier=0;
-      return 0;
-     } else { print("newline-found-and-not-passed\n"); } */
+     /* lexer indicates 'semicolon on carriage return' (after reading retrospect) */
+     ctxt->carrier₁=1; /* assign₋symbol(semicolon,out,1); */
      location₋nextline(&ctxt->interval);
    }
    else if (STATE(mode₋initial) && uc == U'\xd') { }
@@ -210,7 +208,7 @@ void next₋token(struct language₋context * ctxt)
   int retrospect₋class = retrospect.class;
   if (retrospect₋class == ident || retrospect₋class == callsym ||
     retrospect₋class == beginsym || retrospect₋class == ifsym) 
-  { ctxt->carrier=0; } else { ctxt->carrier=1; }
+  { ctxt->carrier₂=1; } else { ctxt->carrier₂=0; }
   if (y != 0) { error(1,"scanner error: advanced failure"); exit(2); }
 
 #if defined TRACE₋TOKENS
@@ -389,8 +387,7 @@ void statement(void)
     else { error(2,"neither assignment, call nor introduction"); }
    }
    else if (enrich(callsym,ident,0)) { expect(ident); House(🅖,1,symbol₋passed.gritty.store.regularOrIdent); }
-   else if (match(beginsym)) { Ctxt.carrier=0; do { statement(); } while (newline₋match(semicolon)); 
-    Ctxt.carrier=0; expect(endsym); House(🅗,1,form); }
+   else if (match(beginsym)) { do { statement(); } while (newline₋match(semicolon)); expect(endsym); House(🅗,1,form); }
    else if (match(ifsym)) { condition(); expect(thensym); statement(); at₋opt(elsesym,opt₋etter); House(🅙,1,form); }
    /* else if (match(whilesym)) { condition(); expect(dosym); statement(); } */ /* notera att 'undvikande utav vānster' ska vara tre abstraktion. */
    else { error(2,"statement: syntax error"); next₋token(&Ctxt); }
@@ -449,7 +446,6 @@ int main()
    merge₋to₋trie(11,kvlist,symlist,&(Ctxt.keys));
    Ctxt.state=mode₋initial;
    Ctxt.tip₋unicode=0;
-   Ctxt.carrier=0;
    Ctxt.syms₋in₋regular=0;
    Ctxt.ongoing=0; /* Ctxt.syms₋in₋fraction=0; */
    location₋init(&Ctxt.interval);
