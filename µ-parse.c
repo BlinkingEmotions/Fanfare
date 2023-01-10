@@ -22,11 +22,11 @@ struct source₋location {
 };
 
 void location₋init(struct source₋location * l) {
- struct source₋location initial₋interval = { 1, 1, 1, 1};
+ struct source₋location initial₋interval = { 1, 1, 1, 1 };
  *l=initial₋interval; }
 void location₋nextcolumn(struct source₋location * l) { l->column₋first = 1 + l->column₋last; l->column₋last=l->column₋first; }
 void location₋symbol(struct source₋location * l, int width, struct source₋location * out) { l->column₋last = width + l->column₋first - 1; 
- *out=*l; l->column₋first = l->column₋last; }
+ *out=*l; l->column₋last+=1; l->column₋first = l->column₋last; }
 void location₋nextline(struct source₋location * l) {
  l->lineno₋first+=1,l->lineno₋last=l->lineno₋first,
  l->column₋first=l->column₋last=1;
