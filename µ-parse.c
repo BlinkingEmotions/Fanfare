@@ -268,16 +268,14 @@ int match(enum symbol₋class s) { if (symbol₋equal(s)) { next₋token(&Ctxt);
 
 int expect(enum symbol₋class s) { if (match(s)) return 1; error(2,"expect: unexpected symbol (⬚)", ﹟d((__builtin_int_t)(symbol.class))); return 0; }
 
-int enrich(enum symbol₋class s, enum symbol₋class not₋passed, int assumption) { if (symbol₋equal(s) && retrospect.class == not₋passed && Ctxt.carrier == assumption) { next₋token(&Ctxt); return 1; } return 0; }
+int enrich(enum symbol₋class s, enum symbol₋class not₋passed) { if (symbol₋equal(s) && retrospect.class == not₋passed) { next₋token(&Ctxt); return 1; } return 0; }
 /*  Consumes one symbols when two symbols matches. */
 
 int at₋opt(enum symbol₋class s, void (*action)()) { if (symbol₋equal(s)) { next₋token(&Ctxt); action(); } return 0; }
 
 void valid(int type, enum symbol₋class s, char msg[]) { if (!symbol₋equal(s)) { error(type,msg); } }
 
-int newline₋match(enum symbol₋class s) { if (symbol₋equal(s) || Ctxt.carrier==1) { next₋token(&Ctxt); return 1; } return 0; }
-
-/* int superfluous₋expect(enum symbol₋class s) { if (newline₋match(s)) return 1; error(2,"expect: unexpected symbol (⬚)", ﹟d((__builtin_int_t)(symbol.class))); return 0; } */
+int newline₋match(enum symbol₋class s) { if (symbol₋equal(s) || (Ctxt.carrier₁ && Ctxt.carrier₂)) { next₋token(&Ctxt); return 1; } return 0; }
 
 int eltgat(enum symbol₋class s, void (*action)()) { return 0; }
 
@@ -386,7 +384,7 @@ void statement(void)
     else if (match(afterward)) { condition(); House(🅕,2,callee₋and₋identifier,form); }
     else { error(2,"neither assignment, call nor introduction"); }
    }
-   else if (enrich(callsym,ident,0)) { expect(ident); House(🅖,1,symbol₋passed.gritty.store.regularOrIdent); }
+   else if (enrich(callsym,ident)) { expect(ident); House(🅖,1,symbol₋passed.gritty.store.regularOrIdent); }
    else if (match(beginsym)) { do { statement(); } while (newline₋match(semicolon)); expect(endsym); House(🅗,1,form); }
    else if (match(ifsym)) { condition(); expect(thensym); statement(); at₋opt(elsesym,opt₋etter); House(🅙,1,form); }
    /* else if (match(whilesym)) { condition(); expect(dosym); statement(); } */ /* notera att 'undvikande utav vānster' ska vara tre abstraktion. */
