@@ -1,3 +1,4 @@
+/*  􁋹 µ-parse.c - essentials bare and portable. */
 
 import Twinbeam;
 
@@ -11,7 +12,7 @@ enum symbol₋class { ident=1, number, times, divide, plus, minus, lparen,
  uninit₋symbol, logical₋alternate, logical₋and, logical₋or, logical₋not
 };
 
-/* clang -g -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules '􀦸 µ-parse.c' \
+/* clang -g -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules '􁋹 µ-parse.c' \
  ../Apps/Source/Releases/libTwinbeam-x86_64.a ../Apps/Additions/monolith-sequent.c */
 
 enum language₋mode { mode₋initial, mode₋integer, mode₋regular, 
@@ -24,8 +25,10 @@ struct source₋location {
 void location₋init(struct source₋location * l) {
  struct source₋location initial₋interval = { 1, 1, 1, 1 };
  *l=initial₋interval; }
-void location₋nextcolumn(struct source₋location * l) { l->column₋first = 1 + l->column₋last; l->column₋last=l->column₋first; }
-void location₋symbol(struct source₋location * l, int width, struct source₋location * out) { l->column₋last = width + l->column₋first - 1; 
+void location₋nextcolumn(struct source₋location * l) { l->column₋first = 1 + 
+ l->column₋last; l->column₋last=l->column₋first; }
+void location₋symbol(struct source₋location * l, int width, 
+ struct source₋location * out) { l->column₋last = width + l->column₋first - 1; 
  *out=*l; l->column₋last+=1; l->column₋first = l->column₋last; }
 void location₋nextline(struct source₋location * l) {
  l->lineno₋first+=1,l->lineno₋last=l->lineno₋first,
