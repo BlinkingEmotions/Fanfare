@@ -1,5 +1,24 @@
 /*  µ⃝-code-and-intel.cxx | print assembly for Intel x86-64. */
 
+#define INTEGER₋PASSING 1
+#define REAL₋PASSING 2
+
+char * parameter₋passed(int count, short signature[], short left₋to₋right)
+{ char * registers1[] = { "rdi","rsi","rdx","rcx","r8","r9" }, 
+    * registers2[] = { "xmm0","xmm1","xmm2","xmm3","xmm4","xmm5","xmm6","xmm7" };
+   short idx₋integer=0,idx₋real=0,i=0,type;
+again:
+   type = signature[i];
+   if (type == INTEGER₋PASSING) { idx₋integer+=1; }
+   if (type == REAL₋PASSING) { idx₋real+=1; }
+   if (i == left₋to₋right - 1) {
+     if (type == INTEGER₋PASSING && idx₋integer <= 5) return registers1[idx₋integer];
+     if (type == REAL₋PASSING && idx₋real <= 7) return registers2[idx₋real];
+     else return "[rbp+8*n+16]";
+   }
+   i+=1; goto again;
+}
+
 char * registers[] = { "rax", "r15", "r14", "r13", "r12", "rbx", "rbp", "r9", "r8", "rcx", "rdx", "rsi", "rdi" };
 
 char ** requisi₋automat(int count)
@@ -144,9 +163,14 @@ void codegenerate()
    print(
 "#define END(symbol)\n"
 "#define START(symbol)\n\n"
-"    .data\n"
-"abc: .long 0x41,0x44,0\n\n"
-"    .text\n\n"
+"\n    .data\n" /* initialized and placed in object file. */
+"abc1: .asciz \"\342\254\232 \"\n"
+"abc2: .long 0x41,0x44,0\n"
+"\n    .bss\n" /* uninitialized and placed in ram. */
+"abc3: .fill 1,28,0\n" /* three parameters repeat, size, value. */
+"\n    .text,.rodata\n" /* initialization for global and static. */
+"abc4 dd 0ffff1a92h, 0ffff1a93h"
+"\n    .text\n\n"
    );
 again:
    if (item==ΨΛΩ) { return; }
@@ -157,20 +181,19 @@ again:
 "    .intel_syntax\n"
 "    /* START(_⬚) */\n" 
 "_⬚:\n",﹟run(symbol),﹟run(symbol),﹟run(symbol),﹟run(symbol));
-   preserve(0,1,"rbx");
    print(
-"    sub   24,rsp\n"
-/* rdi, rsi, rdx, rcx, r8, r9 then right to left pushed. */
-   /* 􀉈: cutaway until ✂️. */
-"    fnstcw 64[rax]\n"
-   /* ✂️ */
-"    mov   13,rax\n"
-"    add   24,rsp\n"
+"    pushq  rbp             /* store frame pointer in stack. */\n"
+"    movq   rsp,rbp         /* assign 'rbp' to 'rsp'. */\n"
+"    subq   rsp,24          /* stack pointer points to top of frame. */\n"
    );
-   preserve(1,1,"rbx");
+   preserve(0,7,"rbx","rsp","rbp","r12","r13","r14","r15"); /* preserve calle-save registers. */
+   preserve(1,7,"rbx","rsp","rbp","r12","r13","r14","r15"); /* restore callee-save registers. */
    print(
-"    ret\n"
-"    /* END(_⬚) */\n", 
+"    movq   rax,13            /* return integer in 'rax'. */\n"
+"    movq   rbp, rsp          /* free automatic variables. */\n"
+"    popq   rbp               /* restore frame pointer from stack. */\n"
+"    retq\n" /*  for lexical nesting on intel x86-64 see 'enter', 'leave' and 'ret'. */
+"    END(_⬚)\n", 
    ﹟run(symbol));
    item=item->next; goto again;
 }
