@@ -190,7 +190,7 @@ again:
    preserve(1,7,"rbx","rsp","rbp","r12","r13","r14","r15"); /* restore callee-save registers. */
    print(
 "    movq   rax,13            /* return integer in 'rax'. */\n"
-"    movq   rbp, rsp          /* free automatic variables. */\n"
+"    movq   rbp, rsp          /* dealloc automatic variables. */\n"
 "    popq   rbp               /* restore frame pointer from stack. */\n"
 "    retq\n" /*  for lexical nesting on intel x86-64 see 'enter', 'leave' and 'ret'. */
 "    END(_⬚)\n", 
