@@ -1,22 +1,45 @@
 /*  µ⃝-code-and-intel.cxx | print assembly for Intel x86-64. */
 
-#define INTEGER₋PASSING 1
-#define REAL₋PASSING 2
+#define INTEGER 1
+#define REAL 2
 
-char * parameter₋passed(int count, short signature[], short left₋to₋right)
-{ char * registers1[] = { "rdi","rsi","rdx","rcx","r8","r9" }, 
-    * registers2[] = { "xmm0","xmm1","xmm2","xmm3","xmm4","xmm5","xmm6","xmm7" };
+Argᴾ ﹟intel₋params(int count, short signature[], short left₋to₋right)
+{ char * regset1[] = { "rdi","rsi","rdx","rcx","r8","r9" }, * regset2[] = { 
+    "xmm0","xmm1","xmm2","xmm3","xmm4","xmm5","xmm6","xmm7" };
    short idx₋integer=0,idx₋real=0,i=0,type;
+   Serialfragment f1 = ^(serial₋present u8out, void * ctxt) { char8₋t * text = 
+    (char8₋t *)ctxt; __builtin_int_t count=Utf8BytesUntilZero(text,
+    BUILTIN₋INT₋MAX); u8out(text,count); };
+   Serialfragment f2 = ^(serial₋present u8out, void * ctxt) {
+    char8₋t * prefix=U8("[rbp+8*"),*suffix=U8("+16]");
+    u8out(prefix,7); Base𝕟((__builtin_uint_t)ctxt,10,0,^(char c) { 
+     u8out((char8₋t *)&c,1); }); u8out(suffix,4);
+   };
 again:
    type = signature[i];
-   if (type == INTEGER₋PASSING) { idx₋integer+=1; }
-   if (type == REAL₋PASSING) { idx₋real+=1; }
-   if (i == left₋to₋right - 1) {
-     if (type == INTEGER₋PASSING && idx₋integer <= 5) return registers1[idx₋integer];
-     if (type == REAL₋PASSING && idx₋real <= 7) return registers2[idx₋real];
-     else return "[rbp+8*n+16]";
+   if (type == INTEGER) { idx₋integer+=1; }
+   if (type == REAL) { idx₋real+=1; }
+   if (i == left₋to₋right-1) {
+     if (type == INTEGER && idx₋integer <= 5) return ﹟λ₁(f1,regset1[idx₋integer]);
+     if (type == REAL && idx₋real <= 7) return ﹟λ₁(f1,regset2[idx₋real]);
+     else { return ﹟λ₁(f2,(void *)&i); }
    }
    i+=1; goto again;
+}
+
+Argᴾ ﹟intel₋automatic(int count, short signature[], short top₋to₋bottom)
+{ char8₋t * prefix=U8("[rbp-8-N]"), * suffix=U8("]");
+   Serialfragment f1 = ^(serial₋present u8out, void * ctxt) { u8out(prefix,5); 
+   Base𝕟((__builtin_uint_t)count,10,0,^(char c) { u8out((char8₋t *)&c,1); });
+     u8out(suffix,1); }; void * ctxt=(void *)0x0;
+   return ﹟λ₁(f1,ctxt);
+}
+
+Argᴾ ﹟intel₋result(short passing, int is₋128₋bits)
+{ char8₋t * text = U8("rax"); /* "xmm" */
+   Serialfragment f1 = ^(serial₋present u8out, void * ctxt) { u8out(text,3); };
+   void * ctxt = (void *)0;
+   return ﹟λ₁(f1,ctxt);
 }
 
 char * registers[] = { "rax", "r15", "r14", "r13", "r12", "rbx", "rbp", "r9", "r8", "rcx", "rdx", "rsi", "rdi" };
