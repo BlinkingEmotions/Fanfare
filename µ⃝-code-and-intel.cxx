@@ -3,44 +3,71 @@
 #define INTEGER 1
 #define REAL 2
 
-Argᴾ ﹟intel₋params(int count, short signature[], short left₋to₋right)
+Argᴾ ﹟intel₋passed(int count, short signature[], short left₋to₋right)
 { char * regset1[] = { "rdi","rsi","rdx","rcx","r8","r9" }, * regset2[] = { 
     "xmm0","xmm1","xmm2","xmm3","xmm4","xmm5","xmm6","xmm7" };
-   short idx₋integer=0,idx₋real=0,i=0,type;
-   Serialfragment f1 = ^(serial₋present u8out, void * ctxt) { char8₋t * text = 
-    (char8₋t *)ctxt; __builtin_int_t count=Utf8BytesUntilZero(text,
-    BUILTIN₋INT₋MAX); u8out(text,count); };
-   Serialfragment f2 = ^(serial₋present u8out, void * ctxt) {
-    char8₋t * prefix=U8("[rbp+8*"),*suffix=U8("+16]");
-    u8out(prefix,7); Base𝕟((__builtin_uint_t)ctxt,10,0,^(char c) { 
+   short idx₋integer=0,idx₋real=0,type; __builtin_int_t i=0;
+   Serialfragment element = ^(serial₋present u8out, void * ctxt) {
+    char8₋t * text = (char8₋t *)ctxt; __builtin_int_t count = 
+    Utf8BytesUntilZero(text,BUILTIN₋INT₋MAX); u8out(text,count); };
+   Serialfragment indexed = ^(serial₋present u8out, void * ctxt) {
+    char8₋t * prefix=U8("[rbp+8*"), *suffix=U8("+16]");
+    u8out(prefix,7); Base𝕟((__builtin_uint_t)ctxt,10,0, ^(char c) { 
      u8out((char8₋t *)&c,1); }); u8out(suffix,4);
    };
 again:
    type = signature[i];
+   if (i == left₋to₋right-1) {
+     if (type == INTEGER && idx₋integer <= 5) return ﹟λ₁(element,regset1[idx₋integer]);
+     if (type == REAL && idx₋real <= 7) return ﹟λ₁(element,regset2[idx₋real]);
+     else { return ﹟λ₁(indexed,(void *)i); }
+   }
    if (type == INTEGER) { idx₋integer+=1; }
    if (type == REAL) { idx₋real+=1; }
-   if (i == left₋to₋right-1) {
-     if (type == INTEGER && idx₋integer <= 5) return ﹟λ₁(f1,regset1[idx₋integer]);
-     if (type == REAL && idx₋real <= 7) return ﹟λ₁(f1,regset2[idx₋real]);
-     else { return ﹟λ₁(f2,(void *)&i); }
-   }
    i+=1; goto again;
 }
 
-Argᴾ ﹟intel₋automatic(int count, short signature[], short top₋to₋bottom)
-{ char8₋t * prefix=U8("[rbp-8-N]"), * suffix=U8("]");
-   Serialfragment f1 = ^(serial₋present u8out, void * ctxt) { u8out(prefix,5); 
-   Base𝕟((__builtin_uint_t)count,10,0,^(char c) { u8out((char8₋t *)&c,1); });
-     u8out(suffix,1); }; void * ctxt=(void *)0x0;
-   return ﹟λ₁(f1,ctxt);
+Argᴾ ﹟intel₋automatic₋alloc(int count, short signature[])
+{ char8₋t * prefix=U8("subl rsp, "), *suffix=U8(" /* move stack pointer to include new automatic. */");
+   Serialfragment three = ^(serial₋present u8out, void * ctxt) { u8out(prefix,9); 
+   Base𝕟((__builtin_uint_t)ctxt,10,0, ^(char c) { u8out((char8₋t *)&c,1); });
+    u8out(suffix,51); };
+   short type; __builtin_int_t acc,i=0;
+   void * ctxt = (void *)0;
+again:
+   type = signature[i];
+   if (i == count) { ctxt=(void *)acc; return ﹟λ₁(three,ctxt); }
+   if (type == INTEGER) { acc+=4; }
+   if (type == REAL) { acc+=4; }
+   i+=1; goto again;
 }
 
-Argᴾ ﹟intel₋result(short passing, int is₋128₋bits)
-{ char8₋t * text = U8("rax"); /* "xmm" */
-   Serialfragment f1 = ^(serial₋present u8out, void * ctxt) { u8out(text,3); };
+Argᴾ ﹟intel₋automatic₋reference(int count, short signature[], short 
+ top₋to₋bottom)
+{ char8₋t * prefix=U8("[rbp-8-"), *suffix=U8("]");
+   Serialfragment three = ^(serial₋present u8out, void * ctxt) { u8out(prefix,7); 
+    Base𝕟((__builtin_uint_t)ctxt,10,0,^(char c) { u8out((char8₋t *)&c,1); });
+    u8out(suffix,1); };
+   short type; __builtin_int_t offset=0,i=0;
+again:
+   type = signature[i];
+   if (i == top₋to₋bottom - 1) { return ﹟λ₁(three,(void *)offset); }
+   i+=1; goto again;
+} /* in at&t: '-4(ebp)' and referenced as negative offset relative rbp. */
+
+Argᴾ ﹟intel₋call₋coalesc(short passing, int is₋128₋bits, char * src₋opt, 
+ char * src₋mandatory)
+{ char8₋t * integer₋lsb=U8("movq rax, "), *real₋lsb=U8("movq xmm0, "), 
+    *integer₋msb=U8("movq rdx, "), *real₋msb=U8("movq xmm1, ");
+   Serialfragment two = ^(serial₋present u8out, void * ctxt) {
+    if (passing == INTEGER) { u8out(integer₋lsb,3); }
+    if (passing == REAL) { u8out(real₋lsb,3); }
+    if (is₋128₋bits && passing == INTEGER) { u8out(integer₋msb,3); }
+    if (is₋128₋bits && passing == REAL) { u8out(real₋msb,3); }
+   };
    void * ctxt = (void *)0;
-   return ﹟λ₁(f1,ctxt);
-}
+   return ﹟λ₁(two,ctxt);
+} /* the 'rdx' is used on 128-bit integer returns. (and for 'real' xmm0 and secondarily xmm1) */
 
 char * registers[] = { "rax", "r15", "r14", "r13", "r12", "rbx", "rbp", "r9", "r8", "rcx", "rdx", "rsi", "rdi" };
 
