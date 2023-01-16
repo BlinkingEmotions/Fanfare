@@ -264,6 +264,12 @@ void next₋token(struct language₋context * ctxt)
   case rformalreferencesym: token("'@>'"); break;
   case additionssym: token("'additions'"); break;
   case label: token("label"); break;
+  case diffusesym: token("diffuse"); break;
+  case referencessym: token("references"); break;
+  case dowsingsym: token("--<"); break;
+  case ellipsissym: token("..."); break;
+  case leftrightread: token("@@"); break;
+  case insym: token("in"); break;
   default: vfprint("period and non-sorted generalization.\n");
   }
 #endif
