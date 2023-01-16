@@ -1,4 +1,4 @@
-/*  􁋹 µ-parse.c - essentials bare and portable. */
+/*  􁋹 µ-parse.c | infix computation, location and error-class essentials. */
 
 import Twinbeam;
 
@@ -9,7 +9,8 @@ enum symbol₋class { ident=1, number, times, divide, plus, minus, lparen,
  procsym, period, comma, oddsym/*=30*/, voidsym, sectionsym, textsym, 
  lformalrefpressym, rformalpresentsym, rformalreferencesym, additionssym, 
  colon, label, symbol₋for₋enquery/*=40*/, end₋of₋transmission₋and₋file, 
- uninit₋symbol, logical₋alternate, logical₋and, logical₋or, logical₋not
+ uninit₋symbol, logical₋alternate, logical₋and, logical₋or, logical₋not, 
+ diffusesym, referencessym, dowsingsym, ellipsissym, leftrightread, 
 };
 
 /* clang -g -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules '􁋹 µ-parse.c' \
@@ -170,12 +171,12 @@ again:
    else if (STATE(mode₋initial) && uc == U':') { assign₋symbol(colon,out,1); return 0; }
    else if (STATE(mode₋initial) && uc == U',') { assign₋symbol(comma,out,1); return 0; }
    else if (STATE(mode₋initial) && uc == U'.') { assign₋symbol(period,out,1); print("754 period\n"); return 0; }
-   else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'*') { assign₋symbol(sectionsym,out,2); return 0; }
-   else if (STATE(mode₋initial) && uc == U'@') { assign₋symbol(textsym,out,1); return 0; }
-   else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'<') { assign₋symbol(lformalrefpressym,out,2); return 0; }
-   else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'>' && uc₊2 == U'=') { assign₋symbol(rformalpresentsym,out,3); return 0; }
+   else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'*') { assign₋symbol(sectionsym,out,2); return 0; } /* paragraph, subsection and article. */
+   else if (STATE(mode₋initial) && uc == U'@') { assign₋symbol(textsym,out,1); return 0; } /* section, claim, report and changes and subclause and indenture. */
+   else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'<') { assign₋symbol(lformalrefpressym,out,2); return 0; } /* exhibit, annex and addendum. */
+   else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'>' && uc₊2 == U'=') { assign₋symbol(rformalpresentsym,out,3); return 0; } /* schedule, expenditures, jurisdiction */
    else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'>') { assign₋symbol(rformalreferencesym,out,2); return 0; }
-   else if (STATE(mode₋initial) && uc == U'\x2405') { assign₋symbol(symbol₋for₋enquery,out,1); return 0; }
+   else if (STATE(mode₋initial) && uc == U'\x2405') { assign₋symbol(symbol₋for₋enquery,out,1); return 0; } /* render alternatively do-not-render section in editor. */
    else if ((STATE(mode₋initial) && letter(uc)) || (STATE(mode₋regular) && (letter(uc) || digit(uc)))) {
      if (ctxt->syms₋in₋regular == 2048) { error(1,"identifier and keyword too long"); confess(trouble); }
      ctxt->regular[ctxt->syms₋in₋regular]=uc;
@@ -442,9 +443,12 @@ void program(void) { next₋token(&Ctxt); block(); valid(2,end₋of₋transmissi
 
 int main()
 {
-   char32̄_t * kvlist[] = { U"constant",U"variable",U"call",U"begin",U"end",U"if",U"then",U"odd",U"transcript",U"else",U"void" };
-   int symlist[] = { constsym,varsym,callsym,beginsym,endsym,ifsym,thensym,oddsym,procsym,elsesym,voidsym };
-   merge₋to₋trie(11,kvlist,symlist,&(Ctxt.keys));
+   char32̄_t * kvlist[] = { U"constant", U"variable", U"call", U"begin", U"end", 
+    U"if", U"then", U"odd", U"transcript", U"else", U"void", U"diffuse", 
+    U"references" };
+   int symlist[] = { constsym,varsym,callsym,beginsym,endsym,ifsym,thensym,
+    oddsym,procsym,elsesym,voidsym,diffusesym,referencessym };
+   merge₋to₋trie(13,kvlist,symlist,&(Ctxt.keys));
    Ctxt.state=mode₋initial;
    Ctxt.tip₋unicode=0;
    Ctxt.syms₋in₋regular=0;
@@ -463,35 +467,39 @@ int main()
 #endif
    codegenerate(); /* a.k.a 'ferry' and 'tooth'. (code and documentation.) */
 #if defined TRACE₋SYMBOL
-   __builtin_int_t symbol₋count=collection₋count(identifiers)/4;
+   __builtin_int_t symbol₋count=collection₋count(identifiers);
    Nonabsolute 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 relative=0,previous₋relative=0;
    print("symbols-begin\n");
 again:
-   if (relative >= symbol₋count) { print("symbols-end\n"); return 0; }
+   if (relative >= symbol₋count) { goto unagain; }
    if (regularpool₋at(identifiers, relative, 
-     ^(int symbols₋total, int count₋segments, int symbols₋segment[], char32̄_t * segment[]) {
+     ^(short symbols₋total, short count₋segments, short symbols₋segment[], char32̄_t * segment[]) {
        print("⬚: ", ﹟d((__builtin_int_t)relative));
        for (int i=0; i<count₋segments; i+=1) print("⬚",﹟S(symbols₋segment[i],segment[i]));
-       print(" (⬚ symbols)\n", ﹟d((__builtin_int_t)(relative - previous₋relative)));
+       print(" (⬚ symbols)\n", ﹟d((__builtin_int_t)(symbols₋total)));
        previous₋relative=relative;
-       relative+=symbols₋total;
+       relative+=symbols₋total + 1;
      }
-   )) { return 1; }
+   )) { print("unable to locate symbol '⬚' in pool.\n", ﹟d(relative)); return 1; }
    goto again;
+unagain:
+   print("symbols-end\n");
 #endif
+   return 0;
 }
 
 /*
  
  program = block end₋of₋transmission₋and₋file
  block = 'const' ident '=' number { ',' ident '=' number } block₋p₋se
-         'var' ident { ',' ident } block₋p₋se
-         'transcript' ident '(' { formal-list } ')' statement block₋p₋se
+   'var' ident { ',' ident } block₋p₋se
+   'transcript' ident '(' { formal-list } ')' statement block₋p₋se
+   'references' '--<' etta '@@' tvāa '>' { 'in' ident } \cr <indent augment>
  statement = ident ':=' expression
-              { 'call' } ident
-             'begin' statement stmt₋se₋p { statment stmt₋se₋p } 'end'
-             'if' condition 'then' statement
-             / * 'while' condition 'do' statement * /
+   { 'call' } ident
+   'begin' statement stmt₋se₋p { statment stmt₋se₋p } 'end'
+   'if' condition 'then' statement
+   / * 'while' condition 'do' statement * /
  condition = 'odd' statment | expression ('='|'#'|'<'|'<='|'>'|'>=') expression
  expression = ['+'|'-'] term {'+'|'-' term}
  term = factor {'*'|'/' factor}
