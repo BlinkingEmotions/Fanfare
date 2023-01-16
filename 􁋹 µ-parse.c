@@ -10,7 +10,7 @@ enum symbol₋class { ident=1, number, times, divide, plus, minus, lparen,
  lformalrefpressym, rformalpresentsym, rformalreferencesym, additionssym, 
  colon, label, symbol₋for₋enquery/*=40*/, end₋of₋transmission₋and₋file, 
  uninit₋symbol, logical₋alternate, logical₋and, logical₋or, logical₋not, 
- diffusesym, referencessym, dowsingsym, ellipsissym, leftrightread, 
+ diffusesym, referencessym, dowsingsym, ellipsissym, leftrightread, insym, 
 };
 
 /* clang -g -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules '􁋹 µ-parse.c' \
@@ -448,10 +448,10 @@ int main()
 {
    char32̄_t * kvlist[] = { U"constant", U"variable", U"call", U"begin", U"end", 
     U"if", U"then", U"odd", U"transcript", U"else", U"void", U"diffuse", 
-    U"references" };
+    U"references", U"in" };
    int symlist[] = { constsym,varsym,callsym,beginsym,endsym,ifsym,thensym,
-    oddsym,procsym,elsesym,voidsym,diffusesym,referencessym };
-   merge₋to₋trie(13,kvlist,symlist,&(Ctxt.keys));
+    oddsym,procsym,elsesym,voidsym,diffusesym,referencessym, insym };
+   merge₋to₋trie(14,kvlist,symlist,&(Ctxt.keys));
    Ctxt.state=mode₋initial;
    Ctxt.tip₋unicode=0;
    Ctxt.syms₋in₋regular=0;
