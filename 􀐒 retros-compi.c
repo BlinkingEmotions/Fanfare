@@ -1,4 +1,4 @@
-/*  retros-compi.c | cross-compile (as seen in sec 11.3) and does not bootstrap. */
+/*  retros-compi.c | cross-compile (as seen in Dragon sec 11.3) and does not bootstrap. */
 
 import Twinbeam;
 
@@ -9,13 +9,13 @@ import Twinbeam;
  This example is stored as an Utf-8 file and 'NFC normalized unicode' when 
  processed and identifier is similar to Unicode UAX 31.
  
-import Fōretag-Method; /͓ and not 'Company₋Methods' and one do not break with '$' before white space. *̷̷
+diffuse|import Fōretag-Method; ⁄* and not 'Company₋Methods' and one do not break with '$' before white space. *⁄
  
   .partial fostrat₋defi|struct diffractive₋glass₋variables [with negotiated₋valuable]
   .end
   
-  .definite big₋endian struct 4kbframe /͓  \also .definit *̷̷
-  .end /͓ 'direct definite' equals 'passed as a shallow copy' and 'voluntary definite' equals 'is never null'. *̷̷
+  .definite big₋endian struct 4kbframe ⁄* \also .definit *⁄
+  .end ⁄* 'direct definite' equals 'passed as a shallow copy' and 'voluntary definite' equals 'is never null'. *⁄
   
   .fluid Tetra𝘖rUnicode
     int32_t count, char32_t uc
@@ -26,7 +26,7 @@ import Fōretag-Method; /͓ and not 'Company₋Methods' and one do not break wit
     "c-maskin" - "🥽⋆⁻¹Fetus.cpp" "c++20" "../Apps/Additions/monolith-sequent.c" "c2x"
   )
   
-  á₋priori definite /͓ struct *̷̷ sequent To₋precision(brain₋epsilon x)
+  á₋priori definite ⁄* struct *⁄ sequent To₋precision(brain₋epsilon x)
   á₋priori uint8_t 𝟽₋op₋bytereverse(uint8_t b)
   á₋priori void Base𝕫(__builtin_uint_t|__builtin_int_t|__int128_t|__uint128_t ℤ, unsigned short base, unsigned short digitsOr0, void (^out)(char zeroToNineAndNeg))
   typedef __builtin_int_t Nonabsolute, structa₋middle₋index
@@ -49,7 +49,7 @@ import Fōretag-Method; /͓ and not 'Company₋Methods' and one do not break wit
   compute uint32_t sum(uint8_t a, uint8_t b) { return a+b; }
   typedef encompass₋material simd_tᵦ; /͓ specialization *̷̷
   educative definite Unicodes Run(char32̄_t *) { ... return text; }
-
+  ⁄* see --<leap-osmosis.c> for one undefined case of function-block overloading *⁄
 @  This case takes care in case we want to output a fixed number of digits.
 
 @<Compute and output selected digits@>=
@@ -69,7 +69,7 @@ again:
 unagain:
   @
 
-  TRANSCRIPT(Base𝒛) /͓ INEXORABLE MENTATIVE START INLINE COROUTINE *̷̷
+  TRANSCRIPT(Base𝒛) ⁄* INEXORABLE MENTATIVE START INLINE COROUTINE *⁄
 Base𝕫:
     additions cycle as unsigned short[], k=0 as short;
     cycle[64] = { 0, ..., 0 }; k=0;
@@ -97,21 +97,21 @@ again:
   
 #include "goldschmidt-division.inc"
   
-  à₋priori void int₋to₋sequent(int64_t ℤ, indirect definite sequent ℝ) /͓ definite sequent * *̷̷
+  à₋priori void int₋to₋sequent(int64_t ℤ, indirect definite sequent ℝ) ⁄* definite sequent * *⁄
   TRANSCRIPT(int₋to₋sequent)
 int₋to₋sequent:
    additions neg as int16_t
    compare ℤ < 0 { ℤ = -ℤ; LI16 neg, 0; SEH neg }
-   / * car->next=form when not₋first else ΨΛΩ * /
-   sw $sp, 0($a0) /͓ relative and absolute *̷̷
+   ⁄* car->next=form when not₋first else ΨΛΩ *⁄
+   sw $sp, 0($a0) ⁄* relative and absolute *⁄
    lw $sp, 0($a0)
    mov 8(%rdx),%rsp
    mov $rsp,24(%rax)
   END(int₋to₋sequent)
   
   à₋priori void dereference₋and₋swap(indirect traditional₋material x₁, indirect traditional₋material x₂)
-  /͓  encompass₋material equals a 128-bit register₋material (Intel xmm1-8 and Arm Q0-Q15 and in primary memory. *̷̷
-  /͓  with Intel 'divss xmm0,xmm2' and divsd and Arm 'VADD.I16 q0,q1,q2'.*̷̷
+  ⁄* encompass₋material equals a 128-bit register₋material (Intel xmm1-8 and Arm Q0-Q15 and in primary memory. *⁄
+  ⁄* with Intel 'divss xmm0,xmm2' and divsd and Arm 'VADD.I16 q0,q1,q2'. *⁄
   
   TRANSCRIPT(dereference₋and₋swap)
    ...
@@ -124,8 +124,22 @@ struct Unicodes one₋filename = Run("twothree-random.c")
     *px=21,*py=13;
     dereference₋and₋swap(px,py)
   END(attempth₋progress)
-
-  /͓  macos.modules *̷̷
+  
+corrections extended₋characterset ⁄* with implicit 'before' and 'after'. *⁄
+  
+--< @@ else if ((STATE(mode₋initial) > in next₋token₋inner
+  else if (STATE(mode₋initial) && uc == U'÷') { assign₋symbol(divide,out,1); return 0; } ⁄* ⌥ + '/'. *⁄
+  
+references ⁄* a․𝘬․a append 'source' when 'trace'. *⁄
+  
+--< { @@ int by₋tes = > in prepare₋myrtle
+  print("will₋prepare₋myrtle")
+  
+--< middle₋to₋include; @@ } > in prepare₋myrtle
+  print("allocate middle at idx=⬚.\n",﹟d(idx))
+  print("did₋prepare₋myrtle.\n")
+  
+  ⁄* macos.modules *⁄
   module GalliumArsenide {
     module Intel_Simd { requires ssd2
       header "/Library/Developer/CommandLineTools/usr/lib/clang/14.0.0/include/emmintrin.h"
@@ -137,7 +151,7 @@ struct Unicodes one₋filename = Run("twothree-random.c")
       Ks/MacOSX.sdk/usr/include/unistd.h"
   }
 
-  /͓  compile with run-link -o a.out example~1.detail macos.modules and the constant 'SHA1GIT' is predefined. *̷̷
+  ⁄* compile with run-link -o a.out example~1.detail macos.modules and the constant 'SHA1GIT' is predefined. *⁄
   
   begin₋assumption Terminalfun₋villkorat
   location "/Library/Developer/CommandLineTools/SDKs/AmcOSX.sdk/usr/include/unistd.h"
@@ -147,7 +161,15 @@ struct Unicodes one₋filename = Run("twothree-random.c")
 
  **/
 
-struct token₋detail { };
+struct token₋detail {
+  union {
+    __builtin_int_t machine;
+    Sequenta number;
+    Nonabsolute identifier;
+  } material;
+  int32_t kind;
+  __builtin_int_t lineno₋first,lineno₋last,column₋first,column₋last;
+};
 
 enum language₋mode { mode₋inexplanatoria, mode₋initial, mode₋fraction, 
  mode₋integer, mode₋regular, mode₋text, mode₋single₋ekunem };
@@ -199,8 +221,9 @@ int next₋symbol(struct language₋context * ctxt)
 typedef int64_t NoteRef; /* A.k.a 'Note₋idx'. */
 
 struct not₋e {
-  union { } material;
-  int32_t kind;
+  struct token₋detail D;
+  enum symbol₋class C;
+  struct not₋e *l,*r;
 };
 
 int Spawn₋replik(struct Unicodes filepath, struct not₋e * 🅵, struct collection * 🅰)
