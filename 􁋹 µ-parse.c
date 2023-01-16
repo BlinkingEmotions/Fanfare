@@ -157,14 +157,18 @@ again:
    else if (STATE(mode₋initial) && uc == U'(') { assign₋symbol(lparen,out,1); return 0; }
    else if (STATE(mode₋initial) && uc == U')') { assign₋symbol(rparen,out,1); return 0; }
    else if (STATE(mode₋initial) && uc == U'*') { assign₋symbol(times,out,1); return 0; }
+   else if (STATE(mode₋initial) && uc == U'÷') { assign₋symbol(divide,out,1); return 0; } /* ⌥ + '/'. */
    else if (STATE(mode₋initial) && uc == U'/') { assign₋symbol(divide,out,1); return 0; }
    else if (STATE(mode₋initial) && uc == U'+') { assign₋symbol(plus,out,1); return 0; }
    else if (STATE(mode₋initial) && uc == U'-') { assign₋symbol(minus,out,1); return 0; }
    else if (STATE(mode₋initial) && uc == U'=') { assign₋symbol(eql,out,1); return 0; }
    else if (STATE(mode₋initial) && uc == U'<' && uc₊₁ == U'>') { ctxt->tip₋unicode+=1; assign₋symbol(neq,out,2); return 0; }
+   else if (STATE(mode₋initial) && uc == U'≠') { assign₋symbol(neq,out,1); return 0; } /* ⌥ + '='. */
    else if (STATE(mode₋initial) && uc == U'<' && uc₊₁ == U'=') { ctxt->tip₋unicode+=1; assign₋symbol(leq,out,2); return 0; }
+   else if (STATE(mode₋initial) && uc == U'≤') { assign₋symbol(leq,out,1); return 0; } /* ⌥ + '<'. */
    else if (STATE(mode₋initial) && uc == U'<') { assign₋symbol(lss,out,1); return 0; }
    else if (STATE(mode₋initial) && uc == U'>' && uc₊₁ == U'=') { ctxt->tip₋unicode+=1; assign₋symbol(geq,out,2); return 0; }
+   else if (STATE(mode₋initial) && uc == U'≥') { assign₋symbol(geq,out,1); return 0; } /* ⌥ + '>'. */
    else if (STATE(mode₋initial) && uc == U'>') { assign₋symbol(gtr,out,1); return 0; }
    else if (STATE(mode₋initial) && uc == U';') { assign₋symbol(semicolon,out,1); return 0; } /* @<semicolon₋processed@> twice. */
    else if (STATE(mode₋initial) && uc == U':' && uc₊₁ == U'=') { ctxt->tip₋unicode+=1; assign₋symbol(afterward,out,2); return 0; }
@@ -179,6 +183,8 @@ again:
    else if (STATE(mode₋initial) && uc == U'\x2405') { assign₋symbol(symbol₋for₋enquery,out,1); return 0; } /* render alternatively do-not-render section in editor. */
    else if (STATE(mode₋initial) && uc == U'-' && uc₊₁ == U'-' && uc₊2 == U'<') { assign₋symbol(dowsingsym,out,3); return 0; }
    else if (STATE(mode₋initial) && uc == U'.' && uc₊₁ == U'.' && uc₊2 == U'.') { assign₋symbol(ellipsissym,out,3); return 0; }
+   else if (STATE(mode₋initial) && uc == U'…') { assign₋symbol(ellipsissym,out,1); return 0; } /* ⌥ + ';'. */
+   else if (STATE(mode₋initial) && uc == U'¬') { assign₋symbol(logical₋not,out,1); return 0; } /* ⌥ + 'l'. ∧∨. */
    else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'@') { assign₋symbol(leftrightread,out,2); return 0; }
    else if ((STATE(mode₋initial) && letter(uc)) || (STATE(mode₋regular) && (letter(uc) || digit(uc)))) {
      if (ctxt->syms₋in₋regular == 2048) { error(1,"identifier and keyword too long"); confess(trouble); }
