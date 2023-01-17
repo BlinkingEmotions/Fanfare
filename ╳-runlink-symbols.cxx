@@ -7,7 +7,7 @@ enum symbol₋class { diffusesym, preproc₋if, preproc₋else, preproc₋elif,
  constantsym, computesym, collide, comparesym, ifsym, gotosym, transcriptsym, 
  inexorablesym, mentativesym, startsym, inlinesym, coroutinesym, endsym, 
  additionssym, ident, number, assym /* lāngs utstreckning */, indirectsym, voluntarysym, isomorphsym, 
- intsym, char8₋tsym, char32̄_tsym, binary32sym, decimal32sym, tertary32sym, 
+ referssym, intsym, char8₋tsym, char32̄_tsym, binary32sym, decimal32sym, tertary32sym, 
  unsignedsym, schemasym, end₋of₋transmission₋and₋file };
 
 
