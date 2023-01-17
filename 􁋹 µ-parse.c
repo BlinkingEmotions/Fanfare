@@ -1,8 +1,9 @@
-/*  􁋹 µ-parse.c | infix computation, location and error-class essentials. */
+/*  􁋹 µ-parse.c | infix computation, location, inclusion, presentation-
+ prominent, folding and retrieval-correctness harvesting essentials. */
 
 import Twinbeam;
 
-enum symbol₋class { ident=1, number, times, divide, plus, minus, lparen, 
+enum symbol₋class { ident, number, times, divide, plus, minus, lparen, 
  rparen, eql, neq/*=10*/, lss, leq, gtr, geq, semicolon, callsym, beginsym, 
  endsym, /* whilesym, dosym, forsym */ branch₋goto₋optsym/*=20 inner and 
  outer iteration */, elsesym, thensym, ifsym, afterward, constsym, varsym, 
@@ -11,10 +12,11 @@ enum symbol₋class { ident=1, number, times, divide, plus, minus, lparen,
  colon, label, symbol₋for₋enquery/*=40*/, end₋of₋transmission₋and₋file, 
  uninit₋symbol, logical₋alternate, logical₋and, logical₋or, logical₋not, 
  diffusesym, referencessym, dowsingsym, ellipsissym, leftrightread, insym, 
-};
+}; /* .IF. .ELSE. .ELIF. .END. .INCLUDE. .DEFINE. DEFINED */
 
-/* clang -g -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules '􁋹 µ-parse.c' \
- ../Apps/Source/Releases/libTwinbeam-x86_64.a ../Apps/Additions/monolith-sequent.c */
+/* clang -g -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules      \
+ '􁋹 µ-parse.c' ../Apps/Source/Releases/libTwinbeam-x86_64.a                   \
+  ../Apps/Additions/monolith-sequent.c */
 
 enum language₋mode { mode₋initial, mode₋integer, mode₋regular, 
  mode₋fixpoint, mode₋collection };
@@ -178,9 +180,9 @@ again:
    else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'*') { assign₋symbol(sectionsym,out,2); return 0; } /* paragraph, subsection and article. */
    else if (STATE(mode₋initial) && uc == U'@') { assign₋symbol(textsym,out,1); return 0; } /* section, claim, report and changes and subclause and indenture. */
    else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'<') { assign₋symbol(lformalrefpressym,out,2); return 0; } /* exhibit, annex and addendum. */
-   else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'>' && uc₊2 == U'=') { assign₋symbol(rformalpresentsym,out,3); return 0; } /* schedule, expenditures, jurisdiction */
+   else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'>' && uc₊2 == U'=') { assign₋symbol(rformalpresentsym,out,3); return 0; } /* schedule, expenditures, jurisdiction. */
    else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'>') { assign₋symbol(rformalreferencesym,out,2); return 0; }
-   else if (STATE(mode₋initial) && uc == U'\x2405') { assign₋symbol(symbol₋for₋enquery,out,1); return 0; } /* render alternatively do-not-render section in editor. */
+   else if (STATE(mode₋initial) && uc == U'\x2405') { assign₋symbol(symbol₋for₋enquery,out,1); return 0; } /* first and final 'render' alternatively 'do-not-render' section in editor. */
    else if (STATE(mode₋initial) && uc == U'-' && uc₊₁ == U'-' && uc₊2 == U'<') { assign₋symbol(dowsingsym,out,3); return 0; }
    else if (STATE(mode₋initial) && uc == U'.' && uc₊₁ == U'.' && uc₊2 == U'.') { assign₋symbol(ellipsissym,out,3); return 0; }
    else if (STATE(mode₋initial) && uc == U'…') { assign₋symbol(ellipsissym,out,1); return 0; } /* ⌥ + ';'. */
@@ -279,7 +281,7 @@ void next₋token(struct language₋context * ctxt)
   default: vfprint("period and non-sorted generalization.\n");
   }
 #endif
-} /* .IF. .ELSE. .END. .INCLUDE. .DEFINE. */
+}
 
 void expression(void);
 
@@ -288,7 +290,7 @@ int match(enum symbol₋class s) { if (symbol₋equal(s)) { next₋token(&Ctxt);
 int expect(enum symbol₋class s) { if (match(s)) return 1; error(2,"expect: unexpected symbol (⬚)", ﹟d((__builtin_int_t)(symbol.class))); return 0; }
 
 int enrich(enum symbol₋class s, enum symbol₋class not₋passed) { if (symbol₋equal(s) && retrospect.class == not₋passed) { next₋token(&Ctxt); return 1; } return 0; }
-/*  Consumes one symbols when two symbols matches. */
+/*  consumes one symbols when two symbols matches. */
 
 int at₋opt(enum symbol₋class s, void (*action)()) { if (symbol₋equal(s)) { next₋token(&Ctxt); action(); } return 0; }
 
