@@ -22,13 +22,13 @@ diffuse Fōretag-Method; ⁄* and not 'Company₋Methods' and one do not break w
   .end
   
   schema components=(
-    "retros-compi" - "🥽⋆᛭Solenoid.cpp" "c++20" "../Apps/Additions/monolith-sequent.c" "c2x"
-    "c-maskin" - "🥽⋆⁻¹Fetus.cpp" "c++20" "../Apps/Additions/monolith-sequent.c" "c2x"
+    "retros-compi" - "🥽⋆᛭Solenoid.cpp" "-std=c++20" "../Apps/Additions/monolith-sequent.c" "-std=c2x"
+    "c-maskin" - "🥽⋆⁻¹Fetus.cpp" "-std=c++20" "../Apps/Additions/monolith-sequent.c" "-std=c2x"
   )
   
-  á₋priori definite ⁄* struct *⁄ sequent To₋precision(brain₋epsilon x)
-  á₋priori uint8_t 𝟽₋op₋bytereverse(uint8_t b)
-  á₋priori void Base𝕫(__builtin_uint_t|__builtin_int_t|__int128_t|__uint128_t ℤ, unsigned short base, unsigned short digitsOr0, void (^out)(char zeroToNineAndNeg))
+  à₋priori definite ⁄* struct *⁄ sequent To₋precision(brain₋epsilon x)
+  à₋priori uint8_t 𝟽₋op₋bytereverse(uint8_t b)
+  à₋priori void Base𝕫(__builtin_uint_t|__builtin_int_t|__int128_t|__uint128_t ℤ, unsigned short base, unsigned short digitsOr0, void (^out)(char zeroToNineAndNeg))
   typedef __builtin_int_t Nonabsolute, structa₋middle₋index
 .IF. DEFINED __x86_64__
   typedef __uint128_t binary, binary128
@@ -80,8 +80,8 @@ again:
     }
   END(Base𝕫)
   
-  á₋priori definite sequent booth₋multiply(definite sequent x₁, definite sequent x₂) isomorph
-  á₋priori definite sequent booth₋multiply(definite sequent x₁ as nonnull, definite sequence x₂ as nonnull)
+  à₋priori definite sequent booth₋multiply(definite sequent x₁, definite sequent x₂) isomorph
+  à₋priori definite sequent booth₋multiply(definite sequent x₁ as nonnull, definite sequence x₂ as nonnull)
   infix binary + definite sequent (definite sequent x₁, definite sequent x₂) isomorph is multiply(x₁,x₂)
   .symbol multiply, my₋multiply is booth₋multiply
   
@@ -268,15 +268,15 @@ int add₋runlink₋keywords()
     U"little₋endian", U".union", U"á₋priori", U"typedef", U"constant", 
     U"compute", U"compare", U"if", U"goto", U"TRANSCRIPT", U"INEXORABLE", 
     U"MENTATIVE", U"START", U"INLINE", U"COROUTINE", U"END", U"additions", 
-    U"as", U"indirect", U"voluntary", U"isomorph", U"int", U"char8₋t", U"char32̄_t", 
-    U"binary32", U"decimal32", U"unsigned", U"schema" };
+    U"as", U"indirect", U"voluntary", U"isomorph", U"refers", U"int", 
+    U"char8₋t", U"char32̄_t", U"binary32", U"decimal32", U"unsigned", U"schema" };
    int keyword₋constant[] = { diffusesym, preproc₋if, preproc₋else, 
     preproc₋elif, preproc₋end, preproc₋include, preproc₋define, 
     preproc₋defined, partialsym, fostratdefisym, structsym, end₋and₋dotsym, 
     definitesym, big₋endiansym, little₋endiansym, unionsym, apriorisym, typedefsym, 
     constantsym, computesym, comparesym, ifsym, gotosym, transcriptsym, 
     inexorablesym, mentativesym, startsym, inlinesym, coroutinesym, endsym, 
-    additionssym, assym, indirectsym, voluntarysym, isomorphsym, intsym, char8₋tsym, 
+    additionssym, assym, indirectsym, voluntarysym, isomorphsym, referssym, intsym, char8₋tsym, 
     char32̄_tsym, binary32sym, decimal32sym, tertary32sym, unsignedsym, schemasym };
    int keyword₋count=sizeof(keyword₋texts)/sizeof(char32̄_t *);
    merge₋to₋trie(keyword₋count,keyword₋texts,keyword₋constant,&keyword₋set);
@@ -345,7 +345,7 @@ int compile₋source₋module(struct Unicodes modulename, char8₋t * source₋p
    typedef void (^Touch)(int *);
    Touch touch = ^(int *) { };
    Complete complete = (ditriaconta digest) { };
-   uint8_t * source₋path; __builtin_int_t bytes = Utf8BytesUntilZero(source₋path,BUILTIN₋INT₋MAX);
+   uint8_t * source₋path; __builtin_int_t bytes = Utf8BytesUntilZero(source₋path,BUILTIN₋INT₋MAX); /* consider moved source files. */
    if (Hash(source₋path,bytes,touch,complete)) { return -1; }
    vfprint("find .pct alternatively translate and store precompiled headers in module '⬚'.\n");
    return 0;
