@@ -80,9 +80,9 @@ again:
     }
   END(Base𝕫)
   
-  á₋priori definite sequent booth₋multiply(definite sequent x₁, definite sequent x₂)
+  á₋priori definite sequent booth₋multiply(definite sequent x₁, definite sequent x₂) isomorph
   á₋priori definite sequent booth₋multiply(definite sequent x₁ as nonnull, definite sequence x₂ as nonnull)
-  infix binary + definite sequent (definite sequent x₁, definite sequent x₂) is multiply(x₁,x₂)
+  infix binary + definite sequent (definite sequent x₁, definite sequent x₂) isomorph is multiply(x₁,x₂)
   .symbol multiply, my₋multiply is booth₋multiply
   
   TRANSCRIPT(booth₋multiply)
@@ -215,7 +215,7 @@ int next₋symbol(struct language₋context * ctxt)
    return 0;
 }
 
-typedef int64_t NoteRef; /* A.k.a 'Note₋idx'. */
+typedef int64_t NoteReference; /* a․𝘬․a 'Note₋idx'. */
 
 struct not₋e {
   struct token₋detail D;
@@ -268,15 +268,15 @@ int add₋runlink₋keywords()
     U"little₋endian", U".union", U"á₋priori", U"typedef", U"constant", 
     U"compute", U"compare", U"if", U"goto", U"TRANSCRIPT", U"INEXORABLE", 
     U"MENTATIVE", U"START", U"INLINE", U"COROUTINE", U"END", U"additions", 
-    U"as", U"indirect", U"voluntary", U"int", U"char8₋t", U"char32̄_t", 
+    U"as", U"indirect", U"voluntary", U"isomorph", U"int", U"char8₋t", U"char32̄_t", 
     U"binary32", U"decimal32", U"unsigned", U"schema" };
    int keyword₋constant[] = { diffusesym, preproc₋if, preproc₋else, 
-    preproc₋elif, preproc₋end, preproc₋include, preproc₋define, preproc₋defined, 
-    partialsym, fostratdefisym, structsym, end₋and₋dotsym, definitesym, 
-    big₋endiansym, little₋endiansym, unionsym, apriorisym, typedefsym, 
+    preproc₋elif, preproc₋end, preproc₋include, preproc₋define, 
+    preproc₋defined, partialsym, fostratdefisym, structsym, end₋and₋dotsym, 
+    definitesym, big₋endiansym, little₋endiansym, unionsym, apriorisym, typedefsym, 
     constantsym, computesym, comparesym, ifsym, gotosym, transcriptsym, 
     inexorablesym, mentativesym, startsym, inlinesym, coroutinesym, endsym, 
-    additionssym, assym, indirectsym, voluntarysym, intsym, char8₋tsym, 
+    additionssym, assym, indirectsym, voluntarysym, isomorphsym, intsym, char8₋tsym, 
     char32̄_tsym, binary32sym, decimal32sym, tertary32sym, unsignedsym, schemasym };
    int keyword₋count=sizeof(keyword₋texts)/sizeof(char32̄_t *);
    merge₋to₋trie(keyword₋count,keyword₋texts,keyword₋constant,&keyword₋set);
