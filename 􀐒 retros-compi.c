@@ -1,4 +1,4 @@
-/*  retros-compi.c | cross-compile (as seen in Dragon sec 11.3) and does not bootstrap. */
+/*  retros-compi.c | cross-compile (as in Dragon-book sec 11.3) with 'does not bootstrap'. */
 
 import Twinbeam;
 
@@ -9,7 +9,7 @@ import Twinbeam;
  This example is stored as an Utf-8 file and 'NFC normalized unicode' when 
  processed and identifier is similar to Unicode UAX 31.
  
-diffuse|import Fōretag-Method; ⁄* and not 'Company₋Methods' and one do not break with '$' before white space. *⁄
+diffuse Fōretag-Method; ⁄* and not 'Company₋Methods' and one do not break with '$' before white space. *⁄
  
   .partial fostrat₋defi|struct diffractive₋glass₋variables [with negotiated₋valuable]
   .end
@@ -30,21 +30,18 @@ diffuse|import Fōretag-Method; ⁄* and not 'Company₋Methods' and one do not 
   á₋priori uint8_t 𝟽₋op₋bytereverse(uint8_t b)
   á₋priori void Base𝕫(__builtin_uint_t|__builtin_int_t|__int128_t|__uint128_t ℤ, unsigned short base, unsigned short digitsOr0, void (^out)(char zeroToNineAndNeg))
   typedef __builtin_int_t Nonabsolute, structa₋middle₋index
-#if defined __x86_64__
+.IF. DEFINED __x86_64__
   typedef __uint128_t binary, binary128
-#endif
+.END.
   typedef e.g 'struct variable₋bag *' refers
-#define ◻︎ 0
-#define ◼︎ 1
-#define COROUT₋PROMINENT COROUTINE
-#define PROMINENT TRANSCRIPT
-#define PROCEDUR₋E TRANSCRIPT
-#if defined AJ₋AM₋AN₋IDENTIFIER
-#define )ᐪ ) RETURNS₋NONFAILABLE₋REFERENCE = ')'
-#define )ᐪ⁻¹ RETURNS₋FAILABLE₋REFERENCE
-#define × * OPTIONAL₋NONFAILABLE₋REFERENCE
-#define ^ᐧ ^ ᐧ
-#end
+.DEFINE. ◻︎ 0, ◼︎ 1, COROUT₋PROMINENT COROUTINE, PROMINENT TRANSCRIPT, 
+ PROCEDUR₋E TRANSCRIPT
+.IF. DEFINED AJ₋AM₋AN₋IDENTIFIER
+.DEFINE. )ᐪ ) RETURNS₋NONFAILABLE₋REFERENCE = ')'
+.DEFINE. )ᐪ⁻¹ RETURNS₋FAILABLE₋REFERENCE
+.DEFINE. × * OPTIONAL₋NONFAILABLE₋REFERENCE
+.DEFINE. ^ᐧ ^ ᐧ
+.END.
   constant uint32_t PIC32ATRISCLR = (0x1234 + 10);
   compute uint32_t sum(uint8_t a, uint8_t b) { return a+b; }
   typedef encompass₋material simd_tᵦ; /͓ specialization *̷̷
@@ -130,7 +127,7 @@ corrections extended₋characterset ⁄* with implicit 'before' and 'after'. *�
 --< @@ else if ((STATE(mode₋initial) > in next₋token₋inner
   else if (STATE(mode₋initial) && uc == U'÷') { assign₋symbol(divide,out,1); return 0; } ⁄* ⌥ + '/'. *⁄
   
-references ⁄* a․𝘬․a append 'source' when 'trace'. *⁄
+references ⁄* a․𝘬․a append source augment when 'trace'. *⁄
   
 --< { @@ int by₋tes = > in prepare₋myrtle
   print("will₋prepare₋myrtle")
@@ -154,7 +151,7 @@ references ⁄* a․𝘬․a append 'source' when 'trace'. *⁄
   ⁄* compile with run-link -o a.out example~1.detail macos.modules and the constant 'SHA1GIT' is predefined. *⁄
   
   begin₋assumption Terminalfun₋villkorat
-  location "/Library/Developer/CommandLineTools/SDKs/AmcOSX.sdk/usr/include/unistd.h"
+  location "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/unistd.h"
   when ssd "/Library/Developer/CommandLineTools/usr/lib/clang/14.0.0/include/arm_acle.h"
   includes₋assumption elsewhere₋defined
   end₋assumption
@@ -265,22 +262,22 @@ int do₋not₋link = 0;  /*  only compile to assembly listing. Do not produce b
 
 int add₋runlink₋keywords()
 {
-   char32̄_t * keyword₋texts[] = { U".INCLUDE.", U".IF.", U".END.", U".DEFINE.", 
-    U"defined", U"import", U".partial", U"fostrat₋defi", U"struct", 
-    U".end", U".definite", U"big₋endian", U"little₋endian", U".union", 
-    U"á₋priori", U"typedef", U"constant", U"compute", U"compare", U"if", 
-    U"goto",U"TRANSCRIPT", U"INEXORABLE", U"MENTATIVE", U"START", U"INLINE", 
-    U"COROUTINE", U"END", U"additions", U"as", U"indirect", U"voluntary", 
-    U"int", U"char8₋t", U"char32̄_t", U"binary32", U"decimal32", U"unsigned", 
-    U"schema" };
-   int keyword₋constant[] = { preproc₋include, preproc₋if, preproc₋end, 
-    preproc₋defined, importsym, partialsym, fostratdefisym, structsym, 
-    end₋with₋dotsym, definitesym, big₋endiansym, little₋endiansym, unionsym, 
-    apriorisym, typedefsym, constantsym, computesym, comparesym, ifsym, 
-    gotosym, transcriptsym, inexorablesym, mentativesym, startsym, inlinesym, 
-    coroutinesym, endsym, additionssym, assym, indirectsym, voluntarysym, 
-    intsym, char8₋tsym, char32̄_tsym, binary32sym, decimal32sym, tertary32sym, 
-    unsignedsym, schemasym };
+   char32̄_t * keyword₋texts[] = { U"diffuse", U".IF.", U".ELSE.", 
+    U".ELIF.", U".END.", U".INCLUDE.", U".DEFINE.", U"defined", U".partial", 
+    U"fostrat₋defi", U"struct", U".end", U".definite", U"big₋endian", 
+    U"little₋endian", U".union", U"á₋priori", U"typedef", U"constant", 
+    U"compute", U"compare", U"if", U"goto", U"TRANSCRIPT", U"INEXORABLE", 
+    U"MENTATIVE", U"START", U"INLINE", U"COROUTINE", U"END", U"additions", 
+    U"as", U"indirect", U"voluntary", U"int", U"char8₋t", U"char32̄_t", 
+    U"binary32", U"decimal32", U"unsigned", U"schema" };
+   int keyword₋constant[] = { diffusesym, preproc₋if, preproc₋else, 
+    preproc₋elif, preproc₋end, preproc₋include, preproc₋define, preproc₋defined, 
+    partialsym, fostratdefisym, structsym, end₋and₋dotsym, definitesym, 
+    big₋endiansym, little₋endiansym, unionsym, apriorisym, typedefsym, 
+    constantsym, computesym, comparesym, ifsym, gotosym, transcriptsym, 
+    inexorablesym, mentativesym, startsym, inlinesym, coroutinesym, endsym, 
+    additionssym, assym, indirectsym, voluntarysym, intsym, char8₋tsym, 
+    char32̄_tsym, binary32sym, decimal32sym, tertary32sym, unsignedsym, schemasym };
    int keyword₋count=sizeof(keyword₋texts)/sizeof(char32̄_t *);
    merge₋to₋trie(keyword₋count,keyword₋texts,keyword₋constant,&keyword₋set);
    extern int arm₋keyword₋count(); extern char32̄_t ** arm₋keyword₋list(); extern int * arm₋constant₋list();
@@ -310,14 +307,16 @@ int add₋runlink₋keywords()
 #include "╳-mips-keyword.cxx"
 #include "╳-kirkbridge-keyword.cxx"
 #include "╳-color-special.cxx"
+#include "╳-canoni-inclusion.cxx"
 #include "╳-art-linear-arm.cxx"
+#include <fcntl.h> /* the 'open' function. */
 #include <sys/stat.h>
 #include <unistd.h>
 
 int compile₋source₋files(int (*module₋compile)(struct Unicodes,char8₋t *))
 { int fd; struct stat sb; __builtin_int_t actual,bytes,i=0; char8₋t * u8path;
    __builtin_int_t count=collection₋count(&filepaths),tetras; char32̄_t * ucs=
-    Ctxt->text;
+    l₋ctxt.text.unicodes;
 again:
    if (i >= count) { goto unagain; }
    u8path = (char8₋t *)collection₋relative(i,&filepaths);
