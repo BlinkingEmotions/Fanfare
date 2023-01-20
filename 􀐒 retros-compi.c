@@ -117,12 +117,12 @@ int₋to₋sequent:
 struct Unicodes one₋filename = Run("twothree-random.c")
   
   TRANSCRIPT(attempt₋progress)
-    additions px,py as indirect traditional₋material
+    additions px,py as indirect traditional₋material ⁄* and 'void *' and 'refer'. *⁄
     *px=21,*py=13;
     dereference₋and₋swap(px,py)
   END(attempth₋progress)
   
-corrections extended₋characterset ⁄* with implicit 'before' and 'after'. *⁄
+corrections extended₋characterset ⁄* with implicit 'emboss' and 'replace' to rename 'delete', 'append' and 'change'. *⁄
   
 --< @@ else if ((STATE(mode₋initial) > in next₋token₋inner
   else if (STATE(mode₋initial) && uc == U'÷') { assign₋symbol(divide,out,1); return 0; } ⁄* ⌥ + '/'. *⁄
@@ -192,7 +192,14 @@ int inner₋next₋symbol(struct language₋context * ctxt)
    typedef int (^non₋coalescent)(char32̄_t uc);
    non₋coalescent digit = ^(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; };
    non₋coalescent letter = ^(char32̄_t uc) { return U'A' <= uc && uc <= U'Z' || (U'a' <= uc && uc <= U'z'); };
-   non₋coalescent miscella₋augment = ^(char32̄_t uc) { return uc == U'₋' || uc == U'ᵦ'; };
+   non₋coalescent miscella₋augment = ^(char32̄_t uc) { return uc == U'₋' || 
+    uc == U'ᵦ' || uc == U'ƒ' || uc == U'﹟' || uc == U'■' || uc == U'□' || 
+    uc == U'ª' || uc == U'⁻' || uc == U'⁺' || uc == U'⁽' || uc == U'⁾' || 
+    uc == U'⁄' || uc == U'₊' || uc == U'₍' || uc == U'₎' || uc == U'µ' || 
+    uc == U'√' || uc == U'∫' || uc == U'∂' || uc == U'–' || uc == U'𝐊'; };
+   non₋coalescent script = ^(char32̄_t uc) { return U'⁰' <= uc <= U'⁹' || U'₀' <= uc <= U'₉'; };
+   /* non₋coalescent indent = ^(char32̄_t uc) { return uc == U'↹' || uc == U'↩︎'; }; */
+   non₋coalescent greek = ^(char32̄_t uc) { return U'α' <= uc <= U'ω' || U'Α' <= uc <= U'Ω'; };
    🧵(identifier,trouble,completion) {
    case identifier: return 0;
    case completion: return 0;
@@ -206,7 +213,7 @@ again:
    if (STATE(mode₋initial) && uc == U'\xa') { }
    else if (uc == U'?' && uc₊₁ == U'#') { ctxt->state = mode₋single₋ekunem; }
    else if (uc == U'#' && uc₊₁ == U'?') { ctxt->state = mode₋single₋ekunem; }
-   else if (miscella₋augment(uc) || digit(uc) || letter(uc)) { confess(identifier); }
+   else if (miscella₋augment(uc) || script(uc) || greek(uc) || digit(uc) || letter(uc)) { confess(identifier); }
    goto again;
 }
 
