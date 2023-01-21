@@ -1,5 +1,6 @@
 /*  􁋹 µ-parse.c | infix computation, location, inclusion, presentation-
- prominent, folding and retrieval-correctness harvesting essentials. */
+ prominent, sequent, schema, folding and retrieval-correctness harvesting 
+ essentials. */
 
 import Twinbeam;
 
@@ -275,7 +276,7 @@ void next₋token(struct language₋context * ctxt)
   case diffusesym: token("diffuse"); break;
   case referencessym: token("references"); break;
   case dowsingsym: token("--<"); break;
-  case ellipsissym: token("..."); break;
+  case ellipsissym: token("…"); break;
   case leftrightread: token("@@"); break;
   case insym: token("in"); break;
   default: vfprint("period and non-sorted generalization.\n");
