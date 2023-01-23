@@ -16,7 +16,7 @@ enum symbol₋class { ident, number, times, divide, plus, minus, lparen,
 }; /* .IF. .ELSE. .ELIF. .END. .INCLUDE. .DEFINE. DEFINED */
 
 /* clang -g -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules      \
- '􁋹 µ-parse.c' ../Apps/Source/Releases/libTwinbeam-x86_64.a                   \
+ '􁋹 µ-parse.c' ../Apps/Source/Releases/libTwinbeam-x86_64.a                  \
   ../Apps/Additions/monolith-sequent.c */
 
 enum language₋mode { mode₋initial, mode₋integer, mode₋regular, 
@@ -431,7 +431,8 @@ void opt₋void(void) { }
 
 void block(void)
 { tree=Alloc(sizeof(struct dynamic₋bag)); tree->art=tree->var=tree->pct=ΨΛΩ;
-   while (symbol₋equal(constsym) || symbol₋equal(varsym) || symbol₋equal(procsym))
+   while (symbol₋equal(constsym) || symbol₋equal(varsym) || symbol₋equal(procsym) || 
+    symbol₋equal(schemasym) || symbol₋equal(referencessym))
    {
       switch (symbol.class)
       {
@@ -452,8 +453,8 @@ void block(void)
         if (!symbol₋equal(rparen)) { formal₋list(); list=form; } expect(rparen); 
         statement(); detail=form; House(🅟,3,cipher,list,detail); House(🅩,2,tree,form); }
         break; }
-      case schemasym: { break; }
-      case referencessym: { break; }
+      case schemasym: { expect(ident); expect(eql); expect(lparen); break; }
+      case referencessym: { expect(referencessym); expect(dowsingsym); break; }
       default: error(2,"unsupported initial keyword"); break;
       }
    }
