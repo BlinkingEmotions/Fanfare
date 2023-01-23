@@ -12,7 +12,7 @@ enum symbol₋class { ident, number, times, divide, plus, minus, lparen,
  lformalrefpressym, rformalpresentsym, rformalreferencesym, additionssym, 
  colon, label, symbol₋for₋enquery/*=40*/, end₋of₋transmission₋and₋file, 
  uninit₋symbol, logical₋alternate, logical₋and, logical₋or, logical₋not, 
- diffusesym, referencessym, dowsingsym, ellipsissym, leftrightread, insym, 
+ diffusesym, referencessym, dowsingsym, ellipsissym, leftrightread, insym, schemasym
 }; /* .IF. .ELSE. .ELIF. .END. .INCLUDE. .DEFINE. DEFINED */
 
 /* clang -g -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules      \
@@ -463,10 +463,10 @@ int main()
 {
    char32̄_t * kvlist[] = { U"constant", U"variable", U"call", U"begin", U"end", 
     U"if", U"then", U"odd", U"transcript", U"else", U"void", U"diffuse", 
-    U"references", U"in" };
+    U"references", U"in", U"schema" };
    int symlist[] = { constsym,varsym,callsym,beginsym,endsym,ifsym,thensym,
-    oddsym,procsym,elsesym,voidsym,diffusesym,referencessym, insym };
-   merge₋to₋trie(14,kvlist,symlist,&(Ctxt.keys));
+    oddsym,procsym,elsesym,voidsym,diffusesym,referencessym, insym, schemasym };
+   merge₋to₋trie(15,kvlist,symlist,&(Ctxt.keys));
    Ctxt.state=mode₋initial;
    Ctxt.tip₋unicode=0;
    Ctxt.syms₋in₋regular=0;
