@@ -61,6 +61,20 @@ struct dynamic₋bag * new₋Function(Nonabsolut symbol, struct dynamic₋bag * 
 
 int indentation=0; Argᴾ ﹟ident(Nonabsolut);
 
+Argᴾ ﹟tabula(short times)
+{ int 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 i=0;
+   Serialfragment instance = ^(serial₋present u8out, void * ctxt) {
+again:
+   u8out(U8(' '),1);
+   i+=1; goto again; };
+   Symbolfragment instance = ^(symbol₋present ucout, void * ctxt) {
+again:
+    ucout(1,U" "); i+=1; goto again; 
+   };
+   void * ctxt = (void *)0;
+   return λ₁(instance,ctxt);
+}
+
 Argᴾ ﹟r(struct dynamic₋bag * item)
 {
    return ﹟d((__builtin_uint_t)item);
@@ -70,9 +84,11 @@ void print₋datatree(int brk, struct dynamic₋bag * item)
 { int i=0;
 again:
    if (i>=brk) { goto unagain; }
-   print("⬚: ⬚ ⬚ ⬚ ⬚ ⬚ ⬚ ⬚ ⬚ ⬚ ⬚ ⬚ and ⬚\n", ﹟d((__builtin_uint_t)item),﹟d(item->T),﹟r(item->l),﹟r(item->r),
-    ﹟r(item->compare₋then),﹟r(item->compare₋else),﹟r(item->sequence),
-    ﹟r(item->element),﹟r(item->next),﹟r(item->prev),﹟r(item->formal),﹟r(item->detail), ﹟d(item->X.store.regularOrIdent));
+   print("⬚: ⬚ ⬚ ⬚ ⬚ ⬚ ⬚ ⬚ ⬚ ⬚ ⬚ ⬚ and ⬚\n", ﹟d((__builtin_uint_t)item), 
+    ﹟d(item->T),﹟r(item->l),﹟r(item->r),﹟r(item->compare₋then), 
+    ﹟r(item->compare₋else),﹟r(item->sequence),﹟r(item->element), 
+    ﹟r(item->next),﹟r(item->prev),﹟r(item->formal),﹟r(item->detail), 
+    ﹟d(item->X.store.regularOrIdent));
    i+=1; goto again;
 unagain:
    ;
@@ -85,7 +101,7 @@ void print₋tree(struct dynamic₋bag * item)
    typedef void (^Every)(struct dynamic₋bag *, Detail);
 
    Print infix = ^(char * operation) { for (int i=0; i<indentation; i+=1) { print(" "); } 
-    indentation+=1; print₋tree(item->l); indentation+=-1;
+    indentation+=1; print₋tree(item->l); indentation+=-1; 
     print("⬚ @⬚\n",﹟s7(operation),﹟d((__builtin_int_t)item->memory)); indentation+=2; 
     print₋tree(item->r); indentation+=-1; };
    Every each = ^(struct dynamic₋bag * item₋first, Detail detail) { 
