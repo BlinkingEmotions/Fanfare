@@ -65,7 +65,7 @@ Argᴾ ﹟tabula(short times)
 { int 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 i=0;
    Serialfragment instance = ^(serial₋present u8out, void * ctxt) {
 again:
-   u8out(U8(' '),1);
+   u8out(U8(" "),1);
    i+=1; goto again; };
    Symbolfragment instance = ^(symbol₋present ucout, void * ctxt) {
 again:
