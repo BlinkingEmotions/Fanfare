@@ -68,7 +68,7 @@ unagain:
 
   TRANSCRIPT(Base𝒛) ⁄* INEXORABLE MENTATIVE START INLINE COROUTINE *⁄
 Base𝕫:
-    additions cycle as unsigned short[], k=0 as short;
+    additions ⁄* retrograd *⁄ cycle as unsigned short[], k=0 as short;
     cycle[64] = { 0, ..., 0 }; k=0;
 again:
     cycle[k] = ℕ % base; N /= base; k+=1;
@@ -83,6 +83,7 @@ again:
   à₋priori definite sequent booth₋multiply(definite sequent x₁, definite sequent x₂) isomorph
   à₋priori definite sequent booth₋multiply(definite sequent x₁ as nonnull, definite sequence x₂ as nonnull)
   infix binary + definite sequent (definite sequent x₁, definite sequent x₂) isomorph is multiply(x₁,x₂)
+  unary [] definite sequent (definite sequent x₁, definite sequent x₂) isomorpg is integer(x₁,x₂)
   .symbol multiply, my₋multiply is booth₋multiply
   
   TRANSCRIPT(booth₋multiply)
@@ -122,7 +123,7 @@ struct Unicodes one₋filename = Run("twothree-random.c")
     dereference₋and₋swap(px,py)
   END(attempth₋progress)
   
-corrections extended₋characterset ⁄* with implicit 'emboss' and 'replace' to rename 'delete', 'append' and 'change'. *⁄
+corrections extended₋characterset ⁄* with implicit 'emboss' and 'replace' to rename 'stroke', 'append' and 'change'. *⁄
   
 --< @@ else if ((STATE(mode₋initial) > in next₋token₋inner
   else if (STATE(mode₋initial) && uc == U'÷') { assign₋symbol(divide,out,1); return 0; } ⁄* ⌥ + '/'. *⁄
@@ -136,6 +137,8 @@ references ⁄* a․𝘬․a append source augment when 'trace'. *⁄
   print("allocate middle at idx=⬚.\n",﹟d(idx))
   print("did₋prepare₋myrtle.\n")
   
+end-of-file
+
   ⁄* macos.modules *⁄
   module GalliumArsenide {
     module Intel_Simd { requires ssd2
@@ -330,7 +333,7 @@ again:
    fd = open((const char *)u8path, O_RDONLY | O_EXCL);
    if (fstat(fd,&sb) == -1) { goto err; }
    if (S_ISDIR(sb.st_mode)) { goto err; } bytes=sb.st_size;
-   ssize_t actual=read(fd,(const char *)u8path,bytes); /* \also cabinet-detail. */
+   ssize_t actual=read(fd,(const char *)u8path,bytes); /* \also '∎|∎ cabinet-detail.c'. */
    if (actual != bytes) { goto err; }
    ucs = Alloc(4*bytes);
    if (Utf8ToUnicode(u8bytes,u8text,ucs,&tetras)) { goto err; }
