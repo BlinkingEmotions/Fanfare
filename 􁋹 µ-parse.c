@@ -452,6 +452,8 @@ void block(void)
         if (!symbol₋equal(rparen)) { formal₋list(); list=form; } expect(rparen); 
         statement(); detail=form; House(🅟,3,cipher,list,detail); House(🅩,2,tree,form); }
         break; }
+      case schemasym: { break; }
+      case referencessym: { break; }
       default: error(2,"unsupported initial keyword"); break;
       }
    }
@@ -512,6 +514,7 @@ unagain:
  block = 'const' ident '=' number { ',' ident '=' number } block₋p₋se
    'var' ident { ',' ident } block₋p₋se
    'transcript' ident '(' { formal-list } ')' statement block₋p₋se
+   'schema' ident '=' '(' '"' text '"' '-' ... ')'
    'references' '--<' etta '@@' tvāa '>' { 'in' ident } \cr <indent augment>
  statement = ident ':=' expression
    { 'call' } ident
