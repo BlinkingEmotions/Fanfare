@@ -269,9 +269,9 @@ void next₋token(struct language₋context * ctxt)
   case end₋of₋transmission₋and₋file: token("completion"); break;
   case paragraphsym: token("'@*'"); break;
   case subsectionsym: token("'@'"); break;
-  case lformalrefpressym: token("'@<'"); break;
+  case referenceindenture₋startsym: token("'@<'"); break;
   case start₋indenturesym: token("'@>='"); break;
-  case rformalreferencesym: token("'@>'"); break;
+  case end₋referenceindenturesym: token("'@>'"); break;
   case additionssym: token("'additions'"); break;
   case label: token("label"); break;
   case diffusesym: token("diffuse"); break;
