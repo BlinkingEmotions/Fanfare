@@ -8,8 +8,8 @@ enum symbol₋class { ident, number, times, divide, plus, minus, lparen,
  rparen, eql, neq/*=10*/, lss, leq, gtr, geq, semicolon, callsym, beginsym, 
  endsym, /* whilesym, dosym, forsym */ branch₋goto₋optsym/*=20 inner and 
  outer iteration */, elsesym, thensym, ifsym, afterward, constsym, varsym, 
- procsym, period, comma, oddsym/*=30*/, voidsym, sectionsym, textsym, 
- lformalrefpressym, rformalpresentsym, rformalreferencesym, additionssym, 
+ procsym, period, comma, oddsym/*=30*/, voidsym, textsym, paragraphsym, subsectionsym, 
+ referensindenture₋startsym, end₋referenceindenturesym, start₋indenturesym, additionssym, 
  colon, label, symbol₋for₋enquery/*=40*/, end₋of₋transmission₋and₋file, 
  uninit₋symbol, logical₋alternate, logical₋and, logical₋or, logical₋not, 
  diffusesym, referencessym, dowsingsym, ellipsissym, leftrightread, insym, schemasym
@@ -178,12 +178,13 @@ again:
    else if (STATE(mode₋initial) && uc == U':') { assign₋symbol(colon,out,1); return 0; }
    else if (STATE(mode₋initial) && uc == U',') { assign₋symbol(comma,out,1); return 0; }
    else if (STATE(mode₋initial) && uc == U'.') { assign₋symbol(period,out,1); print("754 period\n"); return 0; }
-   else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'*') { assign₋symbol(sectionsym,out,2); return 0; } /* paragraph, subsection and article. */
-   else if (STATE(mode₋initial) && uc == U'@') { assign₋symbol(textsym,out,1); return 0; } /* section, claim, report and changes and subclause and indenture. */
-   else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'<') { assign₋symbol(lformalrefpressym,out,2); return 0; } /* exhibit, annex and addendum. */
-   else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'>' && uc₊2 == U'=') { assign₋symbol(rformalpresentsym,out,3); return 0; } /* schedule, expenditures, jurisdiction. */
-   else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'>') { assign₋symbol(rformalreferencesym,out,2); return 0; }
-   else if (STATE(mode₋initial) && uc == U'\x2405') { assign₋symbol(symbol₋for₋enquery,out,1); return 0; } /* first and final 'render' alternatively 'do-not-render' section in editor. */
+   else if (STATE(mode₋initial) && uc == U'"') { assign₋symbol(textsym,out,1); return 0; } /* first and final 'render' alternatively 'do-not-render' section in editor. */
+   else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'*') { assign₋symbol(paragraphsym,out,2); return 0; } /* paragraph, subsection and article. */
+   else if (STATE(mode₋initial) && uc == U'@') { assign₋symbol(subsectionsym,out,1); return 0; } /* section, claim, report and changes and subclause. */
+   else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'<') { assign₋symbol(referenceindenture₋startsym,out,2); return 0; } /* exhibit, annex and addendum. */
+   else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'>' && uc₊2 == U'=') { assign₋symbol(start₋indenture,out,3); return 0; } /* schedule, expenditures, jurisdiction. */
+   else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'>') { assign₋symbol(end₋referenceindenturesym,out,2); return 0; }
+   else if (STATE(mode₋initial) && uc == U'\x2405') { assign₋symbol(symbol₋for₋enquery,out,1); return 0; }
    else if (STATE(mode₋initial) && uc == U'-' && uc₊₁ == U'-' && uc₊2 == U'<') { assign₋symbol(dowsingsym,out,3); return 0; }
    else if (STATE(mode₋initial) && uc == U'.' && uc₊₁ == U'.' && uc₊2 == U'.') { assign₋symbol(ellipsissym,out,3); return 0; }
    else if (STATE(mode₋initial) && uc == U'…') { assign₋symbol(ellipsissym,out,1); return 0; } /* ⌥ + ';'. */
@@ -266,10 +267,10 @@ void next₋token(struct language₋context * ctxt)
   case afterward: token("':='"); break;
   case semicolon: token("';'"); break;
   case end₋of₋transmission₋and₋file: token("completion"); break;
-  case sectionsym: token("'@*'"); break;
-  case textsym: token("'@'"); break;
+  case paragraphsym: token("'@*'"); break;
+  case subsectionsym: token("'@'"); break;
   case lformalrefpressym: token("'@<'"); break;
-  case rformalpresentsym: token("'@>='"); break;
+  case start₋indenturesym: token("'@>='"); break;
   case rformalreferencesym: token("'@>'"); break;
   case additionssym: token("'additions'"); break;
   case label: token("label"); break;
@@ -453,8 +454,10 @@ void block(void)
         if (!symbol₋equal(rparen)) { formal₋list(); list=form; } expect(rparen); 
         statement(); detail=form; House(🅟,3,cipher,list,detail); House(🅩,2,tree,form); }
         break; }
-      case schemasym: { expect(ident); expect(eql); expect(lparen); break; }
-      case referencessym: { expect(referencessym); expect(dowsingsym); break; }
+      case schemasym: { Nonabsolut table; 
+        match(schemasym); expect(ident); table=symbol₋passed.gritty.store.regularOrIdent;
+        expect(eql); expect(lparen); schema₋rows(); House(🅢,3,table,tree,form); expect(rparen); break; }
+      case referencessym: { match(referencessym); expect(dowsingsym); break; }
       default: error(2,"unsupported initial keyword"); break;
       }
    }
