@@ -6,15 +6,15 @@ import Twinbeam;
 
 enum symbol₋class { ident, number, times, divide, plus, minus, lparen, 
  rparen, eql, neq/*=10*/, lss, leq, gtr, geq, semicolon, callsym, beginsym, 
- endsym, /* whilesym, dosym, forsym */ branch₋goto₋optsym/*=20 inner and 
- outer iteration */, elsesym, thensym, ifsym, afterward, constsym, varsym, 
- procsym, period, comma, oddsym/*=30*/, voidsym, text, paragraphsym, 
- subsectionsym, reference, referenceindenture₋startsym, 
- end₋referenceindenturesym, start₋indenturesym, additionssym, colon, label, 
- symbol₋for₋enquery/*=40*/, end₋of₋transmission₋and₋file, uninit₋symbol, 
+ endsym, /* whilesym, dosym, forsym */ branch₋goto₋optsym, elsesym/*=20 inner 
+ and outer iteration */, thensym, ifsym, afterward, constsym, varsym, procsym, 
+ period, comma, oddsym, voidsym/*=30*/, unicode₋text, utf8₋text, paragraphsym, 
+ start₋indenturesym, referenceindenture₋startsym, end₋referenceindenturesym, 
+ subsectionsym, additionssym, colon, label, symbol₋for₋enquery/*=41*/, 
+ end₋of₋transmission₋and₋file, unarbitrated₋symbol, 
  logical₋alternate, logical₋and, logical₋or, logical₋not, diffusesym, 
- referencessym, dowsingsym, ellipsissym, leftrightread, insym, instrumentsym, 
- schemasym, erratasym
+ referencessym, dowsingsym/*=50*/, ellipsissym, leftrightread, insym, instrumentsym, 
+ schemasym/*=55*/, erratasym
 }; /* .IF. .ELSE. .ELIF. .END. .INCLUDE. .DEFINE. DEFINED */
 
 /* clang -g -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules      \
@@ -53,9 +53,9 @@ struct language₋context {
   enum language₋mode state;
   char32̄_t regular[2048]; short syms₋in₋regular;
   __builtin_int_t ongoing; short syms₋in₋number;
+  /* short zero₋to₋nines[100]; short syms₋in₋fraction; */
   Nonabsolut reference₋quoted; short syms₋in₋quotes;
   struct source₋location interval;
-  /* short zero₋to₋nines[100]; short syms₋in₋fraction; */
   Trie keys;
 };
 
@@ -95,7 +95,7 @@ void error(int type, char text[], ...)
    va_epilogue
 }
 
-struct collection *identifiers,*texts;
+struct collection *identifiers,*text₋unicode;
 
 void assign₋symbol(enum symbol₋class s, Symbol * sym, short count₋impression)
 { sym->class=s;
@@ -135,7 +135,7 @@ int next₋token₋inner(struct language₋context * ctxt, Symbol * out)
    typedef int (^type)(char32̄_t); ctxt->carrier₁=0;
    type digit = ^(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; };
    type letter = ^(char32̄_t uc) { return U'a' <= uc && uc <= U'z'; };
-   🧵(identifier,integer₋constant,keyword,trouble,completion) {
+   🧵(identifier,integer₋constant,keyword,trouble,completion,unicode₋text) {
    case identifier: copy₋identifier(ctxt,out); ctxt->syms₋in₋regular=0; ctxt->state=mode₋initial; return 0;
    case integer₋constant: copy₋number(ctxt,out,1); ctxt->ongoing=0; ctxt->syms₋in₋number=0; ctxt->state=mode₋initial; return 0;
    case keyword: assign₋symbol(sym,out,ctxt->syms₋in₋regular); ctxt->syms₋in₋regular=0; ctxt->state=mode₋initial; return 0;
@@ -180,14 +180,14 @@ again:
    else if (STATE(mode₋initial) && uc == U',') { assign₋symbol(comma,out,1); return 0; }
    else if (STATE(mode₋initial) && uc == U'.') { assign₋symbol(period,out,1); print("754 period\n"); return 0; }
    else if (STATE(mode₋initial) && uc == U'"') {
-     ctxt->reference₋quoted = collection₋count(texts); ctxt->syms₋in₋quotes=0;
+     ctxt->reference₋quoted = collection₋count(text₋unicode); ctxt->syms₋in₋quotes=0;
      ctxt->state = mode₋quotes₋text; location₋nextcolumn(&ctxt->interval); }
    else if (STATE(mode₋quotes₋text)) {
      if (uc == U'"') {
-       if (regularpool₋datum₋text(texts,ctxt->syms₋in₋quotes,ctxt->reference₋quoted)) { confess(trouble); }
+       if (regularpool₋datum₋text(texts₋unicode,ctxt->syms₋in₋quotes,ctxt->reference₋quoted)) { confess(trouble); }
        assign₋symbol(text,out,ctxt->syms₋in₋quotes); ctxt->state = mode₋initial; return 0; }
      else { if (uc == U'\\' && uc₊₁ == U'"') { ctxt->tip₋unicode+=1; uc=U'"'; }
-       if (copy₋append₋onto₋regular(texts,1,&uc,Alloc,&ctxt->reference₋quoted)) { confess(trouble); }
+       if (copy₋append₋onto₋regular(texts₋unicode,1,&uc,Alloc,&ctxt->reference₋quoted)) { confess(trouble); }
      }
    } /* first and final 'render' alternatively 'do-not-render' section in editor. */
    else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'*') { assign₋symbol(paragraphsym,out,2); return 0; } /* paragraph, subsection and article. */
@@ -195,7 +195,8 @@ again:
    else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'>' && uc₊2 == U'=') { assign₋symbol(start₋indenturesym,out,3); return 0; } /* schedule, expenditures, jurisdiction. */
    else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'<') { assign₋symbol(referenceindenture₋startsym,out,2); return 0; } /* exhibit, annex and addendum. */
    else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'>') { assign₋symbol(end₋referenceindenturesym,out,2); return 0; }
-   else if (STATE(mode₋initial) && uc == U'\x2405') { assign₋symbol(symbol₋for₋enquery,out,1); return 0; }
+   else if (STATE(mode₋initial) && uc == U'\x2405') { assign₋symbol(symbol₋for₋enquery,out,1); return 0; } /* fold */
+   /* else if (STATE(mode₋initial) ** uc == U'\x----') { assign₋symbol(symbol₋for₋,out,1) } /* inclusion clipbook */
    else if (STATE(mode₋initial) && uc == U'-' && uc₊₁ == U'-' && uc₊2 == U'<') { assign₋symbol(dowsingsym,out,3); return 0; }
    else if (STATE(mode₋initial) && uc == U'.' && uc₊₁ == U'.' && uc₊2 == U'.') { assign₋symbol(ellipsissym,out,3); return 0; }
    else if (STATE(mode₋initial) && uc == U'…') { assign₋symbol(ellipsissym,out,1); return 0; } /* ⌥ + ';'. */
@@ -490,14 +491,14 @@ int main()
    int symlist[] = { constsym,varsym,callsym,beginsym,endsym,ifsym,thensym, 
     oddsym,procsym,elsesym,voidsym,diffusesym,referencessym,insym,
     instrumentsym,schemasym,erratasym,branch₋goto₋optsym /* procsym, 
-    reference, additionssym, uninit₋symbol, leftrightread, */ };
+    reference, additionssym, unarbitrated₋symbol, leftrightread, */ };
    merge₋to₋trie(18,kvlist,symlist,&(Ctxt.keys));
    Ctxt.state=mode₋initial;
    Ctxt.tip₋unicode=0;
    Ctxt.syms₋in₋regular=0;
    Ctxt.ongoing=0; /* Ctxt.syms₋in₋fraction=0; */
    location₋init(&Ctxt.interval);
-   symbol₋passed.class = uninit₋symbol;
+   symbol₋passed.class = unarbitrated₋symbol;
    identifiers = Alloc(sizeof(struct collection));
    if (init₋regularpool(identifiers)) { return 1; }
    texts = Alloc(sizeof(struct collection));
