@@ -4,14 +4,16 @@
 
 import Twinbeam;
 
+enum symbol₋class { ident, number, times, divide, plus, minus, lparen, 
  rparen, eql, neq/*=10*/, lss, leq, gtr, geq, semicolon, callsym, beginsym, 
  endsym, /* whilesym, dosym, forsym */ branch₋goto₋optsym/*=20 inner and 
  outer iteration */, elsesym, thensym, ifsym, afterward, constsym, varsym, 
- procsym, period, comma, oddsym/*=30*/, voidsym, text, paragraphsym, subsectionsym, 
- reference, referenceindenture₋startsym, end₋referenceindenturesym, start₋indenturesym, additionssym, 
- colon, label, symbol₋for₋enquery/*=40*/, end₋of₋transmission₋and₋file, 
- uninit₋symbol, logical₋alternate, logical₋and, logical₋or, logical₋not, 
- diffusesym, referencessym, dowsingsym, ellipsissym, leftrightread, insym, instrumentsym,
+ procsym, period, comma, oddsym/*=30*/, voidsym, text, paragraphsym, 
+ subsectionsym, reference, referenceindenture₋startsym, 
+ end₋referenceindenturesym, start₋indenturesym, additionssym, colon, label, 
+ symbol₋for₋enquery/*=40*/, end₋of₋transmission₋and₋file, uninit₋symbol, 
+ logical₋alternate, logical₋and, logical₋or, logical₋not, diffusesym, 
+ referencessym, dowsingsym, ellipsissym, leftrightread, insym, instrumentsym, 
  schemasym, erratasym
 }; /* .IF. .ELSE. .ELIF. .END. .INCLUDE. .DEFINE. DEFINED */
 
@@ -20,7 +22,7 @@ import Twinbeam;
   ../Apps/Additions/monolith-sequent.c */
 
 enum language₋mode { mode₋initial, mode₋integer, mode₋regular, 
- mode₋fixpoint, mode₋quoted₋text, mode₋collection };
+ mode₋fixpoint, mode₋quotes₋text, mode₋collection };
 
 struct source₋location {
   __builtin_int_t lineno₋first,lineno₋last,column₋first,column₋last;
@@ -179,8 +181,8 @@ again:
    else if (STATE(mode₋initial) && uc == U'.') { assign₋symbol(period,out,1); print("754 period\n"); return 0; }
    else if (STATE(mode₋initial) && uc == U'"') {
      ctxt->reference₋quoted = collection₋count(texts); ctxt->syms₋in₋quotes=0;
-     ctxt->state = mode₋quoted₋text; location₋nextcolumn(&ctxt->interval); }
-   else if (STATE(mode₋quoted₋text)) {
+     ctxt->state = mode₋quotes₋text; location₋nextcolumn(&ctxt->interval); }
+   else if (STATE(mode₋quotes₋text)) {
      if (uc == U'"') {
        if (regularpool₋datum₋text(texts,ctxt->syms₋in₋quotes,ctxt->reference₋quoted)) { confess(trouble); }
        assign₋symbol(text,out,ctxt->syms₋in₋quotes); ctxt->state = mode₋initial; return 0; }
@@ -484,10 +486,11 @@ int main()
 {
    char32̄_t * kvlist[] = { U"constant", U"variable", U"call", U"begin", U"end", 
     U"if", U"then", U"odd", U"transcript", U"else", U"void", U"diffuse", 
-    U"references", U"in", U"instrument", U"schema", U"errata",U"somthing" };
-   int symlist[] = { constsym,varsym,callsym,beginsym,endsym,ifsym,thensym,
-    oddsym,procsym,elsesym,voidsym,diffusesym,referencessym,insym,instrumentsym,schemasym,
-    erratasym, somthingsym };
+    U"references", U"in", U"instrument", U"schema", U"errata", U"branch" };
+   int symlist[] = { constsym,varsym,callsym,beginsym,endsym,ifsym,thensym, 
+    oddsym,procsym,elsesym,voidsym,diffusesym,referencessym,insym,
+    instrumentsym,schemasym,erratasym,branch₋goto₋optsym /* procsym, 
+    reference, additionssym, uninit₋symbol, leftrightread, */ };
    merge₋to₋trie(18,kvlist,symlist,&(Ctxt.keys));
    Ctxt.state=mode₋initial;
    Ctxt.tip₋unicode=0;
