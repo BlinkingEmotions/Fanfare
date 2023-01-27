@@ -453,7 +453,7 @@ void opt₋void(void) { }
 
 void opt₋associations()
 {
-   expect(text); expect(minus); do { expect(text); } while(!(symbol₋equal(rparen) || retrospect.class == text));
+   expect(unicode₋text); expect(minus); do { expect(unicode₋text); } while(!(symbol₋equal(rparen) || retrospect.class == unicode₋text));
 }
 
 void block(void)
@@ -495,10 +495,10 @@ int main()
 {
    char32̄_t * kvlist[] = { U"constant", U"variable", U"call", U"begin", U"end", 
     U"if", U"then", U"odd", U"transcript", U"else", U"void", U"diffuse", 
-    U"references", U"in", U"instrument", U"schema", U"errata", U"branch" };
+    U"references", U"in", U"present", U"schema", U"errata", U"branch" };
    int symlist[] = { constsym,varsym,callsym,beginsym,endsym,ifsym,thensym, 
     oddsym,procsym,elsesym,voidsym,diffusesym,referencessym,insym,
-    instrumentsym,schemasym,erratasym,branch₋goto₋optsym /* procsym, 
+    presentsym,schemasym,erratasym,branch₋goto₋optsym /* procsym, 
     reference, additionssym, unarbitrated₋symbol, leftrightread, */ };
    merge₋to₋trie(18,kvlist,symlist,&(Ctxt.keys));
    Ctxt.state=mode₋initial;
