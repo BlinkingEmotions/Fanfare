@@ -79,7 +79,7 @@ again:
    /* Symbolfragment instance = ^(symbol₋present ucout, void * ctxt) {
 again:
     ucout(1,U" "); i+=1; goto again; 
-   }; / * 'sems' and 'allterna' and tvā sexagesimal och trādbrott snarare 'rdex'. */
+   }; */
    void * ctxt = (void *)0;
    return ﹟λ₁(instance,ctxt);
 }
