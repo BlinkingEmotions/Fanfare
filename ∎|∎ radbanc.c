@@ -11,9 +11,9 @@ struct oval₋tree₋cons { struct oval₋tree item; union oval₋tree₋continu
 
 struct necklace { struct oval₋tree₋cons * materialºª,last; } left₋hand;
 
-int necklace₋init() { }
+int necklace₋init(int count, void (^init)(int count, struct oval₋tree ** sometime)) { }
 
-int necklace₋uninit() { }
+int necklace₋uninit(void (^uninit)(int count, struct oval₋tree ** sometime)) { }
 
 int append₋at₋end() { }
 
