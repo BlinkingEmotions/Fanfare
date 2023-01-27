@@ -6,11 +6,10 @@ struct oval₋tree { unicode₋shatter name; };
 
 union oval₋tree₋continuation { struct oval₋tree * next; __builtin_uint_t possibly₋maybe; };
 
-struct necklace { struct oval₋tree₋continuation * materialºª,last; } left₋hand;
-
-
 struct oval₋tree₋cons { struct oval₋tree item; union oval₋tree₋continuation nxt; };
 /*  non-'circular' therefore single-linked. */
+
+struct necklace { struct oval₋tree₋cons * materialºª,last; } left₋hand;
 
 int necklace₋init() { }
 
