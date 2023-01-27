@@ -330,7 +330,7 @@ struct dynamic₋bag {
   struct dynamic₋bag *next,*prev;
   struct dynamic₋bag *formal, *detail;
   __uint128_t fineprint; Nonabsolut episod;
-  struct dynamic₋bag *art,*var,*pct,*last;
+  struct dynamic₋bag *artºª,*varºª,*pctºª,*last;
   short memory,count; int leg;
   __builtin_int_t memory₋count;
 };
@@ -396,7 +396,7 @@ void condition(void)
    }
 }
 
-void actual₋list(void)
+void function₋actual₋list(void)
 { struct dynamic₋bag * car; short size=0;
    do { car=Alloc(sizeof(struct dynamic₋bag)); if (size!=0) car->next=form; 
     condition(); car->element=form; size+=1; } while(match(comma));
@@ -423,7 +423,7 @@ void statement(void)
     } while (match(comma)); /* House() */ }
    else if (match(ident)) { struct dynamic₋bag * meat=ΨΛΩ; 
     Nonabsolut callee₋and₋identifier=symbol.gritty.store.regularOrIdent;
-    if (match(lparen)) { if (!symbol₋equal(rparen)) { actual₋list(); meat=form; } expect(rparen); 
+    if (match(lparen)) { if (!symbol₋equal(rparen)) { function₋actual₋list(); meat=form; } expect(rparen); 
      House(🅣,2,meat,callee₋and₋identifier); }
     else if (match(afterward)) { condition(); House(🅕,2,callee₋and₋identifier,form); }
     else { error(2,"neither assignment, call nor introduction"); }
@@ -440,7 +440,7 @@ void opt₋second(void)
    print("secondary-non-negotiated identifier\n");
 }
 
-void formal₋list(void)
+void function₋formal₋list(void)
 { struct dynamic₋bag * car; short size=0;
    do { car=Alloc(sizeof(struct dynamic₋bag)); if (size!=0) car->next=form; expect(ident); 
     expect(/*left₋*/ ident); eltgat(/*right₋*/ident,opt₋second); 
@@ -477,7 +477,7 @@ void block(void)
       case procsym: {
         match(procsym); { Nonabsolut cipher; struct dynamic₋bag *list=ΨΛΩ,*detail; 
         expect(ident); cipher=symbol₋passed.gritty.store.regularOrIdent; expect(lparen); 
-        if (!symbol₋equal(rparen)) { formal₋list(); list=form; } expect(rparen); 
+        if (!symbol₋equal(rparen)) { function₋formal₋list(); list=form; } expect(rparen); 
         statement(); detail=form; House(🅟,3,cipher,list,detail); House(🅩,2,tree,form); }
         break; }
       case schemasym: { Nonabsolut table; 
@@ -493,14 +493,14 @@ void program(void) { next₋token(&Ctxt); block(); valid(2,end₋of₋transmissi
 
 int main()
 {
-   char32̄_t * kvlist[] = { U"constant", U"variable", U"call", U"begin", U"end", 
+   char32̄_t * keywords[] = { U"constant", U"variable", U"call", U"begin", U"end", 
     U"if", U"then", U"odd", U"transcript", U"else", U"void", U"diffuse", 
     U"references", U"in", U"present", U"schema", U"errata", U"branch" };
-   int symlist[] = { constsym,varsym,callsym,beginsym,endsym,ifsym,thensym, 
+   int symbols[] = { constsym,varsym,callsym,beginsym,endsym,ifsym,thensym, 
     oddsym,procsym,elsesym,voidsym,diffusesym,referencessym,insym,
     presentsym,schemasym,erratasym,branch₋goto₋optsym /* procsym, 
     reference, additionssym, unarbitrated₋symbol, leftrightread, */ };
-   merge₋to₋trie(18,kvlist,symlist,&(Ctxt.keys));
+   merge₋to₋trie(18,keywords,symbols,&(Ctxt.keys));
    Ctxt.state=mode₋initial;
    Ctxt.tip₋unicode=0;
    Ctxt.syms₋in₋regular=0;
