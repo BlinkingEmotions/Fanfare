@@ -8,12 +8,12 @@ enum symbol₋class { ident, number, times, divide, plus, minus, lparen,
  rparen, eql, neq/*=10*/, lss, leq, gtr, geq, semicolon, callsym, beginsym, 
  endsym, /* whilesym, dosym, forsym */ branch₋goto₋optsym, elsesym/*=20 inner 
  and outer iteration */, thensym, ifsym, afterward, constsym, varsym, procsym, 
- period, comma, oddsym, voidsym/*=30*/, unicode₋text, utf8₋text, paragraphsym, 
+ period, comma, oddsym, voidsym/*=30*/, referssym, unicode₋text, utf8₋text, paragraphsym, 
  start₋indenturesym, referenceindenture₋startsym, end₋referenceindenturesym, 
  subsectionsym, additionssym, colon, label, symbol₋for₋enquery/*=41*/, 
  end₋of₋transmission₋and₋file, unarbitrated₋symbol, 
  logical₋alternate, logical₋and, logical₋or, logical₋not, diffusesym, 
- referencessym, dowsingsym/*=50*/, ellipsissym, leftrightread, insym, instrumentsym, 
+ referencessym, dowsingsym/*=50*/, ellipsissym, leftrightread, insym, presentsym, 
  schemasym/*=55*/, erratasym
 }; /* .IF. .ELSE. .ELIF. .END. .INCLUDE. .DEFINE. DEFINED */
 
@@ -135,7 +135,7 @@ int next₋token₋inner(struct language₋context * ctxt, Symbol * out)
    typedef int (^type)(char32̄_t); ctxt->carrier₁=0;
    type digit = ^(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; };
    type letter = ^(char32̄_t uc) { return U'a' <= uc && uc <= U'z'; };
-   🧵(identifier,integer₋constant,keyword,trouble,completion,unicode₋text) {
+   🧵(identifier,integer₋constant,keyword,trouble,completion,unicode_text) {
    case identifier: copy₋identifier(ctxt,out); ctxt->syms₋in₋regular=0; ctxt->state=mode₋initial; return 0;
    case integer₋constant: copy₋number(ctxt,out,1); ctxt->ongoing=0; ctxt->syms₋in₋number=0; ctxt->state=mode₋initial; return 0;
    case keyword: assign₋symbol(sym,out,ctxt->syms₋in₋regular); ctxt->syms₋in₋regular=0; ctxt->state=mode₋initial; return 0;
@@ -184,10 +184,10 @@ again:
      ctxt->state = mode₋quotes₋text; location₋nextcolumn(&ctxt->interval); }
    else if (STATE(mode₋quotes₋text)) {
      if (uc == U'"') {
-       if (regularpool₋datum₋text(texts₋unicode,ctxt->syms₋in₋quotes,ctxt->reference₋quoted)) { confess(trouble); }
-       assign₋symbol(text,out,ctxt->syms₋in₋quotes); ctxt->state = mode₋initial; return 0; }
+       if (regularpool₋datum₋text(text₋unicode,ctxt->syms₋in₋quotes,ctxt->reference₋quoted)) { confess(trouble); }
+       assign₋symbol(unicode₋text,out,ctxt->syms₋in₋quotes); ctxt->state = mode₋initial; return 0; }
      else { if (uc == U'\\' && uc₊₁ == U'"') { ctxt->tip₋unicode+=1; uc=U'"'; }
-       if (copy₋append₋onto₋regular(texts₋unicode,1,&uc,Alloc,&ctxt->reference₋quoted)) { confess(trouble); }
+       if (copy₋append₋onto₋regular(text₋unicode,1,&uc,Alloc,&ctxt->reference₋quoted)) { confess(trouble); }
      }
    } /* first and final 'render' alternatively 'do-not-render' section in editor. */
    else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'*') { assign₋symbol(paragraphsym,out,2); return 0; } /* paragraph, subsection and article. */
@@ -196,7 +196,7 @@ again:
    else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'<') { assign₋symbol(referenceindenture₋startsym,out,2); return 0; } /* exhibit, annex and addendum. */
    else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'>') { assign₋symbol(end₋referenceindenturesym,out,2); return 0; }
    else if (STATE(mode₋initial) && uc == U'\x2405') { assign₋symbol(symbol₋for₋enquery,out,1); return 0; } /* fold */
-   /* else if (STATE(mode₋initial) ** uc == U'\x----') { assign₋symbol(symbol₋for₋,out,1) } /* inclusion clipbook */
+   /* else if (STATE(mode₋initial) ** uc == U'\x----') { assign₋symbol(symbol₋for₋,out,1) } / * inclusion clipbook */
    else if (STATE(mode₋initial) && uc == U'-' && uc₊₁ == U'-' && uc₊2 == U'<') { assign₋symbol(dowsingsym,out,3); return 0; }
    else if (STATE(mode₋initial) && uc == U'.' && uc₊₁ == U'.' && uc₊2 == U'.') { assign₋symbol(ellipsissym,out,3); return 0; }
    else if (STATE(mode₋initial) && uc == U'…') { assign₋symbol(ellipsissym,out,1); return 0; } /* ⌥ + ';'. */
@@ -279,7 +279,7 @@ void next₋token(struct language₋context * ctxt)
   case afterward: token("':='"); break;
   case semicolon: token("';'"); break;
   case end₋of₋transmission₋and₋file: token("completion"); break;
-  case text: token("\"<text>\"");
+  case unicode₋text: token("\"<text>\"");
   case paragraphsym: token("'@*'"); break;
   case subsectionsym: token("'@'"); break;
   case referenceindenture₋startsym: token("'@<'"); break;
@@ -287,12 +287,20 @@ void next₋token(struct language₋context * ctxt)
   case end₋referenceindenturesym: token("'@>'"); break;
   case additionssym: token("'additions'"); break;
   case label: token("label"); break;
-  case diffusesym: token("'diffuse'"); break;
   case referencessym: token("'references'"); break;
   case dowsingsym: token("'--<'"); break;
   case ellipsissym: token("'…'"); break;
   case leftrightread: token("'@@'"); break;
   case insym: token("'in'"); break;
+  case presentsym: token("'present'"); break;
+  case voidsym: token("'void'"); break;
+  case referssym: token("'refers'"); break;
+  case utf8₋text: token("\"<storage-text>\""); break;
+  case symbol₋for₋enquery: token("'␅'"); break;
+  case unarbitrated₋symbol: token("'𝘶𝘯𝘢𝘳𝘣𝘪𝘵𝘳𝘢𝘵𝘦𝘥'"); break;
+  case diffusesym: token("'diffuse'"); break;
+  case schemasym: token("'token'"); break;
+  case erratasym: token("'errata'"); break; /* change, remove-delete and again appaend. */
   default: vfprint("period and non-sorted generalization.\n");
   }
 #endif
@@ -422,7 +430,7 @@ void statement(void)
    }
    else if (enrich(callsym,ident)) { expect(ident); House(🅖,1,symbol₋passed.gritty.store.regularOrIdent); }
    else if (match(beginsym)) { do { statement(); } while (newline₋match(semicolon)); expect(endsym); House(🅗,1,form); }
-   else if (match(ifsym)) { condition(); expect(thensym); statement(); at₋opt(elsesym,opt₋etter); House(🅙,1,form); }
+   else if (match(ifsym)) { condition(); expect(thensym); statement(); at₋opt(elsesym,opt₋etter); House(🅙,1,cond,select1,select2); }
    /* else if (match(whilesym)) { condition(); expect(dosym); statement(); } */ /* notera att 'undvikande utav vānster' ska vara tre abstraktion. */
    else { error(2,"statement: syntax error"); next₋token(&Ctxt); }
 }
@@ -501,8 +509,8 @@ int main()
    symbol₋passed.class = unarbitrated₋symbol;
    identifiers = Alloc(sizeof(struct collection));
    if (init₋regularpool(identifiers)) { return 1; }
-   texts = Alloc(sizeof(struct collection));
-   if (init₋regularpool(texts)) { return 1; }
+   text₋unicode = Alloc(sizeof(struct collection));
+   if (init₋regularpool(text₋unicode)) { return 1; }
    text₋program = Run(U"constant abcd=321+1,dcba=123;\nvariable cdeg,gec,cgb\ntranscript foo() begin\n call window1; call window2;\nif cdeg <> gec then begin cgb:=1+1; abcd() end else begin cgb:=1-1 end end\n transcript fie()\nbegin\n call view\nend\n transcript fue()\nbegin\ncall control end");
    program();
    assign(form);
