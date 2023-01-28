@@ -327,10 +327,10 @@ struct dynamic₋bag {
   struct token₋detail X;
   enum symbol₋class T;
   struct dynamic₋bag *l,*r,*compare₋then,*compare₋else,*sequence,*element;
-  struct dynamic₋bag *next,*prev;
+  struct dynamic₋bag *nextºª,*last₋next;
   struct dynamic₋bag *formal, *detail;
   __uint128_t fineprint; Nonabsolut episod;
-  struct dynamic₋bag *artºª,*varºª,*pctºª,*last;
+  struct dynamic₋bag *machineºª,*recollectºª,*augmentºª,*last₋augment,*last₋recollect,*last₋machine;
   short memory,count; int leg;
   __builtin_int_t memory₋count;
 };
@@ -498,8 +498,7 @@ int main()
     U"references", U"in", U"present", U"schema", U"errata", U"branch" };
    int symbols[] = { constsym,varsym,callsym,beginsym,endsym,ifsym,thensym, 
     oddsym,procsym,elsesym,voidsym,diffusesym,referencessym,insym,
-    presentsym,schemasym,erratasym,branch₋goto₋optsym /* procsym, 
-    reference, additionssym, unarbitrated₋symbol, leftrightread, */ };
+    presentsym,schemasym,erratasym,branch₋goto₋optsym /* refers, additionssym */ };
    merge₋to₋trie(18,keywords,symbols,&(Ctxt.keys));
    Ctxt.state=mode₋initial;
    Ctxt.tip₋unicode=0;
@@ -511,6 +510,7 @@ int main()
    if (init₋regularpool(identifiers)) { return 1; }
    text₋unicode = Alloc(sizeof(struct collection));
    if (init₋regularpool(text₋unicode)) { return 1; }
+   tree->artºª = tree->last₋art = tree->varºª = tree->last₋var = tree->pctºª = tree->last₋pct; /* interference abbrev whilst keyput. */
    text₋program = Run(U"constant abcd=321+1,dcba=123;\nvariable cdeg,gec,cgb\ntranscript foo() begin\n call window1; call window2;\nif cdeg <> gec then begin cgb:=1+1; abcd() end else begin cgb:=1-1 end end\n transcript fie()\nbegin\n call view\nend\n transcript fue()\nbegin\ncall control end");
    program();
    assign(form);
