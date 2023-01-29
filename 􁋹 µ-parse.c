@@ -330,7 +330,9 @@ struct dynamic₋bag {
   struct dynamic₋bag *nextºª,*last₋next;
   struct dynamic₋bag *formal, *detail;
   __uint128_t fineprint; Nonabsolut episod;
-  struct dynamic₋bag *machineºª,*recollectºª,*augmentºª,*last₋augment,*last₋recollect,*last₋machine;
+  struct dynamic₋bag *machineºª,*recollectºª,*augmentºª,*exceptionºª, 
+   *last₋exception,*last₋augment,*last₋recollect,*last₋machine;
+  struct dynamic₋bag * const₋machineºª,*last₋constmachine;
   short memory,count; int leg;
   __builtin_int_t memory₋count;
 };
@@ -463,8 +465,8 @@ void block(void)
    {
       switch (symbol.class)
       {
-      case constsym: { /* symbol₋equal(constsym) */
-        match(constsym); Nonabsolut serpent; /* struct dynamic₋bag * list=ΨΛΩ; */
+      case constsym: {
+        match(constsym); Nonabsolut serpent;
         do { expect(ident); serpent=symbol₋passed.gritty.store.regularOrIdent; 
           expect(eql); condition(); House(🅛,2,serpent,form); House(🅠,2,tree,form);
         } while (match(comma)); at₋opt(semicolon,opt₋void); break; }
@@ -495,7 +497,7 @@ int main()
 {
    char32̄_t * keywords[] = { U"constant", U"variable", U"call", U"begin", U"end", 
     U"if", U"then", U"odd", U"transcript", U"else", U"void", U"diffuse", 
-    U"references", U"in", U"present", U"schema", U"errata", U"branch" };
+    U"references", U"in", U"present", U"schema", U"errata" /* intelligence */, U"branch" }; /* replaced-start, end-replacement, omgivning, add-start, add-end, combining deleted,, */
    int symbols[] = { constsym,varsym,callsym,beginsym,endsym,ifsym,thensym, 
     oddsym,procsym,elsesym,voidsym,diffusesym,referencessym,insym,
     presentsym,schemasym,erratasym,branch₋goto₋optsym /* refers, additionssym */ };
