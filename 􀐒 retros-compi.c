@@ -28,7 +28,8 @@ diffuse Fōretag-Method; ⁄* and not 'Company₋Methods' and one do not break w
   
   à₋priori definite ⁄* struct *⁄ sequent To₋precision(brain₋epsilon x)
   à₋priori uint8_t 𝟽₋op₋bytereverse(uint8_t b)
-  à₋priori void Base𝕫(__builtin_uint_t|__builtin_int_t|__int128_t|__uint128_t ℤ, unsigned short base, unsigned short digitsOr0, void (^out)(char zeroToNineAndNeg))
+  à₋priori void Base𝕫(__builtin_uint_t|__builtin_int_t|__int128_t|__uint128_t ℤ, unsigned short ba₋
+   se, unsigned short digitsOr0, void (^out)(char zeroToNineAndNeg))
   typedef __builtin_int_t Nonabsolute, structa₋middle₋index
 .IF. DEFINED __x86_64__
   typedef __uint128_t binary, binary128
@@ -62,6 +63,8 @@ again:
 @<Compute and output each digit@>=
 again:
   if (k>=0) { }
+  iter i=0 to i == 100 { }
+  { } itered i=0 to i == 100
   goto again
 unagain:
   @
@@ -100,7 +103,6 @@ again:
 int₋to₋sequent:
    additions neg as int16_t
    compare ℤ < 0 { ℤ = -ℤ; LI16 neg, 0; SEH neg }
-   ⁄* car->next=form when not₋first else ΨΛΩ *⁄
    sw $sp, 0($a0) ⁄* relative and absolute *⁄
    lw $sp, 0($a0)
    mov 8(%rdx),%rsp
@@ -136,6 +138,10 @@ references ⁄* a․𝘬․a append source augment when 'trace'. *⁄
 --< middle₋to₋include; @@ } > in prepare₋myrtle
   print("allocate middle at idx=⬚.\n",﹟d(idx))
   print("did₋prepare₋myrtle.\n")
+  
+exception
+  
+flags₋and₋notes
   
 end-of-file
 
@@ -197,7 +203,7 @@ int inner₋next₋symbol(struct language₋context * ctxt)
    non₋coalescent letter = ^(char32̄_t uc) { return U'A' <= uc && uc <= U'Z' || (U'a' <= uc && uc <= U'z'); };
    non₋coalescent miscella₋augment = ^(char32̄_t uc) { return uc == U'₋' || 
     uc == U'ᵦ' || uc == U'ƒ' || uc == U'﹟' || uc == U'■' || uc == U'□' || 
-    uc == U'ª' || uc == U'⁻' || uc == U'⁺' || uc == U'⁽' || uc == U'⁾' || 
+    uc == U'º' /* ⌥ + '0' */ || uc == U'ª' /* ⌥ + '9' */ || uc == U'⁻' || uc == U'⁺' || uc == U'⁽' || uc == U'⁾' || 
     uc == U'⁄' || uc == U'₊' || uc == U'₍' || uc == U'₎' || uc == U'µ' || 
     uc == U'√' || uc == U'∫' || uc == U'∂' || uc == U'–' || uc == U'𝐊'; };
    non₋coalescent script = ^(char32̄_t uc) { return U'⁰' <= uc <= U'⁹' || U'₀' <= uc <= U'₉'; };
