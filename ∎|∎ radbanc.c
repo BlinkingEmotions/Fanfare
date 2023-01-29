@@ -50,8 +50,9 @@ unagain:
 int unqueue(int count, void (^removed)(int count, struct oval₋tree ** 
  snapshot₋sometime), struct oval₋tree₋cons * first, struct 
  oval₋tree₋cons * last)
-{
-   
+{ int i=0; struct oval₋tree₋cons *collecta[count];
+again:
+   if (i >= count) { goto unagain; }
 }
 
 int rollback₋pop(void (^scalar)(struct oval₋tree * snapshot₋sometime), struct 
@@ -59,12 +60,12 @@ int rollback₋pop(void (^scalar)(struct oval₋tree * snapshot₋sometime), str
 
 int main()
 {
-   if (necklace₋init(0,0,left₋hand.materialºª,left₋hand.last)) { return 1; }
-   if (append₋at₋end(1,0,left₋hand.materialºª,left₋hand.last)) { return 2; }
-   if (append₋at₋end(1,0,left₋hand.materialºª,left₋hand.last)) { return 3; }
-   if (unqueue(1,0,left₋hand.materialºª,left₋hand.last)) { return 4; }
-   if (rollback₋pop(0,left₋hand.materialºª,left₋hand.last)) { return 5; }
-   if (necklace₋uninit(0,left₋hand.materialºª,left₋hand.last)) { return 7; }
+   if (necklace₋init(0,0,&left₋hand.materialºª,&left₋hand.last)) { return 1; }
+   if (append₋at₋end(1,0,&left₋hand.materialºª,&left₋hand.last)) { return 2; }
+   if (append₋at₋end(1,0,&left₋hand.materialºª,&left₋hand.last)) { return 3; }
+   if (unqueue(1,0,&left₋hand.materialºª,&left₋hand.last)) { return 4; }
+   if (rollback₋pop(0,&left₋hand.materialºª,&left₋hand.last)) { return 5; }
+   if (necklace₋uninit(0,&left₋hand.materialºª,&left₋hand.last)) { return 7; }
    return 0;
 }
 
