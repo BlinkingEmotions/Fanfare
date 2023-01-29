@@ -59,11 +59,11 @@ struct dynamic₋bag * new₋Userfunction(Nonabsolut symbol, struct dynamic₋ba
    return node;
 }
 
-struct dynamic₋bag * new₋Instrinsicfunction(Nonabsolut symbol, struct dynamic₋bag * actual, 
+struct dynamic₋bag * new₋Intrinsicfunction(Nonabsolut symbol, struct dynamic₋bag * actual, 
  struct dynamic₋bag * detail)
 {
    struct dynamic₋bag *node = Alloc(sizeof(struct dynamic₋bag));
-   struct dynamic₋bag init = { .T=procsym, .X.kind=1. .X.store.regularOrIdent=symbol };
+   struct dynamic₋bag init = { .T=procsym, .X.kind=1., .X.store.regularOrIdent=symbol };
    *node=init;
    return node;
 }
@@ -79,7 +79,8 @@ again:
    /* Symbolfragment instance = ^(symbol₋present ucout, void * ctxt) {
 again:
     ucout(1,U" "); i+=1; goto again; 
-   }; */
+   }; / * registers 'sems' = '/' possibly-maybe '⁄' and 'allterna' = 'µ' and 
+    conditional₋corrections = '^^' and tvā sexagesimal och trādbrott snarare 'rdex'. */
    void * ctxt = (void *)0;
    return ﹟λ₁(instance,ctxt);
 }
@@ -201,27 +202,27 @@ void House(int type, int count, ...)
     void * parameters = va_unqueue(struct dynamic₋bag *);
     void * detail = va_unqueue(struct dynamic₋bag *);
     form = new₋Userfunction(sy,(struct dynamic₋bag *)parameters,(struct dynamic₋bag *)detail);
-    break; } /* found in tree. */
+    break; } /* details found in tree and compilation unit. */
    case 🅠: { refers tree = va_unqueue(struct dynamic₋bag *);
     refers reads = va_unqueue(struct dynamic₋bag *);
-    if (tree->art==ΨΛΩ) { tree->art=reads; } 
+    if (tree->const₋machineºª==ΨΛΩ) { tree->const₋machineºª=reads; }
     else { reads->prev=tree->art->last; if (tree->art->last) tree->art->last->next=reads; tree->art->last=reads; }
-    break; }
+    break; } /* computed and expressed constants. */
    case 🅡: { refers tree = va_unqueue(struct dynamic₋bag *);
     refers reads = va_unqueue(struct dynamic₋bag *);
-    if (tree->var==ΨΛΩ) { tree->var=reads; }
+    if (tree->recollectºª==ΨΛΩ) { tree->recollectºª=reads; }
     else { reads->prev=tree->var->last; if (tree->var->last) tree->var->last->next=reads; tree->var->last=reads; }
-    break; }
+    break; } /* variables. */
    case 🅢: { Nonabsolut name = va_unqueue(Nonabsolut);
     refers tree = va_unqueue(struct dynamic₋bag *);
     refers table = va_unqueue(struct dynamic₋bag *);
     form = new₋Intrinsicfunction(name,(struct dynamic₋bag *)tree, (struct dynamic₋bag *)table);
-    break; } /* uses runtime. */
+    break; } /* uses runtime with no explicit details. */
    case 🅩: { refers tree = va_unqueue(struct dynamic₋bag *);
     refers reads = va_unqueue(struct dynamic₋bag *);
-    if (tree->pct == ΨΛΩ) { tree->pct=reads; }
-    else { reads->prev=tree->pct->last; if (tree->pct->last) tree->pct->last->next=reads; tree->pct->last=reads; }
-    break; }
+    if (tree->machineºª == ΨΛΩ) { tree->machineºª=reads; }
+    else { reads->prev=tree->last₋machine; if (tree->last₋machine) tree->pct->last->next=reads; tree->pct->last=reads; }
+    break; } /* procedures and functions. */
    }
    va_epilogue
 }
