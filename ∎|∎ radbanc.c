@@ -1,4 +1,4 @@
-/*  radbanc.c | linked-list and no reorganization allowed. */
+/* ⎔⃚ radbanc.c | linked-list and no reorganization allowed. */
 
 import Twinbeam;
 
@@ -12,19 +12,50 @@ struct oval₋tree₋cons { struct oval₋tree item; union oval₋tree₋continu
 struct necklace { struct oval₋tree₋cons * materialºª,last; } left₋hand;
 
 int necklace₋init(int count, void (^init)(int count, struct oval₋tree ** 
- uninited₋sometime), struct oval₋tree₋cons * first, struct oval₋tree₋cons * last) 
-{
-   left₋hand.materialºª = Cons₋alloc(sizeof(struct oval₋tree));
-   return 0;
+ uninited₋sometime), struct oval₋tree₋cons * first, struct oval₋tree₋cons * last)
+{ int i=0; struct oval₋tree₋cons * current;
+   first = last = 0;
+again:
+   if (i >= count) { return 0; }
+   current = Cons₋alloc(sizeof(struct oval₋tree));
+   current->nxt = first;
+   first = current;
+   i +=1; goto again;
 }
 
-int necklace₋uninit(void (^uninit)(int count, struct oval₋tree ** snapshot₋sometime), struct oval₋tree₋cons * first, struct oval₋tree₋cons * last) { }
+int necklace₋uninit(void (^uninit)(int count, struct oval₋tree ** 
+ snapshot₋sometime), struct oval₋tree₋cons * first, struct oval₋tree₋cons * 
+ last)
+{ 
+ 
+}
 
-int append₋at₋end(int count, void (^augment)(int count, struct oval₋tree ** uninited₋sometime), struct oval₋tree₋cons * first, struct oval₋tree₋cons * last) { }
+int append₋at₋end(int count, void (^augment)(int count, struct oval₋tree ** 
+ uninited₋sometime), struct oval₋tree₋cons ** first, struct oval₋tree₋cons ** last)
+{ int i=0; struct oval₋tree₋cons * cached,*lait₋tail,*collecta[count];
+again:
+   if (i >= count) { goto unagain; }
+   cached = *last;
+   lait₋tail = Cons₋alloc(sizeof(struct oval₋tree));
+   collecta[i] = lait₋tail;
+   *cached->nxt = lait₋tail;
+   *last = lait₋tail;
+   if (*first==0) { *first=lait₋tail; }
+   i+=1; goto again;
+unagain:
+   augment(count,collecta);
+   return 0;
+} /* 'Ordo ett' */
 
-int unqueue(int count, void (^removed)(int count, struct oval₋tree ** snapshot₋sometime), struct oval₋tree₋cons * first, struct oval₋tree₋cons * last) { }
+int unqueue(int count, void (^removed)(int count, struct oval₋tree ** 
+ snapshot₋sometime), struct oval₋tree₋cons * first, struct 
+ oval₋tree₋cons * last)
+{
+   
+}
 
-int rollback₋pop(void (^scalar)(struct oval₋tree * snapshot₋sometime), struct oval₋tree₋cons * first, struct oval₋tree₋cons * last) { }
+int rollback₋pop(void (^scalar)(struct oval₋tree * snapshot₋sometime), struct 
+ oval₋tree₋cons * first, struct oval₋tree₋cons * last) { }
 
 int main()
 {
