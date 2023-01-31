@@ -10,7 +10,7 @@ struct oval₋tree₋cons { struct oval₋tree item; union oval₋tree₋continu
 /*  non-'circular' therefore single-linked. */
 
 int rollback₋pop(void (^)(struct oval₋tree *));
-int unqueue(int count, void (^)(int, struct oval₋tree **), struct oval₋tree **, struct oval₋tree **);
+int unqueue(int, void (^)(int, struct oval₋tree **), struct oval₋tree **, struct oval₋tree **);
 int append₋at₋end(int, void (^)(int, struct oval₋tree **), struct oval₋tree **, struct oval₋tree **);
 int is₋empty(struct oval₋tree **, struct oval₋tree **);
 
