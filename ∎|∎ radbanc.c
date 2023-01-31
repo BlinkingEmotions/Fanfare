@@ -4,7 +4,7 @@ import Twinbeam;
 
 struct oval₋tree { unicode₋shatter name; };
 
-union oval₋tree₋continuation { struct oval₋tree * next; __builtin_uint_t possibly₋maybe; };
+union oval₋tree₋continuation { struct oval₋tree₋cons * next; __builtin_uint_t possibly₋maybe; };
 
 struct oval₋tree₋cons { struct oval₋tree item; union oval₋tree₋continuation nxt; };
 /*  non-'circular' therefore single-linked. */
@@ -12,9 +12,9 @@ struct oval₋tree₋cons { struct oval₋tree item; union oval₋tree₋continu
 int rollback₋pop(void (^)(struct oval₋tree *));
 int unqueue(int, void (^)(int, struct oval₋tree **), struct oval₋tree **, struct oval₋tree **);
 int append₋at₋end(int, void (^)(int, struct oval₋tree **), struct oval₋tree **, struct oval₋tree **);
-int is₋empty(struct oval₋tree **, struct oval₋tree **);
+int is₋empty(struct oval₋tree₋cons *, struct oval₋tree₋cons *);
 
-struct necklace { struct oval₋tree₋cons * materialºª,last; } left₋hand;
+struct necklace { struct oval₋tree₋cons * materialºª,*last; } left₋hand;
 
 int necklace₋init(int count, void (^init)(int count, struct oval₋tree ** 
  uninited₋sometime), struct necklace * 🅷)
@@ -23,8 +23,8 @@ int necklace₋init(int count, void (^init)(int count, struct oval₋tree **
 again:
    if (i >= count) { goto unagain; }
    current = Cons₋alloc(sizeof(struct oval₋tree));
-   current->nxt = first;
-   first = current;
+   current->nxt.next = 🅷->materialºª;
+   🅷->materialºª = current;
    i+=1; goto again;
 unagain:
    init(count,collect);
@@ -33,14 +33,16 @@ unagain:
 
 int necklace₋uninit(void (^uninit)(int count, struct oval₋tree ** 
  snapshot₋sometime), struct necklace * 🅷)
-{ 
+{
+again:
+   if (is₋empty(🅷->materialºª,🅷->last)) { return 0; }
    if (unqueue(1,^(int count, struct oval₋tree ** snapshot₋sometime) { 
      uninit(count,snapshot₋sometime);
    },&🅷->materialºª, &🅷->last)) { return -1; }
-   return 0;
+   goto again;
 }
 
-int is₋empty(struct oval₋tree * first, struct oval₋tree * last)
+int is₋empty(struct oval₋tree₋cons * first, struct oval₋tree₋cons * last)
 {
    return first == 0 && last == 0;
 }
