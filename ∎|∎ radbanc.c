@@ -16,7 +16,7 @@ int is₋empty(struct oval₋tree₋cons *, struct oval₋tree₋cons *);
 
 struct necklace { struct oval₋tree₋cons * materialºª,*last; } left₋hand;
 
-int necklace₋init(int count, void (^init)(int count, struct oval₋tree * 
+int necklace₋init(int count, void (^init)(int count, struct oval₋tree ** 
  uninited₋sometime), struct necklace * 🅷)
 { int i=0; struct oval₋tree₋cons * current; /* curl, div and rot. */
    🅷->materialºª = 🅷->last = 0; struct oval₋tree * collect[count];
@@ -36,7 +36,7 @@ int necklace₋uninit(void (^uninit)(int count, struct oval₋tree *
 {
 again:
    if (is₋empty(🅷->materialºª,🅷->last)) { return 0; }
-   if (unqueue(1,^(int count, struct oval₋tree ** snapshot₋sometime) { 
+   if (unqueue(1,^(int count, struct oval₋tree * snapshot₋sometime) { 
      uninit(count,snapshot₋sometime);
    },&🅷->materialºª, &🅷->last)) { return -1; }
    goto again;
