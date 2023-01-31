@@ -49,12 +49,13 @@ int is₋empty(struct oval₋tree₋cons * first, struct oval₋tree₋cons * la
 
 int append₋at₋end(int count, void (^augment)(int count, struct oval₋tree * 
  uninited₋sometime), struct oval₋tree₋cons ** first, struct oval₋tree₋cons ** last)
-{ int i=0; struct oval₋tree₋cons * cached,*lait₋tail,*collecta[count];
+{ int i=0; struct oval₋tree₋cons * cached,*lait₋tail; 
+   struct oval₋tree * collecta[count];
 again:
    if (i >= count) { goto unagain; }
    cached = *last;
    lait₋tail = Cons₋alloc(sizeof(struct oval₋tree));
-   collecta[i] = lait₋tail;
+   collecta[i] = &lait₋tail->item;
    *cached->nxt = lait₋tail;
    *last = lait₋tail;
    if (*first==0) { *first=lait₋tail; }
@@ -75,11 +76,12 @@ again:
    i+=1; goto again;
 unagain:
    removed(i,collecta);
+   return 0;
 }
 
 int rollback₋pop(void (^scalar)(struct oval₋tree * snapshot₋sometime), struct 
  oval₋tree₋cons ** first, struct oval₋tree₋cons ** last)
-{ oval₋tree₋cons * iter = *first;
+{ struct oval₋tree₋cons * iter = *first;
    if (iter == 0) { return -1; }
    if (iter->nxt == 0) { * return 0; }
 again:
