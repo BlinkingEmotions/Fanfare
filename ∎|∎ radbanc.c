@@ -10,13 +10,13 @@ struct oval₋tree₋cons { struct oval₋tree item; union oval₋tree₋continu
 /*  non-'circular' therefore single-linked. */
 
 int rollback₋pop(void (^)(struct oval₋tree *));
-int unqueue(int, void (^)(int, struct oval₋tree **), struct oval₋tree **, struct oval₋tree **);
-int append₋at₋end(int, void (^)(int, struct oval₋tree **), struct oval₋tree **, struct oval₋tree **);
+int unqueue(int, void (^)(int, struct oval₋tree *), struct oval₋tree₋cons **, struct oval₋tree₋cons **);
+int append₋at₋end(int, void (^)(int, struct oval₋tree *), struct oval₋tree₋cons **, struct oval₋tree₋cons **);
 int is₋empty(struct oval₋tree₋cons *, struct oval₋tree₋cons *);
 
 struct necklace { struct oval₋tree₋cons * materialºª,*last; } left₋hand;
 
-int necklace₋init(int count, void (^init)(int count, struct oval₋tree ** 
+int necklace₋init(int count, void (^init)(int count, struct oval₋tree * 
  uninited₋sometime), struct necklace * 🅷)
 { int i=0; struct oval₋tree₋cons * current; /* curl, div and rot. */
    🅷->materialºª = 🅷->last = 0; struct oval₋tree * collect[count];
@@ -31,7 +31,7 @@ unagain:
    return 0;
 }
 
-int necklace₋uninit(void (^uninit)(int count, struct oval₋tree ** 
+int necklace₋uninit(void (^uninit)(int count, struct oval₋tree * 
  snapshot₋sometime), struct necklace * 🅷)
 {
 again:
@@ -47,7 +47,7 @@ int is₋empty(struct oval₋tree₋cons * first, struct oval₋tree₋cons * la
    return first == 0 && last == 0;
 }
 
-int append₋at₋end(int count, void (^augment)(int count, struct oval₋tree ** 
+int append₋at₋end(int count, void (^augment)(int count, struct oval₋tree * 
  uninited₋sometime), struct oval₋tree₋cons ** first, struct oval₋tree₋cons ** last)
 { int i=0; struct oval₋tree₋cons * cached,*lait₋tail,*collecta[count];
 again:
@@ -64,7 +64,7 @@ unagain:
    return 0;
 } /* 'Ordo ett' */
 
-int unqueue(int count, void (^removed)(int count, struct oval₋tree ** 
+int unqueue(int count, void (^removed)(int count, struct oval₋tree * 
  snapshot₋sometime), struct oval₋tree₋cons ** first, struct 
  oval₋tree₋cons ** last)
 { int i=0; struct oval₋tree₋cons *collecta[count];
