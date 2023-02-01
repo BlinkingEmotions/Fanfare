@@ -1,10 +1,10 @@
-/* ⎔⃚ radbanc.c | linked-list and no reorganization allowed. */
+/* ⎔⃚ radbanc.c | linked-list later with no reorganization allowed. */
 
 import Twinbeam;
 
 struct oval₋tree { unicode₋shatter name; };
 
-union oval₋tree₋continuation { struct oval₋tree₋cons * next; __builtin_uint_t possibly₋maybe; };
+union oval₋tree₋continuation { /* prominent */ struct oval₋tree₋cons * next; __builtin_uint_t possibly₋maybe; };
 
 struct oval₋tree₋cons { struct oval₋tree item; union oval₋tree₋continuation nxt; };
 /*  non-'circular' therefore single-linked. */
@@ -17,28 +17,29 @@ int is₋empty(struct oval₋tree₋cons *, struct oval₋tree₋cons *);
 struct necklace { struct oval₋tree₋cons * materialºª,*last; } left₋hand;
 
 int necklace₋init(int count, void (^init)(int count, struct oval₋tree ** 
- uninited₋sometime), struct necklace * 🅷)
+ uninited₋sometime), struct oval₋tree₋cons ** first, struct oval₋tree₋cons ** last)
 { int i=0; struct oval₋tree₋cons * current; /* curl, div and rot. */
-   🅷->materialºª = 🅷->last = 0; struct oval₋tree * collect[count];
+   *first = *last = 0; struct oval₋tree * collect[count];
 again:
    if (i >= count) { goto unagain; }
    current = Cons₋alloc(sizeof(struct oval₋tree));
-   current->nxt.next = 🅷->materialºª;
-   🅷->materialºª = current;
+   current->nxt.next = *first;
+   *first = current;
+   collect[i] = current.item;
    i+=1; goto again;
 unagain:
    init(count,collect);
    return 0;
 }
 
-int necklace₋uninit(void (^uninit)(int count, struct oval₋tree * 
- snapshot₋sometime), struct necklace * 🅷)
+int necklace₋uninit(void (^before)(int count, struct oval₋tree * 
+ snapshot₋sometime), struct oval₋tree₋cons ** first, struct oval₋tree₋cons ** last)
 {
 again:
-   if (is₋empty(🅷->materialºª,🅷->last)) { return 0; }
+   if (is₋empty(*first,*last)) { return 0; }
    if (unqueue(1,^(int count, struct oval₋tree * snapshot₋sometime) { 
-     uninit(count,snapshot₋sometime);
-   },&🅷->materialºª, &🅷->last)) { return -1; }
+     before(count,snapshot₋sometime);
+   },first,last)) { return -1; }
    goto again;
 }
 
