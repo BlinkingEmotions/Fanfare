@@ -13,6 +13,8 @@ int rollback₋pop(void (^)(struct oval₋tree *), struct oval₋tree₋cons **,
 int unqueue(int, void (^)(int, struct oval₋tree **), struct oval₋tree₋cons **, struct oval₋tree₋cons **);
 int append₋at₋end(int, void (^)(int, struct oval₋tree **), struct oval₋tree₋cons **, struct oval₋tree₋cons **);
 int is₋empty(struct oval₋tree₋cons *, struct oval₋tree₋cons *);
+typedef void (^Every)(struct oval₋tree *);
+void for₋each(Every, struct oval₋tree₋cons **, struct oval₋tree₋cons **);
 
 struct necklace { struct oval₋tree₋cons * materialºª,*last; } left₋hand;
 
@@ -34,7 +36,10 @@ unagain:
 
 int necklace₋uninit(void (^before)(int count, struct oval₋tree ** 
  snapshot₋sometime), struct oval₋tree₋cons ** first, struct oval₋tree₋cons ** last)
-{ struct oval₋tree * collecta[count];
+{ __builtin_int_t 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 elements=0;
+   Every element = ^(struct oval₋tree * elem) { elements+=1; };
+   for₋each(element,first,last);
+   struct oval₋tree * collecta[elements];
 again:
    if (is₋empty(*first,*last)) { return 0; }
    if (unqueue(1,^(int count, struct oval₋tree ** snapshot₋sometime) { 
