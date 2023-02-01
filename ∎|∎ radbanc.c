@@ -14,7 +14,7 @@ int unqueue(int, void (^)(int, struct oval₋tree **), struct oval₋tree₋cons
 int append₋at₋end(int, void (^)(int, struct oval₋tree **), struct oval₋tree₋cons **, struct oval₋tree₋cons **);
 int is₋empty(struct oval₋tree₋cons *, struct oval₋tree₋cons *);
 typedef void (^Every)(struct oval₋tree *);
-void for₋each(Every, struct oval₋tree₋cons **, struct oval₋tree₋cons **);
+void recollect(Every, struct oval₋tree₋cons **, struct oval₋tree₋cons **);
 
 struct necklace { struct oval₋tree₋cons * materialºª,*last; } left₋hand;
 
@@ -55,7 +55,7 @@ int is₋empty(struct oval₋tree₋cons * first, struct oval₋tree₋cons * la
    return first == 0 && last == 0;
 }
 
-void for₋each(Every element, struct oval₋tree₋cons ** first, struct oval₋tree₋cons ** last)
+void recollect(Every element, struct oval₋tree₋cons ** first, struct oval₋tree₋cons ** last)
 { struct oval₋tree₋cons * current = *first;
 again:
    if (current == 0) { return; }
