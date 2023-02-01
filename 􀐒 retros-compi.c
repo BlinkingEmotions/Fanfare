@@ -18,7 +18,7 @@ diffuse Fōretag-Method; ⁄* and not 'Company₋Methods' and one do not break w
   .end ⁄* 'direct definite' equals 'passed as a shallow copy' and 'voluntary definite' equals 'is never null'. *⁄
   
   .fluid Tetra𝘖rUnicode
-    int32_t count, char32_t uc
+    int32_t count, char32_t uc, prominent uint32_t bits
   .end
   
   schema components=(
@@ -89,7 +89,7 @@ again:
   unary [] definite sequent (definite sequent x₁, definite sequent x₂) isomorpg is integer(x₁,x₂)
   .symbol multiply, my₋multiply is booth₋multiply
   
-  TRANSCRIPT(booth₋multiply)
+  TRANSCRIPT(booth₋multiply) PROMINENT
 booth₋multiply:
   additions ACC, mask, X1, X2 as 128 bit signed, hi,lo=0 as int, 
     y={ .detail.bits=0, .valid=0 } as definite sequent
@@ -285,7 +285,8 @@ int add₋runlink₋keywords()
     U"compute", U"compare", U"if", U"goto", U"TRANSCRIPT", U"INEXORABLE", 
     U"MENTATIVE", U"START", U"INLINE", U"COROUTINE", U"END", U"additions", 
     U"as", U"indirect", U"voluntary", U"isomorph", U"refers", U"int", 
-    U"char8₋t", U"char32̄_t", U"binary32", U"decimal32", U"unsigned", U"schema" };
+    U"char8₋t", U"char32̄_t", U"binary32", U"decimal32", U"unsigned", U"schema", 
+    U"prominent", U"PROMINENT" };
    int keyword₋constant[] = { diffusesym, preproc₋if, preproc₋else, 
     preproc₋elif, preproc₋end, preproc₋include, preproc₋define, 
     preproc₋defined, partialsym, fostratdefisym, structsym, end₋and₋dotsym, 
@@ -293,7 +294,7 @@ int add₋runlink₋keywords()
     constantsym, computesym, comparesym, ifsym, gotosym, transcriptsym, 
     inexorablesym, mentativesym, startsym, inlinesym, coroutinesym, endsym, 
     additionssym, assym, indirectsym, voluntarysym, isomorphsym, referssym, intsym, char8₋tsym, 
-    char32̄_tsym, binary32sym, decimal32sym, tertary32sym, unsignedsym, schemasym };
+    char32̄_tsym, binary32sym, decimal32sym, tertary32sym, unsignedsym, schemasym, prominentsym, prominentsym };
    int keyword₋count=sizeof(keyword₋texts)/sizeof(char32̄_t *);
    merge₋to₋trie(keyword₋count,keyword₋texts,keyword₋constant,&keyword₋set);
    extern int arm₋keyword₋count(); extern char32̄_t ** arm₋keyword₋list(); extern int * arm₋constant₋list();
