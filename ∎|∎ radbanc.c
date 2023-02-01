@@ -19,22 +19,22 @@ struct necklace { struct oval₋tree₋cons * materialºª,*last; } left₋hand;
 int necklace₋init(int count, void (^init)(int count, struct oval₋tree ** 
  uninited₋sometime), struct oval₋tree₋cons ** first, struct oval₋tree₋cons ** last)
 { int i=0; struct oval₋tree₋cons * current; /* curl, div and rot. */
-   *first = *last = 0; struct oval₋tree * collect[count];
+   *first = *last = 0; struct oval₋tree * collecta[count];
 again:
    if (i >= count) { goto unagain; }
    current = Cons₋alloc(sizeof(struct oval₋tree));
    current->nxt.next = *first;
    *first = current;
-   collect[i] = current.item;
+   collecta[i] = &current->item;
    i+=1; goto again;
 unagain:
-   init(count,collect);
+   init(count,collecta);
    return 0;
 }
 
 int necklace₋uninit(void (^before)(int count, struct oval₋tree * 
  snapshot₋sometime), struct oval₋tree₋cons ** first, struct oval₋tree₋cons ** last)
-{
+{ struct oval₋tree * collecta[count];
 again:
    if (is₋empty(*first,*last)) { return 0; }
    if (unqueue(1,^(int count, struct oval₋tree * snapshot₋sometime) { 
@@ -69,11 +69,13 @@ unagain:
 int unqueue(int count, void (^removed)(int count, struct oval₋tree * 
  snapshot₋sometime), struct oval₋tree₋cons ** first, struct 
  oval₋tree₋cons ** last)
-{ int i=0; struct oval₋tree₋cons *collecta[count];
+{ int i=0; struct oval₋tree₋cons * collecta[count];
 again:
    if (i >= count) { goto unagain; }
+   if (*first == 0) { goto unagain; }
    collecta[i] = *first;
-   *first=first->next;
+   Cons₋fallow(*first);
+   *first=first->next.nxt;
    i+=1; goto again;
 unagain:
    removed(i,collecta);
@@ -84,11 +86,10 @@ int rollback₋pop(void (^scalar)(struct oval₋tree * snapshot₋sometime), str
  oval₋tree₋cons ** first, struct oval₋tree₋cons ** last)
 { struct oval₋tree₋cons * iter = *first;
    if (iter == 0) { return -1; }
-   if (iter->nxt == 0) { * return 0; }
+   if (iter->nxt.next == *last) { *first=0; *last=0; return 0; }
 again:
-   if (iter->nxt == last) { return 0; }
-   iter = iter->nxt;
-   goto again;
+   if (iter->nxt.next == *last) { *last=iter; return 0; }
+   iter = iter->nxt; goto again;
 }
 
 int main()
