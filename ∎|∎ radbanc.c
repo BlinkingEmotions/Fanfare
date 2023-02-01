@@ -36,7 +36,7 @@ unagain:
 
 int necklace₋uninit(void (^before)(int count, struct oval₋tree ** 
  snapshot₋sometime), struct oval₋tree₋cons ** first, struct oval₋tree₋cons ** last)
-{ __builtin_int_t 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 elements=0;
+{  struct oval₋tree * addition = alloca(sizeof(struct oval₋tree *)); __builtin_int_t 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 elements=0;
    Every element = ^(struct oval₋tree * elem) { elements+=1; };
    for₋each(element,first,last);
    struct oval₋tree * collecta[elements];
