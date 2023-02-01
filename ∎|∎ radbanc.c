@@ -36,12 +36,12 @@ unagain:
 
 int necklace₋uninit(void (^before)(int count, struct oval₋tree ** 
  snapshot₋sometime), struct oval₋tree₋cons ** first, struct oval₋tree₋cons ** last)
-{ __builtin_int_t count=0; struct oval₋tree * first₋element, *last₋element; 
+{ __builtin_int_t count=0; struct oval₋tree ** first₋element, **last₋element; 
    last₋element = first₋element = alloca(sizeof(struct oval₋tree *));
 again:
    if (is₋empty(*first,*last)) { goto unagain; }
    if (unqueue(1,^(int count, struct oval₋tree ** snapshot₋sometime) { 
-     before(count,snapshot₋sometime);
+     *last₋element = *(snapshot₋sometime + 0);
    },first,last)) { return -1; }
    last₋element = alloca(sizeof(struct oval₋tree *));
    goto again;
@@ -53,6 +53,14 @@ unagain:
 int is₋empty(struct oval₋tree₋cons * first, struct oval₋tree₋cons * last)
 {
    return first == 0 && last == 0;
+}
+
+void for₋each(Every element, struct oval₋tree₋cons ** first, struct oval₋tree₋cons ** last)
+{ struct oval₋tree₋cons * current = *first;
+again:
+   if (current == 0) { return; }
+   element(&current->item);
+   current = current->nxt.next; goto again;
 }
 
 int append₋at₋end(int count, void (^augment)(int count, struct oval₋tree ** 
