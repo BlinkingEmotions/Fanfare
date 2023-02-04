@@ -148,6 +148,8 @@ references ⁄* a․𝘬․a append source augment when 'trace'. *⁄
   
 exception
   
+old₋sock  = ("recorded", "oat")
+  
 flags₋and₋notes
   
   -g
