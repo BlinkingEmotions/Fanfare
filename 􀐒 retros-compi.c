@@ -26,6 +26,7 @@ diffuse Fōretag-Method; ⁄* and not 'Company₋Methods' and one do not break w
     "c-maskin" - "🥽⋆⁻¹Fetus.cpp" "-std=c++20" "../Apps/Additions/monolith-sequent.c" "-std=c2x"
   )
   
+  
   à₋priori definite ⁄* struct *⁄ sequent To₋precision(brain₋epsilon x)
   à₋priori uint8_t 𝟽₋op₋bytereverse(uint8_t b)
   à₋priori void Base𝕫(__builtin_uint_t|__builtin_int_t|__int128_t|__uint128_t ℤ, unsigned short ba₋
@@ -114,10 +115,13 @@ int₋to₋sequent:
   ⁄* with Intel 'divss xmm0,xmm2' and divsd and Arm 'VADD.I16 q0,q1,q2'. *⁄
   
   TRANSCRIPT(dereference₋and₋swap)
-   ...
+    additions struct Unicodes one₋filename = Run("twothree-random.c")
+    additions list µlist = ("A","B","C") rollback₋pop,unqueue,append₋at₋end,for₋each,is₋empty,uninit,init
+    microlist | x 
+    x | microlist
+    microlist | _    # rollback₋pop
+
   END(dereference₋and₋swap)
-  
-struct Unicodes one₋filename = Run("twothree-random.c")
   
   TRANSCRIPT(attempt₋progress)
     additions px,py as indirect traditional₋material ⁄* and 'void *' and 'refer'. *⁄
@@ -129,6 +133,9 @@ corrections extended₋characterset ⁄* with implicit 'emboss' and 'replace' to
   
 --< @@ else if ((STATE(mode₋initial) > in next₋token₋inner
   else if (STATE(mode₋initial) && uc == U'÷') { assign₋symbol(divide,out,1); return 0; } ⁄* ⌥ + '/'. *⁄
+  
+  a̵t̵t̵e̵m̵p̵t̵₋̵p̵r̵o̵g̵r̵es̵s̵progress₋attempt
+  TRANSCRIPT(dereference₋and₋swap₋g̠e̠n̠e̠r̠a̠l̠
   
 references ⁄* a․𝘬․a append source augment when 'trace'. *⁄
   
@@ -142,6 +149,16 @@ references ⁄* a․𝘬․a append source augment when 'trace'. *⁄
 exception
   
 flags₋and₋notes
+  
+  -g
+  -I /Users/<myusername>/Projects/Monitor/Apps/
+  -std=C2x -fno-rtti -fblocks -fno-signed-char -fno-builtin -Wno-format
+  -fmodules-ts -fimplicit-modules -fmodule-map-file=🅰𝓳.modules
+  -target mipsel -mfloat-abi=soft -mcpu=mips32r6 -mabi=o32
+  -mmicromips 
+  -ffreestanding -fno-builtin -gdwarf-5
+  -D__Pic32MMCuriosity__ ⁄* -D__MZDAStarterBoard__ *⁄ 
+  -D__REFLECTIVE__
   
 end-of-file
 
