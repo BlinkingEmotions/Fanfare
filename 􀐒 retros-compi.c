@@ -92,7 +92,7 @@ again:
   
   TRANSCRIPT(booth₋multiply) PROMINENT
 booth₋multiply:
-  additions ACC, mask, X1, X2 as 128 bit signed, hi,lo=0 as int, 
+  additions ACC, mask, X1, X2 as 128₋bit signed, hi,lo=0 as int, 
     y={ .detail.bits=0, .valid=0 } as definite sequent
 again:
   END(booth₋multiply)
@@ -148,11 +148,11 @@ references ⁄* a․𝘬․a append source augment when 'trace'. *⁄
   
 exception
   
-old₋sock  = ("recorded", "oat")
+old₋sock  = ("recorded", "chester", "kommunist", "oat", "pill")
   
 flags₋and₋notes
   
-  -g
+  ⁄* -g
   -I /Users/<myusername>/Projects/Monitor/Apps/
   -std=C2x -fno-rtti -fblocks -fno-signed-char -fno-builtin -Wno-format
   -fmodules-ts -fimplicit-modules -fmodule-map-file=🅰𝓳.modules
@@ -160,7 +160,9 @@ flags₋and₋notes
   -mmicromips 
   -ffreestanding -fno-builtin -gdwarf-5
   -D__Pic32MMCuriosity__ ⁄* -D__MZDAStarterBoard__ *⁄ 
-  -D__REFLECTIVE__
+  -D__REFLECTIVE__ *⁄
+  
+  -intel-mac -T -exclude dereference₋and₋swap
   
 end-of-file
 
@@ -226,7 +228,7 @@ int inner₋next₋symbol(struct language₋context * ctxt)
     uc == U'⁄' || uc == U'₊' || uc == U'₍' || uc == U'₎' || uc == U'µ' || 
     uc == U'√' || uc == U'∫' || uc == U'∂' || uc == U'–' || uc == U'𝐊'; };
    non₋coalescent script = ^(char32̄_t uc) { return U'⁰' <= uc <= U'⁹' || U'₀' <= uc <= U'₉'; };
-   /* non₋coalescent indent = ^(char32̄_t uc) { return uc == U'↹' || uc == U'↩︎'; }; */
+   /* non₋coalescent indent = ^(char32̄_t uc) { return uc == U'↹' || uc == U'↩︎'; }; */ /* sort₋keyword₋array₋these₋days₋unalter and 'angāende sortering-sõkning utavarray med tvā processorer' */
    non₋coalescent greek = ^(char32̄_t uc) { return U'α' <= uc <= U'ω' || U'Α' <= uc <= U'Ω'; };
    🧵(identifier,trouble,completion) {
    case identifier: return 0;
@@ -277,7 +279,7 @@ struct collection notes₋ess;
 
 struct collection /* char8₋t * */ filepaths;
 
-struct collection /* char8₋t * */  modulemap₋files;
+struct collection /* char8₋t * */ modulemap₋files;
 
 struct collection /* char8₋t * */ modules₋files;
 
@@ -295,31 +297,43 @@ int library₋alt₋executable = 0; /* library=1, edecutable=2. */
 
 int do₋not₋link = 0;  /*  only compile to assembly listing. Do not produce binary file. */
 
+int do₋stream₋control; struct collection /* char8₋t * */ symbols₋uninstrumented;
+/*  for automatic inclusion of 'vfprint' in source. */
+
 int add₋runlink₋keywords()
 {
-   char32̄_t * keyword₋texts[] = { U"diffuse", U".IF.", U".ELSE.", 
-    U".ELIF.", U".END.", U".INCLUDE.", U".DEFINE.", U"defined", U".partial", 
+   char32̄_t * keyword₋texts[] = { U"diffuse", U".IF.", U".ELSE.", U".ELIF.", 
+    U".END.", U".INCLUDE.", U".DEFINE.", U"defined", U".partial", 
     U"fostrat₋defi", U"struct", U".end", U".definite", U"big₋endian", 
     U"little₋endian", U".union", U"á₋priori", U"typedef", U"constant", 
-    U"compute", U"compare", U"if", U"goto", U"TRANSCRIPT", U"INEXORABLE", 
-    U"MENTATIVE", U"START", U"INLINE", U"COROUTINE", U"END", U"additions", 
-    U"as", U"indirect", U"voluntary", U"isomorph", U"refers", U"int", 
-    U"char8₋t", U"char32̄_t", U"binary32", U"decimal32", U"unsigned", U"schema", 
-    U"prominent", U"PROMINENT" };
+    U"compute", U"compare", U"if", U"goto", U"transcript", U"TRANSCRIPT", 
+    U"inexorable", U"INEXORABLE", U"mentative", U"MENTATIVE", U"START", 
+    U"inline", U"INLINE", U"coroutine", U"COROUTINE", U"END", U"end", 
+    U"additions", U"as", U"indirect", U"voluntary", U"isomorph", U"refers", 
+    U"int", U"char8₋t", U"char32̄_t", U"binary32", U"decimal32", U"tertary32", 
+    U"tertary128", U"decimal128", U"binary128", U"unsigned", U"schema", 
+    U"prominent", U"PROMINENT", "address₋of" };
    int keyword₋constant[] = { diffusesym, preproc₋if, preproc₋else, 
     preproc₋elif, preproc₋end, preproc₋include, preproc₋define, 
     preproc₋defined, partialsym, fostratdefisym, structsym, end₋and₋dotsym, 
-    definitesym, big₋endiansym, little₋endiansym, unionsym, apriorisym, typedefsym, 
-    constantsym, computesym, comparesym, ifsym, gotosym, transcriptsym, 
-    inexorablesym, mentativesym, startsym, inlinesym, coroutinesym, endsym, 
-    additionssym, assym, indirectsym, voluntarysym, isomorphsym, referssym, intsym, char8₋tsym, 
-    char32̄_tsym, binary32sym, decimal32sym, tertary32sym, unsignedsym, schemasym, prominentsym, prominentsym };
+    definitesym, big₋endiansym, little₋endiansym, unionsym, apriorisym, 
+    typedefsym, constantsym, computesym, comparesym, ifsym, gotosym, 
+    transcriptsym, transcriptsym, inexorablesym, inexorablesym, mentativesym, 
+    mentativesym, startsym, inlinesym, inlinesym, coroutinesym, coroutinesym, 
+    endsym, additionssym, assym, indirectsym, voluntarysym, isomorphsym, 
+    referssym, intsym, char8₋tsym, char32̄_tsym, binary32sym, decimal32sym, 
+    tertary32sym, tertary128sym, decimal128sym, binary128sym, unsignedsym, 
+    schemasym, prominentsym, prominentsym, addressofsym };
    int keyword₋count=sizeof(keyword₋texts)/sizeof(char32̄_t *);
    merge₋to₋trie(keyword₋count,keyword₋texts,keyword₋constant,&keyword₋set);
-   extern int arm₋keyword₋count(); extern char32̄_t ** arm₋keyword₋list(); extern int * arm₋constant₋list();
-   extern int intel₋keyword₋count(); extern char32̄_t ** intel₋keyword₋list(); extern int * intel₋constant₋list();
-   extern int mips₋keyword₋count(); extern char32̄_t ** mips₋keyword₋list(); extern int * mips₋constant₋list();
-   extern int kirkbridge₋keyword₋count(); extern char32̄_t ** kirkbridge₋keyword₋list(); extern int * kirkbridge₋constant₋list();
+   extern int arm₋keyword₋count(); extern char32̄_t ** arm₋keyword₋list(); 
+    extern int * arm₋constant₋list();
+   extern int intel₋keyword₋count(); extern char32̄_t ** intel₋keyword₋list(); 
+    extern int * intel₋constant₋list();
+   extern int mips₋keyword₋count(); extern char32̄_t ** mips₋keyword₋list(); 
+    extern int * mips₋constant₋list();
+   extern int kirkbridge₋keyword₋count(); extern char32̄_t ** 
+    kirkbridge₋keyword₋list(); extern int * kirkbridge₋constant₋list();
    switch (platform₋chip)
    {
    case 1:
@@ -404,18 +418,24 @@ again:
 void keyput₋rewrite(char8₋t * utf8) { }
 
 int option₋machine₋interprets(int argc, char8₋t ** argv)
-{ int i=1,y,output₋filepath=0; char8₋t * token, *msg=U8("");
+{ int i=1,y,output₋filepath=0,symbol₋exclude=0; char8₋t * token, *msg=U8("");
 again:
    if (i>=argc) { goto unagain; }
    token = *(argv + i);
    keyput₋rewrite(token);
-   if (output₋filepath) { vfprint("output is ⬚\n", ﹟s8(token)); outputfile₋path=token; output₋filepath=0; goto next; }
+   if (output₋filepath) { vfprint("output is ⬚\n",﹟s8(token)); outputfile₋path=token; output₋filepath=0; goto next; }
+   if (symbol₋exclude) { vfprint("control added to ⬚\n",﹟s8(token)); if (copy₋append₋items(1,token,&symbols₋uninstrumented,Alloc)) { goto generic₋error; } goto next; }
+   symbol₋exclude=0; goto next; }
    y = IsPrefixOrEqual((const char *)token,"-v");
    if (y == 0) { salutant=true; goto next; }
    y = IsPrefixOrEqual((const char *)token,"-h");
    if (y == 0) { salutant=true; procuratio=true; goto next; }
    y = IsPrefixOrEqual((const char *)token,"-c");
    if (y == 0) { do₋not₋link=true; goto next; }
+   y = IsPrefixOrEqual((const char *)token,"-T");
+   if (y == 0) { do₋stream₋control=true; goto next; }
+   y = IsPrefixOrEqual((const char *)token,"-exclude");
+   if (y == 0) { symbol₋exclude=1; }
    y = IsPrefixOrEqual((const char *)token,"-library");
    if (y == 0) { library₋alt₋executable=1; goto next; }
    y = IsPrefixOrEqual((const char *)token,"-deliverable");
@@ -449,12 +469,14 @@ void help()
 { const char * text = 
 "usage run-link [options] <.detail, .incl, .S, .modules and .modulemap input files>\n" /* llvm '.S' files. */
 "\noptions\n\n"
-" -v  verbose output\n"
-" -h  display help\n"
-" -c  do not link\n"
+" -v  verbose output.\n"
+" -h  display help.\n"
+" -c  do not link.\n"
+" -T  incorporate instrumentation with deliverable.\n"
+" -exclude <symbol>  when '-T', unincorporate instrumentation from symbol\n"
 " -library  build library and not executable\n"
 " -deliverable  build not library but executable\n"
-" -put <path and .asm file>\n" /* .cumpani alternatively a.out alternatively 'ess-pe'. */
+" -put <path and .asm file>  indicate location for intermediate\n" /* .cumpani alternatively a.out alternatively 'ess-pe'. */
 "\nplatforms\n\n"
 " -intel-mac\n"
 " -pic-mips\n"
