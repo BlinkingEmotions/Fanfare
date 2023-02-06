@@ -10,7 +10,7 @@ union oval₋tree₋continuation { /* default */ struct oval₋tree₋cons * nex
 struct oval₋tree₋cons { struct oval₋tree * item; union oval₋tree₋continuation 
  nxt; }; /*  non-'circular' therefore single-linked. */
 
-int append₋at₋end(int, void (^)(int, * refers), sffdress₋of refers, address₋
+int append₋at₋end(int, void (^)(int, * refers), address₋of refers, address₋
  of refers) alternates;
 int unqueue(int, void (^)(int, * refers), address₋of refers, address₋of refers) 
  alternates;
