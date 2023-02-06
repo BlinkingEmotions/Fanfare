@@ -117,10 +117,7 @@ int₋to₋sequent:
   TRANSCRIPT(dereference₋and₋swap)
     additions struct Unicodes one₋filename = Run("twothree-random.c")
     additions list µlist = ("A","B","C") rollback₋pop,unqueue,append₋at₋end,for₋each,is₋empty,uninit,init
-    microlist | x 
-    x | microlist
-    microlist | _    # rollback₋pop
-
+    4(one₋filename) = '\u2425'
   END(dereference₋and₋swap)
   
   TRANSCRIPT(attempt₋progress)
