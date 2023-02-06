@@ -166,5 +166,5 @@ main(
   clang -g -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules      \
    '∎|∎ radbanc.c' ../Apps/Source/Releases/libTwinbeam-x86_64.a
  
- \also 'sys/queue.h' and similar to 'struct.h'. */
+ \also 'sys/queue.h' and 'struct.h'. */
 
