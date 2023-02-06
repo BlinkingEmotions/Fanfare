@@ -10,14 +10,14 @@ union oval₋tree₋continuation { /* default */ struct oval₋tree₋cons * nex
 struct oval₋tree₋cons { struct oval₋tree * item; union oval₋tree₋continuation 
  nxt; }; /*  non-'circular' therefore single-linked. */
 
-int append₋at₋end(int, void (^)(int, * refers), address₋of refers, address₋
+/* int append₋at₋end(int, void (^)(int, * refers), address₋of refers, address₋
  of refers) alternates;
 int unqueue(int, void (^)(int, * refers), address₋of refers, address₋of refers) 
  alternates;
 int rollback₋pop(void (^)(refers), address₋of refers, address₋of refers) 
  alternates;
 int is₋empty(address₋of refers, address₋of refers) alternates;
-void recollect(void (^every)(refers)) alternates;
+void recollect(void (^every)(refers)) alternates; */
 
 int append₋at₋end(int, void (^)(int, struct oval₋tree **), struct 
  oval₋tree₋cons **, struct oval₋tree₋cons **) ⓣ;
@@ -29,10 +29,11 @@ int is₋empty(struct oval₋tree₋cons *, struct oval₋tree₋cons *) ⓣ;
 typedef void (^Every)(struct oval₋tree *) ⓣ;
 void recollect(Every, struct oval₋tree₋cons *, struct oval₋tree₋cons *) ⓣ;
 
-int append₋at₋end(int, void (^)(int, struct oval₋tre **), struct 
- oval₋tree₋cons **, struct oval₋tree₋cons **) ⓣ;
+int append₋at₋end(int, void (^)(int, void **), void **, void **) ⓣ;
 int unqueue(int, void (^)(int, void **), void **, void **) ⓣ;
 int rollback₋pop(void (^)(void *), void **, void **) ⓣ; 
+int is₋empty(void *, void *) ⓣ;
+void recollect(void (^every)(void *)) ⓣ;
 
 int append₋at₋end(int count, void (^augment)(int count, struct oval₋tree ** 
  uninited₋sometime), struct oval₋tree₋cons ** first, struct oval₋tree₋cons ** 
