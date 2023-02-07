@@ -11,7 +11,7 @@ int rollback₋pop(void (^)(refers), address₋of refers, address₋of refers)
 int is₋empty(address₋of refers, address₋of refers) alternates;
 void recollect(void (^every)(refers)) alternates; */
 
-int append₋at₋end(int, void (^)(int, void **), void **, void **) ⓣ;
+int append₋at₋end(int, void (^)(int, void **), void **, void **, int) ⓣ;
 int unqueue(int, void (^)(int, void **), void **, void **) ⓣ;
 int rollback₋pop(void (^)(void *), void **, void **) ⓣ; 
 int is₋empty(void *, void *) ⓣ;
@@ -23,15 +23,17 @@ union cell₋continuation { /* default */ Conscell * next; __builtin_uint_t poss
 
 struct cons₋cell { Material * item; union cell₋continuation nxt; };
 
+typedef struct cons₋cell Cons₋cell;
+
 int append₋at₋end(int count, void (^augment)(int count, Material ** 
- uninited₋sometime), Conscell ** first, Conscell ** last) ⓣ
-{ int i=0; cons₋cell * cached,*lait₋tail; 
+ uninited₋sometime), Conscell ** first, Conscell ** last, int sizeof₋material) ⓣ
+{ int i=0; struct cons₋cell * cached,*lait₋tail; 
    Material * collect[count];
 again:
    if (i >= count) { goto unagain; }
-   cached = *last;
+   cached = (Cons₋cell *)*last;
    lait₋tail = Cons₋alloc(sizeof(Material *) + sizeof(Conscell *)); /* unfortunately type-error. */
-   lait₋tail->item = Heap₋alloc(sizeof(struct oval₋tree)); lait₋tail->nxt.next=0;
+   lait₋tail->item = Heap₋alloc(sizeof₋material); lait₋tail->nxt.next=0;
    collect[i] = lait₋tail->item;
    if (cached) cached->nxt.next = lait₋tail;
    *last = lait₋tail;
@@ -44,14 +46,14 @@ unagain:
 
 int unqueue(int count, void (^removed)(int count, Material ** 
  snapshot₋sometime), Conscell ** first, Conscell ** last) ⓣ
-{ int i=0; Material * collect[count];
+{ int i=0; Material * collect[count]; Cons₋cell ** First=(Cons₋cell **)first;
 again:
    if (i >= count) { goto unagain; }
    if (*first == 0) { goto unagain; }
-   collect[i] = (*first)->item;
-   Heap₋unalloc((*first)->item);
+   collect[i] = (*First)->item;
+   Heap₋unalloc((*First)->item);
    Cons₋fallow(*first); /* unfortunately sometime not-overwritten. */
-   *first=(*first)->nxt.next;
+   *first=(*First)->nxt.next;
    i+=1; goto again;
 unagain:
    if (removed) removed(i,collect); /* unfortunately sometime null,... */
@@ -60,7 +62,7 @@ unagain:
 
 int rollback₋pop(void (^scalar)(Material * snapshot₋sometime), Conscell ** 
  first, Conscell ** last) ⓣ
-{ Conscell * iter = *first;
+{ Cons₋cell * iter = *(Cons₋cell **)first;
    if (iter == 0) { return -1; }
    if (iter->nxt.next == *last) { *first=0; *last=0; return 0; }
 again:
@@ -74,7 +76,7 @@ int is₋empty(Conscell * first, Conscell * last) ⓣ
 }
 
 void recollect(void (^element)(Material *), Conscell * first, Conscell * last) ⓣ
-{ Conscell * current = first;
+{ Cons₋cell * current = (Cons₋cell *)first;
 again:
    if (current == 0) { goto unagain; }
    element(current->item);
@@ -98,7 +100,7 @@ int append₋at₋end(int count, void (^augment)(int, struct oval₋tree **), st
  oval₋tree₋cons ** first, struct oval₋tree₋cons ** last) ⓣ
 {
    return append₋at₋end(count,^(int count, void ** uninited₋sometime) { 
-    augment(count,uninited₋sometime); },first,last);
+    augment(count,uninited₋sometime); },first,last,sizeof(struct oval₋tree));
 }
 
 int unqueue(int count, void (^removed)(int, struct oval₋tree **), struct 
@@ -193,6 +195,7 @@ main(
      print("rollback ⬚",﹟S(Heap₋object₋size(snapshot₋sometime->name), 
       snapshot₋sometime->name));
    },&left₋hand.materialºª,&left₋hand.last)) { return 5; }
+   typedef void (^Every)(struct oval₋tree *);
    Every every = ^(struct oval₋tree * car) { vfprint("car is '⬚'\n", 
     ﹟S(Heap₋object₋size(car->name)/4,car->name)); };
    recollect(every,left₋hand.materialºª,left₋hand.last);
