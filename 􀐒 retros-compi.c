@@ -224,9 +224,9 @@ int inner₋next₋symbol(struct language₋context * ctxt)
     uc == U'º' /* ⌥ + '0' */ || uc == U'ª' /* ⌥ + '9' */ || uc == U'⁻' || uc == U'⁺' || uc == U'⁽' || uc == U'⁾' || 
     uc == U'⁄' || uc == U'₊' || uc == U'₍' || uc == U'₎' || uc == U'µ' || 
     uc == U'√' || uc == U'∫' || uc == U'∂' || uc == U'–' || uc == U'𝐊'; };
-   non₋coalescent script = ^(char32̄_t uc) { return U'⁰' <= uc <= U'⁹' || U'₀' <= uc <= U'₉'; };
+   non₋coalescent script = ^(char32̄_t uc) { return (U'⁰' <= uc && uc <= U'⁹') || (U'₀' <= uc && uc <= U'₉'); };
    /* non₋coalescent indent = ^(char32̄_t uc) { return uc == U'↹' || uc == U'↩︎'; }; */ /* sort₋keyword₋array₋these₋days₋unalter and 'angāende sortering-sõkning utavarray med tvā processorer' */
-   non₋coalescent greek = ^(char32̄_t uc) { return U'α' <= uc <= U'ω' || U'Α' <= uc <= U'Ω'; };
+   non₋coalescent greek = ^(char32̄_t uc) { return (U'α' <= uc && uc <= U'ω') || (U'Α' <= uc && uc <= U'Ω'); };
    🧵(identifier,trouble,completion) {
    case identifier: return 0;
    case completion: return 0;
@@ -294,7 +294,7 @@ int library₋alt₋executable = 0; /* library=1, edecutable=2. */
 
 int do₋not₋link = 0;  /*  only compile to assembly listing. Do not produce binary file. */
 
-int do₋stream₋control; struct collection /* char8₋t * */ symbols₋uninstrumented;
+int control₋branch; struct collection /* char8₋t * */ symbols₋uninstrumented;
 /*  for automatic inclusion of 'vfprint' in source. */
 
 int add₋runlink₋keywords()
@@ -309,7 +309,7 @@ int add₋runlink₋keywords()
     U"additions", U"as", U"indirect", U"voluntary", U"isomorph", U"refers", 
     U"int", U"char8₋t", U"char32̄_t", U"binary32", U"decimal32", U"tertary32", 
     U"tertary128", U"decimal128", U"binary128", U"unsigned", U"schema", 
-    U"prominent", U"PROMINENT", "address₋of" };
+    U"prominent", U"PROMINENT", U"address₋of", U"alternates" };
    int keyword₋constant[] = { diffusesym, preproc₋if, preproc₋else, 
     preproc₋elif, preproc₋end, preproc₋include, preproc₋define, 
     preproc₋defined, partialsym, fostratdefisym, structsym, end₋and₋dotsym, 
@@ -320,7 +320,7 @@ int add₋runlink₋keywords()
     endsym, additionssym, assym, indirectsym, voluntarysym, isomorphsym, 
     referssym, intsym, char8₋tsym, char32̄_tsym, binary32sym, decimal32sym, 
     tertary32sym, tertary128sym, decimal128sym, binary128sym, unsignedsym, 
-    schemasym, prominentsym, prominentsym, addressofsym };
+    schemasym, prominentsym, prominentsym, addressofsym, alternatessym };
    int keyword₋count=sizeof(keyword₋texts)/sizeof(char32̄_t *);
    merge₋to₋trie(keyword₋count,keyword₋texts,keyword₋constant,&keyword₋set);
    extern int arm₋keyword₋count(); extern char32̄_t ** arm₋keyword₋list(); 
@@ -361,27 +361,27 @@ int add₋runlink₋keywords()
 #include <unistd.h>
 
 int compile₋source₋files(int (*module₋compile)(struct Unicodes,char8₋t *))
-{ int fd; struct stat sb; __builtin_int_t actual,bytes,i=0; char8₋t * u8path;
+{ int fd; struct stat sb; __builtin_int_t u8bytes,i=0; char8₋t * u8path,*u8text;
    __builtin_int_t count=collection₋count(&filepaths),tetras; char32̄_t * ucs=
-    l₋ctxt.text.unicodes;
+    l₋ctxt.text.unicodes; ssize_t actual;
 again:
    if (i >= count) { goto unagain; }
    u8path = (char8₋t *)collection₋relative(i,&filepaths);
    fd = open((const char *)u8path, O_RDONLY | O_EXCL);
    if (fstat(fd,&sb) == -1) { goto err; }
-   if (S_ISDIR(sb.st_mode)) { goto err; } bytes=sb.st_size;
-   ssize_t actual=read(fd,(const char *)u8path,bytes); /* \also '∎|∎ cabinet-detail.c'. */
-   if (actual != bytes) { goto err; }
-   ucs = Alloc(4*bytes);
+   if (S_ISDIR(sb.st_mode)) { goto err; } u8bytes=sb.st_size;
+   actual=read(fd,(void *)u8text,u8bytes); /* \also '∎|∎ cabinet-detail.c'. */
+   if (actual != u8bytes) { goto err; }
+   ucs = Alloc(4*u8bytes);
    if (Utf8ToUnicode(u8bytes,u8text,ucs,&tetras)) { goto err; }
-   if (mprot(addr,tetras,PROT_READ)) { goto err; }
+   /* if (mprot(addr,tetras,PROT_READ)) { goto err; } */
    /* translation₋unit(); */
    Fallow(ucs);
-   if (fclose(fd) == -1) { vfprint("unable to close '⬚'.\n"); goto unagain; }
+   if (close(fd) == -1) { vfprint("unable to close '⬚'.\n"); goto unagain; }
    i+=1; goto again;
 err:
-   vfprint("error when reading source file '⬚'.\n", s8(u8path));
-   if (fclose(fd) == -1) { return -1; }
+   vfprint("error when reading source file '⬚'.\n", ﹟s8(u8path));
+   if (close(fd) == -1) { return -1; }
 unagain:
    return 0;
 }
@@ -391,7 +391,7 @@ int compile₋source₋module(struct Unicodes modulename, char8₋t * source₋p
    typedef void (^Complete)(ditriaconta);
    typedef void (^Touch)(int *);
    Touch touch = ^(int *) { };
-   Complete complete = (ditriaconta digest) { };
+   Complete complete = ^(ditriaconta digest) { };
    uint8_t * source₋path; __builtin_int_t bytes = Utf8BytesUntilZero(source₋path,BUILTIN₋INT₋MAX); /* consider moved source files. */
    if (Hash(source₋path,bytes,touch,complete)) { return -1; }
    vfprint("find .pct alternatively translate and store precompiled headers in module '⬚'.\n");
@@ -430,7 +430,7 @@ again:
    y = IsPrefixOrEqual((const char *)token,"-c");
    if (y == 0) { do₋not₋link=true; goto next; }
    y = IsPrefixOrEqual((const char *)token,"-T");
-   if (y == 0) { do₋stream₋control=true; goto next; }
+   if (y == 0) { control₋stream=true; goto next; }
    y = IsPrefixOrEqual((const char *)token,"-exclude");
    if (y == 0) { symbol₋exclude=1; }
    y = IsPrefixOrEqual((const char *)token,"-library");
