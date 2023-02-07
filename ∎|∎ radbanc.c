@@ -19,14 +19,16 @@ void recollect(void (^every)(void *)) ⓣ;
 
 typedef void Material; typedef void Conscell;
 
-union cell₋continuation { /* default */ Conscell * next; __builtin_uint_t possibly₋maybe; };
+union cell₋continuation { /* default */ Conscell * next; __builtin_uint_t 
+ possibly₋maybe; };
 
 struct cons₋cell { Material * item; union cell₋continuation nxt; };
 
 typedef struct cons₋cell Cons₋cell;
 
 int append₋at₋end(int count, void (^augment)(int count, Material ** 
- uninited₋sometime), Conscell ** first, Conscell ** last, int sizeof₋material) ⓣ
+ uninited₋sometime), Conscell ** first, Conscell ** last, 
+ int sizeof₋material) ⓣ
 { int i=0; struct cons₋cell * cached,*lait₋tail; 
    Material * collect[count];
 again:
@@ -100,8 +102,8 @@ int append₋at₋end(int count, void (^augment)(int, struct oval₋tree **), st
  oval₋tree₋cons ** first, struct oval₋tree₋cons ** last) ⓣ
 {
    return append₋at₋end(count,^(int count, void ** uninited₋sometime) { 
-    augment(count,(struct oval₋tree **)uninited₋sometime); },(void **)first,(void **)last,
-     sizeof(struct oval₋tree));
+    augment(count,(struct oval₋tree **)uninited₋sometime); },(void **)first,
+     (void **)last,sizeof(struct oval₋tree));
 }
 
 int unqueue(int count, void (^removed)(int, struct oval₋tree **), struct 
