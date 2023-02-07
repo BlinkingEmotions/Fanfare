@@ -100,7 +100,8 @@ int append₋at₋end(int count, void (^augment)(int, struct oval₋tree **), st
  oval₋tree₋cons ** first, struct oval₋tree₋cons ** last) ⓣ
 {
    return append₋at₋end(count,^(int count, void ** uninited₋sometime) { 
-    augment(count,uninited₋sometime); },first,last,sizeof(struct oval₋tree));
+    augment(count,(struct oval₋tree **)uninited₋sometime); },first,last,
+     sizeof(struct oval₋tree));
 }
 
 int unqueue(int count, void (^removed)(int, struct oval₋tree **), struct 
