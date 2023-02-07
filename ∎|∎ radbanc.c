@@ -100,7 +100,7 @@ int append₋at₋end(int count, void (^augment)(int, struct oval₋tree **), st
  oval₋tree₋cons ** first, struct oval₋tree₋cons ** last) ⓣ
 {
    return append₋at₋end(count,^(int count, void ** uninited₋sometime) { 
-    augment(count,(struct oval₋tree **)uninited₋sometime); },first,last,
+    augment(count,(struct oval₋tree **)uninited₋sometime); },(void **)first,(void **)last,
      sizeof(struct oval₋tree));
 }
 
@@ -108,14 +108,14 @@ int unqueue(int count, void (^removed)(int, struct oval₋tree **), struct
  oval₋tree₋cons ** first, struct oval₋tree₋cons ** last) ⓣ
 {
    return unqueue(count, ^(int count, void ** snapshot₋sometime) { 
-    removed(count,(struct oval₋tree **)snapshot₋sometime); },first,last);
+    removed(count,(struct oval₋tree **)snapshot₋sometime); },(void **)first,(void **)last);
 }
 
 int rollback₋pop(void (^scalar)(struct oval₋tree *), struct oval₋tree₋cons ** 
  first, struct oval₋tree₋cons ** last) ⓣ
 {
    return rollback₋pop(^(void * snapshot₋sometime) { 
-    scalar(snapshot₋sometime); },first,last);
+    scalar((struct oval₋tree *)snapshot₋sometime); },(void **)first,(void **)last);
 }
 
 int is₋empty(struct oval₋tree₋cons * first, struct oval₋tree₋cons * last) ⓣ
