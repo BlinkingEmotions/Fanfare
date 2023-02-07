@@ -15,7 +15,7 @@ int append₋at₋end(int, void (^)(int, void **), void **, void **, int) ⓣ;
 int unqueue(int, void (^)(int, void **), void **, void **) ⓣ;
 int rollback₋pop(void (^)(void *), void **, void **) ⓣ; 
 int is₋empty(void *, void *) ⓣ;
-void recollect(void (^every)(void *)) ⓣ;
+void recollect(void (^every)(void *),void *,void *) ⓣ;
 
 typedef void Material; typedef void Conscell;
 
@@ -98,13 +98,17 @@ union oval₋tree₋continuation { /* default */ struct oval₋tree₋cons * nex
 struct oval₋tree₋cons { struct oval₋tree * item; union oval₋tree₋continuation 
  nxt; }; /*  non-'circular' therefore single-linked. */
 
-typedef void ** (*paramet₋to₋automat)(struct oval₋tree₋cons **);
-typedef struct oval₋tree₋cons ** (*variant₋fromto)(void **);
-typedef struct ship₋relation { paramet₋to₋automat special1; variant₋fromto special2; int sizeof₋material; } refers;
+typedef void ** (^paramet₋to₋automat)(struct oval₋tree₋cons **);
+typedef struct oval₋tree ** (^variant₋fromto₋array)(void **);
+typedef struct oval₋tree * (^variant₋fromto₋indirect₋toread)(void *);
+
+typedef struct ship₋relation { paramet₋to₋automat special1; variant₋fromto₋array 
+ special2; int sizeof₋material; variant₋fromto₋indirect₋toread special3; } refers;
 struct ship₋relation areel = {
  .special1 = ^(struct oval₋tree₋cons ** input) { return (void **)input; }, 
- .special2 = ^(void ** input) { return (struct oval₋tree₋cons **)input; }, 
- .sizeof₋material = sizeof(struct oval₋tree)
+ .special2 = ^(void ** input) { return (struct oval₋tree **)input; }, 
+ .sizeof₋material = sizeof(struct oval₋tree), 
+ .special3 = ^(void * input) { return (struct oval₋tree *)input; }
 };
 
 int append₋at₋end(int count, void (^augment)(int, struct oval₋tree **), struct 
@@ -119,15 +123,15 @@ int unqueue(int count, void (^removed)(int, struct oval₋tree **), struct
  oval₋tree₋cons ** first, struct oval₋tree₋cons ** last, struct ship₋relation reel) ⓣ
 {
    return unqueue(count, ^(int count, void ** snapshot₋sometime) { 
-    removed(count,(struct oval₋tree **)snapshot₋sometime); },(void **)first,
-     (void **)last);
+    removed(count,reel.special2(snapshot₋sometime)); },reel.special1(first),
+     reel.special1(last));
 }
 
 int rollback₋pop(void (^scalar)(struct oval₋tree *), struct oval₋tree₋cons ** 
  first, struct oval₋tree₋cons ** last, struct ship₋relation reel) ⓣ
 {
    return rollback₋pop(^(void * snapshot₋sometime) { 
-    scalar(reel.special2(snapshot₋sometime)); },reel.special1(first),
+    scalar(reel.special3(snapshot₋sometime)); },reel.special1(first),
      reel.special1(last));
 }
 
@@ -140,7 +144,7 @@ int is₋empty(struct oval₋tree₋cons * first, struct oval₋tree₋cons * la
 void recollect(void (^every)(struct oval₋tree * item), struct oval₋tree₋cons 
  * first, struct oval₋tree₋cons * last, struct ship₋relation reel) ⓣ
 {
-   recollect(^(void * item) { every(reel.special2(item)); },first,last);
+   recollect(^(void * item) { every(reel.special3(item)); },first,last);
 }
 
 struct necklace { struct oval₋tree₋cons * materialºª,*last; } left₋hand;
@@ -168,14 +172,15 @@ unagain:
 int 
 necklace₋uninit(
   void (^before)(int count, struct oval₋tree ** snapshot₋sometime), 
-  struct oval₋tree₋cons ** first, struct oval₋tree₋cons ** last)
+  struct oval₋tree₋cons ** first, struct oval₋tree₋cons ** last, struct 
+  ship₋relation reel)
 { __builtin_int_t count=0; struct oval₋tree ** first₋element, **last₋element; 
    last₋element = first₋element = alloca(sizeof(struct oval₋tree *));
 again:
    if (is₋empty(*first,*last)) { goto unagain; }
    if (unqueue(1,^(int count, struct oval₋tree ** snapshot₋sometime) { 
      *last₋element = *(snapshot₋sometime + 0);
-   },first,last)) { return -1; }
+   },first,last,reel)) { return -1; }
    last₋element = alloca(sizeof(struct oval₋tree *));
    goto again;
 unagain:
@@ -198,13 +203,13 @@ main(
    },&left₋hand.materialºª,&left₋hand.last)) { return 1; }
    if (append₋at₋end(1,^(int count, struct oval₋tree ** snapshot₋sometime) {
      *&(snapshot₋sometime[0]->name) = persist₋as₋shatter(Run(UC("initial-append")));
-   },&left₋hand.materialºª,&left₋hand.last),areel) { return 2; }
+   },&left₋hand.materialºª,&left₋hand.last,areel)) { return 2; }
    if (append₋at₋end(1,^(int count, struct oval₋tree ** snapshot₋sometime) {
      *&(snapshot₋sometime[0]->name) = persist₋as₋shatter(Run(UC("second-append")));
    },&left₋hand.materialºª,&left₋hand.last,areel)) { return 3; }
    if (unqueue(1,^(int count, struct oval₋tree ** snapshot₋sometime) {
-  //   print("unqueued ⬚\n",﹟S(Heap₋object₋size(snapshot₋sometime[0]->name), 
-  //    snapshot₋sometime[0]->name));
+     print("unqueued ⬚\n",﹟S(Heap₋object₋size(snapshot₋sometime[0]->name), 
+      snapshot₋sometime[0]->name));
    },&left₋hand.materialºª,&left₋hand.last,areel)) { return 4; }
    if (rollback₋pop(^(struct oval₋tree * snapshot₋sometime) {
      print("rollback ⬚",﹟S(Heap₋object₋size(snapshot₋sometime->name), 
@@ -213,11 +218,11 @@ main(
    typedef void (^Every)(struct oval₋tree *);
    Every every = ^(struct oval₋tree * car) { vfprint("car is '⬚'\n", 
     ﹟S(Heap₋object₋size(car->name)/4,car->name)); };
-   recollect(every,left₋hand.materialºª,left₋hand.last);
-   /*if (necklace₋uninit(^(int count, struct oval₋tree ** snapshot₋sometime) {
+   recollect(every,left₋hand.materialºª,left₋hand.last,areel);
+   if (necklace₋uninit(^(int count, struct oval₋tree ** snapshot₋sometime) {
      print("uninit list ⬚\n",﹟S(Heap₋object₋size(snapshot₋sometime[0]->name), 
       snapshot₋sometime[0]->name));
-   },&left₋hand.materialºª,&left₋hand.last)) { return 7; } */ /* arc occurred. */
+   },&left₋hand.materialºª,&left₋hand.last)) { return 7; } /* arc occurred. */
    return 0;
 }
 
