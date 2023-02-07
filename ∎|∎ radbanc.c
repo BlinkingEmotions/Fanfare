@@ -2,32 +2,14 @@
 
 import Twinbeam;
 
-struct oval₋tree { unicode₋shatter name; };
-
-union oval₋tree₋continuation { /* default */ struct oval₋tree₋cons * next; 
- __builtin_uint_t possibly₋maybe; };
-
-struct oval₋tree₋cons { struct oval₋tree * item; union oval₋tree₋continuation 
- nxt; }; /*  non-'circular' therefore single-linked. */
-
 /* int append₋at₋end(int, void (^)(int, * refers), address₋of refers, address₋
  of refers) alternates;
-int unqueue(int, void (^)(int, * refers), address₋of refers, address₋of refers) 
- alternates;
+int unqueue(int, void (^)(int, * refers), address₋of refers, address₋of 
+ refers) alternates;
 int rollback₋pop(void (^)(refers), address₋of refers, address₋of refers) 
  alternates;
 int is₋empty(address₋of refers, address₋of refers) alternates;
 void recollect(void (^every)(refers)) alternates; */
-
-int append₋at₋end(int, void (^)(int, struct oval₋tree **), struct 
- oval₋tree₋cons **, struct oval₋tree₋cons **) ⓣ;
-int unqueue(int, void (^)(int, struct oval₋tree **), struct oval₋tree₋cons 
- **, struct oval₋tree₋cons **) ⓣ;
-int rollback₋pop(void (^)(struct oval₋tree *), struct oval₋tree₋cons **, 
- struct oval₋tree₋cons **) ⓣ;
-int is₋empty(struct oval₋tree₋cons *, struct oval₋tree₋cons *) ⓣ;
-typedef void (^Every)(struct oval₋tree *) ⓣ;
-void recollect(Every, struct oval₋tree₋cons *, struct oval₋tree₋cons *) ⓣ;
 
 int append₋at₋end(int, void (^)(int, void **), void **, void **) ⓣ;
 int unqueue(int, void (^)(int, void **), void **, void **) ⓣ;
@@ -35,15 +17,20 @@ int rollback₋pop(void (^)(void *), void **, void **) ⓣ;
 int is₋empty(void *, void *) ⓣ;
 void recollect(void (^every)(void *)) ⓣ;
 
-int append₋at₋end(int count, void (^augment)(int count, struct oval₋tree ** 
- uninited₋sometime), struct oval₋tree₋cons ** first, struct oval₋tree₋cons ** 
- last)
-{ int i=0; struct oval₋tree₋cons * cached,*lait₋tail; 
-   struct oval₋tree * collect[count];
+typedef void Material; typedef void Conscell;
+
+union cell₋continuation { /* default */ Conscell * next; __builtin_uint_t possibly₋maybe; };
+
+struct cons₋cell { Material * item; union cell₋continuation nxt; };
+
+int append₋at₋end(int count, void (^augment)(int count, Material ** 
+ uninited₋sometime), Conscell ** first, Conscell ** last) ⓣ
+{ int i=0; cons₋cell * cached,*lait₋tail; 
+   Material * collect[count];
 again:
    if (i >= count) { goto unagain; }
    cached = *last;
-   lait₋tail = Cons₋alloc(sizeof(struct oval₋tree₋cons)); /* unfortunately type-error. */
+   lait₋tail = Cons₋alloc(sizeof(Material *) + sizeof(Conscell *)); /* unfortunately type-error. */
    lait₋tail->item = Heap₋alloc(sizeof(struct oval₋tree)); lait₋tail->nxt.next=0;
    collect[i] = lait₋tail->item;
    if (cached) cached->nxt.next = lait₋tail;
@@ -55,10 +42,9 @@ unagain:
    return 0;
 } /* 'Ordo ett' */
 
-int unqueue(int count, void (^removed)(int count, struct oval₋tree ** 
- snapshot₋sometime), struct oval₋tree₋cons ** first, struct oval₋tree₋cons 
- ** last)
-{ int i=0; struct oval₋tree * collect[count];
+int unqueue(int count, void (^removed)(int count, Material ** 
+ snapshot₋sometime), Conscell ** first, Conscell ** last) ⓣ
+{ int i=0; Material * collect[count];
 again:
    if (i >= count) { goto unagain; }
    if (*first == 0) { goto unagain; }
@@ -72,9 +58,9 @@ unagain:
    return 0;
 }
 
-int rollback₋pop(void (^scalar)(struct oval₋tree * snapshot₋sometime), struct 
- oval₋tree₋cons ** first, struct oval₋tree₋cons ** last)
-{ struct oval₋tree₋cons * iter = *first;
+int rollback₋pop(void (^scalar)(Material * snapshot₋sometime), Conscell ** 
+ first, Conscell ** last) ⓣ
+{ Conscell * iter = *first;
    if (iter == 0) { return -1; }
    if (iter->nxt.next == *last) { *first=0; *last=0; return 0; }
 again:
@@ -82,14 +68,13 @@ again:
    iter = iter->nxt.next; goto again;
 }
 
-int is₋empty(struct oval₋tree₋cons * first, struct oval₋tree₋cons * last)
+int is₋empty(Conscell * first, Conscell * last) ⓣ
 {
    return first == 0 && last == 0;
 }
 
-void recollect(Every element, struct oval₋tree₋cons * first, struct 
- oval₋tree₋cons * last)
-{ struct oval₋tree₋cons * current = first;
+void recollect(void (^element)(Material *), Conscell * first, Conscell * last) ⓣ
+{ Conscell * current = first;
 again:
    if (current == 0) { goto unagain; }
    element(current->item);
@@ -97,6 +82,48 @@ again:
    goto again;
 unagain:
    return; /* unfortunately non-mandatory ';' */
+}
+
+#pragma recto with 'refers' keyword, detailed 'generalization' is not required
+
+struct oval₋tree { unicode₋shatter name; };
+
+union oval₋tree₋continuation { /* default */ struct oval₋tree₋cons * next; 
+ __builtin_uint_t possibly₋maybe; };
+
+struct oval₋tree₋cons { struct oval₋tree * item; union oval₋tree₋continuation 
+ nxt; }; /*  non-'circular' therefore single-linked. */
+
+int append₋at₋end(int count, void (^augment)(int, struct oval₋tree **), struct 
+ oval₋tree₋cons ** first, struct oval₋tree₋cons ** last) ⓣ
+{
+   return append₋at₋end(count,^(int count, void ** uninited₋sometime) { 
+    augment(count,uninited₋sometime); },first,last);
+}
+
+int unqueue(int count, void (^removed)(int, struct oval₋tree **), struct 
+ oval₋tree₋cons ** first, struct oval₋tree₋cons ** last) ⓣ
+{
+   return unqueue(count, ^(int count, void ** snapshot₋sometime) { 
+    removed(count,snapshot₋sometime); },first,last);
+}
+
+int rollback₋pop(void (^scalar)(struct oval₋tree *), struct oval₋tree₋cons ** 
+ first, struct oval₋tree₋cons ** last) ⓣ
+{
+   return rollback₋pop(^(void * snapshot₋sometime) { 
+    scalar(snapshot₋sometime); },first,last);
+}
+
+int is₋empty(struct oval₋tree₋cons * first, struct oval₋tree₋cons * last) ⓣ
+{
+   return is₋empty(first,last);
+}
+
+void recollect(void (^every)(struct oval₋tree * item), struct oval₋tree₋cons 
+ * first, struct oval₋tree₋cons * last) ⓣ
+{
+   recollect(^(void * item) { every((struct oval₋tree *)item); },first,last);
 }
 
 struct necklace { struct oval₋tree₋cons * materialºª,*last; } left₋hand;
