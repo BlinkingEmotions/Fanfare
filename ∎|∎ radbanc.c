@@ -98,16 +98,25 @@ union oval₋tree₋continuation { /* default */ struct oval₋tree₋cons * nex
 struct oval₋tree₋cons { struct oval₋tree * item; union oval₋tree₋continuation 
  nxt; }; /*  non-'circular' therefore single-linked. */
 
+typedef void ** (*paramet₋to₋automat)(struct oval₋tree₋cons **);
+typedef struct oval₋tree₋cons ** (*variant₋fromto)(void **);
+typedef struct ship₋relation { paramet₋to₋automat special1; variant₋fromto special2; int sizeof₋material; } refers;
+struct ship₋relation areel = {
+ .special1 = ^(struct oval₋tree₋cons ** input) { return (void **)input; }, 
+ .special2 = ^(void ** input) { return (struct oval₋tree₋cons **)input; }, 
+ .sizeof₋material = sizeof(struct oval₋tree)
+};
+
 int append₋at₋end(int count, void (^augment)(int, struct oval₋tree **), struct 
- oval₋tree₋cons ** first, struct oval₋tree₋cons ** last) ⓣ
+ oval₋tree₋cons ** first, struct oval₋tree₋cons ** last, struct ship₋relation reel) ⓣ
 {
    return append₋at₋end(count,^(int count, void ** uninited₋sometime) { 
-    augment(count,(struct oval₋tree **)uninited₋sometime); },(void **)first,
-     (void **)last,sizeof(struct oval₋tree));
+    augment(count,reel.special2(uninited₋sometime)); },reel.special1(first), 
+     reel.special1(last),reel.sizeof₋material);
 }
 
 int unqueue(int count, void (^removed)(int, struct oval₋tree **), struct 
- oval₋tree₋cons ** first, struct oval₋tree₋cons ** last) ⓣ
+ oval₋tree₋cons ** first, struct oval₋tree₋cons ** last, struct ship₋relation reel) ⓣ
 {
    return unqueue(count, ^(int count, void ** snapshot₋sometime) { 
     removed(count,(struct oval₋tree **)snapshot₋sometime); },(void **)first,
@@ -188,10 +197,10 @@ main(
    },&left₋hand.materialºª,&left₋hand.last)) { return 1; }
    if (append₋at₋end(1,^(int count, struct oval₋tree ** snapshot₋sometime) {
      *&(snapshot₋sometime[0]->name) = persist₋as₋shatter(Run(UC("initial-append")));
-   },&left₋hand.materialºª,&left₋hand.last)) { return 2; }
+   },&left₋hand.materialºª,&left₋hand.last),areel) { return 2; }
    if (append₋at₋end(1,^(int count, struct oval₋tree ** snapshot₋sometime) {
      *&(snapshot₋sometime[0]->name) = persist₋as₋shatter(Run(UC("second-append")));
-   },&left₋hand.materialºª,&left₋hand.last)) { return 3; }
+   },&left₋hand.materialºª,&left₋hand.last,areel)) { return 3; }
    if (unqueue(1,^(int count, struct oval₋tree ** snapshot₋sometime) {
   //   print("unqueued ⬚\n",﹟S(Heap₋object₋size(snapshot₋sometime[0]->name), 
   //    snapshot₋sometime[0]->name));
