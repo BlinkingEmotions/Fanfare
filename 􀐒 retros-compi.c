@@ -388,15 +388,23 @@ unagain:
    return 0;
 }
 
-int source₋files(struct Unicodes modulename, char8₋t ** sources, int * source₋count)
-{ /* __builtin_int_t leaf₋sources,module₋sources; int do₋recompile;
+int source₋files(struct Unicodes modulename, char8₋t *** sources, int * source₋count)
+{ char8₋t *filepathsºª=0, *last₋filepath=0; int i=0;
+/* __builtin_int_t leaf₋sources,module₋sources;
    if (evidence₋count(modulename,&module₋sources,&modulename₋and₋filepaths)) { return -1; }
    struct Unicodes * source₋paths=alloca(module₋sources);
    if (related₋evidence(modulename,module₋sources,source₋paths,&modulename₋and₋filepaths)) { return -1; }
    if (option₋correlation₋fileset₋count(module₋sources,&leaf₋sources)) { return -1; }
    struct Unicodes * leaf₋source₋paths=alloca(leaf₋sources);
    if (option₋correlation₋fileset(module₋sources,source₋paths,leaf₋source₋paths) { return -1; } */
-   *source₋count = 0;
+   if (append₋at₋end(1,^(int count, Material ** uninited₋sometime) {
+     *source₋count += 1;
+   },filepathsºª,last₋filepath)) { return -1; }
+   *sources = Alloc(*source₋count * sizeof(char8₋t *));
+   recollect(^(char8₋t * path, int i) { 
+     *sources[i] = path;
+   },filepathsºª,last₋filepath);
+   uninit₋list(filepathsºª,last₋filepath);
    return 0;
 }
 
@@ -406,7 +414,7 @@ int compile₋source₋module(struct Unicodes modulename, char8₋t * object₋p
    if (fstat(diffused₋fd,&sb2) == -1) { goto generic₋error; }
    if (close(diffused₋fd) == -1) { return -1; }
    diffused₋object₋modified = sb2.st_mtimensec;
-   int source₋count; char8₋t * sources;
+   int source₋count; char8₋t ** sources;
    if (source₋files(modulename,&sources,&source₋count)) { return -1; }
 again:
    if (i >= source₋count) { goto unagain; }
@@ -421,7 +429,8 @@ unagain:
    if (do₋recompile) { recompile₋and₋keep₋syntax₋tree(object₋path₋unexpired); }
    Fallow(sources);
    return 0;
-} /* yongest header (with included and diffused files) is older compared to object file does not . */
+} /* yongest header (with included and diffused files) is older compared to 
+ object file does not require compilation when ast is kept. */
 
 int IsFileSuffix(const char * suffix, char8₋t * one₋filepath)
 { __builtin_int_t u8bytes=Utf8BytesUntilZero(one₋filepath,BUILTIN₋INT₋MAX);
