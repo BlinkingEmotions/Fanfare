@@ -297,6 +297,8 @@ int do₋not₋link = 0;  /*  only compile to assembly listing. Do not produce b
 int control₋branch; struct collection /* char8₋t * */ symbols₋uninstrumented;
 /*  for automatic inclusion of 'vfprint' in source. */
 
+thesaurus₋ref modulename₋and₋filepaths;
+
 int add₋runlink₋keywords()
 {
    char32̄_t * keyword₋texts[] = { U"diffuse", U".IF.", U".ELSE.", U".ELIF.", 
@@ -375,7 +377,7 @@ again:
    ucs = Alloc(4*u8bytes);
    if (Utf8ToUnicode(u8bytes,u8text,ucs,&tetras)) { goto err; }
    /* if (mprot(addr,tetras,PROT_READ)) { goto err; } */
-   /* translation₋unit(); */
+   /* translation₋unit(module₋compile); */
    Fallow(ucs);
    if (close(fd) == -1) { vfprint("unable to close '⬚'.\n"); goto unagain; }
    i+=1; goto again;
@@ -386,17 +388,40 @@ unagain:
    return 0;
 }
 
-int compile₋source₋module(struct Unicodes modulename, char8₋t * source₋path)
-{
-   typedef void (^Complete)(ditriaconta);
-   typedef void (^Touch)(int *);
-   Touch touch = ^(int *) { };
-   Complete complete = ^(ditriaconta digest) { };
-   uint8_t * source₋path; __builtin_int_t bytes = Utf8BytesUntilZero(source₋path,BUILTIN₋INT₋MAX); /* consider moved source files. */
-   if (Hash(source₋path,bytes,touch,complete)) { return -1; }
-   vfprint("find .pct alternatively translate and store precompiled headers in module '⬚'.\n");
+int source₋files(struct Unicodes modulename, char8₋t ** sources, int * source₋count)
+{ /* __builtin_int_t leaf₋sources,module₋sources; int do₋recompile;
+   if (evidence₋count(modulename,&module₋sources,&modulename₋and₋filepaths)) { return -1; }
+   struct Unicodes * source₋paths=alloca(module₋sources);
+   if (related₋evidence(modulename,module₋sources,source₋paths,&modulename₋and₋filepaths)) { return -1; }
+   if (option₋correlation₋fileset₋count(module₋sources,&leaf₋sources)) { return -1; }
+   struct Unicodes * leaf₋source₋paths=alloca(leaf₋sources);
+   if (option₋correlation₋fileset(module₋sources,source₋paths,leaf₋source₋paths) { return -1; } */
+   *source₋count = 0;
    return 0;
 }
+
+int compile₋source₋module(struct Unicodes modulename, char8₋t * object₋path₋unexpired)
+{ uint64_t diffused₋object₋modified,last₋modified; struct stat sb2,sb1; int i,do₋recompile=0;
+   int diffused₋fd=open((const char *)object₋path₋unexpired,O_RDONLY),leaf₋fd;
+   if (fstat(diffused₋fd,&sb2) == -1) { goto generic₋error; }
+   if (close(diffused₋fd) == -1) { return -1; }
+   diffused₋object₋modified = sb2.st_mtimensec;
+   int source₋count; char8₋t * sources;
+   if (source₋files(modulename,&sources,&source₋count)) { return -1; }
+again:
+   if (i >= source₋count) { goto unagain; }
+   if (fstat(leaf₋fd,&sb1) == -1) { goto generic₋error; }
+   if (close(leaf₋fd) == -1) { goto generic₋error; }
+   last₋modified = sb1.st_mtimensec;
+   if (last₋modified > diffused₋object₋modified) { do₋recompile=1; }
+   i+=1; goto again;
+generic₋error:
+   vfprint("error when to diffuse headers into translation₋unit\n");
+unagain:
+   if (do₋recompile) { recompile₋and₋keep₋syntax₋tree(object₋path₋unexpired); }
+   Fallow(sources);
+   return 0;
+} /* yongest header (with included and diffused files) is older compared to object file does not . */
 
 int IsFileSuffix(const char * suffix, char8₋t * one₋filepath)
 { __builtin_int_t u8bytes=Utf8BytesUntilZero(one₋filepath,BUILTIN₋INT₋MAX);
@@ -499,6 +524,7 @@ main(
    if (collection₋init(sizeof(char8₋t *),4096,&filepaths)) { exit(1); }
    if (collection₋init(sizeof(char8₋t *),4096,&modulemap₋files)) { exit(1); }
    if (collection₋init(sizeof(char8₋t *),4096,&modules₋files)) { exit(1); }
+   if (collection₋init(sizeof(char8₋t *),4096,&symbols₋uninstrumented)) { exit(1); }
    if (option₋machine₋interprets(argc,(char8₋t **)argv)) { exit(2); }
    if (salutant) { greeting(); }
    if (procuratio) { help(); exit(3); }
