@@ -16,6 +16,7 @@ int unqueue(int, void (^)(int, void **), void **, void **) ⓣ;
 int rollback₋pop(void (^)(void *), void **, void **) ⓣ; 
 int is₋empty(void *, void *) ⓣ;
 void recollect(void (^every)(void *),void *,void *) ⓣ;
+int uninit₋list(void (^removed)(void *),void *,void *) ⓣ;
 
 typedef void Material; typedef void Conscell;
 
@@ -86,6 +87,17 @@ again:
    goto again;
 unagain:
    return; /* unfortunately non-mandatory ';' */
+}
+
+int uninit₋list(void (^removed)(Material *), Conscell * first, Conscell * last) ⓣ
+{ Cons₋cell * current = (Cons₋cell *)first;
+again:
+   if (current == 0) goto unagain;
+   removed(current->item);
+   Heap₋unalloc(current);
+   current = current->nxt.next;
+unagain:
+   return 0;
 }
 
 #pragma recto with 'refers' keyword, detailed 'generalization' is not required
@@ -166,17 +178,6 @@ again:
    i+=1; goto again;
 unagain:
    if (init) init(count,collect); /* unfortunately sometime null,unfortunately. */
-   return 0;
-}
-
-int uninit₋list(void (^removed)(Material *), Conscell * first, Conscell * last)
-{ Cons₋cell * current = (Cons₋cell *)first;
-again:
-   if (current == 0) goto unagain;
-   removed(current->item);
-   Heap₋unalloc(current);
-   current = current->nxt.next;
-unagain:
    return 0;
 }
 
