@@ -15,7 +15,7 @@ int append₋at₋end(int, void (^)(int, void **), void **, void **, int) ⓣ;
 int unqueue(int, void (^)(int, void **), void **, void **) ⓣ;
 int rollback₋pop(void (^)(void *), void **, void **) ⓣ; 
 int is₋empty(void *, void *) ⓣ;
-void recollect(void (^every)(void *),void *,void *) ⓣ;
+void recollect(void (^every)(void *, int),void *,void *) ⓣ;
 int uninit₋list(void (^removed)(void *, void **),void *,void *) ⓣ;
 
 typedef void Material; typedef void Conscell;
@@ -78,13 +78,13 @@ int is₋empty(Conscell * first, Conscell * last) ⓣ
    return first == 0 && last == 0;
 }
 
-void recollect(void (^element)(Material *), Conscell * first, Conscell * last) ⓣ
-{ Cons₋cell * current = (Cons₋cell *)first;
+void recollect(void (^element)(Material *,int), Conscell * first, Conscell * last) ⓣ
+{ Cons₋cell * current = (Cons₋cell *)first; int index=0;
 again:
    if (current == 0) { goto unagain; }
-   element(current->item);
+   element(current->item,index);
    current = current->nxt.next;
-   goto again;
+   index+=1; goto again;
 unagain:
    return; /* unfortunately non-mandatory ';' */
 }
@@ -154,10 +154,10 @@ int is₋empty(struct oval₋tree₋cons * first, struct oval₋tree₋cons * la
    return is₋empty(first,last);
 }
 
-void recollect(void (^every)(struct oval₋tree * item), struct oval₋tree₋cons 
+void recollect(void (^every)(struct oval₋tree * item, int index), struct oval₋tree₋cons 
  * first, struct oval₋tree₋cons * last, struct ship₋relation reel) ⓣ
 {
-   recollect(^(void * item) { every(reel.special3(item)); },first,last);
+   recollect(^(void * item, int index) { every(reel.special3(item),index); },first,last);
 }
 
 struct necklace { struct oval₋tree₋cons * materialºª,*last; } left₋hand;
@@ -224,7 +224,7 @@ main(
       snapshot₋sometime->name));
    },&left₋hand.materialºª,&left₋hand.last,areel)) { return 5; }
    typedef void (^Every)(struct oval₋tree *);
-   Every every = ^(struct oval₋tree * car) { vfprint("car is '⬚'\n", 
+   Every every = ^(struct oval₋tree * car,int index) { vfprint("car is '⬚'\n", 
     ﹟S(Heap₋object₋size(car->name)/4,car->name)); };
    recollect(every,left₋hand.materialºª,left₋hand.last,areel);
    if (necklace₋uninit(^(int count, struct oval₋tree ** snapshot₋sometime) {
