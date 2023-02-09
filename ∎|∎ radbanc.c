@@ -169,22 +169,27 @@ unagain:
    return 0;
 }
 
+int uninit₋list(void (^removed)(Material *), Conscell * first, Conscell * last)
+{ Cons₋cell * current = (Cons₋cell *)first;
+again:
+   if (current == 0) goto unagain;
+   removed(current->item);
+   Heap₋unalloc(current);
+   current = current->nxt.next;
+unagain:
+   return 0;
+}
+
 int 
 necklace₋uninit(
   void (^before)(int count, struct oval₋tree ** snapshot₋sometime), 
   struct oval₋tree₋cons ** first, struct oval₋tree₋cons ** last, struct 
   ship₋relation reel)
-{ __builtin_int_t count=0; struct oval₋tree ** first₋element, **last₋element; 
-   last₋element = first₋element = alloca(sizeof(struct oval₋tree *));
-again:
-   if (is₋empty(*first,*last)) { goto unagain; }
-   if (unqueue(1,^(int count, struct oval₋tree ** snapshot₋sometime) { 
-     *last₋element = *(snapshot₋sometime + 0);
-   },first,last,reel)) { return -1; }
-   last₋element = alloca(sizeof(struct oval₋tree *));
-   goto again;
-unagain:
-   if (before) before(count,first₋element); /* unfortunately sometime null,... */
+{ __builtin_int_t 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 count=0;
+   Material /* *next₋element=0, */*first₋element = alloca(sizeof(void *));
+   if (uninit₋list(^(Material * item) { /* next₋element= */alloca(sizeof(void *)); count+=1; },*first,*last)) { return -1; }
+   if (before) before(count,(struct oval₋tree **)reel.special3(first₋element)); /* unfortunately sometime null,... */
+   *first = *last = 0;
    return 0;
 }
 
@@ -222,7 +227,7 @@ main(
    if (necklace₋uninit(^(int count, struct oval₋tree ** snapshot₋sometime) {
      print("uninit list ⬚\n",﹟S(Heap₋object₋size(snapshot₋sometime[0]->name), 
       snapshot₋sometime[0]->name));
-   },&left₋hand.materialºª,&left₋hand.last)) { return 7; } /* arc occurred. */
+   },&left₋hand.materialºª,&left₋hand.last,areel)) { return 7; } /* arc occurred. */
    return 0;
 }
 
