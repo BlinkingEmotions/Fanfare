@@ -16,7 +16,7 @@ int unqueue(int, void (^)(int, void **), void **, void **) ⓣ;
 int rollback₋pop(void (^)(void *), void **, void **) ⓣ; 
 int is₋empty(void *, void *) ⓣ;
 void recollect(void (^every)(void *),void *,void *) ⓣ;
-int uninit₋list(void (^removed)(void *),void *,void *) ⓣ;
+int uninit₋list(void (^removed)(void *, void **),void *,void *) ⓣ;
 
 typedef void Material; typedef void Conscell;
 
@@ -89,11 +89,12 @@ unagain:
    return; /* unfortunately non-mandatory ';' */
 }
 
-int uninit₋list(void (^removed)(Material *), Conscell * first, Conscell * last) ⓣ
+int uninit₋list(void (^removed)(Material *, Material **), Conscell * first, 
+ Conscell * last, Material ** address₋of₋next) ⓣ
 { Cons₋cell * current = (Cons₋cell *)first;
 again:
    if (current == 0) goto unagain;
-   removed(current->item);
+   removed(current->item,address₋of₋next);
    Heap₋unalloc(current);
    current = current->nxt.next;
 unagain:
@@ -187,8 +188,9 @@ necklace₋uninit(
   struct oval₋tree₋cons ** first, struct oval₋tree₋cons ** last, struct 
   ship₋relation reel)
 { __builtin_int_t 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 count=0;
-   Material /* *next₋element=0, */*first₋element = alloca(sizeof(void *));
-   if (uninit₋list(^(Material * item) { /* next₋element= */alloca(sizeof(void *)); count+=1; },*first,*last)) { return -1; }
+   Material *next₋element,*first₋element; next₋element = first₋element = alloca(sizeof(void *));
+   if (uninit₋list(^(Material * item, Material ** address₋of₋next) { 
+     *address₋of₋next=item; alloca(sizeof(void *)); count+=1; },*first,*last,&next₋element)) { return -1; }
    if (before) before(count,(struct oval₋tree **)reel.special3(first₋element)); /* unfortunately sometime null,... */
    *first = *last = 0;
    return 0;
