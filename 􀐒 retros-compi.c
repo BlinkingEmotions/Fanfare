@@ -299,6 +299,9 @@ int control₋branch; struct collection /* char8₋t * */ symbols₋uninstrument
 
 thesaurus₋ref modulename₋and₋filepaths;
 
+typedef struct ship₋relation { } refers;
+struct ship₋relation areel = { };
+
 int add₋runlink₋keywords()
 {
    char32̄_t * keyword₋texts[] = { U"diffuse", U".IF.", U".ELSE.", U".ELIF.", 
@@ -399,12 +402,13 @@ int source₋files(struct Unicodes modulename, char8₋t *** sources, int * sour
    if (option₋correlation₋fileset(module₋sources,source₋paths,leaf₋source₋paths) { return -1; } */
    if (append₋at₋end(1,^(int count, Material ** uninited₋sometime) {
      *source₋count += 1;
-   },filepathsºª,last₋filepath)) { return -1; }
+   },filepathsºª,last₋filepath,sizeof(char8₋t *))) { return -1; }
    *sources = Alloc(*source₋count * sizeof(char8₋t *));
-   recollect(^(char8₋t * path, int i) { 
-     *sources[i] = path;
-   },filepathsºª,last₋filepath);
-   uninit₋list(filepathsºª,last₋filepath);
+   recollect(^(char8₋t * path, int i) { *sources[i] = path; },filepathsºª, 
+    last₋filepath); char8₋t * next₋element;
+   uninit₋list(^(Material * item, Material ** address₋of₋next) { 
+    *address₋of₋next=item;
+   },filepathsºª,last₋filepath,&next₋element);
    return 0;
 }
 
