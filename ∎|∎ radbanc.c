@@ -223,7 +223,7 @@ main(
      print("rollback ⬚",﹟S(Heap₋object₋size(snapshot₋sometime->name), 
       snapshot₋sometime->name));
    },&left₋hand.materialºª,&left₋hand.last,areel)) { return 5; }
-   typedef void (^Every)(struct oval₋tree *);
+   typedef void (^Every)(struct oval₋tree *,int);
    Every every = ^(struct oval₋tree * car,int index) { vfprint("car is '⬚'\n", 
     ﹟S(Heap₋object₋size(car->name)/4,car->name)); };
    recollect(every,left₋hand.materialºª,left₋hand.last,areel);
