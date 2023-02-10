@@ -126,6 +126,8 @@ int₋to₋sequent:
     dereference₋and₋swap(px,py)
   END(attempth₋progress)
   
+serpent₋summary
+
 corrections extended₋characterset ⁄* with implicit 'emboss' and 'replace' to rename 'stroke', 'append' and 'change'. *⁄
   
 --< @@ else if ((STATE(mode₋initial) > in next₋token₋inner
@@ -416,7 +418,7 @@ int source₋files(struct Unicodes modulename, char8₋t *** sources, int * sour
     areel.special2(last₋filepath)); char8₋t * next₋element;
    uninit₋list(^(Material * item, Material ** address₋of₋next) { 
     *address₋of₋next=item;
-   },filepathsºª,last₋filepath,&next₋element);
+   },areel.special2(filepathsºª),areel.special2(last₋filepath),&next₋element);
    return 0;
 }
 
