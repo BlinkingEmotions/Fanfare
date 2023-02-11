@@ -98,9 +98,10 @@ int uninit₋list(void (^removed)(Material *, Material **), Conscell * first,
 { Cons₋cell * current = (Cons₋cell *)first;
 again:
    if (current == 0) goto unagain;
-   if (removed) removed(current->item,address₋of₋next);
    Heap₋unalloc(current);
+   if (removed) removed(current->item,address₋of₋next);
    current = current->nxt.next;
+   goto again;
 unagain:
    return 0;
 }
@@ -118,7 +119,6 @@ struct oval₋tree₋cons { struct oval₋tree * item; union oval₋tree₋conti
 typedef void ** (^paramet₋to₋automat)(struct oval₋tree₋cons **);
 typedef struct oval₋tree ** (^variant₋fromto₋array)(void **);
 typedef struct oval₋tree * (^variant₋fromto₋indirect₋toread)(void *);
-
 typedef struct ship₋relation { paramet₋to₋automat special1; variant₋fromto₋array 
  special2; int sizeof₋material; variant₋fromto₋indirect₋toread special3; } refers;
 struct ship₋relation areel = {
