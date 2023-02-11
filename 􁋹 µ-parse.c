@@ -196,7 +196,8 @@ again:
    else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'<') { assign₋symbol(referenceindenture₋startsym,out,2); return 0; } /* exhibit, annex and addendum. */
    else if (STATE(mode₋initial) && uc == U'@' && uc₊₁ == U'>') { assign₋symbol(end₋referenceindenturesym,out,2); return 0; }
    else if (STATE(mode₋initial) && uc == U'\x2405') { assign₋symbol(symbol₋for₋enquery,out,1); return 0; } /* fold */
-   /* else if (STATE(mode₋initial) ** uc == U'\x----') { assign₋symbol(symbol₋for₋,out,1) } / * inclusion clipbook */
+   /* else if (STATE(mode₋initial) && uc == U'\x----') { assign₋symbol(symbol₋for₋clipbook₋,out,1) } ⁄* inclusion clipbook */
+   /* else if (STATE(mode₋initial) && uc == U'\x----') { assign₋symbol(symbol₋for₋prominent₋toggle); } ⁄* prominent unicode toggle */
    else if (STATE(mode₋initial) && uc == U'-' && uc₊₁ == U'-' && uc₊2 == U'<') { assign₋symbol(dowsingsym,out,3); return 0; }
    else if (STATE(mode₋initial) && uc == U'.' && uc₊₁ == U'.' && uc₊2 == U'.') { assign₋symbol(ellipsissym,out,3); return 0; }
    else if (STATE(mode₋initial) && uc == U'…') { assign₋symbol(ellipsissym,out,1); return 0; } /* ⌥ + ';'. */
@@ -339,6 +340,15 @@ struct dynamic₋bag {
 
 struct dynamic₋bag * summary₋groundfold;
 
+typedef void ** (^bag₋to₋general)(struct dynamic₋bag **);
+typedef struct ship₋relation { bag₋to₋general special1; } refers;
+struct ship₋relation areel {
+ .special1 = ^(struct dynamic₋bag ** input) { return (void **)input; }, 
+ .special2 = ^(void ** input) { return (struct dynamic₋bag **)input; }, 
+ .sizeof₋bag = sizeof(struct dynamic₋bag), 
+ .special3 = ^(void * input) { return (struct dynamic₋bag *)input; }
+}
+
 enum { 🅐=1, 🅑, 🅒, 🅔, 🅕, 🅖, 🅗, 🅙, 🅛, 🅝, 🅟, 🅠, 🅡, 🅢, 🅩, 🅣 };
 
 void process₋compute(struct dynamic₋bag *);
@@ -460,8 +470,8 @@ void opt₋associations()
 
 void block(void)
 { tree=Alloc(sizeof(struct dynamic₋bag)); tree->art=tree->var=tree->pct=ΨΛΩ;
-   while (symbol₋equal(constsym) || symbol₋equal(varsym) || symbol₋equal(procsym) || 
-    symbol₋equal(schemasym) || symbol₋equal(referencessym))
+   while (symbol₋equal(constsym) || symbol₋equal(varsym) || 
+    symbol₋equal(procsym) || symbol₋equal(schemasym))
    {
       switch (symbol.class)
       {
@@ -486,9 +496,12 @@ void block(void)
         match(schemasym); expect(ident); table=symbol₋passed.gritty.store.regularOrIdent;
         expect(eql); expect(lparen); opt₋associations(); expect(rparen); House(🅢,3,table,tree,form); break; }
       case referencessym: { match(referencessym); expect(dowsingsym); break; }
+      case erratasym: { break; }
+      case attributessym:
       default: error(2,"unsupported initial keyword"); break;
       }
    }
+   while (symbol₋equal(referencessym) || symbol₋equal(erratasym))); 
 }
 
 void program(void) { next₋token(&Ctxt); block(); valid(2,end₋of₋transmission₋and₋file,"incorrect signature"); }
@@ -497,7 +510,8 @@ int main()
 {
    char32̄_t * keywords[] = { U"constant", U"variable", U"call", U"begin", U"end", 
     U"if", U"then", U"odd", U"transcript", U"else", U"void", U"diffuse", 
-    U"references", U"in", U"present", U"schema", U"errata" /* intelligence */, U"branch" }; /* replaced-start, end-replacement, omgivning, add-start, add-end, combining deleted,, */
+    U"references", U"in", U"present", U"schema", U"errata" /* intelligence */, 
+    U"branch" };
    int symbols[] = { constsym,varsym,callsym,beginsym,endsym,ifsym,thensym, 
     oddsym,procsym,elsesym,voidsym,diffusesym,referencessym,insym,
     presentsym,schemasym,erratasym,branch₋goto₋optsym /* refers, additionssym */ };
@@ -566,3 +580,4 @@ unagain:
  block₋p₋se = termirender₋and₋not('transcript','var','const')
  
   */
+
