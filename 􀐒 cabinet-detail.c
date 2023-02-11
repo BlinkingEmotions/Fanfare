@@ -1,4 +1,4 @@
-/*  cabinet-detail.c | multiple-name filing. */
+/*  cabinet-detail.c | multiple-name filename filing and file operation notification. */
 
 import Twinbeam;
 
@@ -7,7 +7,7 @@ import Twinbeam;
 #define _POSIX_C_SOURCE /* high-precision stat and the modern inode. */
 #include <sys/stat.h>
 
-struct Unicodes void₋path() { struct Unicodes epsilon = { 36, U"9E4A34A9-D501-41F6-9C1C-238F96A00CC2" }; return epsilon; }
+struct Unicodes voidfile₋path() { struct Unicodes epsilon = { 36, U"9E4A34A9-D501-41F6-9C1C-238F96A00CC2" }; return epsilon; }
 
 thesaurus₋ref guid₋and₋secondary=ΨΛΩ,guid₋and₋primary=ΨΛΩ; /* persisted index on ssd and two inodes. */
 regular₋ref opened₋files=ΨΛΩ; /* not persisted on ssd, only recorded in virtual memory. */
@@ -20,7 +20,16 @@ char * repo = "/tmp/cabinet-petite";
 union guid₋shim { struct guid composite; __uint128_t machine; };
 
 int create₋file(struct Unicodes primary, struct Unicodes secondary, openfile₋id * regular)
-{ 
+{
+   /* primaries: |idx|->|idx|->/
+      secondaries: |idx|->\ */
+   EXT₋C int init₋regularpool(struct collection * ᐧ 🅷);
+EXT₋C int copy₋append₋onto₋regular(struct collection * ᐧ 🅗, int32_t tetras, 
+ char32̄_t cs[ᐧ], ALLOC alloc, Nonabsolute * ᐧ relative);
+   int related₋evidence(struct Unicodes key₋similar, void (^ ᐧ right)(int count, struct Unicodes values[ᐧ]), thesaurus₋ref ᐝ opaque);
+   // int dissociate₋all(struct Unicodes key₋similar, thesaurus₋ref * ᐝ opaque);
+   // int dissociate₋one(struct Unicodes key₋similar, int idx, thesaurus₋ref * ᐝ opaque);
+   if (form₋ōnymon(struct Unicodes key₋copy, struct Unicodes value₋copy, int shares, thesaurus₋ref * ᐝ opaque, ALLOC alloc)) { return -1; }
    char8₋t stored₋secondary[secondary.tetras*4],stored₋primary[primary.tetras*4]; __builtin_int_t u8bytes;
    if (UnicodeToUtf8(secondary.tetras,secondary.unicodes,stored₋secondary,&u8bytes)) { return -1; }
    if (UnicodeToUtf8(primary.tetras,primary.unicodes,stored₋primary,&u8bytes)) { return -1; }
@@ -126,9 +135,25 @@ int secondary₋filename₋add(struct Unicodes secondary, struct Unicodes additi
    return 0;
 }
 
+int doodle₋textfile(openfile₋id * regular)
+{
+   
+}
+
+int derived₋spawnfile(openfile₋id * regular)
+{
+   
+} /* not links-file but 'tree threaded'. */
+
+int persist₋textfile(openfile₋id regular, struct Unicodes primary, struct Unicodes secondary)
+{
+   
+}
+
 typedef int (*search₋text)(struct Unicodes primary, struct Unicodes secondary, 
  openfile₋id regular, __builtin_int_t lineno₋first, __builtin_int_t lineno₋last, 
- __builtin_int_t column₋first, __builtin_int_t column₋last);
+ __builtin_int_t column₋first, __builtin_int_t column₋last, 
+ __builtin_int_t u8₋offset);
 
 struct outcome₋search {
    union {
@@ -137,11 +162,33 @@ struct outcome₋search {
    int kind;
 };
 
-int search₋and₋find(struct Unicodes filename, struct Unicodes filetype, 
- struct Unicodes anchor₁, struct Unicodes anchor₂, struct outcome₋search find)
+int search₋and₋find(struct Unicodes filename, struct Unicodes filetype, int total₋rows, int row₋outside₋bound, int rows₋in₋sight, 
+ int row₋expected₋soon, struct Unicodes anchor₁, struct Unicodes anchor₂, struct outcome₋search find)
 {
    return 0;
-}
+} /*  replace with 'search₋location' and 'search₋interval' and search₋vironment and 'prominent'. */
+
+typedef void (^Generated)(int count, struct Unicodes * derived₋primary, struct Unicodes * derived₋secondary);
+int Generated₋files(struct Unicodes filename₋source, Generated list); /* not file-links but 'threaded tree'. */
+
+struct text₋presentation₋forfork {
+  __builtin_int_t the₋symbols; char32̄_t * the₋text; __builtin_int_t total₋rows;
+  __builtin_int_t * rendering₋newlines, rendering₋newlines₋count;
+  __builtin_int_t row₋inside₋bound, row₋outside₋bound, rows₋constituting₋bound;
+  __builtin_int_t first₋row₋speculative, last₋row₋speculative;
+}; /* a․𝘬․a 'file attributes' (such-as 'file completed') and 'computed file attributes' (such as 'list-of-functions') and 'forks'. */
+
+struct outcome₋plausable { };
+
+int Plausible₋display(struct text₋form input1, struct Unicodes input2, struct outcome₋plausable options);
+
+int Plausible₋text(struct Unicodes anchor1, struct Unicodes anchor2, 
+ __built_int_t symbols, char32_t * uc, struct outcome₋plausable options);
+
+int Introduce₋program(struct Unicodes function, struct Unicodes anchor1, 
+ struct Unicodes anchor2, __builtin_int_t symbols, char32_t * uc, 
+ struct Unicode augment, struct outcome₋plausable options);
+/* language is described in --<retros-compi.c> and '.detail'. */
 
 /* struct iovec { char *iov_base; size_t iov_len; }; */
 
@@ -149,11 +196,11 @@ int search₋and₋find(struct Unicodes filename, struct Unicodes filetype,
 #include <sys/uio.h>
 
 ssize_t pwritev₋c(int fd, const struct iovec *iov, int iovcnt, 
- off_t byteoffset, coro_t * coro, struct Act * feedback)
+ off_t byteoffsetfile, coro_t * coro, struct Act * feedback)
 { __builtin_int_t acc=0;
    for (__builtin_int_t i=0; i<iovcnt; i+=1) {
      char * dst=iov[i].iov_base; size_t nbyte=iov[i].iov_len;
-     ssize_t byteswrite=pwrite(fd,dst,nbyte,byteoffset+acc);
+     ssize_t byteswrite=pwrite(fd,dst,nbyte,byteoffsetfile+acc);
      if (byteswrite<0) { return byteswrite; }
      acc+=byteswrite;
      if (feedback) { coro_feedback(coro,(int)monoton₋ordinal(ΨΛΩ,feedback)); }
@@ -163,11 +210,11 @@ ssize_t pwritev₋c(int fd, const struct iovec *iov, int iovcnt,
 }
 
 ssize_t preadv₋c(int fd, const struct iovec *iov, int iovcnt, 
- off_t byteoffset, coro_t * coro, struct Act * feedback)
+ off_t byteoffsetfile, coro_t * coro, struct Act * feedback)
 { __builtin_int_t acc=0;
    for (__builtin_int_t i=0; i<iovcnt; i+=1) {
      char * dst=iov[i].iov_base; size_t nbyte=iov[i].iov_len;
-     ssize_t bytesread=pread(fd,dst,nbyte,byteoffset+acc);
+     ssize_t bytesread=pread(fd,dst,nbyte,byteoffsetfile+acc);
      if (bytesread<0) { return bytesread; }
      acc+=bytesread;
      if (feedback) { coro_feedback(coro,(int)monoton₋ordinal(ΨΛΩ,feedback)); }
@@ -231,6 +278,11 @@ struct Unicodes filename₋expression;
 uint8_t material1[5] = { 1, 2, 3, 4, 5 };
 uint8_t material2[7] = { 17, 16, 15, 14, 13, 13, 13 };
 
+struct errors₋and₋diagnostics
+{
+   __builtin_int_t filing₋error;
+} panel = { 0 };
+
 int corout₋filing(coro_t * coro)
 {
    uint8_t * offset[] = { material1, material2 };
@@ -247,7 +299,7 @@ int corout₋filing(coro_t * coro)
 
 #include <removefile.h>
 
-int callback(removefile_state_t s, const char * path, void * ctx)
+int demonstration₋delegate(removefile_state_t s, const char * path, void * ctx)
 {
    vfprint("file deleted '⬚'\n",﹟s7((char *)path));
    return REMOVEFILE_PROCEED;
@@ -255,8 +307,8 @@ int callback(removefile_state_t s, const char * path, void * ctx)
 
 void cleanup()
 { removefile_state_t s=removefile_state_alloc();
-   removefile_state_set(s,REMOVEFILE_STATE_CONFIRM_CALLBACK,callback);
-   removefile_state_set(s,REMOVEFILE_STATE_CONFIRM_CONTEXT,callback);
+   removefile_state_set(s,REMOVEFILE_STATE_CONFIRM_CALLBACK,demonstration₋delegate);
+   removefile_state_set(s,REMOVEFILE_STATE_CONFIRM_CONTEXT,demonstration₋delegate);
    removefile("/tmp/zz.txt",s,ΨΛΩ);
    removefile_state_free(s);
 }
@@ -280,7 +332,7 @@ int main()
 again:
    yield = coro_resume(coro);
    if (yield == 0) { goto unagain; }
-   if (yield <= -1) { goto err; }
+   if (yield <= -1) { Pult💡(panel.filing₋error); goto err; }
    vfprint("filing coroutine reported ⬚.\n", ﹟d((__builtin_int_t)yield));
    goto again;
 err:
@@ -300,5 +352,6 @@ unagain:
   ../../Cox-route/context-2.c                                                \
   ../../Cox-route/coro-main.c */
 
-/* see 'man list' and 'man rbtree' and 'man dirent'. */
+/* see 'man queue' and 'man rbtree' and 'man dirent' and struct.h and SPPose3D.h. */
+
 
