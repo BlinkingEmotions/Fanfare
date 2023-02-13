@@ -2,10 +2,11 @@
 
 import Twinbeam;
 
-#include <unistd.h>
+#include <unistd.h> /* declaration of 'readlink'. */
 #include <fcntl.h>
 #define _POSIX_C_SOURCE /* high-precision stat and the modern inode. */
 #include <sys/stat.h>
+#include <dirent.h>
 
 struct Unicodes voidfile₋path() { struct Unicodes epsilon = { 36, U"9E4A34A9-D501-41F6-9C1C-238F96A00CC2" }; return epsilon; }
 
@@ -19,13 +20,31 @@ char * repo = "/tmp/cabinet-petite";
 
 union guid₋shim { struct guid composite; __uint128_t machine; };
 
-int create₋file(struct Unicodes primary, struct Unicodes secondary, openfile₋id * regular)
+#pragma recto mentatives create₋applicationtextfile, create₋project₋textfile and 'augment₋existing₋project₋with₋textfile'
+
+typedef void (^Response)(char32̄_t * ucs, __builtin_int_t bytes);
+
+EXT₋C int Order(Response out,  char32̄_t * command, ...);
+
+int create₋application₋detail(Response out, struct Unicodes description₋name₋symbol)
 {
-   /* primaries: |idx|->|idx|->/
-      secondaries: |idx|->\ */
+   struct Unicodes text = Run(UC("/"));
+   Order(out, U"ls -la '⬚'", ﹟S(text));
+   return 0;
+}
+
+int create₋collocation(struct Unicodes searchable₋name)
+{
+   return 0;
+}
+
+int create₋textfile(struct Unicodes primary, struct Unicodes secondary, int expiration, openfile₋id * regular)
+{
+   /*( cancellation int cancel-and-singlelinked and file-expiration. */ /* and chronologic expiration. */
+   /* primaries: |idx|->|idx|->/ secondaries: |idx|->\ */
    EXT₋C int init₋regularpool(struct collection * ᐧ 🅷);
-EXT₋C int copy₋append₋onto₋regular(struct collection * ᐧ 🅗, int32_t tetras, 
- char32̄_t cs[ᐧ], ALLOC alloc, Nonabsolute * ᐧ relative);
+   EXT₋C int copy₋append₋onto₋regular(struct collection * ᐧ 🅗, int32_t tetras, 
+   char32̄_t cs[ᐧ], ALLOC alloc, Nonabsolute * ᐧ relative);
    int related₋evidence(struct Unicodes key₋similar, void (^ ᐧ right)(int count, struct Unicodes values[ᐧ]), thesaurus₋ref ᐝ opaque);
    // int dissociate₋all(struct Unicodes key₋similar, thesaurus₋ref * ᐝ opaque);
    // int dissociate₋one(struct Unicodes key₋similar, int idx, thesaurus₋ref * ᐝ opaque);
@@ -44,6 +63,41 @@ EXT₋C int copy₋append₋onto₋regular(struct collection * ᐧ 🅗, int32_t
    material[0]=fd₋primary; material[1]=fd₋secondary;
    opened₋files = impression₋store(opened₋files,fineprint.machine,material,Alloc);
    Copy8Memory((ByteAlignedRef)regular,(ByteAlignedRef)&(fineprint.composite),sizeof(openfile₋id));
+   return 0;
+}
+
+int promote₋doodle₋to₋file()
+{
+   return 0;
+}
+
+int include₋history₋on₋file()
+{
+   return 0;
+}
+
+int discard₋doodle()
+{
+   return 0;
+} /* expiration for a file as well. */
+
+int create₋pathlist()
+{
+   return 0;
+}
+
+int include₋filepath₋in₋pathlist()
+{
+   return 0;
+}
+
+int synchronize₋collocation()
+{
+   return 0;
+}
+
+int synchronize₋application()
+{
    return 0;
 }
 
@@ -294,7 +348,7 @@ int corout₋filing(coro_t * coro)
    if (reconcile₋file(regular,count,offset,bytes,&actual,coro,&act₋wr)) { coro_feedback(coro,-2); }
    coro_feedback(coro,2);
    if (close₋file(regular)) { coro_feedback(coro,-3); }
-   return 0;
+   return 0; /* see equivalence with 'didReadWriteOrSync'. */
 }
 
 #include <removefile.h>
@@ -352,6 +406,6 @@ unagain:
   ../../Cox-route/context-2.c                                                \
   ../../Cox-route/coro-main.c */
 
-/* see 'man queue' and 'man rbtree' and 'man dirent' and struct.h and SPPose3D.h. */
+/* see 'man queue' and 'man rbtree' and 'man dirent'. */
 
 
