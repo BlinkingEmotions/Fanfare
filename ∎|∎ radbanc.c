@@ -22,10 +22,12 @@ int is₋empty(void *, void *) ⓣ;
 void recollect(void (^every)(void *, int),void *,void *) ⓣ;
 int uninit₋list(void (^removed)(void *, void **),void *,void *) ⓣ;
 
+#pragma recto with 'refers' keyword, detailed 'generalization' is not required
+
 struct oval₋tree { unicode₋shatter name; };
 
-union oval₋tree₋continuation { /* default */ struct oval₋tree₋cons * next; 
- __builtin_uint_t possibly₋maybe; };
+union oval₋tree₋continuation { struct oval₋tree₋cons * next; __builtin_uint_t 
+ possibly₋maybe; };
 
 struct oval₋tree₋cons { struct oval₋tree * item; union oval₋tree₋continuation 
  nxt; }; /*  non-'circular' therefore single-linked. */
