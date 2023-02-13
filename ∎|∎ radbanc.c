@@ -3,19 +3,19 @@
 import Twinbeam;
 
 /* int append₋at₋end(int, void (^)(int, * refers), address₋of refers, address₋
- of refers, int) nonalter;
+ of refers, int) nonalter
 int unqueue(int, void (^)(int, * refers), address₋of refers, address₋of 
- refers) nonalter;
+ refers) nonalter
 int rollback₋pop(void (^)(refers), address₋of refers, address₋of refers) 
- nonalter;
-int is₋empty(address₋of refers, address₋of refers) nonalter;
+ nonalter
+int is₋empty(address₋of refers, address₋of refers) nonalter
 void recollect(void (^every)(refers,int), address₋of refers, 
- address₋of refers) nonalter;
+ address₋of refers) nonalter
 int uninit₋list(void (^)(refers, address₋of refers), address₋of refers, 
- address₋of refers, address₋of refers) nonalter;
+ address₋of refers, address₋of refers) nonalter
  
-refers Heap₋alloc(__builtin_int_t bytes) nonalter;
-refers Cons₋alloc(__builtin_int_t bytes) nonalter;
+refers Heap₋alloc(__builtin_int_t bytes) nonalter
+refers Cons₋alloc(__builtin_int_t bytes) nonalter
  
 */
 
@@ -186,5 +186,5 @@ main(
   clang -g -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules      \
    '∎|∎ radbanc.c' ../Apps/Source/Releases/libTwinbeam-x86_64.a
  
- \also 'sys/queue.h' and 'struct.h'. */
+ \also 'sys/queue.h'. */
 
