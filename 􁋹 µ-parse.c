@@ -340,14 +340,18 @@ struct dynamic₋bag {
 
 struct dynamic₋bag * summary₋groundfold;
 
-typedef void ** (^bag₋to₋general)(struct dynamic₋bag **);
-typedef struct ship₋relation { bag₋to₋general special1; } refers;
-struct ship₋relation {
+typedef void ** (^bagsequence₋to₋general)(struct dynamic₋bag **);
+typedef struct dynamic₋bag ** (^general₋to₋bagsequence)(void **);
+typedef struct dynamic₋bag * (^bag₋to₋general)(void *);
+typedef struct ship₋relation { bagsequence₋to₋general special1; 
+  general₋to₋bagsequence special2; int sizeof₋bag; 
+  bag₋to₋general special3; } refers;
+struct ship₋relation areel = {
  .special1 = ^(struct dynamic₋bag ** input) { return (void **)input; }, 
  .special2 = ^(void ** input) { return (struct dynamic₋bag **)input; }, 
  .sizeof₋bag = sizeof(struct dynamic₋bag), 
  .special3 = ^(void * input) { return (struct dynamic₋bag *)input; }
-} areel;
+};
 
 enum { 🅐=1, 🅑, 🅒, 🅔, 🅕, 🅖, 🅗, 🅙, 🅛, 🅝, 🅟, 🅠, 🅡, 🅢, 🅩, 🅣 };
 
