@@ -12,7 +12,7 @@ import Twinbeam;
 diffuse Fōretag-Method; ⁄* and not 'Company₋Methods' and one do not break with '$' before white space. *⁄
  
   .partial fostrat₋defi|struct diffractive₋glass₋variables [with negotiated₋valuable]
-  .end
+  .end ⁄* see struct.h. *⁄
   
   .definite big₋endian struct 4kbframe ⁄* \also .definit *⁄
   .end ⁄* 'direct definite' equals 'passed as a shallow copy' and 'voluntary definite' equals 'is never null'. *⁄
@@ -49,6 +49,8 @@ diffuse Fōretag-Method; ⁄* and not 'Company₋Methods' and one do not break w
   typedef encompass₋material simd_tᵦ; /͓ specialization *̷̷
   educative definite Unicodes Run(char32̄_t *) { ... return text; }
   ⁄* see --<leap-osmosis.c> for one undefined case of function-block overloading *⁄
+  .INCLUDE. "leap-osmosis.inc"
+  .INCLUDE. "stdio.inc" system
 @  This case takes care in case we want to output a fixed number of digits.
 
 @<Compute and output selected digits@>=
@@ -126,13 +128,16 @@ int₋to₋sequent:
     dereference₋and₋swap(px,py)
   END(attempth₋progress)
   
-corrections extended₋characterset ⁄* with implicit 'emboss' and 'replace' to rename 'stroke', 'append' and 'change'. *⁄
+serpent₋summary
   
---< @@ else if ((STATE(mode₋initial) > in next₋token₋inner
-  else if (STATE(mode₋initial) && uc == U'÷') { assign₋symbol(divide,out,1); return 0; } ⁄* ⌥ + '/'. *⁄
   
-  a̵t̵t̵e̵m̵p̵t̵₋̵p̵r̵o̵g̵r̵es̵s̵progress₋attempt
-  TRANSCRIPT(dereference₋and₋swap₋g̠e̠n̠e̠r̠a̠l̠
+exception
+  
+old₋sock  = ("recorded", "chester", "kommunist", "oat", "pill")
+  
+settings
+  window₋X 100px
+  window₋Y 100px
   
 references ⁄* a․𝘬․a append source augment when 'trace'. *⁄
   
@@ -143,9 +148,13 @@ references ⁄* a․𝘬․a append source augment when 'trace'. *⁄
   print("allocate middle at idx=⬚.\n",﹟d(idx))
   print("did₋prepare₋myrtle.\n")
   
-exception
+corrections extended₋characterset ⁄* with implicit 'emboss' and 'replace' to rename 'stroke', 'append' and 'change'. *⁄
   
-old₋sock  = ("recorded", "chester", "kommunist", "oat", "pill")
+--< @@ else if ((STATE(mode₋initial) > in next₋token₋inner
+  else if (STATE(mode₋initial) && uc == U'÷') { assign₋symbol(divide,out,1); return 0; } ⁄* ⌥ + '/'. *⁄
+  
+  a̵t̵t̵e̵m̵p̵t̵₋̵p̵r̵o̵g̵r̵es̵s̵progress₋attempt
+  TRANSCRIPT(dereference₋and₋swap₋g̠e̠n̠e̠r̠a̠l̠
   
 flags₋and₋notes
   
@@ -290,7 +299,7 @@ int salutant = 0;  /*  say 'hello' to operator. */
 
 int procuratio = 0;  /*  instruct operator on 'how to proceed'. */
 
-int library₋alt₋executable = 0; /* library=1, edecutable=2. */
+int library₋alt₋executable = 0; /* library=1, executable=2. */
 
 int do₋not₋link = 0;  /*  only compile to assembly listing. Do not produce binary file. */
 
@@ -299,13 +308,21 @@ int control₋branch; struct collection /* char8₋t * */ symbols₋uninstrument
 
 thesaurus₋ref modulename₋and₋filepaths;
 
-typedef struct ship₋relation { } refers;
-struct ship₋relation areel = { };
+typedef void ** (^include₋files₋reference)(char8₋t **);
+typedef void * (^include₋files₋direct)(char8₋t *);
+typedef struct ship₋relation {
+ include₋files₋reference special1;
+ include₋files₋direct special2;
+} refers;
+struct ship₋relation areel = {
+  .special1 = ^(char8₋t ** input) { return (void **)input; }, 
+  .special2 = ^(char8₋t * input) { return (void *)input; }
+};
 
 int add₋runlink₋keywords()
 {
    char32̄_t * keyword₋texts[] = { U"diffuse", U".IF.", U".ELSE.", U".ELIF.", 
-    U".END.", U".INCLUDE.", U".DEFINE.", U"defined", U".partial", 
+    U".END.", U".INCLUDE.", U"system", U".DEFINE.", U"defined", U".partial", 
     U"fostrat₋defi", U"struct", U".end", U".definite", U"big₋endian", 
     U"little₋endian", U".union", U"á₋priori", U"typedef", U"constant", 
     U"compute", U"compare", U"if", U"goto", U"transcript", U"TRANSCRIPT", 
@@ -314,9 +331,9 @@ int add₋runlink₋keywords()
     U"additions", U"as", U"indirect", U"voluntary", U"isomorph", U"refers", 
     U"int", U"char8₋t", U"char32̄_t", U"binary32", U"decimal32", U"tertary32", 
     U"tertary128", U"decimal128", U"binary128", U"unsigned", U"schema", 
-    U"prominent", U"PROMINENT", U"address₋of", U"alternates" };
+    U"prominent", U"PROMINENT", U"address₋of", U"nonalter" };
    int keyword₋constant[] = { diffusesym, preproc₋if, preproc₋else, 
-    preproc₋elif, preproc₋end, preproc₋include, preproc₋define, 
+    preproc₋elif, preproc₋end, preproc₋include, preproc₋system, preproc₋define, 
     preproc₋defined, partialsym, fostratdefisym, structsym, end₋and₋dotsym, 
     definitesym, big₋endiansym, little₋endiansym, unionsym, apriorisym, 
     typedefsym, constantsym, computesym, comparesym, ifsym, gotosym, 
@@ -325,7 +342,7 @@ int add₋runlink₋keywords()
     endsym, additionssym, assym, indirectsym, voluntarysym, isomorphsym, 
     referssym, intsym, char8₋tsym, char32̄_tsym, binary32sym, decimal32sym, 
     tertary32sym, tertary128sym, decimal128sym, binary128sym, unsignedsym, 
-    schemasym, prominentsym, prominentsym, addressofsym, alternatessym };
+    schemasym, prominentsym, prominentsym, addressofsym, nonaltersym };
    int keyword₋count=sizeof(keyword₋texts)/sizeof(char32̄_t *);
    merge₋to₋trie(keyword₋count,keyword₋texts,keyword₋constant,&keyword₋set);
    extern int arm₋keyword₋count(); extern char32̄_t ** arm₋keyword₋list(); 
@@ -402,13 +419,13 @@ int source₋files(struct Unicodes modulename, char8₋t *** sources, int * sour
    if (option₋correlation₋fileset(module₋sources,source₋paths,leaf₋source₋paths) { return -1; } */
    if (append₋at₋end(1,^(int count, Material ** uninited₋sometime) {
      *source₋count += 1;
-   },filepathsºª,last₋filepath,sizeof(char8₋t *))) { return -1; }
+   },areel.special1(&filepathsºª),areel.special1(&last₋filepath),sizeof(char8₋t *))) { return -1; }
    *sources = Alloc(*source₋count * sizeof(char8₋t *));
-   recollect(^(char8₋t * path, int i) { *sources[i] = path; },filepathsºª, 
-    last₋filepath); char8₋t * next₋element;
+   recollect(^(char8₋t * path, int i) { *sources[i] = path; },areel.special2(filepathsºª), 
+    areel.special2(last₋filepath)); char8₋t * next₋element;
    uninit₋list(^(Material * item, Material ** address₋of₋next) { 
     *address₋of₋next=item;
-   },filepathsºª,last₋filepath,&next₋element);
+   },areel.special2(filepathsºª),areel.special2(last₋filepath),&next₋element);
    return 0;
 }
 
