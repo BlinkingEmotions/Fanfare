@@ -103,8 +103,9 @@ necklace₋init(int count,
 again:
    if (i >= count) goto unagain;
    current = Cons₋alloc(sizeof(struct oval₋tree₋cons));
-   current->item = Heap₋alloc(sizeof(struct oval₋tree)); current->nxt.next=0; 
+   current->item = Heap₋alloc(sizeof(struct oval₋tree));
    if (*last) (*last)->nxt.next = current;
+   else current->nxt.next=0;
    collect[i] = current->item;
    *last = current;
    if (*first == 0) *first = current;
@@ -141,6 +142,13 @@ main(
   char * argv[]
 )
 {
+   typedef void (^Response)(char32̄_t * ucs, __builtin_int_t bytes);
+   EXT₋C int Order(Response out, char32̄_t * command, ...);
+   struct Unicodes text = Run(UC("/"));
+   Response out = ^(char32̄_t * ucs, __builtin_int_t bytes) {
+     print("⬚",﹟S(bytes,ucs));
+   };
+   Order(out,U"ls -la '⬚'",﹟S(text));
    /* 'write into indexed pointer area'. */
    if (necklace₋init(4, ^(int count, struct oval₋tree * uninited[]) {
      *&(uninited[0]->name) = persist₋as₋shatter(Run(UC("item-1")));
@@ -149,32 +157,32 @@ main(
      *&(uninited[3]->name) = persist₋as₋shatter(Run(UC("item-gen")));
      /* a․𝘬․a 3(uninited)->name = persist₋as₋shatter(Run(UC("indexed-pointer"))); */
    },&left₋hand.materialºª,&left₋hand.last)) return 1;
-   if (append₋at₋end(1,^(int count, struct oval₋tree ** snapshot₋sometime) {
-     *&(snapshot₋sometime[0]->name) = persist₋as₋shatter(Run(UC("initial-append")));
+   if (append₋at₋end(1,^(int count, struct oval₋tree ** sometime) {
+     *&(sometime[0]->name) = persist₋as₋shatter(Run(UC("initial-append")));
    },&left₋hand.materialºª,&left₋hand.last,areel)) return 2;
-   if (append₋at₋end(1,^(int count, struct oval₋tree ** snapshot₋sometime) {
-     *&(snapshot₋sometime[0]->name) = persist₋as₋shatter(Run(UC("second-append")));
+   if (append₋at₋end(1,^(int count, struct oval₋tree ** sometime) {
+     *&(sometime[0]->name) = persist₋as₋shatter(Run(UC("second-append")));
    },&left₋hand.materialºª,&left₋hand.last,areel)) return 3;
-   if (unqueue(1,^(int count, struct oval₋tree ** snapshot₋sometime) {
+   if (unqueue(1,^(int count, struct oval₋tree ** sometime) {
      for (int i=0; i<count; i+=1) 
-      print("unqueued ⬚\n",﹟S(Heap₋object₋size(snapshot₋sometime[i]->name), 
-       snapshot₋sometime[i]->name));
-     Fallow(count,areel.special4(snapshot₋sometime));
+      print("unqueued ⬚\n",﹟S(Heap₋object₋size(sometime[i]->name), 
+       sometime[i]->name));
+     Fallow(count,areel.special4(sometime));
    },&left₋hand.materialºª,&left₋hand.last,areel)) return 4;
-   if (rollback₋pop(^(struct oval₋tree * snapshot₋sometime) {
-     print("rollback ⬚\n",﹟S(Heap₋object₋size(snapshot₋sometime->name), 
-      snapshot₋sometime->name));
-     Fallow(snapshot₋sometime);
+   if (rollback₋pop(^(struct oval₋tree *sometime) {
+     print("rollback ⬚\n",﹟S(Heap₋object₋size(sometime->name), 
+      sometime->name));
+     Fallow(sometime);
    },&left₋hand.materialºª,&left₋hand.last,areel)) return 5;
    typedef void (^Every)(struct oval₋tree *,int);
    Every every = ^(struct oval₋tree * car,int index) { print("car is '⬚'\n", 
     ﹟S(Heap₋object₋size(car->name)/4,car->name)); };
    recollect(every,left₋hand.materialºª,left₋hand.last,areel);
-   if (necklace₋uninit(^(int count, struct oval₋tree ** snapshot₋sometime) {
+   if (necklace₋uninit(^(int count, struct oval₋tree ** sometime) {
      for (int i=0; i<count; i+=1)
-       print("uninit list ⬚\n",﹟S(Heap₋object₋size(snapshot₋sometime[i]->name), 
-        snapshot₋sometime[i]->name));
-     Fallow(count,areel.special4(snapshot₋sometime));
+       print("uninit list ⬚\n",﹟S(Heap₋object₋size(sometime[i]->name),
+        sometime[i]->name));
+     Fallow(count,areel.special4(sometime));
    },&left₋hand.materialºª,&left₋hand.last,areel)) return 7; /* arc occurred. */
    return 0;
 }
