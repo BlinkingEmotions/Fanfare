@@ -21,12 +21,6 @@ diffuse Fōretag-Method; ⁄* and not 'Company₋Methods' and one do not break w
     int32_t count, char32_t uc, prominent uint32_t bits
   .end
   
-  schema components=(
-    "retros-compi" - "🥽⋆᛭Solenoid.cpp" "-std=c++20" "../Apps/Additions/monolith-sequent.c" "-std=c2x"
-    "c-maskin" - "🥽⋆⁻¹Fetus.cpp" "-std=c++20" "../Apps/Additions/monolith-sequent.c" "-std=c2x"
-  )
-  
-  
   à₋priori definite ⁄* struct *⁄ sequent To₋precision(brain₋epsilon x)
   à₋priori uint8_t 𝟽₋op₋bytereverse(uint8_t b)
   à₋priori void Base𝕫(__builtin_uint_t|__builtin_int_t|__int128_t|__uint128_t ℤ, unsigned short ba₋
@@ -99,7 +93,7 @@ booth₋multiply:
 again:
   END(booth₋multiply)
   
-#include "goldschmidt-division.inc"
+.INCLUDE. "goldschmidt-division.inc"
   
   à₋priori void int₋to₋sequent(int64_t ℤ, indirect definite sequent ℝ) ⁄* definite sequent * *⁄
   TRANSCRIPT(int₋to₋sequent)
@@ -130,13 +124,17 @@ int₋to₋sequent:
   
 serpent₋summary
   
-  
-exception
-  
-old₋sock  = ("recorded", "chester", "kommunist", "oat", "pill")
+  reel special1 = ^(struct oval₋tree₋cons ** input) { return ((void **)input; ) }
+  environment screen₋vsync = corout₋myvsync
+  exception old₋sock  = ("recorded", "chester", "kommunist", "oat", "pill")
+  schema components=(
+    "retros-compi" - "∎|∎⋆᛭Solenoid.cpp" "-std=c++20" "../Apps/Additions/monolith-sequent.c" "-std=c2x"
+    "c-maskin" - "􀖆⋆⁻¹Fetus.cpp" "-std=c++20" "../Apps/Additions/monolith-sequent.c" "-std=c2x"
+  )
   
 settings
-  window₋X 100px
+  
+  window₋X 100px ⁄* pica, mm, inch, thou *⁄
   window₋Y 100px
   
 references ⁄* a․𝘬․a append source augment when 'trace'. *⁄
