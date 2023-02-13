@@ -34,47 +34,50 @@ typedef struct cons₋cell Cons₋cell;
 int append₋at₋end(int count, void (^augment)(int count, Material ** 
  uninited₋sometime), Conscell ** first, Conscell ** last, 
  int sizeof₋material) ⓣ
-{ int i=0; struct cons₋cell * cached,*lait₋tail; 
+{ int i=0; struct cons₋cell * memory,*element₋last; 
    Material * collect[count];
 again:
-   if (i >= count) { goto unagain; }
-   cached = (Cons₋cell *)*last;
-   lait₋tail = Cons₋alloc(sizeof(Material *) + sizeof(Conscell *)); /* unfortunately type-error. */
-   lait₋tail->item = Heap₋alloc(sizeof₋material); lait₋tail->nxt.next=0;
-   collect[i] = lait₋tail->item;
-   if (cached) cached->nxt.next = lait₋tail;
-   *last = lait₋tail;
-   if (*first==0) { *first=lait₋tail; }
+   if (i >= count) goto unagain;
+   memory = (Cons₋cell *)*last;
+   element₋last = Cons₋alloc(sizeof(Conscell *) + sizeof(Material *)); /* unfortunately type-error. */
+   element₋last->item = Heap₋alloc(sizeof₋material); element₋last->nxt.next=0;
+   collect[i] = element₋last->item;
+   if (memory) memory->nxt.next = element₋last;
+   *last = element₋last;
+   if (*first==0) { *first=memory; }
    i+=1; goto again;
 unagain:
-   if (augment) augment(count,collect); /* unfortunately sometime null,... */
+   if (augment) augment(count,collect);
    return 0;
 } /* 'Ordo ett' */
 
 int unqueue(int count, void (^removed)(int count, Material ** 
  snapshot₋sometime), Conscell ** first, Conscell ** last) ⓣ
-{ int i=0; Material * collect[count]; Cons₋cell ** First=(Cons₋cell **)first;
+{ int i=0; Material * collect[count];
+   Cons₋cell ** First=(Cons₋cell **)first;
 again:
-   if (i >= count) { goto unagain; }
-   if (*first == 0) { goto unagain; }
+   if (i >= count) goto unagain;
+   if (*first == 0) goto unagain;
    collect[i] = (*First)->item;
-   Heap₋unalloc((*First)->item);
-   Cons₋fallow(*first); /* unfortunately sometime not-overwritten. */
+   Cons₋fallow(*First); /* unfortunately sometime not-overwritten. */
    *first=(*First)->nxt.next;
    i+=1; goto again;
 unagain:
-   if (removed) removed(i,collect); /* unfortunately sometime null,... */
+   if (removed) removed(i,collect);
    return 0;
 }
 
 int rollback₋pop(void (^scalar)(Material * snapshot₋sometime), Conscell ** 
  first, Conscell ** last) ⓣ
-{ Cons₋cell * iter = *(Cons₋cell **)first;
-   if (iter == 0) { return -1; }
-   if (iter->nxt.next == *last) { *first=0; *last=0; return 0; }
+{ Cons₋cell * select = *(Cons₋cell **)first, *deleted;
+   if (select == 0) return -1;
+   if (*last == *first) { deleted=select,*first=0,*last=0; goto unagain; }
 again:
-   if (iter->nxt.next == *last) { *last=iter; return 0; }
-   iter = iter->nxt.next; goto again;
+   if (select->nxt.next == *last) { *last=select; goto unagain; }
+   select = select->nxt.next; goto again;
+unagain:
+   scalar(deleted);
+   return 0;
 }
 
 int is₋empty(Conscell * first, Conscell * last) ⓣ
@@ -82,12 +85,13 @@ int is₋empty(Conscell * first, Conscell * last) ⓣ
    return first == 0 && last == 0;
 }
 
-void recollect(void (^element)(Material *,int), Conscell * first, Conscell * last) ⓣ
-{ Cons₋cell * current = (Cons₋cell *)first; int index=0;
+void recollect(void (^item)(Material *,int), Conscell * first, 
+ Conscell * last) ⓣ
+{ Cons₋cell * select = (Cons₋cell *)first; int index=0;
 again:
-   if (current == 0) { goto unagain; }
-   element(current->item,index);
-   current = current->nxt.next;
+   if (select == 0) goto unagain;
+   item(select->item,index);
+   select = select->nxt.next;
    index+=1; goto again;
 unagain:
    return; /* unfortunately non-mandatory ';' */
@@ -95,12 +99,12 @@ unagain:
 
 int uninit₋list(void (^removed)(Material *, Material **), Conscell * first, 
  Conscell * last, Material ** address₋of₋next) ⓣ
-{ Cons₋cell * current = (Cons₋cell *)first;
+{ Cons₋cell * select = (Cons₋cell *)first;
 again:
-   if (current == 0) goto unagain;
-   Heap₋unalloc(current);
-   if (removed) removed(current->item,address₋of₋next);
-   current = current->nxt.next;
+   if (select == 0) goto unagain;
+   Heap₋unalloc(select);
+   if (removed) removed(select->item,address₋of₋next);
+   select = select->nxt.next;
    goto again;
 unagain:
    return 0;
@@ -119,13 +123,17 @@ struct oval₋tree₋cons { struct oval₋tree * item; union oval₋tree₋conti
 typedef void ** (^paramet₋to₋automat)(struct oval₋tree₋cons **);
 typedef struct oval₋tree ** (^variant₋fromto₋array)(void **);
 typedef struct oval₋tree * (^variant₋fromto₋indirect₋toread)(void *);
-typedef struct ship₋relation { paramet₋to₋automat special1; variant₋fromto₋array 
- special2; int sizeof₋material; variant₋fromto₋indirect₋toread special3; } refers;
+typedef void ** (^special₋to₋general)(struct oval₋tree **);
+typedef struct ship₋relation { paramet₋to₋automat special1; 
+ variant₋fromto₋array special2; int sizeof₋material; 
+ variant₋fromto₋indirect₋toread special3; special₋to₋general 
+ special4; } refers;
 struct ship₋relation areel = {
  .special1 = ^(struct oval₋tree₋cons ** input) { return (void **)input; }, 
  .special2 = ^(void ** input) { return (struct oval₋tree **)input; }, 
  .sizeof₋material = sizeof(struct oval₋tree), 
- .special3 = ^(void * input) { return (struct oval₋tree *)input; }
+ .special3 = ^(void * input) { return (struct oval₋tree *)input; }, 
+ .special4 = ^(struct oval₋tree ** input) { return (void **)input; }
 };
 
 int append₋at₋end(int count, void (^augment)(int, struct oval₋tree **), struct 
@@ -200,6 +208,11 @@ necklace₋uninit(
    return 0;
 }
 
+void Fallow(int count, void ** reference) ⓣ
+{
+   for (int i=0; i<count; i+=1) Fallow(i,reference[i]);
+}
+
 int
 main(
   int argc, 
@@ -220,20 +233,25 @@ main(
      *&(snapshot₋sometime[0]->name) = persist₋as₋shatter(Run(UC("second-append")));
    },&left₋hand.materialºª,&left₋hand.last,areel)) { return 3; }
    if (unqueue(1,^(int count, struct oval₋tree ** snapshot₋sometime) {
-     print("unqueued ⬚\n",﹟S(Heap₋object₋size(snapshot₋sometime[0]->name), 
-      snapshot₋sometime[0]->name));
+     for (int i=0; i<count; i+=1) 
+      print("unqueued ⬚\n",﹟S(Heap₋object₋size(snapshot₋sometime[i]->name), 
+       snapshot₋sometime[i]->name));
+     Fallow(count,areel.special4(snapshot₋sometime));
    },&left₋hand.materialºª,&left₋hand.last,areel)) { return 4; }
    if (rollback₋pop(^(struct oval₋tree * snapshot₋sometime) {
-     print("rollback ⬚",﹟S(Heap₋object₋size(snapshot₋sometime->name), 
+     print("rollback ⬚\n",﹟S(Heap₋object₋size(snapshot₋sometime->name), 
       snapshot₋sometime->name));
+     Fallow(snapshot₋sometime);
    },&left₋hand.materialºª,&left₋hand.last,areel)) { return 5; }
    typedef void (^Every)(struct oval₋tree *,int);
-   Every every = ^(struct oval₋tree * car,int index) { vfprint("car is '⬚'\n", 
+   Every every = ^(struct oval₋tree * car,int index) { print("car is '⬚'\n", 
     ﹟S(Heap₋object₋size(car->name)/4,car->name)); };
    recollect(every,left₋hand.materialºª,left₋hand.last,areel);
    if (necklace₋uninit(^(int count, struct oval₋tree ** snapshot₋sometime) {
-     print("uninit list ⬚\n",﹟S(Heap₋object₋size(snapshot₋sometime[0]->name), 
-      snapshot₋sometime[0]->name));
+     for (int i=0; i<count; i+=1)
+       print("uninit list ⬚\n",﹟S(Heap₋object₋size(snapshot₋sometime[i]->name), 
+        snapshot₋sometime[i]->name));
+     Fallow(count,areel.special4(snapshot₋sometime));
    },&left₋hand.materialºª,&left₋hand.last,areel)) { return 7; } /* arc occurred. */
    return 0;
 }
