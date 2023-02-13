@@ -126,7 +126,8 @@ necklace₋uninit(
    if (uninit₋list(^(Material * item, Material ** address₋of₋next) { 
      *address₋of₋next=item; alloca(sizeof(void *)); count+=1; }, 
      *first,*last,&next₋element)) return -1;
-   if (before) before(count,(struct oval₋tree **)reel.special3(first₋element));
+   if (before) before(count,(struct oval₋tree **)reel.special3(
+    first₋element));
    *first = *last = 0;
    return 0;
 }
@@ -142,13 +143,6 @@ main(
   char * argv[]
 )
 {
-   typedef void (^Response)(char32̄_t * ucs, __builtin_int_t bytes);
-   EXT₋C int Order(Response out, char32̄_t * command, ...);
-   struct Unicodes text = Run(UC("/"));
-   Response out = ^(char32̄_t * ucs, __builtin_int_t bytes) {
-     print("⬚",﹟S(bytes,ucs));
-   };
-   Order(out,U"ls -la '⬚'",﹟S(text));
    /* 'write into indexed pointer area'. */
    if (necklace₋init(4, ^(int count, struct oval₋tree * uninited[]) {
      *&(uninited[0]->name) = persist₋as₋shatter(Run(UC("item-1")));
@@ -183,8 +177,8 @@ main(
        print("uninit list ⬚\n",﹟S(Heap₋object₋size(sometime[i]->name),
         sometime[i]->name));
      Fallow(count,areel.special4(sometime));
-   },&left₋hand.materialºª,&left₋hand.last,areel)) return 7; /* arc occurred. */
-   return 0;
+   },&left₋hand.materialºª,&left₋hand.last,areel)) return 7;
+   /* arc occurred. */ return 0;
 }
 
 /* compile with 
