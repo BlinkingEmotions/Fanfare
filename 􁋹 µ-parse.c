@@ -342,12 +342,12 @@ struct dynamic₋bag * summary₋groundfold;
 
 typedef void ** (^bag₋to₋general)(struct dynamic₋bag **);
 typedef struct ship₋relation { bag₋to₋general special1; } refers;
-struct ship₋relation areel {
+struct ship₋relation {
  .special1 = ^(struct dynamic₋bag ** input) { return (void **)input; }, 
  .special2 = ^(void ** input) { return (struct dynamic₋bag **)input; }, 
  .sizeof₋bag = sizeof(struct dynamic₋bag), 
  .special3 = ^(void * input) { return (struct dynamic₋bag *)input; }
-}
+} areel;
 
 enum { 🅐=1, 🅑, 🅒, 🅔, 🅕, 🅖, 🅗, 🅙, 🅛, 🅝, 🅟, 🅠, 🅡, 🅢, 🅩, 🅣 };
 
@@ -580,4 +580,3 @@ unagain:
  block₋p₋se = termirender₋and₋not('transcript','var','const')
  
   */
-
