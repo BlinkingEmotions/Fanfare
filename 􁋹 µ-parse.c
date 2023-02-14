@@ -5,16 +5,19 @@
 import Twinbeam;
 
 enum symbol₋class { ident, number, times, divide, plus, minus, lparen, 
- rparen, eql, neq/*=10*/, lss, leq, gtr, geq, semicolon, callsym, beginsym, 
- endsym, /* whilesym, dosym, forsym */ branch₋goto₋optsym, elsesym/*=20 inner 
- and outer iteration */, thensym, ifsym, afterward, constsym, varsym, procsym, 
- period, comma, oddsym, voidsym/*=30*/, referssym, unicode₋text, utf8₋text, paragraphsym, 
- start₋indenturesym, referenceindenture₋startsym, end₋referenceindenturesym, 
- subsectionsym, additionssym, colon, label, symbol₋for₋enquery/*=41*/, 
- end₋of₋transmission₋and₋file, unarbitrated₋symbol, 
- logical₋alternate, logical₋and, logical₋or, logical₋not, diffusesym, 
- referencessym, dowsingsym/*=50*/, ellipsissym, leftrightread, insym, presentsym, 
- schemasym/*=55*/, erratasym
+ rparen, eql, neq/*=10*/, lss, leq, gtr, geq, callsym, beginsym, endsym, 
+ branch₋goto₋optsym, colon, label, afterward, constsym, varsym, procsym, 
+ period, comma, semicolon, elsesym, thensym, ifsym, oddsym, additionssym, 
+ voidsym, referssym, unicode₋text, utf8₋text, 
+ paragraphsym, start₋indenturesym, referenceindenture₋startsym, 
+ end₋referenceindenturesym, subsectionsym, 
+ symbol₋for₋enquery, 
+ logical₋alternate, logical₋and, logical₋or, logical₋not, 
+ schemasym, reelsym, environmentsym, exceptionsym, 
+ dowsingsym, ellipsissym, leftrightread, insym, presentsym, 
+ serpentsummarysym, settingsym, referencessym, correctionssym, flagsandnotessym, 
+ diffusesym, dotifsym, definedsym, dotdefinesym, dotendsym, dotincludesym, 
+ systemsym, end₋of₋transmission₋and₋file, unarbitrated₋symbol
 }; /* .IF. .ELSE. .ELIF. .END. .INCLUDE. .DEFINE. DEFINED */
 
 /* clang -g -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules      \
@@ -107,8 +110,8 @@ int symbol₋equal(enum symbol₋class s) { return symbol.class==s; }
 int copy₋identifier(struct language₋context * ctxt, Symbol * out)
 { Nonabsolut reference = collection₋count(identifiers);
    char32̄_t * ucs=ctxt->regular; __builtin_int_t tetras=ctxt->syms₋in₋regular;
-   if (copy₋append₋onto₋regular(identifiers,tetras,ucs,Alloc,&reference)) { return -1; }
-   if (regularpool₋datum₋text(identifiers,tetras,reference)) { return -1; }
+   if (copy₋append₋onto₋regular(identifiers,tetras,ucs,Alloc,&reference)) return -1;
+   if (regularpool₋datum₋text(identifiers,tetras,reference)) return -1;
    assign₋symbol(ident,out,tetras);
    return 0;
 }
@@ -256,53 +259,67 @@ void next₋token(struct language₋context * ctxt)
   case divide: token("'/'"); break;
   case plus: token("'+'"); break;
   case minus: token("'-'"); break;
+  case eql: token("'=='"); break;
   case neq: token("'<>'"); break;
   case lss: token("'<'"); break;
   case leq: token("'<='"); break;
   case gtr: token("'>'"); break;
   case geq: token("'>='"); break;
   case callsym: token("'call'"); break;
-  case ifsym: token("'if'"); break;
-  case thensym: token("'then'"); break;
-  case elsesym: token("'else'"); break;
-  /* case whilesym: print("'while'\n"); break;
-  case dosym: print("'do'\n"); break; */
-  case branch₋goto₋optsym: token("'branch-goto-opt'"); break;
-  case constsym: token("'constant'"); break;
-  case comma: token("','"); break;
-  case varsym: token("'var'"); break;
-  case procsym: token("'transcript'"); break;
-  case oddsym: token("'odd'"); break;
   case beginsym: token("'begin'"); break;
   case endsym: token("'end'"); break;
-  case eql: token("'='"); break;
+  case branch₋goto₋optsym: token("'branch-goto-opt'"); break;
   case colon: token("':'"); break;
-  case afterward: token("':='"); break;
-  case semicolon: token("';'"); break;
-  case end₋of₋transmission₋and₋file: token("completion"); break;
-  case unicode₋text: token("\"<text>\"");
-  case paragraphsym: token("'@*'"); break;
-  case subsectionsym: token("'@'"); break;
-  case referenceindenture₋startsym: token("'@<'"); break;
-  case start₋indenturesym: token("'@>='"); break;
-  case end₋referenceindenturesym: token("'@>'"); break;
-  case additionssym: token("'additions'"); break;
   case label: token("label"); break;
-  case referencessym: token("'references'"); break;
+  case afterward: token("':='"); break;
+  case constsym: token("'constant'"); break;
+  case varsym: token("'var'"); break;
+  case procsym: token("'transcript'"); break;
+  case period: token("'period'"); break;
+  case comma: token("','"); break;
+  case semicolon: token("';'"); break;
+  case elsesym: token("'else'"); break;
+  case ifsym: token("'if'"); break;
+  case thensym: token("'then'"); break;
+  case oddsym: token("'odd'"); break;
+  case additionssym: token("'additions'"); break;
+  case voidsym: token("'void'"); break;
+  case referssym: token("'refers'"); break;
+  case unicode₋text: token("\"<process-text>\"");
+  case utf8₋text: token("\"<storage-text>\""); break;
+  case paragraphsym: token("'@*'"); break;
+  case start₋indenturesym: token("'@>='"); break;
+  case referenceindenture₋startsym: token("'@<'"); break;
+  case end₋referenceindenturesym: token("'@>'"); break;
+  case subsectionsym: token("'@'"); break;
+  case symbol₋for₋enquery: token("'␅'"); break;
+  case logical₋alternate: token("'^'"); break;
+  case logical₋and: token("'&&'"); break;
+  case logical₋or: token("'||'"); break;
+  case logical₋not: token("'!'"); break;
   case dowsingsym: token("'--<'"); break;
   case ellipsissym: token("'…'"); break;
   case leftrightread: token("'@@'"); break;
   case insym: token("'in'"); break;
-  case presentsym: token("'present'"); break;
-  case voidsym: token("'void'"); break;
-  case referssym: token("'refers'"); break;
-  case utf8₋text: token("\"<storage-text>\""); break;
-  case symbol₋for₋enquery: token("'␅'"); break;
-  case unarbitrated₋symbol: token("'𝘶𝘯𝘢𝘳𝘣𝘪𝘵𝘳𝘢𝘵𝘦𝘥'"); break;
+  case schemasym: token("'schema'"); break;
+  case reelsym: token("'reel'"); break;
+  case environmentsym: token("'environment'"); break;
+  case exceptionsym: token("'exception'"); break;
+  case serpentsummarysym: token("'serpent₋summary'"); break;
+  case settingsym: token("'settings'"); break;
+  case referencessym: token("'references'"); break;
+  case correctionssym: token("'corrections'"); break;
+  case flagsandnotessym: token("'flags₋and₋notes"); break;
   case diffusesym: token("'diffuse'"); break;
-  case schemasym: token("'token'"); break;
-  case erratasym: token("'errata'"); break; /* change, remove-delete and again appaend. */
-  default: vfprint("period and non-sorted generalization.\n");
+  case dotifsym: token("'.IF.'"); break;
+  case definedsym: token("'DEFINED'"); break;
+  case dotdefinesym: token("'.DEFINE.'"); break;
+  case dotendsym: token("'.END.'"); break;
+  case dotincludesym: token("'.INCLUDE.'"); break;
+  case systemsym: token("'system'"); break;
+  case end₋of₋transmission₋and₋file: token("completion"); break;
+  case unarbitrated₋symbol: token("'𝘶𝘯𝘢𝘳𝘣𝘪𝘵𝘳𝘢𝘵𝘦𝘥'"); break;
+  default: vfprint("non-sorted generalization.\n");
   }
 #endif
 }
@@ -324,27 +341,31 @@ int newline₋match(enum symbol₋class s) { if (symbol₋equal(s) || (Ctxt.carr
 
 int eltgat(enum symbol₋class s, void (*action)()) { return 0; }
 
+struct dynamic₋bag₋detail {
+  struct dynamic₋bag *lºª,*rºª,*compare₋thenºª,*compare₋elseºª,*sequenceºª,*element;
+  struct dynamic₋bag *nextºª;
+  struct dynamic₋bag *formalºª,*detailºª;
+  struct dynamic₋bag *machineºª,*recollectºª,*augmentºª,*exceptionºª;
+  struct dynamic₋bag *const₋machineºª;
+  struct dynamic₋bag *all₋last;
+  __uint128_t fineprint; Nonabsolut episod;
+};
+
 struct dynamic₋bag {
   struct token₋detail X;
+  struct dynamic₋bag₋detail detail;
   enum symbol₋class T;
-  struct dynamic₋bag *l,*r,*compare₋then,*compare₋else,*sequence,*element;
-  struct dynamic₋bag *nextºª,*last₋next;
-  struct dynamic₋bag *formal, *detail;
-  __uint128_t fineprint; Nonabsolut episod;
-  struct dynamic₋bag *machineºª,*recollectºª,*augmentºª,*exceptionºª, 
-   *last₋exception,*last₋augment,*last₋recollect,*last₋machine;
-  struct dynamic₋bag * const₋machineºª,*last₋constmachine;
   short memory,count; int leg;
   __builtin_int_t memory₋count;
 };
 
 struct dynamic₋bag * summary₋groundfold;
 
-typedef void ** (^bagsequence₋to₋general)(struct dynamic₋bag **);
-typedef struct dynamic₋bag ** (^general₋to₋bagsequence)(void **);
+typedef void ** (^sequence₋to₋general)(struct dynamic₋bag **);
+typedef struct dynamic₋bag ** (^general₋to₋sequence)(void **);
 typedef struct dynamic₋bag * (^bag₋to₋general)(void *);
-typedef struct ship₋relation { bagsequence₋to₋general special1; 
-  general₋to₋bagsequence special2; int sizeof₋bag; 
+typedef struct ship₋relation { sequence₋to₋general special1; 
+  general₋to₋sequence special2; int sizeof₋bag; 
   bag₋to₋general special3; } refers;
 struct ship₋relation areel = {
  .special1 = ^(struct dynamic₋bag ** input) { return (void **)input; }, 
@@ -414,7 +435,7 @@ void condition(void)
 
 void function₋actual₋list(void)
 { struct dynamic₋bag * car; short size=0;
-   do { car=Alloc(sizeof(struct dynamic₋bag)); if (size!=0) car->next=form; 
+   do { car=Alloc(sizeof(struct dynamic₋bag)); if (size!=0) car->nextºª=form; 
     condition(); car->element=form; size+=1; } while(match(comma));
    form=car; form->count=size;
 } /* car->next=form when not₋first else ΨΛΩ; */
@@ -458,7 +479,7 @@ void opt₋second(void)
 
 void function₋formal₋list(void)
 { struct dynamic₋bag * car; short size=0;
-   do { car=Alloc(sizeof(struct dynamic₋bag)); if (size!=0) car->next=form; expect(ident); 
+   do { car=Alloc(sizeof(struct dynamic₋bag)); if (size!=0) car->nextºª=form; expect(ident); 
     expect(/*left₋*/ ident); eltgat(/*right₋*/ident,opt₋second); 
     car->element=form; size+=1;
    } while(match(comma));
@@ -469,13 +490,14 @@ void opt₋void(void) { }
 
 void opt₋associations()
 {
-   expect(unicode₋text); expect(minus); do { expect(unicode₋text); } while(!(symbol₋equal(rparen) || retrospect.class == unicode₋text));
+   expect(unicode₋text); expect(minus); do { expect(unicode₋text); } 
+   while(!(symbol₋equal(rparen) || retrospect.class == unicode₋text));
 }
 
 void block(void)
-{ tree=Alloc(sizeof(struct dynamic₋bag)); tree->art=tree->var=tree->pct=ΨΛΩ;
+{
    while (symbol₋equal(constsym) || symbol₋equal(varsym) || 
-    symbol₋equal(procsym) || symbol₋equal(schemasym))
+    symbol₋equal(procsym))
    {
       switch (symbol.class)
       {
@@ -496,29 +518,34 @@ void block(void)
         if (!symbol₋equal(rparen)) { function₋formal₋list(); list=form; } expect(rparen); 
         statement(); detail=form; House(🅟,3,cipher,list,detail); House(🅩,2,tree,form); }
         break; }
-      case schemasym: { Nonabsolut table; 
-        match(schemasym); expect(ident); table=symbol₋passed.gritty.store.regularOrIdent;
-        expect(eql); expect(lparen); opt₋associations(); expect(rparen); House(🅢,3,table,tree,form); break; }
-      case referencessym: { match(referencessym); expect(dowsingsym); break; }
-      case erratasym: { break; }
-      case attributessym:
-      default: error(2,"unsupported initial keyword"); break;
+       default: error(2,"unsupported initial-half keyword"); break;
       }
    }
-   while (symbol₋equal(referencessym) || symbol₋equal(erratasym))); 
+   while (symbol₋equal(serpentsummarysym) || symbol₋equal(settingsym) || 
+    symbol₋equal(referencessym) || symbol₋equal(correctionssym) || 
+    symbol₋equal(flagsandnotessym)) {
+     switch (symbol.class) {
+     case schemasym: { Nonabsolut table; match(schemasym); expect(ident); 
+      table=symbol₋passed.gritty.store.regularOrIdent;
+      expect(eql); expect(lparen); opt₋associations(); expect(rparen); 
+      House(🅢,3,table,tree,form); break; }
+     case referencessym: { match(referencessym); expect(dowsingsym); break; }
+     default: error(2,"unsupported initial second-half keyword"); break;
+     }
+   }
 }
 
 void program(void) { next₋token(&Ctxt); block(); valid(2,end₋of₋transmission₋and₋file,"incorrect signature"); }
 
-int main()
+int main(int argc, char * argv[])
 {
    char32̄_t * keywords[] = { U"constant", U"variable", U"call", U"begin", U"end", 
     U"if", U"then", U"odd", U"transcript", U"else", U"void", U"diffuse", 
-    U"references", U"in", U"present", U"schema", U"errata" /* intelligence */, 
-    U"branch" };
+    U"references", U"in", U"present", U"schema", U"corrections" /* intelligence */, 
+    U"branch" }; /* replaced-start, end-replacement, omgivning, add-start, add-end, combining deleted,, */
    int symbols[] = { constsym,varsym,callsym,beginsym,endsym,ifsym,thensym, 
-    oddsym,procsym,elsesym,voidsym,diffusesym,referencessym,insym,
-    presentsym,schemasym,erratasym,branch₋goto₋optsym /* refers, additionssym */ };
+    oddsym,procsym,elsesym,voidsym,diffusesym,referencessym,insym, 
+    presentsym,schemasym,correctionssym,branch₋goto₋optsym /* refers, additionssym */ };
    merge₋to₋trie(18,keywords,symbols,&(Ctxt.keys));
    Ctxt.state=mode₋initial;
    Ctxt.tip₋unicode=0;
@@ -527,19 +554,31 @@ int main()
    location₋init(&Ctxt.interval);
    symbol₋passed.class = unarbitrated₋symbol;
    identifiers = Alloc(sizeof(struct collection));
-   if (init₋regularpool(identifiers)) { return 1; }
+   if (init₋regularpool(identifiers)) return 1;
    text₋unicode = Alloc(sizeof(struct collection));
-   if (init₋regularpool(text₋unicode)) { return 1; }
-   tree->artºª = tree->last₋art = tree->varºª = tree->last₋var = tree->pctºª = tree->last₋pct; /* interference abbrev whilst keyput. */
-   text₋program = Run(U"constant abcd=321+1,dcba=123;\nvariable cdeg,gec,cgb\ntranscript foo() begin\n call window1; call window2;\nif cdeg <> gec then begin cgb:=1+1; abcd() end else begin cgb:=1-1 end end\n transcript fie()\nbegin\n call view\nend\n transcript fue()\nbegin\ncall control end");
+   if (init₋regularpool(text₋unicode)) return 1;
+   tree = Alloc(sizeof(struct dynamic₋bag));
+   tree->machineºª = tree->recollectºª = tree->augmentºª = 
+    tree->exceptionºª = tree->last₋exception = 
+    tree->last₋augment = tree->last₋recollect = 
+    tree->last₋machine = tree->const₋machineºª = ΨΛΩ;
+   text₋program = Run(
+U"constant abcd=321+1,dcba=123;\n"
+ "variable cdeg,gec,cgb\n"
+ "transcript foo() begin\n"
+ "  call window1; call window2;\n"
+ "  if cdeg <> gec then begin cgb:=1+1; abcd() end "
+ "  else begin cgb:=1-1 end end\n"
+ "transcript fie()\nbegin\n call view\nend\n"
+ "transcript fue()\nbegin\ncall control\nend\n\n");
    program();
    assign(form);
 #if defined TRACE₋SYNTAX
-   print₋tree(tree->art);
-   print₋tree(tree->var);
-   print₋tree(tree->pct);
+   print₋tree(tree->const₋machineºª);
+   print₋tree(tree->recollectºª);
+   print₋tree(tree->machineºª);
 #endif
-   codegenerate(); /* a.k.a 'ferry' and 'tooth'. (code and documentation.) */
+   codegenerate(); /* a․𝘬․a 'ferry' and 'tooth'. (Code and documentation.) */
 #if defined TRACE₋SYMBOL
    __builtin_int_t symbol₋count=collection₋count(identifiers);
    Nonabsolute 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 relative=0,previous₋relative=0;
