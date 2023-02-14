@@ -10,8 +10,7 @@ enum symbol₋class { ident, number, times, divide, plus, minus, lparen,
  period, comma, semicolon, elsesym, thensym, ifsym, oddsym, additionssym, 
  voidsym, referssym, unicode₋text, utf8₋text, 
  paragraphsym, start₋indenturesym, referenceindenture₋startsym, 
- end₋referenceindenturesym, subsectionsym, 
- symbol₋for₋enquery, 
+ end₋referenceindenturesym, subsectionsym, symbol₋for₋enquery, 
  logical₋alternate, logical₋and, logical₋or, logical₋not, 
  schemasym, reelsym, environmentsym, exceptionsym, 
  dowsingsym, ellipsissym, leftrightread, insym, presentsym, 
@@ -168,6 +167,7 @@ again:
    else if (STATE(mode₋initial) && uc == U'/') { assign₋symbol(divide,out,1); return 0; }
    else if (STATE(mode₋initial) && uc == U'+') { assign₋symbol(plus,out,1); return 0; }
    else if (STATE(mode₋initial) && uc == U'-') { assign₋symbol(minus,out,1); return 0; }
+   /* ⌥ + '-' for '–' and ⌥ + shift + '-' for '—'. */
    else if (STATE(mode₋initial) && uc == U'=') { assign₋symbol(eql,out,1); return 0; }
    else if (STATE(mode₋initial) && uc == U'<' && uc₊₁ == U'>') { ctxt->tip₋unicode+=1; assign₋symbol(neq,out,2); return 0; }
    else if (STATE(mode₋initial) && uc == U'≠') { assign₋symbol(neq,out,1); return 0; } /* ⌥ + '='. */
@@ -341,23 +341,42 @@ int newline₋match(enum symbol₋class s) { if (symbol₋equal(s) || (Ctxt.carr
 
 int eltgat(enum symbol₋class s, void (*action)()) { return 0; }
 
-struct dynamic₋bag₋detail {
-  struct dynamic₋bag *lºª,*rºª,*compare₋thenºª,*compare₋elseºª,*sequenceºª,*element;
-  struct dynamic₋bag *nextºª;
-  struct dynamic₋bag *formalºª,*detailºª;
-  struct dynamic₋bag *machineºª,*recollectºª,*augmentºª,*exceptionºª;
-  struct dynamic₋bag *const₋machineºª;
-  struct dynamic₋bag *all₋last;
+struct dynamic₋bag₋form {
+  struct dynamic₋bag *l,*r,*compare₋thenºª,*compare₋elseºª,*sequenceºª,*element;
+  struct dynamic₋bag₋cons *nextºª;
+  struct dynamic₋bag₋cons *formalºª,*detailºª;
+  struct dynamic₋bag₋cons *machineºª,*recollectºª,*augmentºª,*exceptionºª;
+  struct dynamic₋bag₋cons *const₋machineºª;
+  struct dynamic₋bag₋cons *machine₋last,*recollect₋last,*augment₋last, 
+   *exception₋last,*constmachine₋last;
   __uint128_t fineprint; Nonabsolut episod;
 };
 
 struct dynamic₋bag {
   struct token₋detail X;
-  struct dynamic₋bag₋detail detail;
+  struct dynamic₋bag₋form form;
   enum symbol₋class T;
-  short memory,count; int leg;
+  short memory,count; short leg;
   __builtin_int_t memory₋count;
 };
+
+union dynamic₋bag₋continuation { struct dynamic₋bag₋cons * next; __builtin_uint_t possibly₋maybe; };
+
+struct dynamic₋bag₋cons { struct dynamic₋bag *item; union dynamic₋bag₋continuation nxt; };
+
+int retail(void (^appendix)(struct dynamic₋bag * item), struct dynamic₋bag₋cons ** first, struct 
+ dynamic₋bag₋cons ** last)
+{ int bag₋sizeof = sizeof(struct dynamic₋bag), cons₋sizeof=sizeof(struct dynamic₋bag₋cons);
+   struct dynamic₋bag₋cons * cell = (struct dynamic₋bag₋cons *)Heap₋alloc(cons₋sizeof);
+   struct dynamic₋bag *item=(struct dynamic₋bag *)Heap₋alloc(bag₋sizeof);
+   if (item == 0) return -1;
+   appendix(item);
+   memory = *last;
+   *last = item;
+   memory-> ---;
+   if (*first == 0) *first = item;
+   return 0;
+}
 
 struct dynamic₋bag * summary₋groundfold;
 
@@ -434,10 +453,19 @@ void condition(void)
 }
 
 void function₋actual₋list(void)
-{ struct dynamic₋bag * car; short size=0;
-   do { car=Alloc(sizeof(struct dynamic₋bag)); if (size!=0) car->nextºª=form; 
+{ struct dynamic₋bag * material; short size=0;
+   do { material=Alloc(sizeof(struct dynamic₋bag)); if (size!=0) ->nextºª=form; 
     condition(); car->element=form; size+=1; } while(match(comma));
    form=car; form->count=size;
+
+ struct dynamic₋bag * parametersºª = (struct dynamic₋bag *)Alloc(sizeof(struct dynamic₋bag));
+   do { condition();
+
+  if (append₋at₋end(1, ^(int count, Material **) { } ,Conscell * ᐧ * ᐧ, 
+ Conscell * ᐧ * ᐧ,int)) { }
+
+    } while(match(comma));
+   form = parametersºª;
 } /* car->next=form when not₋first else ΨΛΩ; */
 
 void opt₋etter(void)
@@ -454,16 +482,16 @@ void opt₋etter(void)
 
 void statement(void)
 {
-   if (match(additionssym)) { Nonabsolut l₋value /* a․𝘬․a 'left'. */; 
-    do { expect(ident); l₋value=symbol.gritty.store.regularOrIdent; 
-     if (match(eql)) { expect(eql); condition(); House(🅔,2,l₋value,form); }
+   if (match(additionssym)) { Nonabsolut left; /* a.k.a 'l-value'. */ 
+    do { expect(ident); left=symbol₋passed.gritty.store.regularOrIdent; 
+     if (match(eql)) { expect(eql); condition(); House(🅔,2,left,form); }
     } while (match(comma)); /* House() */ }
-   else if (match(ident)) { struct dynamic₋bag * meat=ΨΛΩ; 
-    Nonabsolut callee₋and₋identifier=symbol.gritty.store.regularOrIdent;
-    if (match(lparen)) { if (!symbol₋equal(rparen)) { function₋actual₋list(); meat=form; } expect(rparen); 
-     House(🅣,2,meat,callee₋and₋identifier); }
+   else if (match(ident)) { struct dynamic₋bag * parameters=ΨΛΩ; 
+    Nonabsolut callee₋and₋identifier=symbol₋passed.gritty.store.regularOrIdent;
+    if (match(lparen)) { if (!symbol₋equal(rparen)) { function₋actual₋list(); parameters=form; } expect(rparen); 
+     House(🅣,2,parameters,callee₋and₋identifier); }
     else if (match(afterward)) { condition(); House(🅕,2,callee₋and₋identifier,form); }
-    else { error(2,"neither assignment, call nor introduction"); }
+    else { error(2,"neither assignment, call nor variable introduction"); }
    }
    else if (enrich(callsym,ident)) { expect(ident); House(🅖,1,symbol₋passed.gritty.store.regularOrIdent); }
    else if (match(beginsym)) { do { statement(); } while (newline₋match(semicolon)); expect(endsym); House(🅗,1,form); }
@@ -615,6 +643,7 @@ unagain:
    'if' condition 'then' statement
    / * 'while' condition 'do' statement * /
  condition = 'odd' statment | expression ('='|'#'|'<'|'<='|'>'|'>=') expression
+  \also U'0' <= uc <= U'9'
  expression = ['+'|'-'] term {'+'|'-' term}
  term = factor {'*'|'/' factor}
  factor = ident | number | '(' expression ')'
