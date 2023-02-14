@@ -360,21 +360,35 @@ struct dynamic₋bag {
   __builtin_int_t memory₋count;
 };
 
-union dynamic₋bag₋continuation { struct dynamic₋bag₋cons * next; __builtin_uint_t possibly₋maybe; };
+union dynamic₋bag₋continuation { struct dynamic₋bag₋cons * next; 
+ __builtin_uint_t possibly₋maybe; };
 
-struct dynamic₋bag₋cons { struct dynamic₋bag *item; union dynamic₋bag₋continuation nxt; };
+struct dynamic₋bag₋cons { struct dynamic₋bag *item; union 
+ dynamic₋bag₋continuation nxt; };
 
-int retail(void (^appendix)(struct dynamic₋bag * item), struct dynamic₋bag₋cons ** first, struct 
- dynamic₋bag₋cons ** last)
-{ int bag₋sizeof = sizeof(struct dynamic₋bag), cons₋sizeof=sizeof(struct dynamic₋bag₋cons);
-   struct dynamic₋bag₋cons * cell = (struct dynamic₋bag₋cons *)Heap₋alloc(cons₋sizeof);
-   struct dynamic₋bag *item=(struct dynamic₋bag *)Heap₋alloc(bag₋sizeof);
-   if (item == 0) return -1;
+/* int retail(void (^)(refers), address₋of refers first, address₋of 
+ refers last) */
+
+int retail(void (^ ᐧ)(struct dynamic₋bag * ᐧ), struct dynamic₋bag₋cons * ᐧ 
+ * ᐧ, struct dynamic₋bag₋cons * ᐧ * ᐧ);
+
+int retail(void (^appendix)(struct dynamic₋bag * item), struct 
+ dynamic₋bag₋cons ** first, struct dynamic₋bag₋cons ** last)
+{ int bag₋size = sizeof(struct dynamic₋bag), 
+    cons₋size = sizeof(struct dynamic₋bag₋cons);
+   typedef struct dynamic₋bag₋cons * consref;
+   typedef struct dynamic₋bag * bagref;
+   consref cell = (consref)Heap₋alloc(cons₋size);
+   bagref item = (bagref)Heap₋alloc(bag₋size);
+   struct dynamic₋bag₋cons * memory;
+   if (cell == 0 || item == 0) return -1;
    appendix(item);
    memory = *last;
-   *last = item;
-   memory-> ---;
-   if (*first == 0) *first = item;
+   cell->item = item;
+   memory->nxt.next = cell;
+   cell->nxt.next = 0;
+   *last = cell;
+   if (*first == 0) *first=cell;
    return 0;
 }
 
