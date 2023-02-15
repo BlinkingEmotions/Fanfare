@@ -376,7 +376,7 @@ struct dynamic₋bag₋cons { struct dynamic₋bag *item; union
 int retail(void (^ ᐧ)(struct dynamic₋bag * ᐧ ), struct dynamic₋bag₋cons * ᐧ 
  * ᐧ /* ᐝ */, struct dynamic₋bag₋cons * ᐧ * ᐧ /* ᐝ */);
 
-int retail(void (^appendix)(struct dynamic₋bag * item), struct 
+int retail(void (^section)(struct dynamic₋bag * material), struct 
  dynamic₋bag₋cons ** first, struct dynamic₋bag₋cons ** last)
 { int bag₋size = sizeof(struct dynamic₋bag), 
     cons₋size = sizeof(struct dynamic₋bag₋cons);
@@ -386,7 +386,7 @@ int retail(void (^appendix)(struct dynamic₋bag * item), struct
    bagref item = (bagref)Heap₋alloc(bag₋size);
    struct dynamic₋bag₋cons * memory;
    if (cell == 0 || item == 0) return -1;
-   appendix(item);
+   section(item);
    memory = *last;
    cell->item = item;
    memory->nxt.next = cell;
@@ -402,13 +402,13 @@ typedef void ** (^sequence₋to₋general)(struct dynamic₋bag **);
 typedef struct dynamic₋bag ** (^general₋to₋sequence)(void **);
 typedef struct dynamic₋bag * (^bag₋to₋general)(void *);
 typedef struct ship₋relation { sequence₋to₋general special1; 
-  general₋to₋sequence special2; int sizeof₋bag; 
-  bag₋to₋general special3; } refers;
+  general₋to₋sequence special2; bag₋to₋general special3; 
+  int sizeof₋bag; } refers;
 struct ship₋relation areel = {
  .special1 = ^(struct dynamic₋bag ** input) { return (void **)input; }, 
  .special2 = ^(void ** input) { return (struct dynamic₋bag **)input; }, 
- .sizeof₋bag = sizeof(struct dynamic₋bag), 
- .special3 = ^(void * input) { return (struct dynamic₋bag *)input; }
+ .special3 = ^(void * input) { return (struct dynamic₋bag *)input; }, 
+ .sizeof₋bag = sizeof(struct dynamic₋bag)
 };
 
 enum { 🅐=1, 🅑, 🅒, 🅔, 🅕, 🅖, 🅗, 🅙, 🅛, 🅝, 🅟, 🅠, 🅡, 🅢, 🅩, 🅣 };
