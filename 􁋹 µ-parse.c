@@ -346,10 +346,13 @@ struct dynamic₋bag₋form {
   struct dynamic₋bag₋cons *compare₋thenºª,*compare₋elseºª,*sequenceºª;
   struct dynamic₋bag₋cons *sequence₋last,*else₋last,*then₋last;
   struct dynamic₋bag₋cons *formalºª,*detailºª,*formal₋last,*detail₋last;
-  struct dynamic₋bag₋cons *machineºª,*recollectºª,*augmentºª,*exceptionºª;
-  struct dynamic₋bag₋cons *const₋machineºª;
-  struct dynamic₋bag₋cons *machine₋last,*recollect₋last,*augment₋last, 
-   *exception₋last,*constmachine₋last;
+  struct dynamic₋bag₋cons *machineºª,*recollectºª,*machine₋last, 
+   *recollect₋last;
+  struct dynamic₋bag₋cons *detail,*surround,*associationºª,*exceptionºª, 
+   *detail₋last,*surround₋last,*association₋last,*exception₋last;
+  struct dynamic₋bag₋cons *persistºª,*augmentºª,*differen,*possibly₋two, 
+   *possibly₋two₋last,*differen₋last,*augment₋last,*persist₋last;
+  struct dynamic₋bag₋cons *const₋machineºª,*constmachine₋last;
 };
 
 struct dynamic₋bag {
@@ -371,7 +374,7 @@ struct dynamic₋bag₋cons { struct dynamic₋bag *item; union
  refers last) */
 
 int retail(void (^ ᐧ)(struct dynamic₋bag * ᐧ ), struct dynamic₋bag₋cons * ᐧ 
- * ᐧ, struct dynamic₋bag₋cons * ᐧ * ᐧ);
+ * ᐧ /* ᐝ */, struct dynamic₋bag₋cons * ᐧ * ᐧ /* ᐝ */);
 
 int retail(void (^appendix)(struct dynamic₋bag * item), struct 
  dynamic₋bag₋cons ** first, struct dynamic₋bag₋cons ** last)
