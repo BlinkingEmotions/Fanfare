@@ -342,14 +342,14 @@ int newline₋match(enum symbol₋class s) { if (symbol₋equal(s) || (Ctxt.carr
 int eltgat(enum symbol₋class s, void (*action)()) { return 0; }
 
 struct dynamic₋bag₋form {
-  struct dynamic₋bag *l,*r,*compare₋thenºª,*compare₋elseºª,*sequenceºª,*element;
-  struct dynamic₋bag₋cons *nextºª;
-  struct dynamic₋bag₋cons *formalºª,*detailºª;
+  struct dynamic₋bag *l,*r,*element;
+  struct dynamic₋bag₋cons *compare₋thenºª,*compare₋elseºª,*sequenceºª;
+  struct dynamic₋bag₋cons *sequence₋last,*else₋last,*then₋last;
+  struct dynamic₋bag₋cons *formalºª,*detailºª,*formal₋last,*detail₋last;
   struct dynamic₋bag₋cons *machineºª,*recollectºª,*augmentºª,*exceptionºª;
   struct dynamic₋bag₋cons *const₋machineºª;
   struct dynamic₋bag₋cons *machine₋last,*recollect₋last,*augment₋last, 
    *exception₋last,*constmachine₋last;
-  __uint128_t fineprint; Nonabsolut episod;
 };
 
 struct dynamic₋bag {
@@ -357,6 +357,7 @@ struct dynamic₋bag {
   struct dynamic₋bag₋form form;
   enum symbol₋class T;
   short memory,count; short leg;
+  /* __uint128_t fineprint; Nonabsolut episod; */
   __builtin_int_t memory₋count;
 };
 
@@ -369,7 +370,7 @@ struct dynamic₋bag₋cons { struct dynamic₋bag *item; union
 /* int retail(void (^)(refers), address₋of refers first, address₋of 
  refers last) */
 
-int retail(void (^ ᐧ)(struct dynamic₋bag * ᐧ), struct dynamic₋bag₋cons * ᐧ 
+int retail(void (^ ᐧ)(struct dynamic₋bag * ᐧ ), struct dynamic₋bag₋cons * ᐧ 
  * ᐧ, struct dynamic₋bag₋cons * ᐧ * ᐧ);
 
 int retail(void (^appendix)(struct dynamic₋bag * item), struct 
@@ -390,7 +391,7 @@ int retail(void (^appendix)(struct dynamic₋bag * item), struct
    *last = cell;
    if (*first == 0) *first=cell;
    return 0;
-}
+} /*  a․𝘬․a 'append₋at₋end'. */
 
 struct dynamic₋bag * summary₋groundfold;
 
@@ -467,19 +468,14 @@ void condition(void)
 }
 
 void function₋actual₋list(void)
-{ struct dynamic₋bag * material; short size=0;
-   do { material=Alloc(sizeof(struct dynamic₋bag)); if (size!=0) ->nextºª=form; 
-    condition(); car->element=form; size+=1; } while(match(comma));
-   form=car; form->count=size;
-
- struct dynamic₋bag * parametersºª = (struct dynamic₋bag *)Alloc(sizeof(struct dynamic₋bag));
+{ struct dynamic₋bag * params = (struct dynamic₋bag *)
+    Alloc(sizeof(struct dynamic₋bag));
    do { condition();
-
-  if (append₋at₋end(1, ^(int count, Material **) { } ,Conscell * ᐧ * ᐧ, 
- Conscell * ᐧ * ᐧ,int)) { }
-
-    } while(match(comma));
-   form = parametersºª;
+     if (retail(^(struct dynamic₋bag * item) { 
+       &(item->expression) = form;
+     },&(params->sequenceºª),&(params.sequence₋last))) { return; }
+   } while(match(comma));
+   form = params;
 } /* car->next=form when not₋first else ΨΛΩ; */
 
 void opt₋etter(void)
@@ -496,14 +492,14 @@ void opt₋etter(void)
 
 void statement(void)
 {
-   if (match(additionssym)) { Nonabsolut left; /* a.k.a 'l-value'. */ 
+   if (match(additionssym)) { Nonabsolut left; /* a․𝘬․a 'l-value'. */ 
     do { expect(ident); left=symbol₋passed.gritty.store.regularOrIdent; 
      if (match(eql)) { expect(eql); condition(); House(🅔,2,left,form); }
-    } while (match(comma)); /* House() */ }
-   else if (match(ident)) { struct dynamic₋bag * parameters=ΨΛΩ; 
-    Nonabsolut callee₋and₋identifier=symbol₋passed.gritty.store.regularOrIdent;
-    if (match(lparen)) { if (!symbol₋equal(rparen)) { function₋actual₋list(); parameters=form; } expect(rparen); 
-     House(🅣,2,parameters,callee₋and₋identifier); }
+    } while (match(comma)); }
+   else if (match(ident)) { Nonabsolut callee₋and₋identifier;
+    callee₋and₋identifier=symbol₋passed.gritty.store.regularOrIdent;
+    if (match(lparen)) { if (!symbol₋equal(rparen)) { function₋actual₋list(); } expect(rparen); 
+     House(🅣,2,callee₋and₋identifier,form); } //  new₋Userfunction(), retail₋Userfunction(callee₋and₋identifier,tree->form.machineºª, tree->form.machine₋last)
     else if (match(afterward)) { condition(); House(🅕,2,callee₋and₋identifier,form); }
     else { error(2,"neither assignment, call nor variable introduction"); }
    }
@@ -520,12 +516,14 @@ void opt₋second(void)
 }
 
 void function₋formal₋list(void)
-{ struct dynamic₋bag * car; short size=0;
-   do { car=Alloc(sizeof(struct dynamic₋bag)); if (size!=0) car->nextºª=form; expect(ident); 
-    expect(/*left₋*/ ident); eltgat(/*right₋*/ident,opt₋second); 
-    car->element=form; size+=1;
+{ struct dynamic₋bag * params = (struct dynamic₋bag *)
+    Alloc(sizeof(struct dynamic₋bag));
+   do { expect(ident); expect(/*left₋*/ ident); 
+    eltgat(/*right₋*/ident,opt₋second); 
+   if (retail(^(struct dynamic₋bag * item) {
+   },&(params->formalºª),&(params->formal₋last))) { return; }
    } while(match(comma));
- form=car; form->count=size;
+   form=params;
 }
 
 void opt₋void(void) { }
@@ -560,20 +558,38 @@ void block(void)
         if (!symbol₋equal(rparen)) { function₋formal₋list(); list=form; } expect(rparen); 
         statement(); detail=form; House(🅟,3,cipher,list,detail); House(🅩,2,tree,form); }
         break; }
-       default: error(2,"unsupported initial-half keyword"); break;
       }
    }
-   while (symbol₋equal(serpentsummarysym) || symbol₋equal(settingsym) || 
-    symbol₋equal(referencessym) || symbol₋equal(correctionssym) || 
-    symbol₋equal(flagsandnotessym)) {
-     switch (symbol.class) {
-     case schemasym: { Nonabsolut table; match(schemasym); expect(ident); 
-      table=symbol₋passed.gritty.store.regularOrIdent;
-      expect(eql); expect(lparen); opt₋associations(); expect(rparen); 
-      House(🅢,3,table,tree,form); break; }
-     case referencessym: { match(referencessym); expect(dowsingsym); break; }
-     default: error(2,"unsupported initial second-half keyword"); break;
+   if (symbol₋equal(serpentsummarysym))
+   {
+     switch (symbol.class)
+     {
+     case schemasym: { Nonabsolut table; 
+       match(schemasym); expect(ident); 
+       table = symbol₋passed.gritty.store.regularOrIdent; 
+       expect(eql); expect(lparen); 
+       opt₋associations(); expect(rparen); 
+       House(🅢,3,table,tree,form); break; }
+     case reelsym: break;
+     case environmentsym: break;
+     case exceptionsym: break;
+     default: error(2,"unsupported initial serpent-summary keyword"); break;
      }
+   }
+   if (symbol₋equal(settingsym))
+   {
+     match(settingsym);
+   }
+   while (symbol₋equal(correctionssym) || symbol₋equal(referencessym)) {
+     switch (symbol.class)
+     {
+     case correctionssym: match(correctionssym); break;
+     case referencessym: match(referencessym); expect(dowsingsym); break;
+     }
+   }
+   if (symbol₋equal(flagsandnotessym))
+   {
+     match(flagsandnotessym);
    }
 }
 
