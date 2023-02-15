@@ -1,6 +1,6 @@
 /*  􁋹 µ-parse.c | infix computation, location, inclusion, presentation-
- prominent, sequent, schema, folding and retrieval-correctness harvesting 
- essentials. */
+ prominent, sequent, schema, indirect-refers, text-folding, referecing-
+ debugging and bookholding-correctness harvest-capture. (GET-ON) */
 
 import Twinbeam;
 
