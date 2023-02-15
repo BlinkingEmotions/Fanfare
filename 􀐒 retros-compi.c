@@ -1,4 +1,4 @@
-/*  retros-compi.c | cross-compile (as in Dragon-book sec 11.3) with 'does not bootstrap'. */
+/*  retros-compi.c | keyput language compiler (as in Dragon-book sec 11.3) and 'does not bootstrap'. */
 
 import Twinbeam;
 
@@ -12,7 +12,7 @@ import Twinbeam;
 diffuse Fōretag-Method; ⁄* and not 'Company₋Methods' and one do not break with '$' before white space. *⁄
  
   .partial fostrat₋defi|struct diffractive₋glass₋variables [with negotiated₋valuable]
-  .end ⁄* see struct.h. *⁄
+  .end ⁄* \see 'struct.h'. *⁄
   
   .definite big₋endian struct 4kbframe ⁄* \also .definit *⁄
   .end ⁄* 'direct definite' equals 'passed as a shallow copy' and 'voluntary definite' equals 'is never null'. *⁄
@@ -113,7 +113,7 @@ int₋to₋sequent:
   TRANSCRIPT(dereference₋and₋swap)
     additions struct Unicodes one₋filename = Run("twothree-random.c")
     additions list µlist = ("A","B","C") rollback₋pop,unqueue,append₋at₋end,for₋each,is₋empty,uninit,init
-    4(one₋filename) = '\u2425'
+    4(one₋filename) = '\u2425' 
   END(dereference₋and₋swap)
   
   TRANSCRIPT(attempt₋progress)
@@ -134,7 +134,7 @@ serpent₋summary
   
 settings
   
-  window₋X 100px ⁄* pica, mm, inch, thou *⁄
+  window₋X 100px ⁄* pica, mm, cm, inch and thou. *⁄
   window₋Y 100px
   
 references ⁄* a․𝘬․a append source augment when 'trace'. *⁄
