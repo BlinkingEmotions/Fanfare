@@ -70,25 +70,6 @@ struct dynamic₋bag * new₋Intrinsic(Nonabsolute symbol, struct dynamic₋bag 
    return node;
 }
 
-/* registers 'sems' = '/' possibly-maybe '⁄' and 'allterna' = 'µ' */
-
-void print₋datatree(int brk, struct dynamic₋bag * item)
-{ int i=0;
-again:
-   if (i>=brk) { goto unagain; }
-   print("⬚ at 0x⬚: { l:⬚ r:⬚ elem:⬚ seq:⬚ { ⬚ else ⬚ } { ⬚ with (⬚) } procs:⬚ var:⬚ } and '⬚'\n", 
-    ﹟d(item->T),﹟ref(item), 
-    ﹟ref(item->form.l),﹟ref(item->form.r), 
-    ﹟ref(item->form.element),﹟ref(item->form.sequenceºª), 
-    ﹟ref(item->form.compare₋thenºª),﹟ref(item->form.compare₋elseºª), 
-    ﹟ref(item->form.detailsºª),﹟ref(item->form.formalºª), 
-    ﹟ref(item->form.machineºª),﹟ref(item->form.recollectºª), 
-    ﹟identifier(item->X.store.regular));
-   i+=1; goto again;
-unagain:
-   return;
-}
-
 void print₋tree(struct dynamic₋bag * item)
 {
    typedef void (^Print)(char *);
