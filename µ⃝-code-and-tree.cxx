@@ -1,9 +1,9 @@
-/*  µ⃝-code-and-tree.cxx | scalar and context and explana. */
+/*  µ⃝-code-and-tree.cxx | abstract syntax tree construction. */
 
-struct dynamic₋bag * new₋Identifier(Nonabsolut token)
+struct dynamic₋bag * new₋Identifier(Nonabsolute token)
 {
    struct dynamic₋bag * nonode = Alloc(sizeof(struct dynamic₋bag));
-   struct dynamic₋bag init = { .T=ident, .X.kind=1, .X.store.regularOrIdent=token };
+   struct dynamic₋bag init = {.T=ident,.X.kind=1,.X.store.regular=token};
    *nonode = init;
    return nonode;
 }
@@ -26,18 +26,20 @@ struct dynamic₋bag * new₋Numeric(struct token₋detail item, int type)
    return nonode;
 }
 
-struct dynamic₋bag * new₋Expression(struct dynamic₋bag * left, struct dynamic₋bag * right, enum symbol₋class op)
+struct dynamic₋bag * new₋Expression(struct dynamic₋bag * left, struct 
+ dynamic₋bag * right, enum symbol₋class op)
 {
    struct dynamic₋bag *node = Alloc(sizeof(struct dynamic₋bag));
-   struct dynamic₋bag init = { .T=op, .l=left, .r=right };
+   struct dynamic₋bag init = {.T=op,.form.l=left,.form.r=right};
    *node = init;
    return node;
 }
 
-struct dynamic₋bag * new₋Unary(struct dynamic₋bag * item, enum symbol₋class op)
+struct dynamic₋bag * new₋Unary(struct dynamic₋bag * item, enum 
+ symbol₋class op)
 {
    struct dynamic₋bag *node = Alloc(sizeof(struct dynamic₋bag));
-   struct dynamic₋bag init = { .T=op, .element=item };
+   struct dynamic₋bag init = {.T=op,.form.element=item};
    *node=init;
    return node;
 }
@@ -45,63 +47,46 @@ struct dynamic₋bag * new₋Unary(struct dynamic₋bag * item, enum symbol₋cl
 struct dynamic₋bag * new₋Statement(enum symbol₋class type)
 {
    struct dynamic₋bag *node = Alloc(sizeof(struct dynamic₋bag));
-   struct dynamic₋bag init = { .T=type, .prev=ΨΛΩ, .next=ΨΛΩ };
+   struct dynamic₋bag init = {.T=type,.form.sequence₋last=ΨΛΩ,.form.sequenceºª=ΨΛΩ};
    *node=init;
    return node;
 }
 
-struct dynamic₋bag * new₋Userfunction(Nonabsolut symbol, struct dynamic₋bag * actual, 
- struct dynamic₋bag * detail)
+struct dynamic₋bag * new₋User(Nonabsolute symbol, struct dynamic₋bag * 
+ actual₋and₋detail)
 {
    struct dynamic₋bag *node = Alloc(sizeof(struct dynamic₋bag));
-   struct dynamic₋bag init = { .T=procsym, .X.kind=1, .X.store.regularOrIdent=symbol };
+   struct dynamic₋bag init = { .T=procsym, .X.kind=1, .X.store.regular=symbol };
    *node=init;
    return node;
 }
 
-struct dynamic₋bag * new₋Intrinsicfunction(Nonabsolut symbol, struct dynamic₋bag * actual, 
- struct dynamic₋bag * detail)
+struct dynamic₋bag * new₋Intrinsic(Nonabsolute symbol, struct dynamic₋bag * 
+ actual₋and₋detail)
 {
    struct dynamic₋bag *node = Alloc(sizeof(struct dynamic₋bag));
-   struct dynamic₋bag init = { .T=procsym, .X.kind=1., .X.store.regularOrIdent=symbol };
+   struct dynamic₋bag init = { .T=procsym, .X.kind=1., .X.store.regular=symbol };
    *node=init;
    return node;
 }
 
-int indentation=0; Argᴾ ﹟ident(Nonabsolut);
-
-Argᴾ ﹟tabula(short times)
-{ int 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 i=0;
-   Serialfragment instance = ^(serial₋present u8out, void * ctxt) {
-again:
-   u8out(U8(" "),1);
-   i+=1; goto again; };
-   /* Symbolfragment instance = ^(symbol₋present ucout, void * ctxt) {
-again:
-    ucout(1,U" "); i+=1; goto again; 
-   }; / * registers 'sems' = '/' possibly-maybe '⁄' and 'allterna' = 'µ' and 
-    conditional₋corrections = '^^' and tvā sexagesimal och trādbrott snarare 'rdex'. */
-   void * ctxt = (void *)0;
-   return ﹟λ₁(instance,ctxt);
-}
-
-Argᴾ ﹟r(struct dynamic₋bag * item)
-{
-   return ﹟d((__builtin_uint_t)item);
-}
+/* registers 'sems' = '/' possibly-maybe '⁄' and 'allterna' = 'µ' */
 
 void print₋datatree(int brk, struct dynamic₋bag * item)
 { int i=0;
 again:
    if (i>=brk) { goto unagain; }
-   print("⬚: ⬚ ⬚ ⬚ ⬚ ⬚ ⬚ ⬚ ⬚ ⬚ ⬚ ⬚ and ⬚\n", ﹟d((__builtin_uint_t)item), 
-    ﹟d(item->T),﹟r(item->l),﹟r(item->r),﹟r(item->compare₋then), 
-    ﹟r(item->compare₋else),﹟r(item->sequence),﹟r(item->element), 
-    ﹟r(item->next),﹟r(item->prev),﹟r(item->formal),﹟r(item->detail), 
-    ﹟d(item->X.store.regularOrIdent));
+   print("⬚ at 0x⬚: { l:⬚ r:⬚ elem:⬚ seq:⬚ { ⬚ else ⬚ } { ⬚ with (⬚) } procs:⬚ var:⬚ } and '⬚'\n", 
+    ﹟d(item->T),﹟ref(item), 
+    ﹟ref(item->form.l),﹟ref(item->form.r), 
+    ﹟ref(item->form.element),﹟ref(item->form.sequenceºª), 
+    ﹟ref(item->form.compare₋thenºª),﹟ref(item->form.compare₋elseºª), 
+    ﹟ref(item->form.detailsºª),﹟ref(item->form.formalºª), 
+    ﹟ref(item->form.machineºª),﹟ref(item->form.recollectºª), 
+    ﹟identifier(item->X.store.regular));
    i+=1; goto again;
 unagain:
-   ;
+   return;
 }
 
 void print₋tree(struct dynamic₋bag * item)
@@ -115,11 +100,11 @@ void print₋tree(struct dynamic₋bag * item)
     print("⬚ @⬚\n",﹟s7(operation),﹟d((__builtin_int_t)item->memory)); indentation+=2; 
     print₋tree(item->r); indentation+=-1; };
    Every each = ^(struct dynamic₋bag * item₋first, Detail detail) { 
-    struct dynamic₋bag * i=item₋first; for (;i;i=i->next) { detail(i); } };
+    struct dynamic₋bag * i=item₋first; for (;i;i=i->nextºª) { detail(i); } };
    Detail detail = ^(struct dynamic₋bag * item) { print₋tree(item); };
    switch (item->T)
    {
-   case ident: print("ident '⬚' @⬚\n", ﹟ident(item->X.store.regularOrIdent),﹟d((__builtin_int_t)item->memory)); break;
+   case ident: print("ident '⬚' @⬚\n", ﹟ident(item->X.store.regular),﹟d((__builtin_int_t)item->memory)); break;
    case number: print("number '⬚' @⬚\n", ﹟d(item->X.store.integer), ﹟d((__builtin_int_t)item->memory)); break;
    case times: infix("times"); break;
    case divide: infix("divide"); break;
@@ -131,15 +116,15 @@ void print₋tree(struct dynamic₋bag * item)
    case leq: infix("leq"); break;
    case gtr: infix("gtr"); break;
    case geq: infix("geq"); break;
-   case callsym: print("call '⬚'\n", ﹟ident(item->X.store.regularOrIdent)); break;
-   case branch₋goto₋optsym: print("branch ⬚\n", ﹟ident(item->X.store.regularOrIdent)); break;
+   case callsym: print("call '⬚'\n", ﹟ident(item->X.store.regular)); break;
+   case branch₋goto₋optsym: print("branch ⬚\n", ﹟ident(item->X.store.regular)); break;
    case ifsym: print("compare\n"); indentation+=1; print₋tree(item->compare₋then); 
     print₋tree(item->compare₋else); indentation+=-1; break;
    case afterward: print("afterward @⬚\n", ﹟d((__builtin_int_t)item->memory)); indentation+=1; 
     print₋tree(item->l); if (item->r) print₋tree(item->r); else print("<unassigned>\n"); break;
    case constsym: print("constsym\n"); each(item->sequence,detail); break;
    case varsym: print("varsym\n"); each(item->sequence,detail); break;
-   case procsym: print("procsym '⬚'\n", ﹟ident(item->X.store.regularOrIdent)); 
+   case procsym: print("procsym '⬚'\n", ﹟ident(item->X.store.regular)); 
     indentation+=1; each(item->formal,detail); print("\n"); 
     each(item->detail,detail); indentation+=-1; break;
    default: { print("unknown item with symbol-type '⬚'\n", ﹟d((__builtin_int_t)item->T)); }
@@ -150,7 +135,7 @@ void House(int type, int count, ...)
 { va_prologue(count) typedef struct dynamic₋bag * refers; /* refer-en-ce = auto *. A․𝘬․a 'biblio' and 'redux'. */
    switch (type)
    {
-   case 🅐: { Nonabsolut token = va_unqueue(Nonabsolut);
+   case 🅐: { Nonabsolute token = va_unqueue(Nonabsolute);
     form = new₋Identifier(token); break; }
    case 🅑: { struct token₋detail item = va_unqueue(struct token₋detail);
     int type = va_unqueue(int);
@@ -160,19 +145,19 @@ void House(int type, int count, ...)
     enum symbol₋class op = va_unqueue(enum symbol₋class);
     form = new₋Expression((struct dynamic₋bag *)left,(struct dynamic₋bag *)right,op);
     break; }
-   case 🅔: { Nonabsolut left = va_unqueue(Nonabsolut);
+   case 🅔: { Nonabsolute left = va_unqueue(Nonabsolute);
     void * right = va_unqueue(struct dynamic₋bag *);
     form = new₋Statement(additionssym);
     form->l = new₋Identifier(left);
     form->r = (struct dynamic₋bag *)right;
     break; }
-   case 🅕: { Nonabsolut identity = va_unqueue(Nonabsolut);
+   case 🅕: { Nonabsolute identity = va_unqueue(Nonabsolute);
     void * right = va_unqueue(struct dynamic₋bag *);
     form = new₋Statement(afterward);
     form->l = new₋Identifier(identity);
     form->r = right;
     break; }
-   case 🅖: { Nonabsolut callee = va_unqueue(Nonabsolut);
+   case 🅖: { Nonabsolute callee = va_unqueue(Nonabsolute);
     form = new₋Identifier(callee);
     form->T = callsym;
     break; }
@@ -186,19 +171,19 @@ void House(int type, int count, ...)
     form->compare₋then = compare₋then;
     form->compare₋else = compare₋else;
     break; } /* condition */
-   case 🅛: { Nonabsolut uni₋vers = va_unqueue(Nonabsolut);
+   case 🅛: { Nonabsolute uni₋vers = va_unqueue(Nonabsolute);
     void * serpent = va_unqueue(struct dynamic₋bag *);
     form = new₋Statement(afterward);
     form->l = new₋Identifier(uni₋vers);
     form->r = serpent;
     break; }
-   case 🅝: { Nonabsolut identifier = va_unqueue(Nonabsolut);
+   case 🅝: { Nonabsolute identifier = va_unqueue(Nonabsolute);
     void * arg₋u₋men = va_unqueue(struct dynamic₋bag *);
     form = new₋Statement(afterward);
     form->l = new₋Identifier(identifier);
     form->r = arg₋u₋men;
     break; }
-   case 🅟: { Nonabsolut sy = va_unqueue(Nonabsolut);
+   case 🅟: { Nonabsolute sy = va_unqueue(Nonabsolute);
     void * parameters = va_unqueue(struct dynamic₋bag *);
     void * detail = va_unqueue(struct dynamic₋bag *);
     form = new₋Userfunction(sy,(struct dynamic₋bag *)parameters,(struct dynamic₋bag *)detail);
@@ -213,11 +198,13 @@ void House(int type, int count, ...)
     if (tree->recollectºª==ΨΛΩ) { tree->recollectºª=reads; }
     else { reads->prev=tree->var->last; if (tree->var->last) tree->var->last->next=reads; tree->var->last=reads; }
     break; } /* variables. */
-   case 🅢: { Nonabsolut name = va_unqueue(Nonabsolut);
+   case 🅢: { Nonabsolute name = va_unqueue(Nonabsolute);
     refers tree = va_unqueue(struct dynamic₋bag *);
     refers table = va_unqueue(struct dynamic₋bag *);
     form = new₋Intrinsicfunction(name,(struct dynamic₋bag *)tree, (struct dynamic₋bag *)table);
     break; } /* uses runtime with no explicit details. */
+   case 🅣: { /* new_Usercall */
+    break; }
    case 🅩: { refers tree = va_unqueue(struct dynamic₋bag *);
     refers reads = va_unqueue(struct dynamic₋bag *);
     if (tree->machineºª == ΨΛΩ) { tree->machineºª=reads; }
