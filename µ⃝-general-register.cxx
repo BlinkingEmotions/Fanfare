@@ -1,6 +1,6 @@
 /*  µ⃝-general-register.cxx | register allocation. */
 
-void assign(struct dynamic₋bag * initial)
+void general₋register(struct dynamic₋bag * initial)
 { struct dynamic₋bag * item=initial;
    typedef void (^Init)();
    Init ground = ^{
@@ -31,13 +31,13 @@ again:
    case thensym: assign(item->sequence); break;
    case ifsym: assign(item->sequence); break;
    case afterward: assign(item->r); break;
-   case constsym: assign(item->art); break;
-   case varsym: assign(item->var); break;
-   case procsym: assign(item->pct); break;
+   case constsym: assign(item->const₋machineºª); break;
+   case varsym: assign(item->recollectºª); break;
+   case procsym: assign(item->machineºª); break;
    case oddsym: assign(item->sequence); break;
    case end₋of₋transmission₋and₋file: break;
    default: error(3,"unknown symbol-type at assign"); break;
    }
-   item=item->next; goto again;
+   item=item->nextºª; goto again;
 }
 
