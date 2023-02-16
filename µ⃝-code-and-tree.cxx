@@ -71,7 +71,7 @@ struct dynamic₋bag * new₋Intrinsic(Nonabsolute symbol, struct dynamic₋bag 
 }
 
 void House(int type, int count, ...)
-{ va_prologue(count) typedef struct dynamic₋bag * refers; /* refer-en-ce = auto *. A․𝘬․a 'biblio' and 'redux'. */
+{ va_prologue(count) typedef struct dynamic₋bag * refers; 
    switch (type)
    {
    case 🅐: { Nonabsolute token = va_unqueue(Nonabsolute);
@@ -96,10 +96,10 @@ void House(int type, int count, ...)
     fragment->form.l = new₋Identifier(identity);
     fragment->form.r = right;
     break; }
-   case 🅖: { Nonabsolute callee = va_unqueue(Nonabsolute);
-    fragment = new₋Identifier(callee);
+   case 🅖: { Nonabsolute called = va_unqueue(Nonabsolute);
+    fragment = new₋Identifier(called);
     fragment->T = callsym;
-    break; }
+    break; } /* fast and easy function-call for test purposes. */
    case 🅗: { void * unit = va_unqueue(struct dynamic₋bag *);
     fragment = (struct dynamic₋bag *)unit;
     break; }/* statement list */
@@ -128,33 +128,23 @@ void House(int type, int count, ...)
     break; } /* details found in tree and compilation unit. */
    case 🅠: { refers tree = va_unqueue(struct dynamic₋bag *);
     refers reads = va_unqueue(struct dynamic₋bag *);
-    if (retail(^(struct dynamic₋bag * material) {
-      material = reads;
-    },&(tree->form.const₋machineºª),&(tree->form.machine₋last))) { Pult(areel.retail₋failure); }
     break; } /* computed and expressed constants. */
    case 🅡: { refers tree = va_unqueue(struct dynamic₋bag *);
     refers reads = va_unqueue(struct dynamic₋bag *);
-    if (retail(^(struct dynamic₋bag * material) {
-      material = reads;
-    },&(tree->form.recollectºª),&(tree->form.recollect₋last))) { Pult(areel.retail₋failure); }
     break; } /* variables. */
-   case 🅢: { Nonabsolute name = va_unqueue(Nonabsolute);
-    refers tree = va_unqueue(struct dynamic₋bag *);
-    refers table = va_unqueue(struct dynamic₋bag *);
-    fragment = new₋Intrinsic(name,(struct dynamic₋bag *)tree, (struct dynamic₋bag *)table);
-    if (retail(^(struct dynamic₋bag * material) {
-      material = reads;
-    },&(tree->form.),&(tree->))) { Pult(areel.retail₋failure); }
+   case 🅢: { Nonabsolute token = va_unqueue(Nonabsolute);
+    refers params = va_unqueue(struct dynamic₋bag *);
+    fragment = new₋Intrinsic(token,params);
     break; } /* uses runtime with no details. */
-   case 🅣: { /* new_Usercall */
-    break; }
+   case 🅣: {
+    Nonabsolute token = va_unqueue(Nonabsolute);
+    refers params = va_unqueue(struct dynamic₋bag *);
+    fragment = new₋User(token,params);
+    break; } /* function defined in 'compilation-unit'. */
    case 🅩: { refers tree = va_unqueue(struct dynamic₋bag *);
     refers reads = va_unqueue(struct dynamic₋bag *);
-    if (retail(^struct dynamic₋bag * material) {
-       material = reads;
-    },&(tree->form.),&(tree->form.))) { Pult(areel.retail₋failure); }
     break; } /* procedures and functions. */
    }
    va_epilogue
-}
+} /*  A․𝘬․a 'biblio' and 'redux'. */
 
