@@ -123,25 +123,22 @@ void House(int type, int count, ...)
     fragment->form.r = arg₋u₋men;
     break; }
    case 🅟: { Nonabsolute sy = va_unqueue(Nonabsolute);
-    void * parameters = va_unqueue(struct dynamic₋bag₋cons *);
-    void * detail = va_unqueue(struct dynamic₋bag₋cons *);
-    fragment = new₋Userfunction(sy,(struct dynamic₋bag₋cons *)parameters,(struct dynamic₋bag₋cons *)detail);
+    void * actual₋and₋detail = va_unqueue(struct dynamic₋bag *);
+    fragment = new₋User(sy,(struct dynamic₋bag *)actual₋and₋detail);
     break; } /* details found in tree and compilation unit. */
    case 🅠: { refers tree = va_unqueue(struct dynamic₋bag *);
     refers reads = va_unqueue(struct dynamic₋bag *);
     if (retail(^(struct dynamic₋bag * material) {
       material = reads;
-    },&(tree->form.const₋machineºª),&(tree->form.machine₋lastºª)) { Pult(); }
+    },&(tree->form.const₋machineºª),&(tree->form.machine₋last))) { Pult(); }
     break; } /* computed and expressed constants. */
    case 🅡: { refers tree = va_unqueue(struct dynamic₋bag *);
     refers reads = va_unqueue(struct dynamic₋bag *);
-    if (tree->recollectºª==ΨΛΩ) { tree->recollectºª=reads; }
-    else { reads->prev=tree->var->last; if (tree->var->last) tree->var->last->next=reads; tree->var->last=reads; }
     break; } /* variables. */
    case 🅢: { Nonabsolute name = va_unqueue(Nonabsolute);
     refers tree = va_unqueue(struct dynamic₋bag *);
     refers table = va_unqueue(struct dynamic₋bag *);
-    fragment = new₋Intrinsicfunction(name,(struct dynamic₋bag *)tree, (struct dynamic₋bag *)table);
+    fragment = new₋Intrinsic(name,(struct dynamic₋bag *)tree, (struct dynamic₋bag *)table);
     break; } /* uses runtime with no explicit details. */
    case 🅣: { /* new_Usercall */
     break; }
