@@ -1,6 +1,6 @@
-/*  􁋹 µ-parse.c | infix computation, location, inclusion, presentation-
- prominent, sequent, schema, indirect-refers, text-folding, referecing-
- debugging and bookholding-correctness harvest-capture. (GET-ON) */
+/*  􁋹 µ-parse.c | capturing infix computation, location, inclusion, 
+ presentation-prominent, sequent, schema, indirect-refers, 
+ text-folding, references and correctness log. (GET-ON) */
 
 import Twinbeam;
 
@@ -14,9 +14,10 @@ enum symbol₋class { ident, number, times, divide, plus, minus, lparen,
  logical₋alternate, logical₋and, logical₋or, logical₋not, 
  schemasym, reelsym, environmentsym, exceptionsym, 
  dowsingsym, ellipsissym, leftrightread, insym, presentsym, 
- serpentsummarysym, settingsym, referencessym, correctionssym, flagsandnotessym, 
- diffusesym, dotifsym, definedsym, dotdefinesym, dotendsym, dotincludesym, 
- systemsym, end₋of₋transmission₋and₋file, unarbitrated₋symbol
+ serpentsummarysym, settingsym, referencessym, correctionssym, 
+ flagsandnotessym, diffusesym, dotifsym, definedsym, dotdefinesym, 
+ dotendsym, dotincludesym, systemsym, end₋of₋transmission₋and₋file, 
+ unarbitrated₋symbol
 }; /* .IF. .ELSE. .ELIF. .END. .INCLUDE. .DEFINE. DEFINED */
 
 /* clang -g -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules      \
@@ -43,12 +44,10 @@ void location₋nextline(struct source₋location * l) {
  l->column₋first=l->column₋last=1;
 }
 
-typedef Nonabsolute Nonabsolut;
-
 struct language₋context {
   __builtin_int_t tip₋unicode;
-  int carrier₁,carrier₂; /* 'retrospect did purge newline' and 'retrospect₋detail and 
-   retrospect₋summar differs' and 'summar is always ahead'. */
+  int carrier₁,carrier₂; /* 'retrospect did purge newline' and 'retrospect₋
+   detail and retrospect₋summar differs' and 'summar is always ahead'. */
   /* retrospect is identifier,'call','begin','if','while' and while reading 
    into 'symbol' we passed a (in case of multiple, thelast) 'carriage return' 
    then from lexer insert semicolon. */
@@ -56,16 +55,14 @@ struct language₋context {
   char32̄_t regular[2048]; short syms₋in₋regular;
   __builtin_int_t ongoing; short syms₋in₋number;
   /* short zero₋to₋nines[100]; short syms₋in₋fraction; */
-  Nonabsolut reference₋quoted; short syms₋in₋quotes;
+  Nonabsolute reference₋quoted; short syms₋in₋quotes;
   struct source₋location interval;
   Trie keys;
 };
 
-typedef struct Symbolinterval { short symbols; char32̄_t * start; } Symbolinterval;
-
 struct token₋detail {
   union {
-    Nonabsolut regularOrIdent;
+    Nonabsolute regular;
     Sequenta number;
     __builtin_int_t integer;
   } store;
@@ -91,7 +88,8 @@ void error(int type, char text[], ...)
 { va_prologue(text)
    int write(int,const char *,...);
    int print﹟(Utf8,const char *,__builtin_va_list);
-   Utf8 out = ^(char8₋t * u8s, __builtin_int_t bytes) { write(1,(const void *)u8s,bytes); };
+   Utf8 out = ^(char8₋t * u8s, __builtin_int_t bytes) {
+    write(1,(const void *)u8s,bytes); };
    print﹟(out,text,__various);
    print(out,".\n");
    va_epilogue
@@ -107,7 +105,7 @@ void assign₋symbol(enum symbol₋class s, Symbol * sym, short count₋impressi
 int symbol₋equal(enum symbol₋class s) { return symbol.class==s; }
 
 int copy₋identifier(struct language₋context * ctxt, Symbol * out)
-{ Nonabsolut reference = collection₋count(identifiers);
+{ Nonabsolute reference = collection₋count(identifiers);
    char32̄_t * ucs=ctxt->regular; __builtin_int_t tetras=ctxt->syms₋in₋regular;
    if (copy₋append₋onto₋regular(identifiers,tetras,ucs,Alloc,&reference)) return -1;
    if (regularpool₋datum₋text(identifiers,tetras,reference)) return -1;
@@ -133,14 +131,18 @@ int copy₋number(struct language₋context * ctxt, Symbol * out, int type)
 }
 
 int next₋token₋inner(struct language₋context * ctxt, Symbol * out)
-{ __builtin_int_t i,symbols=text₋program.tetras; char32̄_t uc,uc₊₁,uc₊2; int lift₋count=0,sym;
+{ __builtin_int_t i,symbols=text₋program.tetras; char32̄_t uc,uc₊₁,uc₊2; 
+    int lift₋count=0,sym;
    typedef int (^type)(char32̄_t); ctxt->carrier₁=0;
    type digit = ^(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; };
    type letter = ^(char32̄_t uc) { return U'a' <= uc && uc <= U'z'; };
    🧵(identifier,integer₋constant,keyword,trouble,completion,unicode_text) {
-   case identifier: copy₋identifier(ctxt,out); ctxt->syms₋in₋regular=0; ctxt->state=mode₋initial; return 0;
-   case integer₋constant: copy₋number(ctxt,out,1); ctxt->ongoing=0; ctxt->syms₋in₋number=0; ctxt->state=mode₋initial; return 0;
-   case keyword: assign₋symbol(sym,out,ctxt->syms₋in₋regular); ctxt->syms₋in₋regular=0; ctxt->state=mode₋initial; return 0;
+   case identifier: copy₋identifier(ctxt,out); ctxt->syms₋in₋regular=0; 
+    ctxt->state=mode₋initial; return 0;
+   case integer₋constant: copy₋number(ctxt,out,1); ctxt->ongoing=0; 
+    ctxt->syms₋in₋number=0; ctxt->state=mode₋initial; return 0;
+   case keyword: assign₋symbol(sym,out,ctxt->syms₋in₋regular); 
+    ctxt->syms₋in₋regular=0; ctxt->state=mode₋initial; return 0;
    case completion: assign₋symbol(end₋of₋transmission₋and₋file,out,0); return 0;
    case trouble: return -1;
    }
@@ -342,17 +344,22 @@ int newline₋match(enum symbol₋class s) { if (symbol₋equal(s) || (Ctxt.carr
 int eltgat(enum symbol₋class s, void (*action)()) { return 0; }
 
 struct dynamic₋bag₋form {
-  struct dynamic₋bag *l,*r,*element;
-  struct dynamic₋bag₋cons *compare₋thenºª,*compare₋elseºª,*sequenceºª;
-  struct dynamic₋bag₋cons *sequence₋last,*else₋last,*then₋last;
-  struct dynamic₋bag₋cons *formalºª,*detailºª,*formal₋last,*detail₋last;
-  struct dynamic₋bag₋cons *machineºª,*recollectºª,*machine₋last, 
-   *recollect₋last;
-  struct dynamic₋bag₋cons *detail,*surround,*associationºª,*exceptionºª, 
-   *detail₋last,*surround₋last,*association₋last,*exception₋last;
-  struct dynamic₋bag₋cons *persistºª,*augmentºª,*differen,*possibly₋two, 
-   *possibly₋two₋last,*differen₋last,*augment₋last,*persist₋last;
-  struct dynamic₋bag₋cons *const₋machineºª,*constmachine₋last;
+  struct dynamic₋bag *l,*r,*element;                         /* expression */
+  struct dynamic₋bag₋cons *compare₋thenºª,*compare₋elseºª, 
+   *sequenceºª,*sequence₋last,*else₋last,*then₋last;          /* statement */
+  struct dynamic₋bag₋cons *formalºª,*detailsºª, 
+   *formal₋last,*details₋last;                              /* definitions */
+  struct dynamic₋bag₋cons *machineºª,*recollectºª, 
+   *machine₋last,*recollect₋last;                         /* code and vars */
+  struct dynamic₋bag₋cons *adaptionºª,*surroundºª, 
+   *associationºª,*exceptionºª,*adaption₋last, 
+   *surround₋last,*association₋last,*exception₋last;            /* serpent */
+  struct dynamic₋bag₋cons *persistºª,*persist₋last;            /* settings */
+  struct dynamic₋bag₋cons *augmentºª,*differenceºª, 
+   *possibly₋twoºª,*possibly₋two₋last,
+   *difference₋last,*augment₋last;                  /* instr.,errata,flags */
+  struct dynamic₋bag₋cons *const₋machineºª, 
+   *constmachine₋last;                                        /* constants */
 };
 
 struct dynamic₋bag {
@@ -416,10 +423,56 @@ enum { 🅐=1, 🅑, 🅒, 🅔, 🅕, 🅖, 🅗, 🅙, 🅛, 🅝, 🅟, 🅠,
 void process₋compute(struct dynamic₋bag *);
 void print₋tree(struct dynamic₋bag * item);
 void House(int type, int count, ...);
-void assign(struct dynamic₋bag *);
+void general₋register(struct dynamic₋bag *);
 void codegenerate();
 
-struct dynamic₋bag *form,*tree;
+Argᴾ ﹟regularpool(struct collection * 🅗, Nonabsolute relative)
+{
+   Symbolfragment text = ^(symbol₋present ucout, void * ctxt) {
+     if (regularpool₋at(🅗,relative, 
+       ^(short symbols₋total, short count₋segments, 
+          short symbols₋segment[ᐧ], char32̄_t * segments[ᐧ]) {
+         for (int i=0; i<count₋segments; i+=1)
+          ucout(symbols₋segment[i],segments[i]);
+       })) { ucout(7,U"<empty>"); }
+   };
+   return ﹟λ₂(text,0);
+}
+
+Argᴾ ﹟ident(Nonabsolute regular)
+{
+   return ﹟regularpool(identifiers,regular);
+}
+
+struct tabcontext { short indentation; };
+
+Argᴾ ﹟indent(short times, struct tabcontext * ctxt)
+{ int 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 i=0;
+   Serialfragment instance = ^(serial₋present u8out, void * ctxt) {
+     struct tabcontext * tabs = (struct tabcontext *)ctxt;
+again:
+     if (i >= times) goto unagain;
+     u8out(U8(" "),1);
+     i+=1;
+     goto again;
+unagain:
+     ;
+   };
+   tabs->indentation+=times;
+   return ﹟λ₁(instance,ctxt);
+}
+
+Argᴾ ﹟ref(struct dynamic₋bag₋cons * list) ⓣ
+{
+   return ﹟d((__builtin_uint_t)list);
+}
+
+Argᴾ ﹟ref(struct dynamic₋bag * item) ⓣ
+{
+   return ﹟d((__builtin_uint_t)item);
+}
+
+struct dynamic₋bag *fragment,*tree;
 
 #include "µ⃝-code-and-tree.cxx"
 /* #include "µ⃝-verse-const.cxx" */
@@ -496,17 +549,17 @@ void opt₋etter(void)
 void statement(void)
 {
    if (match(additionssym)) { Nonabsolut left; /* a․𝘬․a 'l-value'. */ 
-    do { expect(ident); left=symbol₋passed.gritty.store.regularOrIdent; 
+    do { expect(ident); left=symbol₋passed.gritty.store.regular; 
      if (match(eql)) { expect(eql); condition(); House(🅔,2,left,form); }
     } while (match(comma)); }
-   else if (match(ident)) { Nonabsolut callee₋and₋identifier;
-    callee₋and₋identifier=symbol₋passed.gritty.store.regularOrIdent;
+   else if (match(ident)) { Nonabsolut identifier;
+    identifier=symbol₋passed.gritty.store.regular;
     if (match(lparen)) { if (!symbol₋equal(rparen)) { function₋actual₋list(); } expect(rparen); 
-     House(🅣,2,callee₋and₋identifier,form); } //  new₋Userfunction(), retail₋Userfunction(callee₋and₋identifier,tree->form.machineºª, tree->form.machine₋last)
-    else if (match(afterward)) { condition(); House(🅕,2,callee₋and₋identifier,form); }
+     House(🅣,2,identifier,form); } // form  new₋Userfunction(), retail₋Userfunction(callee₋and₋identifier,tree->form.machineºª, tree->form.machine₋last)
+    else if (match(afterward)) { condition(); House(🅕,2,identifier,form); }
     else { error(2,"neither assignment, call nor variable introduction"); }
    }
-   else if (enrich(callsym,ident)) { expect(ident); House(🅖,1,symbol₋passed.gritty.store.regularOrIdent); }
+   else if (enrich(callsym,ident)) { expect(ident); House(🅖,1,symbol₋passed.gritty.store.regular); }
    else if (match(beginsym)) { do { statement(); } while (newline₋match(semicolon)); expect(endsym); House(🅗,1,form); }
    else if (match(ifsym)) { condition(); expect(thensym); statement(); at₋opt(elsesym,opt₋etter); House(🅙,1,cond,select1,select2); }
    /* else if (match(whilesym)) { condition(); expect(dosym); statement(); } */ /* notera att 'undvikande utav vānster' ska vara tre abstraktion. */
@@ -633,7 +686,7 @@ U"constant abcd=321+1,dcba=123;\n"
  "transcript fie()\nbegin\n call view\nend\n"
  "transcript fue()\nbegin\ncall control\nend\n\n");
    program();
-   assign(form);
+   general₋register(form);
 #if defined TRACE₋SYNTAX
    print₋tree(tree->const₋machineºª);
    print₋tree(tree->recollectºª);
