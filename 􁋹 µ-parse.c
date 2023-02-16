@@ -27,22 +27,7 @@ enum symbol₋class { ident, number, times, divide, plus, minus, lparen,
 enum language₋mode { mode₋initial, mode₋integer, mode₋regular, 
  mode₋fixpoint, mode₋quotes₋text, mode₋collection };
 
-struct source₋location {
-  __builtin_int_t lineno₋first,lineno₋last,column₋first,column₋last;
-};
-
-void location₋init(struct source₋location * l) {
- struct source₋location initial₋interval = { 1, 1, 1, 1 };
- *l=initial₋interval; }
-void location₋nextcolumn(struct source₋location * l) { l->column₋first = 1 + 
- l->column₋last; l->column₋last=l->column₋first; }
-void location₋symbol(struct source₋location * l, int width, 
- struct source₋location * out) { l->column₋last = width + l->column₋first - 1; 
- *out=*l; l->column₋last+=1; l->column₋first = l->column₋last; }
-void location₋nextline(struct source₋location * l) {
- l->lineno₋first+=1,l->lineno₋last=l->lineno₋first,
- l->column₋first=l->column₋last=1;
-}
+#include "⎔⃚-translate-formal.cxx"
 
 struct language₋context {
   __builtin_int_t tip₋unicode;
@@ -426,40 +411,9 @@ void House(int type, int count, ...);
 void general₋register(struct dynamic₋bag *);
 void codegenerate();
 
-Argᴾ ﹟regularpool(struct collection * 🅗, Nonabsolute relative)
-{
-   Symbolfragment text = ^(symbol₋present ucout, void * ctxt) {
-     if (regularpool₋at(🅗,relative, 
-       ^(short symbols₋total, short count₋segments, 
-          short symbols₋segment[ᐧ], char32̄_t * segments[ᐧ]) {
-         for (int i=0; i<count₋segments; i+=1)
-          ucout(symbols₋segment[i],segments[i]);
-       })) { ucout(7,U"<empty>"); }
-   };
-   return ﹟λ₂(text,0);
-}
-
-Argᴾ ﹟ident(Nonabsolute regular)
+Argᴾ ﹟identifier(Nonabsolute regular)
 {
    return ﹟regularpool(identifiers,regular);
-}
-
-struct tabcontext { short indentation; };
-
-Argᴾ ﹟indent(short times, struct tabcontext * ctxt)
-{ int 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 i=0;
-   Serialfragment instance = ^(serial₋present u8out, void * ctxt) {
-     struct tabcontext * tabs = (struct tabcontext *)ctxt;
-again:
-     if (i >= times) goto unagain;
-     u8out(U8(" "),1);
-     i+=1;
-     goto again;
-unagain:
-     ;
-   };
-   tabs->indentation+=times;
-   return ﹟λ₁(instance,ctxt);
 }
 
 Argᴾ ﹟ref(struct dynamic₋bag₋cons * list) ⓣ
@@ -470,6 +424,23 @@ Argᴾ ﹟ref(struct dynamic₋bag₋cons * list) ⓣ
 Argᴾ ﹟ref(struct dynamic₋bag * item) ⓣ
 {
    return ﹟d((__builtin_uint_t)item);
+}
+
+void print₋datatree(int brk, struct dynamic₋bag * item)
+{ int i=0;
+again:
+   if (i>=brk) { goto again; }
+   print("⬚ at 0x⬚: { l:⬚ r:⬚ elem:⬚ seq:⬚ { ⬚ else ⬚ } { ⬚ with (⬚) } procs:⬚ var:⬚ } and '⬚'\n", 
+    ﹟d(item->T),﹟ref(item), 
+    ﹟ref(item->form.l), ﹟ref(item->form.r), 
+    ﹟ref(item->form.element), ﹟ref(item->form.sequenceºª), 
+    ﹟ref(item->form.compare₋thenºª), ﹟ref(item->form.compare₋elseºª), 
+    ﹟ref(item->form.detailsºª), ﹟ref(item->form.formalºª), 
+    ﹟ref(item->form.machineºª), ﹟ref(item->form.recollectºª), 
+    ﹟identifier(item->X.store.regular));
+   i+=1; goto again;
+unagain:
+   return;
 }
 
 struct dynamic₋bag *fragment,*tree;
