@@ -146,7 +146,7 @@ void generate₋cast(struct dynamic₋bag * computation)
 void generate₋assign(struct dynamic₋bag * becomes)
 {
    print(
-"    movq rdi,rax\n" /* rdi becomes rax. */
+"    movq rdi, rax\n" /* rdi becomes rax. */
    );
 }
 
@@ -169,84 +169,118 @@ void generate₋loop(struct dynamic₋bag * etery)
 "    jmp ⬚\n",﹟leap(ident),﹟leap(ident));
 }
 
-Argᴾ ﹟generic₋run(struct collection * Ⳅ, Nonabsolute relative)
-{
-   if (regularpool₋at(Ⳅ,relative, 
-     ^(int symbols₋total, int count₋segments, int symbols₋segment[ᐧ], char32̄_t * ᐧ segment[ᐧ]) {
-     for (int i=0; i<count₋segments; i+=1) {
-       print("l ⬚", ﹟S(symbols₋segment[i],segment[i]));
-     }
-   })) { ; }
-   return ﹟S(0,U"");
-}
-
-Argᴾ ﹟run(Nonabsolut ref)
-{
-   return ﹟generic₋run(identifiers,ref);
-}
-
-void generate₋call(struct dynamic₋bag * send₋to₋recieve)
-{ Nonabsolut ref = send₋to₋recieve->episod;
-   print(
-"    call  ⬚\n", 
-   ﹟run(ref));
-}
-
 void preserve(int restore, int count, ...)
 { char * register₋name; int i=0; va_prologue(count)
 again:
    if (i >= count) { goto unagain; }
    register₋name = va_unqueue(char *);
    if (restore) { print(
-"    pop ⬚\n",﹟s7(register₋name)
+"    popq   ⬚\n",﹟s7(register₋name)
    ); }
    else { print(
-"    push ⬚\n",﹟s7(register₋name)
+"    pushq  ⬚\n",﹟s7(register₋name)
    ); }
    i+=1; goto again;
 unagain:
    va_epilogue
 }
 
+void generate₋call(struct dynamic₋bag * send₋to₋recieve)
+{ Nonabsolut ref = send₋to₋recieve->episod;
+   preserve(0,7,"rbx","rsp","rbp","r12","r13","r14","r15"); /* preserve caller-save registers before call. */
+   int parameter₋count=8,is₋vararg=1;
+   if (parameter₋count > 6) {
+     print(
+"    pushq eight             /* more than six registers in prototype. */\n"
+"    pushq seventh\n"
+     );
+   }
+   print("mov al,13"); /* variable number of arguments. */
+   print(
+"    call  ⬚                /* push the address of the next instruction onto the stack and transfer control. */n",
+   ﹟ident(ref));
+   /* caller cleans up the stack. ...and */
+   preserve(1,7,"rbx","rsp","rbp","r12","r13","r14","r15"); /* restore caller-save registers after call. */
+}
+
 void codegenerate()
 { struct dynamic₋bag * item=tree; Nonabsolut symbol;
    print(
 "#define END(symbol)\n"
-"#define START(symbol)\n\n"
+"#define START(symbol)\n"
 "\n    .data\n" /* initialized and placed in object file. */
-"abc1: .asciz \"\342\254\232 \"\n"
-"abc2: .long 0x41,0x44,0\n"
+"abc4 dd 0ffff1a92h, 0ffff1a93h"
 "\n    .bss\n" /* uninitialized and placed in ram. */
 "abc3: .fill 1,28,0\n" /* three parameters repeat, size, value. */
 "\n    .text,.rodata\n" /* initialization for global and static. */
-"abc4 dd 0ffff1a92h, 0ffff1a93h"
+"abc1: .asciz \"\41\42\43 \"\n"
+"abc2: .long 0x41,0x44,0\n"
 "\n    .text\n\n"
    );
 again:
    if (item==ΨΛΩ) { return; }
    symbol = item->episod;
    print(
-"    .globl _⬚\n"
-"    /* .type _⬚,@function */\n"
+"\n    .globl _⬚\n"
+"    .type _⬚,@function\n" /* .func */
 "    .intel_syntax\n"
-"    /* START(_⬚) */\n" 
-"_⬚:\n",﹟run(symbol),﹟run(symbol),﹟run(symbol),﹟run(symbol));
+"    START(_⬚)\n"
+"_⬚:\n",﹟ident(symbol),﹟ident(symbol),﹟ident(symbol),﹟ident(symbol));
    print(
 "    pushq  rbp             /* store frame pointer in stack. */\n"
 "    movq   rsp,rbp         /* assign 'rbp' to 'rsp'. */\n"
 "    subq   rsp,24          /* stack pointer points to top of frame. */\n"
    );
+   /* preserve and restor the listed registers if used in this function body. */
+   /* ...and the registers must be preserved before calling is made. */
    preserve(0,7,"rbx","rsp","rbp","r12","r13","r14","r15"); /* preserve calle-save registers. */
+   /* scratch registers are rax,rdi,rsi,rdx,rcx,r8,r9,r10,r11. */
+   /* rdi, rsi, rdx, rcx, r8, r9 and for floating points xmm0 - xmm7 then right to left pushed. */
+   short signature[] = { INTEGER, INTEGER, INTEGER };
+   print(
+"    movq   [rbp-8], ⬚    /* frame pointer finds address to material 'automatic' in frame. */\n", 
+   ﹟intel₋passed(3, signature, 1));
+   /* use up to 128 bytes below 'rsp' (the red-area). */
    preserve(1,7,"rbx","rsp","rbp","r12","r13","r14","r15"); /* restore callee-save registers. */
    print(
-"    movq   rax,13            /* return integer in 'rax'. */\n"
+"    movq   rax, 13           /* return integer in 'rax'. */\n"
+   );
+   print(
 "    movq   rbp, rsp          /* dealloc automatic variables. */\n"
 "    popq   rbp               /* restore frame pointer from stack. */\n"
 "    retq\n" /*  for lexical nesting on intel x86-64 see 'enter', 'leave' and 'ret'. */
 "    END(_⬚)\n", 
-   ﹟run(symbol));
-   item=item->next; goto again;
-}
+   ﹟ident(symbol)); 
+   item=item->nextºª; goto again;
+} /* rbp points to the base of the current stack frame and contains the saved 
+ 'rbp' 
+ |
+ |
+ |---------| 16-byte aligned address.
+ |         |
+ |         | $rbp+8n+16 argument 'n'.
+ |   ...   | ...
+ |         | $rbp+16    argument 7.
+ |         | $rbp+8     return address.
+ |  stack  | $rbp±0     previous $rbp value.
+ |   ...   | $rbp-8     first automatic if all parameters passed in registers.
+ |         | $rbp-16
+ |         | $rsp       top of the stack.
+ |         | 128-bytes red-zone $rsp-128 to $rsp-8.
+ |---------|
+ |   heap  |
+ |---------|
+ |         |
+ |  .text  | code and global- and static initial values.
+ |         |
+ |---------|
+ |  .bss   | globals not having initial value.
+ |---------|
+ |  .data  | inited globals and static variables (also inited).
+ |---------|
+ |
+ |
+ */
 
 /* ./a.out | clang -c -x assembler - -o - */
 /* ▚ ld -arch x86_64 /dev/stdin */ /* not-possible random-access required. */
