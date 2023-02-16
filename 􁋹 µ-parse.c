@@ -464,31 +464,31 @@ void factor(void)
 
 void term(void)
 {
-   factor(); struct dynamic₋bag * left=form; enum symbol₋class passed; 
+   factor(); struct dynamic₋bag * left=fragment; enum symbol₋class passed; 
    while (symbol₋equal(times) || symbol₋equal(divide)) { 
     passed=symbol.class; next₋token(&Ctxt); factor(); 
-    House(🅒,3,left,form,passed); }
+    House(🅒,3,left,fragment,passed); }
 } /*  'multiplication' has higher precedence than 'addition'. */
 
 void expression(void)
 { enum symbol₋class passed=plus; struct dynamic₋bag * left;
    if (symbol₋equal(plus) || symbol₋equal(minus)) { 
-    passed=symbol.class; next₋token(&Ctxt); } term(); left=form; 
+    passed=symbol.class; next₋token(&Ctxt); } term(); left=fragment; 
    if (passed==minus) { left=new₋Unary(left,minus); }
    while (symbol₋equal(plus) || symbol₋equal(minus)) { 
     passed=symbol.class; next₋token(&Ctxt); term(); 
-    House(🅒,3,left,form,passed); }
+    House(🅒,3,left,fragment,passed); }
 } /*  'addition' has not as high precedence as 'multiplication'. */
 
 void condition(void)
 { struct dynamic₋bag * left;
-   if (match(oddsym)) { expression(); form=new₋Unary(form,oddsym); }
+   if (match(oddsym)) { expression(); fragment=new₋Unary(fragment,oddsym); }
    else {
-     expression(); left=form; 
+     expression(); left=fragment; 
      if (symbol₋equal(eql) || symbol₋equal(neq) || symbol₋equal(lss) || 
       symbol₋equal(leq) || symbol₋equal(gtr) || symbol₋equal(geq)) 
      { enum symbol₋class passed=symbol.class; 
-       next₋token(&Ctxt); expression(); House(🅒,3,left,form,passed);
+       next₋token(&Ctxt); expression(); House(🅒,3,left,fragment,passed);
      } /* else {
        error(2,"condition: invalid operator");
        next₋token(&Ctxt,0);
@@ -501,11 +501,11 @@ void function₋actual₋list(void)
     Alloc(sizeof(struct dynamic₋bag));
    do { condition();
      if (retail(^(struct dynamic₋bag * item) { 
-       &(item->expression) = form;
-     },&(params->sequenceºª),&(params.sequence₋last))) { return; }
+       item->expression = fragment;
+     },&(params->sequenceºª),&(params.sequence₋last))) { Pult(areel.retail₋failure); return; }
    } while(match(comma));
-   form = params;
-} /* car->next=form when not₋first else ΨΛΩ; */
+   fragment = params;
+} /* car->next=fragment when not₋first else ΨΛΩ; */
 
 void opt₋etter(void)
 {
@@ -523,17 +523,16 @@ void statement(void)
 {
    if (match(additionssym)) { Nonabsolut left; /* a․𝘬․a 'l-value'. */ 
     do { expect(ident); left=symbol₋passed.gritty.store.regular; 
-     if (match(eql)) { expect(eql); condition(); House(🅔,2,left,form); }
+     if (match(eql)) { expect(eql); condition(); House(🅔,2,left,fragment); }
     } while (match(comma)); }
-   else if (match(ident)) { Nonabsolut identifier;
-    identifier=symbol₋passed.gritty.store.regular;
+   else if (match(ident)) { Nonabsolut identifier=symbol₋passed.gritty.store.regular;
     if (match(lparen)) { if (!symbol₋equal(rparen)) { function₋actual₋list(); } expect(rparen); 
-     House(🅣,2,identifier,form); } // form  new₋Userfunction(), retail₋Userfunction(callee₋and₋identifier,tree->form.machineºª, tree->form.machine₋last)
-    else if (match(afterward)) { condition(); House(🅕,2,identifier,form); }
+     House(🅣,2,identifier,fragment); }
+    else if (match(afterward)) { condition(); House(🅕,2,identifier,fragment); }
     else { error(2,"neither assignment, call nor variable introduction"); }
    }
    else if (enrich(callsym,ident)) { expect(ident); House(🅖,1,symbol₋passed.gritty.store.regular); }
-   else if (match(beginsym)) { do { statement(); } while (newline₋match(semicolon)); expect(endsym); House(🅗,1,form); }
+   else if (match(beginsym)) { do { statement(); } while (newline₋match(semicolon)); expect(endsym); House(🅗,1,fragment); }
    else if (match(ifsym)) { condition(); expect(thensym); statement(); at₋opt(elsesym,opt₋etter); House(🅙,1,cond,select1,select2); }
    /* else if (match(whilesym)) { condition(); expect(dosym); statement(); } */ /* notera att 'undvikande utav vānster' ska vara tre abstraktion. */
    else { error(2,"statement: syntax error"); next₋token(&Ctxt); }
@@ -552,7 +551,7 @@ void function₋formal₋list(void)
    if (retail(^(struct dynamic₋bag * item) {
    },&(params->formalºª),&(params->formal₋last))) { return; }
    } while(match(comma));
-   form=params;
+   fragment=params;
 }
 
 void opt₋void(void) { }
@@ -573,19 +572,19 @@ void block(void)
       case constsym: {
         match(constsym); Nonabsolut serpent;
         do { expect(ident); serpent=symbol₋passed.gritty.store.regularOrIdent; 
-          expect(eql); condition(); House(🅛,2,serpent,form); House(🅠,2,tree,form);
+          expect(eql); condition(); House(🅛,2,serpent,fragment); House(🅠,2,tree,fragment);
         } while (match(comma)); at₋opt(semicolon,opt₋void); break; }
       case varsym: {
         match(varsym); { Nonabsolut argument; /* struct dynamic₋bag * list=ΨΛΩ; */
         do { expect(ident); argument=symbol₋passed.gritty.store.regularOrIdent; 
-         if (match(eql)) { expect(eql); condition(); House(🅝,2,argument,form); } 
-         else { House(🅝,2,argument,ΨΛΩ); } House(🅡,2,tree,form);
+         if (match(eql)) { expect(eql); condition(); House(🅝,2,argument,fragment); } 
+         else { House(🅝,2,argument,ΨΛΩ); } House(🅡,2,tree,fragment);
         } while (match(comma)); at₋opt(semicolon,opt₋void); } break; }
       case procsym: {
         match(procsym); { Nonabsolut cipher; struct dynamic₋bag *list=ΨΛΩ,*detail; 
         expect(ident); cipher=symbol₋passed.gritty.store.regularOrIdent; expect(lparen); 
-        if (!symbol₋equal(rparen)) { function₋formal₋list(); list=form; } expect(rparen); 
-        statement(); detail=form; House(🅟,3,cipher,list,detail); House(🅩,2,tree,form); }
+        if (!symbol₋equal(rparen)) { function₋formal₋list(); list=fragment; } expect(rparen); 
+        statement(); detail=fragment; House(🅟,3,cipher,list,detail); House(🅩,2,tree,fragment); }
         break; }
       }
    }
@@ -595,10 +594,10 @@ void block(void)
      {
      case schemasym: { Nonabsolut table; 
        match(schemasym); expect(ident); 
-       table = symbol₋passed.gritty.store.regularOrIdent; 
+       table = symbol₋passed.gritty.store.regular; 
        expect(eql); expect(lparen); 
        opt₋associations(); expect(rparen); 
-       House(🅢,3,table,tree,form); break; }
+       House(🅢,3,table,tree,fragment); break; }
      case reelsym: break;
      case environmentsym: break;
      case exceptionsym: break;
@@ -660,7 +659,7 @@ U"constant abcd=321+1,dcba=123;\n"
  "transcript fie()\nbegin\n call view\nend\n"
  "transcript fue()\nbegin\n call control\nend\n\n");
    program();
-   general₋register(form);
+   general₋register(fragment);
 #if defined TRACE₋SYNTAX
    struct tabcontext tabs; tabs.indentation = 0;
    print₋tree(&tabs,tree->form.const₋machineºª);
