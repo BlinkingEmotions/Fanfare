@@ -1,6 +1,6 @@
 /*  􁋹 µ-parse.c | capturing infix computation, location, inclusion, 
- presentation-prominent, sequent, schema, indirect-refers, 
- text-folding, references and correctness log. (GET-ON) */
+ presentation-prominent, sequent, schema, indirect-refers, text-folding, 
+ references and correctness log. (GET-ON) */
 
 import Twinbeam;
 
@@ -27,7 +27,7 @@ enum symbol₋class { ident, number, times, divide, plus, minus, lparen,
 enum language₋mode { mode₋initial, mode₋integer, mode₋regular, 
  mode₋fixpoint, mode₋quotes₋text, mode₋collection };
 
-#include "⎔⃚-translate-formal.cxx"
+#include "Ω⃝-translate-formal.cxx"
 
 struct language₋context {
   __builtin_int_t tip₋unicode;
@@ -395,11 +395,12 @@ typedef struct dynamic₋bag ** (^general₋to₋sequence)(void **);
 typedef struct dynamic₋bag * (^bag₋to₋general)(void *);
 typedef struct ship₋relation { sequence₋to₋general special1; 
   general₋to₋sequence special2; bag₋to₋general special3; 
-  int sizeof₋bag; } refers;
+  int retail₋failure; int sizeof₋bag; } refers;
 struct ship₋relation areel = {
  .special1 = ^(struct dynamic₋bag ** input) { return (void **)input; }, 
  .special2 = ^(void ** input) { return (struct dynamic₋bag **)input; }, 
  .special3 = ^(void * input) { return (struct dynamic₋bag *)input; }, 
+ .retail₋failure = 0,
  .sizeof₋bag = sizeof(struct dynamic₋bag)
 };
 
@@ -451,6 +452,7 @@ struct dynamic₋bag *fragment,*tree;
 /* #include "µ⃝-semantic-register.cxx"
 #include "µ⃝-code-and-arm.cxx" */
 #include "µ⃝-code-and-intel.cxx"
+#include "µ⃝-syntax-pretty.cxx"
 
 void factor(void)
 {
@@ -643,10 +645,11 @@ int main(int argc, char * argv[])
    text₋unicode = Alloc(sizeof(struct collection));
    if (init₋regularpool(text₋unicode)) return 1;
    tree = Alloc(sizeof(struct dynamic₋bag));
-   tree->machineºª = tree->recollectºª = tree->augmentºª = 
-    tree->exceptionºª = tree->last₋exception = 
-    tree->last₋augment = tree->last₋recollect = 
-    tree->last₋machine = tree->const₋machineºª = ΨΛΩ;
+   tree->form.machineºª = tree->form.recollectºª = 
+    tree->form.augmentºª = tree->form.exceptionºª = 
+    tree->form.last₋exception = tree->form.last₋augment = 
+    tree->form.last₋recollect = tree->form.last₋machine = 
+    tree->form.const₋machineºª = ΨΛΩ;
    text₋program = Run(
 U"constant abcd=321+1,dcba=123;\n"
  "variable cdeg,gec,cgb\n"
@@ -655,13 +658,14 @@ U"constant abcd=321+1,dcba=123;\n"
  "  if cdeg <> gec then begin cgb:=1+1; abcd() end "
  "  else begin cgb:=1-1 end end\n"
  "transcript fie()\nbegin\n call view\nend\n"
- "transcript fue()\nbegin\ncall control\nend\n\n");
+ "transcript fue()\nbegin\n call control\nend\n\n");
    program();
    general₋register(form);
 #if defined TRACE₋SYNTAX
-   print₋tree(tree->const₋machineºª);
-   print₋tree(tree->recollectºª);
-   print₋tree(tree->machineºª);
+   struct tabcontext tabs; tabs.indentation = 0;
+   print₋tree(&tabs,tree->form.const₋machineºª);
+   print₋tree(&tabs,tree->form.recollectºª);
+   print₋tree(&tabs,tree->form.machineºª);
 #endif
    codegenerate(); /* a․𝘬․a 'ferry' and 'tooth'. (Code and documentation.) */
 #if defined TRACE₋SYMBOL
