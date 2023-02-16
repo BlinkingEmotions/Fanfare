@@ -75,62 +75,63 @@ void House(int type, int count, ...)
    switch (type)
    {
    case 🅐: { Nonabsolute token = va_unqueue(Nonabsolute);
-    form = new₋Identifier(token); break; }
+    fragment = new₋Identifier(token); break; }
    case 🅑: { struct token₋detail item = va_unqueue(struct token₋detail);
     int type = va_unqueue(int);
-    form = new₋Numeric((struct token₋detail)item,1); break; }
+    fragment = new₋Numeric((struct token₋detail)item,1); break; }
    case 🅒: { void * left = va_unqueue(struct dynamic₋bag *);
     void * right = va_unqueue(struct dynamic₋bag *);
     enum symbol₋class op = va_unqueue(enum symbol₋class);
-    form = new₋Expression((struct dynamic₋bag *)left,(struct dynamic₋bag *)right,op);
+    fragment = new₋Expression((struct dynamic₋bag *)left,(struct dynamic₋bag *)right,op);
     break; }
    case 🅔: { Nonabsolute left = va_unqueue(Nonabsolute);
     void * right = va_unqueue(struct dynamic₋bag *);
-    form = new₋Statement(additionssym);
-    form->l = new₋Identifier(left);
-    form->r = (struct dynamic₋bag *)right;
+    fragment = new₋Statement(additionssym);
+    fragment->form.l = new₋Identifier(left);
+    fragment->form.r = (struct dynamic₋bag *)right;
     break; }
    case 🅕: { Nonabsolute identity = va_unqueue(Nonabsolute);
     void * right = va_unqueue(struct dynamic₋bag *);
-    form = new₋Statement(afterward);
-    form->l = new₋Identifier(identity);
-    form->r = right;
+    fragment = new₋Statement(afterward);
+    fragment->form.l = new₋Identifier(identity);
+    fragment->form.r = right;
     break; }
    case 🅖: { Nonabsolute callee = va_unqueue(Nonabsolute);
-    form = new₋Identifier(callee);
-    form->T = callsym;
+    fragment = new₋Identifier(callee);
+    fragment->T = callsym;
     break; }
    case 🅗: { void * unit = va_unqueue(struct dynamic₋bag *);
-    form = (struct dynamic₋bag *)unit;
+    fragment = (struct dynamic₋bag *)unit;
     break; }/* statement list */
    case 🅙: { void * condition = va_unqueue(struct dynamic₋bag *);
-    void * compare₋then = va_unqueue(struct dynamic₋bag *);
-    void * compare₋else = va_unqueue(struct dynamic₋bag *);
-    form = new₋Statement(ifsym);
-    form->compare₋then = compare₋then;
-    form->compare₋else = compare₋else;
+    void * compare₋then = va_unqueue(struct dynamic₋bag₋cons *);
+    void * compare₋else = va_unqueue(struct dynamic₋bag₋cons *);
+    fragment = new₋Statement(ifsym);
+    fragment->form.compare₋thenºª = compare₋then;
+    fragment->form.compare₋elseºª = compare₋else;
     break; } /* condition */
    case 🅛: { Nonabsolute uni₋vers = va_unqueue(Nonabsolute);
     void * serpent = va_unqueue(struct dynamic₋bag *);
-    form = new₋Statement(afterward);
-    form->l = new₋Identifier(uni₋vers);
-    form->r = serpent;
+    fragment = new₋Statement(afterward);
+    fragment->form.l = new₋Identifier(uni₋vers);
+    fragment->form.r = serpent;
     break; }
    case 🅝: { Nonabsolute identifier = va_unqueue(Nonabsolute);
     void * arg₋u₋men = va_unqueue(struct dynamic₋bag *);
-    form = new₋Statement(afterward);
-    form->l = new₋Identifier(identifier);
-    form->r = arg₋u₋men;
+    fragment = new₋Statement(afterward);
+    fragment->form.l = new₋Identifier(identifier);
+    fragment->form.r = arg₋u₋men;
     break; }
    case 🅟: { Nonabsolute sy = va_unqueue(Nonabsolute);
-    void * parameters = va_unqueue(struct dynamic₋bag *);
-    void * detail = va_unqueue(struct dynamic₋bag *);
-    form = new₋Userfunction(sy,(struct dynamic₋bag *)parameters,(struct dynamic₋bag *)detail);
+    void * parameters = va_unqueue(struct dynamic₋bag₋cons *);
+    void * detail = va_unqueue(struct dynamic₋bag₋cons *);
+    fragment = new₋Userfunction(sy,(struct dynamic₋bag₋cons *)parameters,(struct dynamic₋bag₋cons *)detail);
     break; } /* details found in tree and compilation unit. */
    case 🅠: { refers tree = va_unqueue(struct dynamic₋bag *);
     refers reads = va_unqueue(struct dynamic₋bag *);
-    if (tree->const₋machineºª==ΨΛΩ) { tree->const₋machineºª=reads; }
-    else { reads->prev=tree->art->last; if (tree->art->last) tree->art->last->next=reads; tree->art->last=reads; }
+    if (retail(^(struct dynamic₋bag * material) {
+      material = reads;
+    },&(tree->form.const₋machineºª),&(tree->form.machine₋lastºª)) { Pult(); }
     break; } /* computed and expressed constants. */
    case 🅡: { refers tree = va_unqueue(struct dynamic₋bag *);
     refers reads = va_unqueue(struct dynamic₋bag *);
@@ -140,7 +141,7 @@ void House(int type, int count, ...)
    case 🅢: { Nonabsolute name = va_unqueue(Nonabsolute);
     refers tree = va_unqueue(struct dynamic₋bag *);
     refers table = va_unqueue(struct dynamic₋bag *);
-    form = new₋Intrinsicfunction(name,(struct dynamic₋bag *)tree, (struct dynamic₋bag *)table);
+    fragment = new₋Intrinsicfunction(name,(struct dynamic₋bag *)tree, (struct dynamic₋bag *)table);
     break; } /* uses runtime with no explicit details. */
    case 🅣: { /* new_Usercall */
     break; }
