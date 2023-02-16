@@ -144,8 +144,6 @@ void House(int type, int count, ...)
     break; }
    case 🅩: { refers tree = va_unqueue(struct dynamic₋bag *);
     refers reads = va_unqueue(struct dynamic₋bag *);
-    if (tree->machineºª == ΨΛΩ) { tree->machineºª=reads; }
-    else { reads->prev=tree->last₋machine; if (tree->last₋machine) tree->pct->last->next=reads; tree->pct->last=reads; }
     break; } /* procedures and functions. */
    }
    va_epilogue
