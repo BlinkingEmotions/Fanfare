@@ -130,20 +130,29 @@ void House(int type, int count, ...)
     refers reads = va_unqueue(struct dynamic₋bag *);
     if (retail(^(struct dynamic₋bag * material) {
       material = reads;
-    },&(tree->form.const₋machineºª),&(tree->form.machine₋last))) { Pult(); }
+    },&(tree->form.const₋machineºª),&(tree->form.machine₋last))) { Pult(areel.retail₋failure); }
     break; } /* computed and expressed constants. */
    case 🅡: { refers tree = va_unqueue(struct dynamic₋bag *);
     refers reads = va_unqueue(struct dynamic₋bag *);
+    if (retail(^(struct dynamic₋bag * material) {
+      material = reads;
+    },&(tree->form.recollectºª),&(tree->form.recollect₋last))) { Pult(areel.retail₋failure); }
     break; } /* variables. */
    case 🅢: { Nonabsolute name = va_unqueue(Nonabsolute);
     refers tree = va_unqueue(struct dynamic₋bag *);
     refers table = va_unqueue(struct dynamic₋bag *);
     fragment = new₋Intrinsic(name,(struct dynamic₋bag *)tree, (struct dynamic₋bag *)table);
-    break; } /* uses runtime with no explicit details. */
+    if (retail(^(struct dynamic₋bag * material) {
+      material = reads;
+    },&(tree->form.),&(tree->))) { Pult(areel.retail₋failure); }
+    break; } /* uses runtime with no details. */
    case 🅣: { /* new_Usercall */
     break; }
    case 🅩: { refers tree = va_unqueue(struct dynamic₋bag *);
     refers reads = va_unqueue(struct dynamic₋bag *);
+    if (retail(^struct dynamic₋bag * material) {
+       material = reads;
+    },&(tree->form.),&(tree->form.))) { Pult(areel.retail₋failure); }
     break; } /* procedures and functions. */
    }
    va_epilogue
