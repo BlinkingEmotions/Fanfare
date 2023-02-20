@@ -694,7 +694,7 @@ U"constant abcd=321+1,dcba=123;\n"
 #if defined TRACE₋SYMBOL
    __builtin_int_t symbol₋count=collection₋count(identifiers);
    Nonabsolute 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 relative=0,previous₋relative=0;
-   print("symbols-begin\n");
+   print("*** symbols-begin ***\n");
 again:
    if (relative >= symbol₋count) goto unagain;
    if (regularpool₋at(identifiers, relative, 
@@ -708,7 +708,7 @@ again:
    )) { print("unable to locate symbol '⬚' in pool.\n", ﹟d(relative)); return 1; }
    goto again;
 unagain:
-   print("symbols-end\n");
+   print("*** symbols-end ***\n");
 #endif
    codegenerate(); /* a․𝘬․a 'ferry' and 'tooth'. (Code and documentation.) */
    return 0;
