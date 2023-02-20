@@ -32,10 +32,12 @@ struct language₋context {
    into 'symbol' we passed a (in case of multiple, thelast) 'carriage return' 
    then from lexer insert semicolon. */
   enum language₋mode state;
-  char32̄_t regular[2048]; short syms₋in₋regular;
-  __builtin_int_t ongoing₋number; short syms₋in₋number;
-  short zero₋to₋nines[100]; short syms₋in₋fraction;
-  Nonabsolute reference₋quoted; short syms₋in₋quotes;
+  char32̄_t regular[2048];
+  __builtin_int_t ongoing₋number;
+  short zero₋to₋nines[100];
+  Nonabsolute reference₋quoted;
+  short syms₋in₋regular,syms₋in₋number, 
+   syms₋in₋fraction,syms₋in₋quotes;
   struct source₋location interval;
   Trie keys;
 };
