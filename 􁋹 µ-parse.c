@@ -34,7 +34,7 @@ struct language₋context {
   enum language₋mode state;
   char32̄_t regular[2048];
   __builtin_int_t ongoing₋number;
-  short zero₋to₋nines[100];
+  short zero₋to₋nines[100]; /* a․𝘬․a 'fraction₋and₋digits'. */
   Nonabsolute reference₋quoted;
   short syms₋in₋regular,syms₋in₋number, 
    syms₋in₋fraction,syms₋in₋quotes;
@@ -87,12 +87,13 @@ void assign₋symbol(enum symbol₋class s, Symbol * sym, short count₋impressi
 int symbol₋equal(enum symbol₋class s) { return symbol.class==s; }
 
 int copy₋identifier(struct language₋context * ctxt, Symbol * out)
-{ Nonabsolute reference = collection₋count(identifiers);
-   __builtin_int_t tetras=ctxt->syms₋in₋regular;
+{ __builtin_int_t tetras=ctxt->syms₋in₋regular;
+   assign₋symbol(ident,out,tetras);
+   Nonabsolute reference = collection₋count(identifiers);
    char32̄_t * ucs=ctxt->regular;
    if (copy₋append₋onto₋regular(identifiers,tetras,ucs,Alloc,&reference)) return -1;
    if (regularpool₋datum₋text(identifiers,tetras,reference)) return -1;
-   assign₋symbol(ident,out,tetras);
+   out->gritty.kind=1;
    return 0;
 }
 
@@ -102,13 +103,13 @@ int copy₋number(struct language₋context * ctxt, Symbol * out, int type)
    {
    case 1:
      out->gritty.store.integer = ctxt->ongoing₋number;
-     out->gritty.kind = 3;
+     out->gritty.kind=3;
      break;
-   /* case 2:
-     int₋to₋sequent((int64_t)(ctxt->ongoing),&out->gritty.store.number);
-     fraction₋to₋sequent(4,ctxt->zeroToNines,&out->gritty.store.number);
-     out->gritty.kind = 2;
-     break; */
+   case 2:
+     /* int₋to₋sequent((int64_t)(ctxt->ongoing₋number),&out->gritty.store.number);
+     fraction₋to₋sequent(4,ctxt->zero₋to₋nines,&out->gritty.store.number);
+     out->gritty.kind=2; */
+     break;
    }
    return 0;
 }
@@ -208,7 +209,8 @@ again:
      ctxt->state = mode₋regular;
      if (!(U'a' <= uc₊₁ && uc₊₁ <= U'z') && !(U'0' <= uc₊₁ && uc₊₁ <= U'9') && uc₊₁ != U'₋') {
        if (!trie₋keyword(ctxt->syms₋in₋regular,ctxt->regular,&sym,&(Ctxt.keys))) { confess(keyword); }
-       confess(identifier); }
+       confess(identifier);
+     }
    }
    else if ((STATE(mode₋initial) || STATE(mode₋integer)) && digit(uc)) {
      ctxt->ongoing₋number*=10;
@@ -665,14 +667,18 @@ int main(int argc, char * argv[])
    Ctxt.state=mode₋initial;
    Ctxt.tip₋unicode=0;
    Ctxt.syms₋in₋regular=0;
-   Ctxt.ongoing₋number=0;
+   Ctxt.syms₋in₋number=0;
    Ctxt.syms₋in₋fraction=0;
+   /* the integer 'syms₋in₋quotes' set when '"' is recognized. */
+   Ctxt.ongoing₋number=0;
    location₋init(&Ctxt.interval);
    symbol₋passed.class = unarbitrated₋symbol;
    identifiers = Alloc(sizeof(struct collection));
    if (init₋regularpool(identifiers)) return 1;
    text₋unicode = Alloc(sizeof(struct collection));
    if (init₋regularpool(text₋unicode)) return 1;
+   text₋utf8 = Alloc(sizeof(struct collection));
+   if (init₋regularpool(text₋utf8)) return 1;
    tree = Alloc(sizeof(struct dynamic₋bag));
    tree->form.machineºª = tree->form.recollectºª = 
     tree->form.augmentºª = tree->form.exceptionºª = 
