@@ -69,7 +69,8 @@ Argᴾ ﹟intel₋call₋coalesc(short passing, int is₋128₋bits, char * src�
    return ﹟λ₁(two,ctxt);
 } /* the 'rdx' is used on 128-bit integer returns. (and for 'real' xmm0 and secondarily xmm1) */
 
-char * registers[] = { "rax", "r15", "r14", "r13", "r12", "rbx", "rbp", "r9", "r8", "rcx", "rdx", "rsi", "rdi" };
+char * registers[] = { "rax", "r15", "r14", "r13", "r12", "rbx", "rbp", "r9", 
+ "r8", "rcx", "rdx", "rsi", "rdi" };
 
 char ** requisi₋automat(int count)
 { 
@@ -86,8 +87,8 @@ int requisi₋redundant(struct dynamic₋bag * item, char **item1, char **item2)
    case divide:
    case plus:
    case minus:
-     *item1=requisi₋signature(item->l->memory);
-     *item2=requisi₋signature(item->r->memory);
+     *item1=requisi₋signature(item->form.l->memory);
+     *item2=requisi₋signature(item->form.r->memory);
      return 0;
    default: error(4,"unknown operation found while allocating registers");
    }
@@ -110,7 +111,7 @@ void generate₋arithmetic(struct dynamic₋bag * item)
    char *r1,*r2;
    if (requisi₋redundant(item,&r1,&r2)) { error(4,"unknown arithmetic rendition in assembly"); }
    print(" ⬚,⬚\n",﹟s7(r1),﹟s7(r2));
-   if (item->memory != item->r->memory) {
+   if (item->memory != item->form.r->memory) {
      char * dst = requisi₋signature(item->memory);
      print("mov ⬚,⬚\n",﹟s7(r2),﹟s7(dst));
   }
@@ -130,16 +131,16 @@ void generate₋logic(struct dynamic₋bag * item, enum symbol₋class type)
    } char *r1,*r2;
    if (requisi₋redundant(item,&r1,&r2)) { error(4,"unknown logic rendition in assembly"); }
    print(" ⬚,⬚\n",﹟s7(r1),﹟s7(r2));
-   if (item->memory != item->r->memory) {
+   if (item->memory != item->form.r->memory) {
       char * dst = requisi₋signature(item->memory);
       print("mov ⬚,⬚\n",﹟s7(r2),﹟s7(dst));
    }
 }
 
-void generate₋cast(struct dynamic₋bag * computation)
+void generate₋cast(struct dynamic₋bag * widen)
 {
    print(
-"     cwb,cwde,cwd,cdq"
+"     cwb,cwde,cwd,cdq\n"
    );
 }
 
@@ -172,7 +173,7 @@ void generate₋loop(struct dynamic₋bag * etery)
 void preserve(int restore, int count, ...)
 { char * register₋name; int i=0; va_prologue(count)
 again:
-   if (i >= count) { goto unagain; }
+   if (i >= count) goto unagain;
    register₋name = va_unqueue(char *);
    if (restore) { print(
 "    popq   ⬚\n",﹟s7(register₋name)
@@ -183,10 +184,10 @@ again:
    i+=1; goto again;
 unagain:
    va_epilogue
-}
+} /* \see Scandinavian 'bespara'. */
 
-void generate₋call(struct dynamic₋bag * send₋to₋recieve)
-{ Nonabsolut ref = send₋to₋recieve->episod;
+void generate₋call(struct dynamic₋bag * called₋to₋recieve)
+{ Nonabsolute ref = called₋to₋recieve->X.store.regular;
    preserve(0,7,"rbx","rsp","rbp","r12","r13","r14","r15"); /* preserve caller-save registers before call. */
    int parameter₋count=8,is₋vararg=1;
    if (parameter₋count > 6) {
@@ -204,13 +205,16 @@ void generate₋call(struct dynamic₋bag * send₋to₋recieve)
 }
 
 void codegenerate()
-{ struct dynamic₋bag * item=tree; Nonabsolut symbol;
+{ struct dynamic₋bag * material; Nonabsolute symbol;
+   struct dynamic₋bag₋cons * cell = tree->form.machineºª;
    print(
+"/*  assembly.S | compiled material. */\n"
 "#define END(symbol)\n"
 "#define START(symbol)\n"
 "\n    .data\n" /* initialized and placed in object file. */
 "abc4 dd 0ffff1a92h, 0ffff1a93h"
 "\n    .bss\n" /* uninitialized and placed in ram. */
+"abc4  .reb 64\n" /* sixty-four bits uninitialized reserved. */
 "abc3: .fill 1,28,0\n" /* three parameters repeat, size, value. */
 "\n    .text,.rodata\n" /* initialization for global and static. */
 "abc1: .asciz \"\41\42\43 \"\n"
@@ -218,8 +222,10 @@ void codegenerate()
 "\n    .text\n\n"
    );
 again:
-   if (item==ΨΛΩ) { return; }
-   symbol = item->episod;
+   if (cell == 0) goto unagain;
+   material = cell->item;
+   if (material==ΨΛΩ) goto unagain;
+   symbol = material->X.store.regular;
    print(
 "\n    .globl _⬚\n"
 "    .type _⬚,@function\n" /* .func */
@@ -250,8 +256,11 @@ again:
 "    popq   rbp               /* restore frame pointer from stack. */\n"
 "    retq\n" /*  for lexical nesting on intel x86-64 see 'enter', 'leave' and 'ret'. */
 "    END(_⬚)\n", 
-   ﹟ident(symbol)); 
-   item=item->nextºª; goto again;
+   ﹟ident(symbol));
+   /* item = item->form.next₋machineºª; */
+   cell = cell->nxt.next; goto again;
+unagain:
+   print("/* (end compiled material.) */\n");
 } /* rbp points to the base of the current stack frame and contains the saved 
  'rbp' 
  |
