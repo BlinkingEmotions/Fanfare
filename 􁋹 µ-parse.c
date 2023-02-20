@@ -177,15 +177,15 @@ again:
    ELIF₋INIT₋WITH₋TWO(U':',U'=') { ctxt->tip₋unicode+=1; assign₋symbol(afterward,out,2); RET }
    ELIF₋INIT₋WITH₋ONE(U':') { assign₋symbol(colon,out,1); RET }
    ELIF₋INIT₋WITH₋ONE(U',') { assign₋symbol(comma,out,1); RET }
-   ELIF₋INIT₋WITH₋TWO(U'@',U'*') { assign₋symbol(paragraphsym,out,2); RET } /* paragraph, subsection and article. */
+   ELIF₋INIT₋WITH₋TWO(U'@',U'*') { ctxt->tip₋unicode+=1; assign₋symbol(paragraphsym,out,2); RET } /* paragraph, subsection and article. */
    ELIF₋INIT₋WITH₋ONE(U'@') { assign₋symbol(subsectionsym,out,1); RET } /* section, claim, report and changes and subclause. */
-   ELIF₋INIT₋WITH₋TEE(U'@',U'>',U'=') { assign₋symbol(start₋indenturesym,out,3); RET } /* schedule, expenditures, jurisdiction. */
-   ELIF₋INIT₋WITH₋TWO(U'@',U'<') { assign₋symbol(referenceindenture₋startsym,out,2); RET } /* exhibit, annex and addendum. */
-   ELIF₋INIT₋WITH₋TWO(U'@',U'>') { assign₋symbol(end₋referenceindenturesym,out,2); RET }
-   ELIF₋INIT₋WITH₋TEE(U'.',U'.',U'.') { assign₋symbol(ellipsissym,out,3); RET }
+   ELIF₋INIT₋WITH₋TEE(U'@',U'>',U'=') { ctxt->tip₋unicode+=2; assign₋symbol(start₋indenturesym,out,3); RET } /* schedule, expenditures, jurisdiction. */
+   ELIF₋INIT₋WITH₋TWO(U'@',U'<') { ctxt->tip₋unicode+=1; assign₋symbol(referenceindenture₋startsym,out,2); RET } /* exhibit, annex and addendum. */
+   ELIF₋INIT₋WITH₋TWO(U'@',U'>') { ctxt->tip₋unicode+=1; assign₋symbol(end₋referenceindenturesym,out,2); RET }
+   ELIF₋INIT₋WITH₋TEE(U'.',U'.',U'.') { ctxt->tip₋unicode+=2; assign₋symbol(ellipsissym,out,3); RET }
    ELIF₋INIT₋WITH₋ONE(U'…') { assign₋symbol(ellipsissym,out,1); RET } /* ⌥ + ';'. */
-   ELIF₋INIT₋WITH₋TEE(U'-',U'-',U'<') { assign₋symbol(dowsingsym,out,3); RET }
-   ELIF₋INIT₋WITH₋TWO(U'@',U'@') { assign₋symbol(leftrightread,out,2); RET }
+   ELIF₋INIT₋WITH₋TEE(U'-',U'-',U'<') { ctxt->tip₋unicode+=2; assign₋symbol(dowsingsym,out,3); RET }
+   ELIF₋INIT₋WITH₋TWO(U'@',U'@') { ctxt->tip₋unicode+=1; assign₋symbol(leftrightread,out,2); RET }
    /* first and final 'render' alternatively 'do-not-render' and 'requires modification' in text editor. */
    /* else if (STATE(mode₋initial) && uc == U'\x----') { assign₋symbol(symbol₋for₋clipbook₋exclusion₋toggle,out,1) } ⁄* will not include material in clipbook. */
    /* else if (STATE(mode₋initial) && uc == U'\x----') { assign₋symbol(symbol₋for₋prominent₋toggle); } ⁄* display text in bold-face. */
