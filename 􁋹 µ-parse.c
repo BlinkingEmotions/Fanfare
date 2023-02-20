@@ -22,7 +22,7 @@ enum symbol₋class { ident, number, times, divide, plus, minus, lparen,
 enum language₋mode { mode₋initial, mode₋integer, mode₋regular, 
  mode₋fixpoint, mode₋quotes₋text, mode₋collection };
 
-#include "Ω⃝-translate-formal.cxx"
+#include "Ω⃝-translate-formal.cxx" /* defines 'source₋location'. */
 
 struct language₋context {
   __builtin_int_t tip₋unicode;
@@ -56,8 +56,8 @@ struct Unicodes text₋program; struct language₋context Ctxt;
 
 typedef struct Symbol { enum symbol₋class class; struct token₋detail gritty; } Symbol;
 
-Symbol symbol₋passed; /*  a․𝘬․a 'memory after reading passed' and 'ground₋fold'. */
-Symbol symbol,retrospect;
+Symbol symbol₋passed,symbol,retrospect;
+/*  a․𝘬․a 'memory after reading passed'/'ground₋fold', 'current' and 'next'. */
 
 #define STATE(s) (s == ctxt->state)
 #define TRACE₋TOKENS
@@ -106,9 +106,10 @@ int copy₋number(struct language₋context * ctxt, Symbol * out, int type)
      out->gritty.kind=3;
      break;
    case 2:
-     /* int₋to₋sequent((int64_t)(ctxt->ongoing₋number),&out->gritty.store.number);
-     fraction₋to₋sequent(4,ctxt->zero₋to₋nines,&out->gritty.store.number);
-     out->gritty.kind=2; */
+     int₋to₋sequent((int64_t)(ctxt->ongoing₋number),&out->gritty.store.number);
+     fraction₋to₋sequent(ctxt->syms₋in₋fraction,ctxt->zero₋to₋nines, 
+      &out->gritty.store.number);
+     out->gritty.kind=2;
      break;
    }
    return 0;
@@ -120,11 +121,12 @@ int next₋token₋inner(struct language₋context * ctxt, Symbol * out)
    typedef int (^type)(char32̄_t); ctxt->carrier₁=0;
    type digit = ^(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; };
    type letter = ^(char32̄_t uc) { return (U'a' <= uc && uc <= U'z') || uc == U'₋'; };
-   🧵(identifier,integer₋constant,keyword,trouble,completion,unicode_text) {
+   🧵(identifier,machine₋constant,keyword,trouble,completion,unicode_text) {
    case identifier: copy₋identifier(ctxt,out); ctxt->syms₋in₋regular=0; 
     ctxt->state=mode₋initial; return 0;
-   case integer₋constant: copy₋number(ctxt,out,1); ctxt->ongoing₋number=0; 
-    ctxt->syms₋in₋number=0; ctxt->state=mode₋initial; return 0;
+   case machine₋constant: copy₋number(ctxt,out,1); ctxt->ongoing₋number=0; 
+    ctxt->syms₋in₋number=ctxt->syms₋in₋fraction=0; ctxt->state=mode₋initial;
+    return 0;
    case keyword: assign₋symbol(sym,out,ctxt->syms₋in₋regular); 
     ctxt->syms₋in₋regular=0; ctxt->state=mode₋initial; return 0;
    case completion: assign₋symbol(eot₋and₋file,out,0); return 0;
@@ -186,10 +188,10 @@ again:
    /* first and final 'render' alternatively 'do-not-render' and 'requires modification' in text editor. */
    /* else if (STATE(mode₋initial) && uc == U'\x----') { assign₋symbol(symbol₋for₋clipbook₋exclusion₋toggle,out,1) } ⁄* will not include material in clipbook. */
    /* else if (STATE(mode₋initial) && uc == U'\x----') { assign₋symbol(symbol₋for₋prominent₋toggle); } ⁄* display text in bold-face. */
-   /* else if (STATE(mode₋initial) && uc == U'\x----') { assign₋symbol(symbol₋for₋guttertext); } ⁄* material rendered line-oriented and left to editor (gutter) at hoover. */
+   /* else if (STATE(mode₋initial) && uc == U'\x----') { assign₋symbol(symbol₋for₋guttertext); } ⁄* line-oriented material rendered left to editor (gutter) at hoover. */
    /* else if (STATE(mode₋initial) && UC == U'\x----') { assign₋SYMBOL(symbol₋for₋popovertext); } ⁄* multiple-line material rendered as popover inside editor at hoover. */
    ELIF₋INIT₋WITH₋ONE(U'\x2405') { assign₋symbol(symbol₋for₋enquery,out,1); RET } /* toggle fold/unfold at double-click. */
-   /* And text-block rendered with painters-knife' (\see 77995 Sat, 18 Feb 2023 05:25). ⌥ + '-' is '–' and ⌥ + shift + '-' is '—'. */
+   /* \later 'text-block rendition-interpretation and painters-knife' (\see 77995 Sat, 18 Feb 2023 05:25). ⌥ + '-' is '–' and ⌥ + shift + '-' is '—'. */
    ELIF₋INIT₋WITH₋ONE(U'.') { assign₋symbol(period,out,1); print("754 period\n"); RET }
    ELIF₋INIT₋WITH₋ONE(U'"') {
      ctxt->reference₋quoted = collection₋count(text₋unicode); ctxt->syms₋in₋quotes=0;
@@ -217,7 +219,7 @@ again:
      ctxt->ongoing₋number+=(uc - U'0');
      ctxt->syms₋in₋number+=1;
      ctxt->state = mode₋integer;
-     if (!(U'0' <= uc₊₁ && uc₊₁ <= U'9')) { confess(integer₋constant); }
+     if (!(U'0' <= uc₊₁ && uc₊₁ <= U'9')) { confess(machine₋constant); }
    } /* else if mode₋fixpoint \also in --<􀥳 lingustics-epi.c>{array buffer the}. */
      /* @= #include "u-arithmetic.cxx" */ /* if (x==0) @<array buffer the@> */
    EL₋CONFESS
