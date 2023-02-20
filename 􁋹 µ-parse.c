@@ -120,7 +120,8 @@ int next₋token₋inner(struct language₋context * ctxt, Symbol * out)
     int lift₋count=0,sym;
    typedef int (^type)(char32̄_t); ctxt->carrier₁=0;
    type digit = ^(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; };
-   type letter = ^(char32̄_t uc) { return (U'a' <= uc && uc <= U'z') || uc == U'₋'; };
+   type letter = ^(char32̄_t uc) { return (U'a' <= uc && uc <= U'z') || 
+    (U'A' <= uc && uc <= U'Z') || uc == U'₋'; };
    🧵(identifier,machine₋constant,keyword,trouble,completion,unicode_text) {
    case identifier: copy₋identifier(ctxt,out); ctxt->syms₋in₋regular=0; 
     ctxt->state=mode₋initial; return 0;
@@ -194,8 +195,12 @@ again:
    /* \later 'text-block rendition-interpretation and painters-knife' (\see 77995 Sat, 18 Feb 2023 05:25). ⌥ + '-' is '–' and ⌥ + shift + '-' is '—'. */
    ELIF₋INIT₋WITH₋ONE(U'.') { assign₋symbol(period,out,1); print("754 period\n"); RET }
    ELIF₋INIT₋WITH₋ONE(U'"') {
-     ctxt->reference₋quoted = collection₋count(text₋unicode); ctxt->syms₋in₋quotes=0;
-     ctxt->state = mode₋quotes₋text; location₋nextcolumn(&ctxt->interval); /* RET */ }
+     ctxt->reference₋quoted = collection₋count(text₋unicode);
+     ctxt->syms₋in₋quotes=0;
+     ctxt->state = mode₋quotes₋text;
+     location₋nextcolumn(&ctxt->interval);
+     /* RET */
+   }
    else if (STATE(mode₋quotes₋text)) {
      if (uc == U'"') {
        if (regularpool₋datum₋text(text₋unicode,ctxt->syms₋in₋quotes,ctxt->reference₋quoted)) { confess(trouble); }
@@ -209,7 +214,7 @@ again:
      ctxt->regular[ctxt->syms₋in₋regular]=uc;
      ctxt->syms₋in₋regular+=1;
      ctxt->state = mode₋regular;
-     if (!(U'a' <= uc₊₁ && uc₊₁ <= U'z') && !(U'0' <= uc₊₁ && uc₊₁ <= U'9') && uc₊₁ != U'₋') {
+     if (!letter(uc₊₁) && !digit(uc₊₁)) {
        if (!trie₋keyword(ctxt->syms₋in₋regular,ctxt->regular,&sym,&(Ctxt.keys))) { confess(keyword); }
        confess(identifier);
      }
@@ -219,7 +224,7 @@ again:
      ctxt->ongoing₋number+=(uc - U'0');
      ctxt->syms₋in₋number+=1;
      ctxt->state = mode₋integer;
-     if (!(U'0' <= uc₊₁ && uc₊₁ <= U'9')) { confess(machine₋constant); }
+     if (!digit(uc₊₁)) { confess(machine₋constant); }
    } /* else if mode₋fixpoint \also in --<􀥳 lingustics-epi.c>{array buffer the}. */
      /* @= #include "u-arithmetic.cxx" */ /* if (x==0) @<array buffer the@> */
    EL₋CONFESS
@@ -245,7 +250,7 @@ void next₋token(struct language₋context * ctxt)
 #if defined TRACE₋TOKENS
   typedef void (^Print)(char *);
   struct source₋location interval = symbol.gritty.interval;
-  Print token = ^(char * rendition) { print("token '⬚'. (col. ⬚-⬚, line ⬚-⬚.)\n", 
+  Print token = ^(char * rendition) { print("token ⬚. (col. ⬚-⬚, line ⬚-⬚.)\n", 
    ﹟s7(rendition), ﹟d(interval.column₋first), ﹟d(interval.column₋last), 
    ﹟d(interval.lineno₋first), ﹟d(interval.lineno₋last)); };
   switch (symbol.class) {
@@ -665,7 +670,7 @@ int main(int argc, char * argv[])
     serpentsummarysym,settingsym,referencessym,correctionssym, 
     flagsandnotessym,diffusesym,dotifsym,definedsym,dotdefinesym, 
     dotendsym,dotincludesym,systemsym };
-   merge₋to₋trie(34,keywords,symbols,&(Ctxt.keys));
+   merge₋to₋trie(34,keywords,symbols,&Ctxt.keys);
    Ctxt.state=mode₋initial;
    Ctxt.tip₋unicode=0;
    Ctxt.syms₋in₋regular=0;
