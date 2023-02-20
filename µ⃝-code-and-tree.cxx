@@ -90,6 +90,11 @@ void House(int type, int count, ...)
     fragment->form.l = new₋Identifier(left);
     fragment->form.r = (struct dynamic₋bag *)right;
     break; }
+   case 🅣: {
+    Nonabsolute token = va_unqueue(Nonabsolute);
+    refers params = va_unqueue(struct dynamic₋bag *);
+    fragment = new₋User(token,params);
+    break; } /* function defined in 'compilation-unit'. */
    case 🅕: { Nonabsolute identity = va_unqueue(Nonabsolute);
     void * right = va_unqueue(struct dynamic₋bag *);
     fragment = new₋Statement(afterward);
@@ -106,44 +111,39 @@ void House(int type, int count, ...)
    case 🅙: { void * condition = va_unqueue(struct dynamic₋bag *);
     void * compare₋then = va_unqueue(struct dynamic₋bag₋cons *);
     void * compare₋else = va_unqueue(struct dynamic₋bag₋cons *);
-    fragment = new₋Statement(ifsym);
+    fragment = new₋Statement(comparesym);
     fragment->form.compare₋thenºª = compare₋then;
     fragment->form.compare₋elseºª = compare₋else;
     break; } /* condition */
-   case 🅛: { Nonabsolute uni₋vers = va_unqueue(Nonabsolute);
+   case 🅛1: { Nonabsolute uni₋vers = va_unqueue(Nonabsolute);
     void * serpent = va_unqueue(struct dynamic₋bag *);
     fragment = new₋Statement(afterward);
     fragment->form.l = new₋Identifier(uni₋vers);
     fragment->form.r = serpent;
     break; }
+   case 🅛2: { refers tree = va_unqueue(struct dynamic₋bag *);
+    refers reads = va_unqueue(struct dynamic₋bag *);
+    break; } /* computed and expressed constants. */
    case 🅝: { Nonabsolute identifier = va_unqueue(Nonabsolute);
     void * arg₋u₋men = va_unqueue(struct dynamic₋bag *);
     fragment = new₋Statement(afterward);
     fragment->form.l = new₋Identifier(identifier);
     fragment->form.r = arg₋u₋men;
     break; }
-   case 🅟: { Nonabsolute sy = va_unqueue(Nonabsolute);
+   case 🅟: { refers tree = va_unqueue(struct dynamic₋bag *);
+    refers reads = va_unqueue(struct dynamic₋bag *);
+    break; } /* variables. */
+   case 🅡1: { Nonabsolute sy = va_unqueue(Nonabsolute);
     void * actual₋and₋detail = va_unqueue(struct dynamic₋bag *);
     fragment = new₋User(sy,(struct dynamic₋bag *)actual₋and₋detail);
     break; } /* details found in tree and compilation unit. */
-   case 🅠: { refers tree = va_unqueue(struct dynamic₋bag *);
+   case 🅡2: { refers tree = va_unqueue(struct dynamic₋bag *);
     refers reads = va_unqueue(struct dynamic₋bag *);
-    break; } /* computed and expressed constants. */
-   case 🅡: { refers tree = va_unqueue(struct dynamic₋bag *);
-    refers reads = va_unqueue(struct dynamic₋bag *);
-    break; } /* variables. */
+    break; } /* procedures and functions. */
    case 🅢: { Nonabsolute token = va_unqueue(Nonabsolute);
     refers params = va_unqueue(struct dynamic₋bag *);
     fragment = new₋Intrinsic(token,params);
     break; } /* uses runtime with no details. */
-   case 🅣: {
-    Nonabsolute token = va_unqueue(Nonabsolute);
-    refers params = va_unqueue(struct dynamic₋bag *);
-    fragment = new₋User(token,params);
-    break; } /* function defined in 'compilation-unit'. */
-   case 🅩: { refers tree = va_unqueue(struct dynamic₋bag *);
-    refers reads = va_unqueue(struct dynamic₋bag *);
-    break; } /* procedures and functions. */
    }
    va_epilogue
 } /*  A․𝘬․a 'biblio' and 'redux'. */
