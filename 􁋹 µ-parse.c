@@ -135,9 +135,9 @@ int next₋token₋inner(struct language₋context * ctxt, Symbol * out)
    }
 again:
    i=ctxt->tip₋unicode,ctxt->tip₋unicode+=1;
-   if (i >= symbols) { confess(completion); }
-   if (i == symbols - 1) { lift₋count=2; }
-   if (i == symbols - 2) { lift₋count=1; }
+   if (i >= symbols) confess(completion);
+   if (i == symbols - 1) lift₋count=2;
+   if (i == symbols - 2) lift₋count=1;
    uc = *(text₋program.unicodes + i), 
    uc₊₁ = lift₋count >= 2 ? U' ' : *(text₋program.unicodes + i + 1);
    uc₊2 = lift₋count >= 1 ? U' ' : *(text₋program.unicodes + i + 2);
@@ -152,10 +152,10 @@ again:
 #define ELIF₋INIT₋WITH₋TEE(sym1,sym2,sym3) else if (STATE(mode₋initial) &&   \
  uc == sym1 && uc₊₁ == sym2 && uc₊2 == sym3)
 #define RET return 0;
-#define EL₋CONFESS else { confess(trouble); }
-   ELIF₋INIT₋WITH₋ONE(U'\xd') { }
-   ELIF₋INIT₋WITH₋ONE(U' ') { location₋nextcolumn(&ctxt->interval); }
-   ELIF₋INIT₋WITH₋ONE(U'\t') { location₋nextcolumn(&ctxt->interval); }
+#define EL₋CONFESS else confess(trouble);
+   ELIF₋INIT₋WITH₋ONE(U'\xd') { /* do nothing */ }
+   ELIF₋INIT₋WITH₋ONE(U' ') location₋nextcolumn(&ctxt->interval);
+   ELIF₋INIT₋WITH₋ONE(U'\t') location₋nextcolumn(&ctxt->interval);
    ELIF₋INIT₋WITH₋ONE(U'(') { assign₋symbol(lparen,out,1); RET }
    ELIF₋INIT₋WITH₋ONE(U')') { assign₋symbol(rparen,out,1); RET }
    ELIF₋INIT₋WITH₋ONE(U'*') { assign₋symbol(times,out,1); RET }
@@ -243,7 +243,7 @@ void next₋token(struct language₋context * ctxt)
   y = next₋token₋inner(ctxt,&retrospect);
   int retrospect₋class = retrospect.class;
   if (retrospect₋class == ident || retrospect₋class == callsym ||
-    retrospect₋class == beginsym || retrospect₋class == comparesym) 
+   retrospect₋class == beginsym || retrospect₋class == comparesym) 
   { ctxt->carrier₂=1; } else { ctxt->carrier₂=0; }
   if (y != 0) { error(1,"scanner error: advanced failure"); exit(2); }
 
@@ -350,18 +350,18 @@ struct dynamic₋bag₋form {
    *compare₋elseºª,*sequenceºª,*sequence₋last, 
    *else₋last,*then₋last;                                     /* statement */
   struct dynamic₋bag₋cons *formalºª,*detailsºª, 
-   *formal₋last,*details₋last;                              /* definitions */
+   *formal₋last,*details₋last;                               /* definition */
   struct dynamic₋bag₋cons *machineºª,*recollectºª, 
-   *machine₋last,*recollect₋last;                    /* code and variables */
+   *machine₋last,*recollect₋last;                     /* code and variable */
   struct dynamic₋bag₋cons *adaptionºª,*surroundºª, 
    *associationºª,*exceptionºª,*adaption₋last, 
    *surround₋last,*association₋last,*exception₋last;            /* serpent */
-  struct dynamic₋bag₋cons *persistºª,*persist₋last;            /* settings */
+  struct dynamic₋bag₋cons *persistºª,*persist₋last;             /* setting */
   struct dynamic₋bag₋cons *augmentºª,*differenceºª, 
    *possibly₋twoºª,*possibly₋two₋last, 
-   *difference₋last,*augment₋last;                  /* instr.,errata,flags */
+   *difference₋last,*augment₋last;                   /* instr.,errata,flag */
   struct dynamic₋bag₋cons *const₋machineºª, 
-   *constmachine₋last;                                        /* constants */
+   *constmachine₋last;                                         /* constant */
 };
 
 struct dynamic₋bag {
@@ -559,7 +559,7 @@ void statement(void)
      condition(); cond=fragment; expect(thensym); statement(); select1=fragment;
      at₋opt(elsesym,opt₋etter); select2=fragment; 
      House(🅙,1,cond,select1,select2); }
-   /* else if (match(whilesym)) { condition(); expect(dosym); statement(); } */ /* notera att 'undvikande utav vānster' ska vara tre abstraktion. */
+   /* else if (match(whilesym)) { condition(); expect(dosym); statement(); } */
    else { error(2,"statement: syntax error"); next₋token(&Ctxt); }
 }
 
@@ -607,10 +607,10 @@ void block(void)
          else { House(🅝,2,argument,ΨΛΩ); } House(🅟/*🅡*/,2,tree,fragment);
         } while (match(comma)); at₋opt(semicolon,opt₋void); } break; }
       case procsym: {
-        match(procsym); { Nonabsolute cipher; struct dynamic₋bag *list=ΨΛΩ,*detail; 
-        expect(ident); cipher=symbol₋passed.gritty.store.regular; expect(lparen); 
+        match(procsym); { Nonabsolute ciphered; struct dynamic₋bag *list=ΨΛΩ,*detail; 
+        expect(ident); ciphered=symbol₋passed.gritty.store.regular; expect(lparen); 
         if (!symbol₋equal(rparen)) { function₋formal₋list(); list=fragment; } expect(rparen); 
-        statement(); detail=fragment; House(🅡1/*🅟*/,3,cipher,list,detail); House(🅡2 /*🅩*/,2,tree,fragment); }
+        statement(); detail=fragment; House(🅡1/*🅟*/,3,ciphered,list,detail); House(🅡2 /*🅩*/,2,tree,fragment); }
         break; }
       default: break;
       }
@@ -625,9 +625,16 @@ void block(void)
        expect(eql); expect(lparen); 
        opt₋associations(); expect(rparen); 
        House(🅢,3,table,tree,fragment); break; }
-     case reelsym: break;
-     case environmentsym: break;
-     case exceptionsym: break;
+     case reelsym: { match(reelsym); expect(eql); break;
+     case environmentsym: {
+       Nonabsolute coroutine,interrupt;
+       match(environmentsym); expect(ident); 
+       interrupt = symbol₋passed.gritty.store.regular;
+       expect(eql); expect(ident);
+       coroutine = symbol₋passed.gritty.store.regular;
+       break; }
+     case exceptionsym: match(exceptionsym); expect(eql); expect(lparen); 
+       expect(rparen); break;
      default: error(2,"unsupported initial serpent-summary keyword"); break;
      }
    }
@@ -691,7 +698,7 @@ int main(int argc, char * argv[])
     tree->form.augmentºª = tree->form.exceptionºª = 
     tree->form.exception₋last = tree->form.augment₋last = 
     tree->form.recollect₋last = tree->form.machine₋last = 
-    tree->form.const₋machineºª = ΨΛΩ;
+    tree->form.const₋machineºª = 0;
    text₋program = Run(
 U"constant abcd=321+1,dcba=123;\n"
  "variable cdeg,gec,cgb\n"
@@ -725,7 +732,7 @@ again:
 unagain:
    print("*** symbols-end ***\n");
 #endif
-   codegenerate(); /* a․𝘬․a 'ferry' and 'tooth'. (Code and documentation.) */
+   codegenerate();
    return 0;
 }
 
