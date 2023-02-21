@@ -221,7 +221,7 @@ void codegenerate()
 "\n    .text\n\n"
    );
    struct dynamic₋bag * material; Nonabsolute symbol;
-   struct dynamic₋bag₋cons * cell₋machine = tree->form.machineºª;
+   struct dynamic₋bag₋cons *cell₋machine=tree->form.machineºª,*statement₋cell;
 function₋again:
    if (cell₋machine == 0) goto function₋unagain;
    material = cell₋machine->item;
