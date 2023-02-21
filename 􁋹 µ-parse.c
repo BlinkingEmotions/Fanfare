@@ -625,7 +625,7 @@ void block(void)
        expect(eql); expect(lparen); 
        opt₋associations(); expect(rparen); 
        House(🅢,3,table,tree,fragment); break; }
-     case reelsym: { match(reelsym); expect(eql); break;
+     case reelsym: { match(reelsym); expect(eql); break; }
      case environmentsym: {
        Nonabsolute coroutine,interrupt;
        match(environmentsym); expect(ident); 
