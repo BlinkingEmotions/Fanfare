@@ -1,4 +1,4 @@
-/*  µ⃝-code-and-intel.cxx | print assembly for Intel x86-64. */
+/*  µ⃝-code-and-intel.cxx | (fine-)print assembly for Intel x86-64. */
 
 #define INTEGER 1
 #define REAL 2
@@ -222,8 +222,8 @@ void codegenerate()
    );
    struct dynamic₋bag * material; Nonabsolute symbol;
    struct dynamic₋bag₋cons * cell₋machine = tree->form.machineºª;
-again:
-   if (cell₋machine == 0) goto unagain;
+function₋again:
+   if (cell₋machine == 0) goto function₋unagain;
    material = cell₋machine->item;
    if (material==0) error(99,"unable to form abstract syntax");
    symbol = material->X.store.regular;
@@ -248,10 +248,18 @@ again:
 "    movq   [rbp-8], ⬚    /* frame pointer finds address to material 'automatic' in frame. */\n", 
    ﹟intel₋passed(3, signature, 1));
    /* use up to 128 bytes below 'rsp' (on macos coined 'the red-area'). */
-   preserve(1,7,"rbx","rsp","rbp","r12","r13","r14","r15"); /* restore callee-save registers. */
+   statement₋cell = material->form.sequenceºª;
+statement₋again:
+   if (statement₋cell == 0) goto statement₋unagain;
+   print(
+"    movq  rax, 17            /* real statement. */\n"
+   );
+   statement₋cell = statement₋cell->nxt.next; goto statement₋again;
+statement₋unagain:
    print(
 "    movq   rax, 13           /* return integer in 'rax'. */\n"
    );
+   preserve(1,7,"rbx","rsp","rbp","r12","r13","r14","r15"); /* restore callee-save registers. */
    print(
 "    movq   rbp, rsp          /* dealloc automatic variables. */\n"
 "    popq   rbp               /* restore frame pointer from stack. */\n"
@@ -259,8 +267,8 @@ again:
 "    END(_⬚)\n", 
    ﹟ident(symbol));
    /* item = item->form.next₋machineºª; */
-   cell₋machine = cell₋machine->nxt.next; goto again;
-unagain:
+   cell₋machine = cell₋machine->nxt.next; goto function₋again;
+function₋unagain:
    print("/* (end compiled material.) */\n");
 } /* rbp points to the base of the current stack frame and contains the saved 
  'rbp' 
