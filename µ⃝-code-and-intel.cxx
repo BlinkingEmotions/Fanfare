@@ -184,7 +184,7 @@ again:
    i+=1; goto again;
 unagain:
    va_epilogue
-} /* \see Scandinavian 'bespara'. */
+}
 
 void generate₋call(struct dynamic₋bag * called₋to₋recieve)
 { Nonabsolute ref = called₋to₋recieve->X.store.regular;
@@ -205,8 +205,7 @@ void generate₋call(struct dynamic₋bag * called₋to₋recieve)
 }
 
 void codegenerate()
-{ struct dynamic₋bag * material; Nonabsolute symbol;
-   struct dynamic₋bag₋cons * cell = tree->form.machineºª;
+{
    print(
 "/*  assembly.S | compiled material. */\n"
 "#define END(symbol)\n"
@@ -221,10 +220,12 @@ void codegenerate()
 "abc2: .long 0x41,0x44,0\n"
 "\n    .text\n\n"
    );
+   struct dynamic₋bag * material; Nonabsolute symbol;
+   struct dynamic₋bag₋cons * cell₋machine = tree->form.machineºª;
 again:
-   if (cell == 0) goto unagain;
-   material = cell->item;
-   if (material==ΨΛΩ) goto unagain;
+   if (cell₋machine == 0) goto unagain;
+   material = cell₋machine->item;
+   if (material==0) error(99,"unable to form abstract syntax");
    symbol = material->X.store.regular;
    print(
 "\n    .globl _⬚\n"
@@ -237,7 +238,7 @@ again:
 "    movq   rsp,rbp         /* assign 'rbp' to 'rsp'. */\n"
 "    subq   rsp,24          /* stack pointer points to top of frame. */\n"
    );
-   /* preserve and restor the listed registers if used in this function body. */
+   /* preserve and restore the listed registers used in this function body. */
    /* ...and the registers must be preserved before calling is made. */
    preserve(0,7,"rbx","rsp","rbp","r12","r13","r14","r15"); /* preserve calle-save registers. */
    /* scratch registers are rax,rdi,rsi,rdx,rcx,r8,r9,r10,r11. */
@@ -258,7 +259,7 @@ again:
 "    END(_⬚)\n", 
    ﹟ident(symbol));
    /* item = item->form.next₋machineºª; */
-   cell = cell->nxt.next; goto again;
+   cell = cell₋machine->nxt.next; goto again;
 unagain:
    print("/* (end compiled material.) */\n");
 } /* rbp points to the base of the current stack frame and contains the saved 
