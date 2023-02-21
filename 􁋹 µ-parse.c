@@ -16,8 +16,8 @@ enum symbol₋class { ident, number, times, divide, plus, minus, lparen,
  dowsingsym, ellipsissym, leftrightread, insym, presentsym, 
  serpentsummarysym, settingsym, referencessym, correctionssym, 
  flagsandnotessym, diffusesym, dotifsym, definedsym, dotdefinesym, 
- dotendsym, dotincludesym, systemsym, eot₋and₋file, 
- unarbitrated₋symbol };
+ dotendsym, dotincludesym, systemsym, unicodesym, utf8sym, conceptsym, 
+ eot₋and₋file, unarbitrated₋symbol };
 
 enum language₋mode { mode₋initial, mode₋integer, mode₋regular, 
  mode₋fixpoint, mode₋quotes₋text, mode₋collection };
@@ -203,10 +203,10 @@ again:
    }
    else if (STATE(mode₋quotes₋text)) {
      if (uc == U'"') {
-       if (regularpool₋datum₋text(text₋unicode,ctxt->syms₋in₋quotes,ctxt->reference₋quoted)) { confess(trouble); }
+       if (regularpool₋datum₋text(text₋unicode,ctxt->syms₋in₋quotes,ctxt->reference₋quoted)) confess(trouble);
        assign₋symbol(unicode₋textsym,out,ctxt->syms₋in₋quotes); ctxt->state = mode₋initial; return 0; }
      else { if (uc == U'\\' && uc₊₁ == U'"') { ctxt->tip₋unicode+=1; uc=U'"'; }
-       if (copy₋append₋onto₋regular(text₋unicode,1,&uc,Alloc,&ctxt->reference₋quoted)) { confess(trouble); }
+       if (copy₋append₋onto₋regular(text₋unicode,1,&uc,Alloc,&ctxt->reference₋quoted)) confess(trouble);
      }
    }
    else if ((STATE(mode₋initial) && letter(uc)) || (STATE(mode₋regular) && (letter(uc) || digit(uc)))) {
@@ -224,7 +224,7 @@ again:
      ctxt->ongoing₋number+=(uc - U'0');
      ctxt->syms₋in₋number+=1;
      ctxt->state = mode₋integer;
-     if (!digit(uc₊₁)) { confess(machine₋constant); }
+     if (!digit(uc₊₁)) confess(machine₋constant);
    } /* else if mode₋fixpoint \also in --<􀥳 lingustics-epi.c>{array buffer the}. */
      /* @= #include "u-arithmetic.cxx" */ /* if (x==0) @<array buffer the@> */
    EL₋CONFESS
@@ -607,10 +607,10 @@ void block(void)
          else { House(🅝,2,argument,ΨΛΩ); } House(🅟/*🅡*/,2,tree,fragment);
         } while (match(comma)); at₋opt(semicolon,opt₋void); } break; }
       case procsym: {
-        match(procsym); { Nonabsolute ciphered; struct dynamic₋bag *list=ΨΛΩ,*detail; 
-        expect(ident); ciphered=symbol₋passed.gritty.store.regular; expect(lparen); 
+        match(procsym); { Nonabsolute cipher; struct dynamic₋bag *list=ΨΛΩ,*detail; 
+        expect(ident); cipher=symbol₋passed.gritty.store.regular; expect(lparen); 
         if (!symbol₋equal(rparen)) { function₋formal₋list(); list=fragment; } expect(rparen); 
-        statement(); detail=fragment; House(🅡1/*🅟*/,3,ciphered,list,detail); House(🅡2 /*🅩*/,2,tree,fragment); }
+        statement(); detail=fragment; House(🅡1/*🅟*/,3,cipher,list,detail); House(🅡2 /*🅩*/,2,tree,fragment); }
         break; }
       default: break;
       }
@@ -669,14 +669,14 @@ int main(int argc, char * argv[])
     U"schema", U"reel", U"environment", U"exception", 
     U"serpent₋summary", U"settings", U"references", U"corrections", 
     U"flags₋and₋notes", U"diffuse", U".IF.", U"DEFINED", U".DEFINE.", 
-    U".END.", U".INCLUDE.", U"system" };
+    U".END.", U".INCLUDE.", U"system", U"unicode", U"utf₋8", U"concept" };
    int symbols[] = { constsym,varsym,callsym,beginsym,endsym,comparesym, 
     thensym,oddsym,procsym,elsesym,voidsym,branch₋goto₋optsym,insym, 
     presentsym,referssym,additionssym,utf8₋textsym,unicode₋textsym, 
     schemasym,reelsym,environmentsym,exceptionsym, 
     serpentsummarysym,settingsym,referencessym,correctionssym, 
     flagsandnotessym,diffusesym,dotifsym,definedsym,dotdefinesym, 
-    dotendsym,dotincludesym,systemsym };
+    dotendsym,dotincludesym,systemsym,unicodesym,utf8sym, conceptsym };
    merge₋to₋trie(34,keywords,symbols,&Ctxt.keys);
    Ctxt.state=mode₋initial;
    Ctxt.tip₋unicode=0;
