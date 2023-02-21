@@ -152,7 +152,7 @@ again:
 #define ELIF₋INIT₋WITH₋TEE(sym1,sym2,sym3) else if (STATE(mode₋initial) &&   \
  uc == sym1 && uc₊₁ == sym2 && uc₊2 == sym3)
 #define RET return 0;
-#define EL₋CONFESS else { confess(trouble); }
+#define EL₋CONFESS else confess(trouble);
    ELIF₋INIT₋WITH₋ONE(U'\xd') { /* do nothing */ }
    ELIF₋INIT₋WITH₋ONE(U' ') location₋nextcolumn(&ctxt->interval);
    ELIF₋INIT₋WITH₋ONE(U'\t') location₋nextcolumn(&ctxt->interval);
