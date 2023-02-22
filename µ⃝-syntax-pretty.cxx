@@ -12,7 +12,7 @@ void print₋expr(struct tabcontext * tabs, struct dynamic₋bag * expr)
    switch (expr->T)
    {
    case ident: print("⬚ident '⬚' @⬚\n",﹟ent(0,tabs), 
-    ﹟ent(expr->X.store.regular),﹟short(expr->memory)); return;
+    ﹟fier(expr),﹟short(expr->memory)); return;
    case number: print("⬚number '⬚' @⬚\n",﹟ent(0,tabs), 
     ﹟d(expr->X.store.integer),﹟short(expr->memory)); return;
    case times: op="*"; goto tail;
@@ -86,7 +86,7 @@ again:
      break;
    case varsym:
      print("⬚variable '⬚'\n",﹟ent(0,tabs),﹟fier( memory));
-     if (memory.form.element) { print("⬚inited with\n",﹟ent(0,tabs)); print₋expr(tabs,memory->form.element); }
+     if (memory->form.element) { print("⬚inited with\n",﹟ent(0,tabs)); print₋expr(tabs,memory->form.element); }
      else print("⬚uninited\n",﹟ent(0,tabs));
      break;
    case procsym:
