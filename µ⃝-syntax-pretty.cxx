@@ -74,18 +74,18 @@ again:
      --tabs->indentation;
      break;
    case label:
-     print("label '⬚':",﹟fier( memory));
+     print("label '⬚':",﹟fier(memory));
      break;
    case additionssym:
-     print("additions '⬚'",﹟fier(memory));
+     print("⬚additions '⬚'",﹟ent(0,tabs),﹟fier(memory));
      print₋expr(tabs,memory);
      break;
    case constsym:
-     print("constant '⬚'\n",﹟fier( memory));
+     print("constant '⬚'\n",﹟fier(memory));
      print₋expr(tabs,memory->form.element);
      break;
    case varsym:
-     print("⬚variable '⬚'\n",﹟ent(0,tabs),﹟fier( memory));
+     print("⬚variable '⬚'\n",﹟ent(0,tabs),﹟fier(memory));
      if (memory->form.element) { print("⬚inited with\n",﹟ent(0,tabs)); print₋expr(tabs,memory->form.element); }
      else print("⬚uninited\n",﹟ent(0,tabs));
      break;
