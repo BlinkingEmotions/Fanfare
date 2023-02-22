@@ -86,8 +86,8 @@ again:
      break;
    case varsym:
      print("⬚variable '⬚'\n",﹟ent(0,tabs),﹟fier( memory));
-     if (memory.form.element) { print("⬚inited with\n",﹟ent(1,tabs)); print₋expr(tabs,memory->form.element); }
-     else print("⬚uninited\n",﹟ent(1,tabs));
+     if (memory.form.element) { print("⬚inited with\n",﹟ent(0,tabs)); print₋expr(tabs,memory->form.element); }
+     else print("⬚uninited\n",﹟ent(0,tabs));
      break;
    case procsym:
      print("transcript '⬚'\n",﹟fier(memory));
