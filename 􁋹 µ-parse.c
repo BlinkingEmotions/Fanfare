@@ -369,8 +369,9 @@ struct dynamic₋bag {
   struct dynamic₋bag₋form form;
   enum symbol₋class T;
   short memory,count; short leg;
-  /* __uint128_t fineprint; Nonabsolute episod; */
-  __builtin_int_t memory₋count;
+  struct dynamic₋bag * preexercise;
+  __uint128_t fineprint; Nonabsolute episod;
+  __builtin_int_t memory₋count; /* counts 'reads' from virtual memory */
 };
 
 union dynamic₋bag₋continuation { struct dynamic₋bag₋cons * next; 
@@ -417,7 +418,7 @@ struct ship₋relation areel = {
  .special1 = ^(struct dynamic₋bag ** input) { return (void **)input; }, 
  .special2 = ^(void ** input) { return (struct dynamic₋bag **)input; }, 
  .special3 = ^(void * input) { return (struct dynamic₋bag *)input; }, 
- .retail₋failure = 0, 
+ .retail₋failure = 0, /* Retail₋failure, */
  .sizeof₋bag = sizeof(struct dynamic₋bag)
 };
 
@@ -677,7 +678,7 @@ int main(int argc, char * argv[])
     serpentsummarysym,settingsym,referencessym,correctionssym, 
     flagsandnotessym,diffusesym,dotifsym,definedsym,dotdefinesym, 
     dotendsym,dotincludesym,systemsym,unicodesym,utf8sym, conceptsym };
-   merge₋to₋trie(34,keywords,symbols,&Ctxt.keys);
+   merge₋to₋trie(35,keywords,symbols,&Ctxt.keys);
    Ctxt.state=mode₋initial;
    Ctxt.tip₋unicode=0;
    Ctxt.syms₋in₋regular=0;
