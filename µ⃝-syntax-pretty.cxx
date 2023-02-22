@@ -1,12 +1,19 @@
 /*  µ⃝-syntax-pretty.cxx | prints abstract syntax tree from left to right. */
 
+Argᴾ ﹟fier(struct dynamic₋bag * item)
+{
+   return ﹟ident(item->X.store.regular);
+}
+
+#define ﹟ent ﹟indent
+
 void print₋expr(struct tabcontext * tabs, struct dynamic₋bag * expr)
 { char * op;
    switch (expr->T)
    {
-   case ident: print("⬚ident '⬚' @⬚\n",﹟indent(0,tabs), 
-    ﹟ident(expr->X.store.regular),﹟short(expr->memory)); return;
-   case number: print("⬚number '⬚' @⬚\n",﹟indent(0,tabs), 
+   case ident: print("⬚ident '⬚' @⬚\n",﹟ent(0,tabs), 
+    ﹟ent(expr->X.store.regular),﹟short(expr->memory)); return;
+   case number: print("⬚number '⬚' @⬚\n",﹟ent(0,tabs), 
     ﹟d(expr->X.store.integer),﹟short(expr->memory)); return;
    case times: op="*"; goto tail;
    case divide: op="÷"; goto tail;
@@ -22,7 +29,7 @@ void print₋expr(struct tabcontext * tabs, struct dynamic₋bag * expr)
    }
 tail:
    print₋expr(tabs,expr->form.l);
-   print("⬚⬚ @⬚\n",﹟indent(0,tabs),﹟s7(op),﹟short(expr->memory));
+   print("⬚⬚ @⬚\n",﹟ent(0,tabs),﹟s7(op),﹟short(expr->memory));
    print₋expr(tabs,expr->form.r);
 }
 
@@ -46,13 +53,13 @@ again:
    switch (memory->T)
    {
    case callsym:
-     print("⬚call '⬚'\n",﹟indent(0,tabs),﹟ident(memory->X.store.regular));
+     print("⬚call '⬚'\n",﹟ent(0,tabs),﹟fier(memory));
      break;
    case branch₋goto₋optsym:
-     print("⬚branch to '⬚'\n",﹟indent(0,tabs),﹟ident(memory->X.store.regular));
+     print("⬚branch to '⬚'\n",﹟ent(0,tabs),﹟fier(memory));
      break;
    case comparesym:
-     print("⬚compare\n",﹟indent(0,tabs));
+     print("⬚compare\n",﹟ent(0,tabs));
      ++tabs->indentation;
      print₋expr(tabs,memory->form.element);
      print₋list(tabs,memory->form.compare₋thenºª);
@@ -60,34 +67,35 @@ again:
      --tabs->indentation;
      break;
    case afterward:
-     print("⬚assign\n",﹟indent(0,tabs));
+     print("⬚assign\n",﹟ent(0,tabs));
      ++tabs->indentation;
      print₋expr(tabs,memory->form.l);
      print₋expr(tabs,memory->form.r);
      --tabs->indentation;
      break;
    case label:
-     print("label '⬚'",﹟ident(memory->X.store.regular));
+     print("label '⬚':",﹟fier( memory));
      break;
    case additionssym:
-     print("additions '⬚'",﹟ident(memory->X.store.regular));
+     print("additions '⬚'",﹟fier(memory));
      print₋expr(tabs,memory);
      break;
    case constsym:
-     print("constant '⬚'\n",﹟ident(memory->X.store.regular));
+     print("constant '⬚'\n",﹟fier( memory));
      print₋expr(tabs,memory->form.element);
      break;
    case varsym:
-     print("variable '⬚'\n",﹟ident(memory->X.store.regular));
-     print₋expr(tabs,memory->form.element);
+     print("⬚variable '⬚'\n",﹟ent(0,tabs),﹟fier( memory));
+     if (memory.form.element) { print("⬚inited with\n",﹟ent(1,tabs)); print₋expr(tabs,memory->form.element); }
+     else print("⬚uninited\n",﹟ent(1,tabs));
      break;
    case procsym:
-     print("transcript '⬚'\n",﹟ident(memory->X.store.regular));
+     print("transcript '⬚'\n",﹟fier(memory));
      print₋list(tabs,memory->form.formalºª);
      print₋list(tabs,memory->form.sequenceºª);
      break;
    default:
-     print("unknown list item and symbol-type '⬚'\n",﹟d(memory->T));
+     print("⬚unknown tree item and symbol-type '⬚'\n",﹟ent(0,tabs),﹟d(memory->T));
    }
    cell=cell->nxt.next;
    goto again;
