@@ -419,7 +419,7 @@ struct ship₋relation areel = {
  .special1 = ^(struct dynamic₋bag ** input) { return (void **)input; }, 
  .special2 = ^(void ** input) { return (struct dynamic₋bag **)input; }, 
  .special3 = ^(void * input) { return (struct dynamic₋bag *)input; }, 
- .retail₋failure = 0, /* Setting(Retail₋failure) */
+ .retail₋failure = 0, /* setting Retail₋failure */
  .sizeof₋bag = sizeof(struct dynamic₋bag)
 };
 
