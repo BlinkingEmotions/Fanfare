@@ -84,6 +84,12 @@ void House(int type, int count, ...)
     enum symbol₋class op = va_unqueue(enum symbol₋class);
     fragment = new₋Expression((struct dynamic₋bag *)left,(struct dynamic₋bag *)right,op);
     break; }
+   case 🅒2: {
+    consref params = (consref)va_unqueue(consref);
+    consref params₋last = (consref)va_unqueue(consref);
+    fragment->form.formalºª = params;
+    fragment->form.formal₋last = params₋last;
+    break; }
    case 🅔: { Nonabsolute left = va_unqueue(Nonabsolute);
     void * right = va_unqueue(struct dynamic₋bag *);
     fragment = new₋Statement(additionssym);
@@ -117,14 +123,14 @@ void House(int type, int count, ...)
     break; } /* condition */
    case 🅛1: { Nonabsolute uni₋vers = va_unqueue(Nonabsolute);
     void * serpent = va_unqueue(struct dynamic₋bag *);
-    fragment = new₋Statement(afterward);                             /* 'global' key. */
+    fragment = new₋Statement(afterward);                              /* 'global' key. */
     fragment->form.l = new₋Identifier(uni₋vers);
     fragment->form.r = serpent;
     break; } /* constant second time. */
    case 🅛2: { refers circul = va_unqueue(struct dynamic₋bag *);
     refers unit = va_unqueue(struct dynamic₋bag *);
     if (retail(^(struct dynamic₋bag * material) {
-      *material = *circul;                                          /* a.k.a 'Copy8Memory'. 'shadow-hallow' */
+      *material = *circul;                     /* a․𝘬․a 'Copy8Memory'. 'shadow-hallow' */
     },&unit->form.const₋machineºª,&unit->form.constmachine₋last)) {
       Pult(areel.retail₋failure); return;
     }                                                          /* not to be 'overlay'. */
