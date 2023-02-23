@@ -124,10 +124,10 @@ void House(int type, int count, ...)
    case 🅛2: { refers circul = va_unqueue(struct dynamic₋bag *);
     refers unit = va_unqueue(struct dynamic₋bag *);
     if (retail(^(struct dynamic₋bag * material) {
-      *material = circul;                                           /* shadow-hallow */
+      *material = circul;                                           /* 'shadow-hallow' */
     }, unit->const₋machineºª,unit->constmachine₋last)) {
       Pult(areel.retail₋failure); return;
-    }
+    }                                                          /* not to be 'overlay'. */
     break; } /* computed and expressed constants. */
    case 🅝: { Nonabsolute identifier = va_unqueue(Nonabsolute);
     void * arg₋u₋men = va_unqueue(struct dynamic₋bag *);
