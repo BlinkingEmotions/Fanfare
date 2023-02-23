@@ -1,16 +1,16 @@
 /*  µ⃝-code-and-tree.cxx | abstract syntax tree construction. */
 
-struct dynamic₋bag * new₋Identifier(Nonabsolute token)
+bagref new₋Identifier(Nonabsolute token)
 {
-   struct dynamic₋bag * nonode = Alloc(sizeof(struct dynamic₋bag));
+   bagref nonode = Alloc(sizeof(struct dynamic₋bag));
    struct dynamic₋bag init = {.T=ident,.X.kind=1,.X.store.regular=token};
    *nonode = init;
    return nonode;
 }
 
-struct dynamic₋bag * new₋Numeric(struct token₋detail item, int type)
+bagref new₋Numeric(struct token₋detail item, int type)
 {
-   struct dynamic₋bag * nonode = Alloc(sizeof(struct dynamic₋bag));
+   bagref nonode = Alloc(sizeof(struct dynamic₋bag));
    nonode->T=number;
    switch (type)
    {
@@ -26,36 +26,33 @@ struct dynamic₋bag * new₋Numeric(struct token₋detail item, int type)
    return nonode;
 }
 
-struct dynamic₋bag * new₋Expression(struct dynamic₋bag * left, struct 
- dynamic₋bag * right, enum symbol₋class op)
+bagref new₋Expression(bagref left, bagref right, enum symbol₋class op)
 {
-   struct dynamic₋bag *node = Alloc(sizeof(struct dynamic₋bag));
+   bagref node = Alloc(sizeof(struct dynamic₋bag));
    struct dynamic₋bag init = {.T=op,.form.l=left,.form.r=right};
    *node = init;
    return node;
 }
 
-struct dynamic₋bag * new₋Unary(struct dynamic₋bag * item, enum 
- symbol₋class op)
+bagref new₋Unary(bagref item, enum symbol₋class op)
 {
-   struct dynamic₋bag *node = Alloc(sizeof(struct dynamic₋bag));
+   bagref node = Alloc(sizeof(struct dynamic₋bag));
    struct dynamic₋bag init = {.T=op,.form.element=item};
    *node=init;
    return node;
 }
 
-struct dynamic₋bag * new₋Statement(enum symbol₋class type)
+bagref new₋Statement(enum symbol₋class type)
 {
-   struct dynamic₋bag *node = Alloc(sizeof(struct dynamic₋bag));
+   bagref node = Alloc(sizeof(struct dynamic₋bag));
    struct dynamic₋bag init = {.T=type,.form.sequence₋last=ΨΛΩ,.form.sequenceºª=ΨΛΩ};
    *node=init;
    return node;
 }
 
-struct dynamic₋bag * new₋User(Nonabsolute symbol, struct dynamic₋bag * 
- actual₋and₋detail)
+bagref new₋User(Nonabsolute symbol, bagref actual₋and₋detail)
 {
-   struct dynamic₋bag *node = Alloc(sizeof(struct dynamic₋bag));
+   bagref node = Alloc(sizeof(struct dynamic₋bag));
    struct dynamic₋bag init = { .T=procsym, .X.kind=1, .X.store.regular=symbol };
    *node=init;
    return node;
