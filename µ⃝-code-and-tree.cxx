@@ -121,7 +121,7 @@ void House(int type, int count, ...)
     fragment->form.l = new₋Identifier(uni₋vers);
     fragment->form.r = serpent;
     break; } /* constant second time. */
-   case 🅛2: { refers circulate = va_unqueue(struct dynamic₋bag *);
+   case 🅛2: { refers circul = va_unqueue(struct dynamic₋bag *);
     refers unit = va_unqueue(struct dynamic₋bag *);
     if (retail(^(struct dynamic₋bag * material) {
       *material = circul;
