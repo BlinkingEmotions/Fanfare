@@ -1,13 +1,13 @@
 /*  µ⃝-syntax-pretty.cxx | prints abstract syntax tree from left to right. */
 
-Argᴾ ﹟fier(struct dynamic₋bag * item)
+Argᴾ ﹟fier(bagref item)
 {
    return ﹟ident(item->X.store.regular);
 }
 
 #define ﹟ent ﹟indent
 
-void print₋expr(struct tabcontext * tabs, struct dynamic₋bag * expr)
+void print₋expr(struct tabcontext * tabs, bagref expr)
 { char * op;
    switch (expr->T)
    {
@@ -33,9 +33,9 @@ tail:
    print₋expr(tabs,expr->form.r);
 }
 
-void list₋print(struct dynamic₋bag₋cons * list₋first, 
+void list₋print(consref list₋first, 
  void (^element)(struct dynamic₋bag * item))
-{ struct dynamic₋bag₋cons * memory = list₋first;
+{ consref memory = list₋first;
    print("[");
 again:
    if (memory == 0) goto unagain;
@@ -45,8 +45,8 @@ unagain:
    print("]");
 }
 
-void print₋list(struct tabcontext * tabs, struct dynamic₋bag₋cons * list)
-{  struct dynamic₋bag₋cons * cell = list; struct dynamic₋bag * memory;
+void print₋list(struct tabcontext * tabs, consref list)
+{ consref cell=list; bagref memory;
 again:
    if (cell == 0) return;
    memory=cell->item;
@@ -101,13 +101,13 @@ again:
    goto again;
 }
 
-void print₋ast(struct dynamic₋bag * tree)
+void print₋ast(bagref tree)
 {  struct tabcontext tabs; tabs.indentation=0;
    print₋list(&tabs,tree->form.const₋machineºª);
    tabs.indentation=0;
    print("*** start-of function list ***\n");
    print₋list(&tabs,tree->form.machineºª);
-   print("*** function list ends with found transgressions ***\n");
+   print("*** function list ends with found memory ***\n");
    print₋list(&tabs,tree->form.recollectºª);
 }
 
