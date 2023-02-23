@@ -117,12 +117,17 @@ void House(int type, int count, ...)
     break; } /* condition */
    case 🅛1: { Nonabsolute uni₋vers = va_unqueue(Nonabsolute);
     void * serpent = va_unqueue(struct dynamic₋bag *);
-    fragment = new₋Statement(afterward);
+    fragment = new₋Statement(afterward);                             /* global */
     fragment->form.l = new₋Identifier(uni₋vers);
     fragment->form.r = serpent;
-    break; }
-   case 🅛2: { refers tree = va_unqueue(struct dynamic₋bag *);
-    refers reads = va_unqueue(struct dynamic₋bag *);
+    break; } /* constant second time. */
+   case 🅛2: { refers circulate = va_unqueue(struct dynamic₋bag *);
+    refers unit = va_unqueue(struct dynamic₋bag *);
+    if (retail(^(struct dynamic₋bag * material) {
+      *material = circul;
+    }, unit->const₋machineºª,unit->constmachine₋last)) {
+      Pult(areel.retail₋failure); return;
+    }
     break; } /* computed and expressed constants. */
    case 🅝: { Nonabsolute identifier = va_unqueue(Nonabsolute);
     void * arg₋u₋men = va_unqueue(struct dynamic₋bag *);
