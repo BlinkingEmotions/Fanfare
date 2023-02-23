@@ -342,7 +342,7 @@ void valid(int type, enum symbol₋class s, char msg[]) { if (!symbol₋equal(s)
 
 int newline₋match(enum symbol₋class s) { if (symbol₋equal(s) || (Ctxt.carrier₁ && Ctxt.carrier₂)) { next₋token(&Ctxt); return 1; } return 0; }
 
-int eltgat(enum symbol₋class s, void (*action)()) { return 0; }
+int one₋alternatively₋two(enum symbol₋class s, void (*action)()) { return 0; } /* a․𝘬․a 'eltgat'. */
 
 struct dynamic₋bag₋form {
   struct dynamic₋bag *l,*r,*element;                         /* expression */
@@ -370,8 +370,9 @@ struct dynamic₋bag {
   enum symbol₋class T;
   short memory,count; short leg;
   struct dynamic₋bag * preexercise;
-  __uint128_t fineprint; Nonabsolute episod;
+  __uint128_t guid₋fineprint;
   __builtin_int_t memory₋count; /* counts 'reads' from virtual memory */
+  Nonabsolute episod₋read; /* non-physical register name holding virtual memory reads. */
 };
 
 union dynamic₋bag₋continuation { struct dynamic₋bag₋cons * next; 
@@ -394,12 +395,12 @@ int retail(void (^section)(struct dynamic₋bag * material), struct
    typedef struct dynamic₋bag * bagref;
    consref cell = (consref)Heap₋alloc(cons₋size);
    bagref item = (bagref)Heap₋alloc(bag₋size);
-   struct dynamic₋bag₋cons * memory;
+   struct dynamic₋bag₋cons * memory=0;
    if (cell == 0 || item == 0) return -1;
    section(item);
-   memory = *last;
+   if (last) memory = *last;
    cell->item = item;
-   memory->nxt.next = cell;
+   if (memory) memory->nxt.next = cell;
    cell->nxt.next = 0;
    *last = cell;
    if (*first == 0) *first=cell;
@@ -418,7 +419,7 @@ struct ship₋relation areel = {
  .special1 = ^(struct dynamic₋bag ** input) { return (void **)input; }, 
  .special2 = ^(void ** input) { return (struct dynamic₋bag **)input; }, 
  .special3 = ^(void * input) { return (struct dynamic₋bag *)input; }, 
- .retail₋failure = 0, /* Retail₋failure, */
+ .retail₋failure = 0, /* Setting(Retail₋failure) */
  .sizeof₋bag = sizeof(struct dynamic₋bag)
 };
 
@@ -470,7 +471,7 @@ unagain:
 struct dynamic₋bag *fragment,*tree;
 
 #include "µ⃝-code-and-tree.cxx"
-/* #include "µ⃝-verse-const.cxx" */
+#include "µ⃝-verse-const.cxx"
 #include "µ⃝-general-register.cxx"
 /* #include "µ⃝-semantic-register.cxx"
 #include "µ⃝-code-and-arm.cxx" */
@@ -572,7 +573,7 @@ void opt₋second(void)
 void function₋formal₋list(void)
 { struct dynamic₋bag₋cons *params=0,*params₋last=0;
    do { expect(ident); expect(/*left₋*/ ident); 
-     eltgat(/*right₋*/ident,opt₋second);
+     one₋alternatively₋two(/*right₋*/ident,opt₋second);
      if (retail(^(struct dynamic₋bag * item) {
        item->form.element = fragment;
      },&params,&params₋last)) { Pult(areel.retail₋failure); return; }
@@ -622,7 +623,7 @@ void block(void)
      {
      case schemasym: { Nonabsolute table; 
        match(schemasym); expect(ident); 
-       table = symbol₋passed.gritty.store.regular; 
+       table = symbol₋passed.gritty.store.regular;
        expect(eql); expect(lparen); 
        opt₋associations(); expect(rparen); 
        House(🅢,3,table,tree,fragment); break; }
@@ -697,9 +698,10 @@ int main(int argc, char * argv[])
    tree = Alloc(sizeof(struct dynamic₋bag));
    tree->form.machineºª = tree->form.recollectºª = 
     tree->form.augmentºª = tree->form.exceptionºª = 
+    tree->form.const₋machineºª =
     tree->form.exception₋last = tree->form.augment₋last = 
     tree->form.recollect₋last = tree->form.machine₋last = 
-    tree->form.const₋machineºª = 0;
+    tree->form.constmachine₋last = 0;
    text₋program = Run(
 U"constant abcd=321+1,dcba=123;\n"
  "variable cdeg,gec,cgb\n"
@@ -726,7 +728,7 @@ again:
        for (int i=0; i<count₋segments; i+=1) print("⬚",﹟S(symbols₋segment[i],segment[i]));
        print(" (⬚ symbols)\n", ﹟d((__builtin_int_t)(symbols₋total)));
        previous₋relative=relative;
-       relative+=symbols₋total + 1;
+       relative+=(symbols₋total + 1);
      }
    )) { print("unable to locate symbol '⬚' in pool.\n", ﹟d(relative)); return 1; }
    goto again;
