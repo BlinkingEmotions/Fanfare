@@ -103,8 +103,11 @@ again:
 
 void print₋ast(struct dynamic₋bag * tree)
 {  struct tabcontext tabs; tabs.indentation=0;
-   print₋list(&tabs,tree->form.recollectºª);
+   print₋list(&tabs,tree->form.const₋machineºª);
    tabs.indentation=0;
+   print("*** start-of function list ***\n");
    print₋list(&tabs,tree->form.machineºª);
+   print("*** function list ends with found transgressions ***\n");
+   print₋list(&tabs,tree->form.recollectºª);
 }
 
