@@ -117,7 +117,7 @@ void House(int type, int count, ...)
     break; } /* condition */
    case 🅛1: { Nonabsolute uni₋vers = va_unqueue(Nonabsolute);
     void * serpent = va_unqueue(struct dynamic₋bag *);
-    fragment = new₋Statement(afterward);                             /* global */
+    fragment = new₋Statement(afterward);                             /* 'global' key. */
     fragment->form.l = new₋Identifier(uni₋vers);
     fragment->form.r = serpent;
     break; } /* constant second time. */
