@@ -124,8 +124,8 @@ void House(int type, int count, ...)
    case 🅛2: { refers circul = va_unqueue(struct dynamic₋bag *);
     refers unit = va_unqueue(struct dynamic₋bag *);
     if (retail(^(struct dynamic₋bag * material) {
-      *material = circul;                                           /* 'shadow-hallow' */
-    }, unit->const₋machineºª,unit->constmachine₋last)) {
+      *material = *circul;                                          /* a.k.a 'Copy8Memory'. 'shadow-hallow' */
+    },&unit->form.const₋machineºª,&unit->form.constmachine₋last)) {
       Pult(areel.retail₋failure); return;
     }                                                          /* not to be 'overlay'. */
     break; } /* computed and expressed constants. */
