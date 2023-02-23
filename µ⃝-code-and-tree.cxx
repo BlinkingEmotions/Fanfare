@@ -114,7 +114,7 @@ void House(int type, int count, ...)
     },&unit->form.sequenceºª,&unit->form.sequence₋last)) {
       Pult(areel.retail₋failure); return;
     }
-    fragment = (struct dynamic₋bag *)unit;
+    fragment = unit;
     break; }/* statement list */
    case 🅙: { void * condition = va_unqueue(bagref);
     void * compare₋then = va_unqueue(consref);
