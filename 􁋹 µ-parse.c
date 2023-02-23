@@ -381,6 +381,9 @@ union dynamic₋bag₋continuation { struct dynamic₋bag₋cons * next;
 struct dynamic₋bag₋cons { struct dynamic₋bag *item; union 
  dynamic₋bag₋continuation nxt; };
 
+typedef struct dynamic₋bag₋cons * consref;
+typedef struct dynamic₋bag * bagref;
+
 /* int retail(void (^)(refers), address₋of refers first, address₋of 
  refers last) */
 
@@ -391,8 +394,6 @@ int retail(void (^section)(struct dynamic₋bag * material), struct
  dynamic₋bag₋cons ** first, struct dynamic₋bag₋cons ** last)
 { int bag₋size = sizeof(struct dynamic₋bag), 
     cons₋size = sizeof(struct dynamic₋bag₋cons);
-   typedef struct dynamic₋bag₋cons * consref;
-   typedef struct dynamic₋bag * bagref;
    consref cell = (consref)Heap₋alloc(cons₋size);
    bagref item = (bagref)Heap₋alloc(bag₋size);
    struct dynamic₋bag₋cons * memory=0;
@@ -426,7 +427,7 @@ struct ship₋relation areel = {
 enum { 🅐=1, 🅑, 🅒, 🅔, 🅕, 🅖, 🅗, 🅙, 🅛1, 🅛2 /* 🅠 */, 🅝, 🅟, 🅠, 🅡1, 🅡2 /* 🅩 */, 🅢, 🅣 };
 
 void House(int type, int count, ...);
-void constant₋compute(struct dynamic₋bag *);
+int constant₋compute(struct dynamic₋bag *);
 void general₋register(struct dynamic₋bag *);
 void print₋ast(struct dynamic₋bag * tree);
 void generate₋code();
@@ -488,7 +489,7 @@ void factor(void)
 
 void term(void)
 {
-   factor(); struct dynamic₋bag * left=fragment; enum symbol₋class op; 
+   factor(); bagref left=fragment; enum symbol₋class op; 
    while (symbol₋equal(times) || symbol₋equal(divide)) { 
     op=symbol.class; next₋token(&Ctxt); factor(); 
     House(🅒,3,left,fragment,op); }
@@ -526,7 +527,7 @@ void function₋actual₋list(void)
      if (retail(^(struct dynamic₋bag * item) {
        item->form.element = fragment;
      },&params,&params₋last)) { Pult(areel.retail₋failure); return; }
-   } while(match(comma));
+   } while(match(comma)); House(🅓,2,params,params₋last);
    fragment->form.sequenceºª = params;
    fragment->form.sequence₋last = params₋last;
 } /* car->next=fragment when not₋first else ΨΛΩ; */
@@ -698,7 +699,7 @@ int main(int argc, char * argv[])
    tree = Alloc(sizeof(struct dynamic₋bag));
    tree->form.machineºª = tree->form.recollectºª = 
     tree->form.augmentºª = tree->form.exceptionºª = 
-    tree->form.const₋machineºª =
+    tree->form.const₋machineºª = 
     tree->form.exception₋last = tree->form.augment₋last = 
     tree->form.recollect₋last = tree->form.machine₋last = 
     tree->form.constmachine₋last = 0;
@@ -712,7 +713,8 @@ U"constant abcd=321+1,dcba=123;\n"
  "transcript fie()\nbegin\n call view\nend\n"
  "transcript fue()\nbegin\n call control\nend\n\n");
    program();
-   general₋register(fragment);
+   if (constant₋compute(tree)) return 2;
+   general₋register(tree);
 #if defined TRACE₋SYNTAX
    print₋ast(tree);
 #endif
@@ -730,7 +732,7 @@ again:
        previous₋relative=relative;
        relative+=(symbols₋total + 1);
      }
-   )) { print("unable to locate symbol '⬚' in pool.\n", ﹟d(relative)); return 1; }
+   )) { print("unable to locate symbol '⬚' in pool.\n", ﹟d(relative)); return 3; }
    goto again;
 unagain:
    print("*** symbols-end ***\n");
