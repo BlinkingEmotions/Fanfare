@@ -424,7 +424,7 @@ struct ship₋relation areel = {
  .sizeof₋bag = sizeof(struct dynamic₋bag)
 };
 
-enum { 🅐=1, 🅑, 🅒, 🅔, 🅕, 🅖, 🅗, 🅙, 🅛1, 🅛2 /* 🅠 */, 🅝, 🅟, 🅠, 🅡1, 🅡2 /* 🅩 */, 🅢, 🅣 };
+enum { 🅐=1, 🅑, 🅒, 🅒2, 🅔, 🅕, 🅖, 🅗, 🅙, 🅛1, 🅛2 /* 🅠 */, 🅝, 🅟, 🅠, 🅡1, 🅡2 /* 🅩 */, 🅢, 🅣 };
 
 void House(int type, int count, ...);
 int constant₋compute(struct dynamic₋bag *);
@@ -496,7 +496,7 @@ void term(void)
 } /*  'multiplication' has higher precedence than 'addition'. */
 
 void expression(void)
-{ enum symbol₋class op=plus; struct dynamic₋bag * left;
+{ enum symbol₋class op=plus; bagref left;
    if (symbol₋equal(plus) || symbol₋equal(minus)) { 
     op=symbol.class; next₋token(&Ctxt); } term(); left=fragment; 
    if (op==minus) { left=new₋Unary(left,minus); }
@@ -506,10 +506,10 @@ void expression(void)
 } /*  'addition' has not as high precedence as 'multiplication'. */
 
 void condition(void)
-{ struct dynamic₋bag * left;
+{
    if (match(oddsym)) { expression(); fragment=new₋Unary(fragment,oddsym); }
    else {
-     expression(); left=fragment; 
+     expression(); bagref left=fragment; 
      if (symbol₋equal(eql) || symbol₋equal(neq) || symbol₋equal(lss) || 
       symbol₋equal(leq) || symbol₋equal(gtr) || symbol₋equal(geq)) 
      { enum symbol₋class op=symbol.class; 
@@ -522,14 +522,13 @@ void condition(void)
 }
 
 void function₋actual₋list(void)
-{ struct dynamic₋bag₋cons *params=0,*params₋last=0;
+{ consref params=0,params₋last=0;
    do { condition();
-     if (retail(^(struct dynamic₋bag * item) {
-       item->form.element = fragment;
+     if (retail(^(struct dynamic₋bag * material) {
+       *material = *fragment;
      },&params,&params₋last)) { Pult(areel.retail₋failure); return; }
-   } while(match(comma)); House(🅓,2,params,params₋last);
-   fragment->form.sequenceºª = params;
-   fragment->form.sequence₋last = params₋last;
+   } while(match(comma));
+   House(🅒2,2,params,params₋last);
 } /* car->next=fragment when not₋first else ΨΛΩ; */
 
 void opt₋etter(void)
@@ -550,18 +549,22 @@ void statement(void)
     do { expect(ident); left=symbol₋passed.gritty.store.regular; 
      if (match(eql)) { expect(eql); condition(); House(🅔,2,left,fragment); }
     } while (match(comma)); }
-   else if (match(ident)) { Nonabsolute token=symbol₋passed.gritty.store.regular;
-    if (match(lparen)) { if (!symbol₋equal(rparen)) { function₋actual₋list(); } expect(rparen); 
+   else if (match(ident)) {
+    Nonabsolute token=symbol₋passed.gritty.store.regular;
+    if (match(lparen)) {
+     if (!symbol₋equal(rparen)) { function₋actual₋list(); } expect(rparen); 
      House(🅣,2,token,fragment); }
     else if (match(afterward)) { condition(); House(🅕,2,token,fragment); }
     else { error(2,"neither assignment, call nor variable introduction"); }
    }
-   else if (enrich(callsym,ident)) { expect(ident); House(🅖,1,symbol₋passed.gritty.store.regular); }
-   else if (match(beginsym)) { do { statement(); } while (newline₋match(semicolon)); expect(endsym); House(🅗,1,fragment); }
-   else if (match(comparesym)) { struct dynamic₋bag *select1,*select2=0,*cond=0;
+   else if (enrich(callsym,ident)) { expect(ident); 
+    House(🅖,1,symbol₋passed.gritty.store.regular); }
+   else if (match(beginsym)) { do { statement(); House(🅦,,); } 
+    while (newline₋match(semicolon)); expect(endsym); House(🅗,1,fragment); }
+   else if (match(comparesym)) { bagref select1,select2=0,cond=0;
      condition(); cond=fragment; expect(thensym); statement(); select1=fragment;
      at₋opt(elsesym,opt₋etter); select2=fragment; 
-     House(🅙,1,cond,select1,select2); }
+     House(🅙,3,cond,select1,select2); }
    /* else if (match(whilesym)) { condition(); expect(dosym); statement(); } */
    else { error(2,"statement: syntax error"); next₋token(&Ctxt); }
 }
@@ -572,7 +575,7 @@ void opt₋second(void)
 }
 
 void function₋formal₋list(void)
-{ struct dynamic₋bag₋cons *params=0,*params₋last=0;
+{ consref params=0,params₋last=0;
    do { expect(ident); expect(/*left₋*/ ident); 
      one₋alternatively₋two(/*right₋*/ident,opt₋second);
      if (retail(^(struct dynamic₋bag * item) {
@@ -610,7 +613,7 @@ void block(void)
          else { House(🅝,2,argument,ΨΛΩ); } House(🅟/*🅡*/,2,tree,fragment);
         } while (match(comma)); at₋opt(semicolon,opt₋void); } break; }
       case procsym: {
-        match(procsym); { Nonabsolute cipher; struct dynamic₋bag *list=ΨΛΩ,*detail; 
+        match(procsym); { Nonabsolute cipher; bagref list=ΨΛΩ,detail; 
         expect(ident); cipher=symbol₋passed.gritty.store.regular; expect(lparen); 
         if (!symbol₋equal(rparen)) { function₋formal₋list(); list=fragment; } expect(rparen); 
         statement(); detail=fragment; House(🅡1/*🅟*/,3,cipher,list,detail); House(🅡2 /*🅩*/,2,tree,fragment); }
