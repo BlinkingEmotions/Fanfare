@@ -131,7 +131,7 @@ serpent₋summary
     "retros-compi" - "∎|∎⋆᛭Solenoid.cpp" "-std=c++20" "../Apps/Additions/monolith-sequent.c" "-std=c2x"
     "c-maskin" - "􀖆⋆⁻¹Fetus.cpp" "-std=c++20" "../Apps/Additions/monolith-sequent.c" "-std=c2x"
   )
-  
+  ⁄* add 'actor, 'coordinator' alternatively 'police' required mid 'transmit' and 'rendition'. *⁄
 settings
   
   window₋X 100px ⁄* pica, mm, cm, inch and thou. *⁄
@@ -258,13 +258,20 @@ int next₋symbol(struct language₋context * ctxt)
 
 typedef int64_t NoteReference; /* a․𝘬․a 'Note₋idx'. */
 
+struct note₋form {
+  struct note₋idx l,r,element;
+  struct notecons₋idx compare₋thenºªidx, 
+   compare₋elseºªidx;
+};
+
 struct not₋e {
   struct token₋detail D;
+  struct note₋form form;
   enum symbol₋class C;
   struct not₋e *l,*r;
 };
 
-int Spawn₋replik(struct Unicodes filepath, struct not₋e * 🅵, struct collection * 🅰)
+int spawn₋replik(struct Unicodes filepath, struct not₋e * 🅵, struct collection * 🅰)
 { __builtin_int_t ﹟₋segments=5,i;
 again:
    if (i >= ﹟₋segments) { return 0; }
@@ -272,7 +279,13 @@ again:
    return 0;
 }
 
-int Load(struct Unicodes filepath, struct not₋e * 🅵, struct collection * 🅰)
+int load₋cells(struct Unicodes filepath, struct not₋e * 🅵, struct collection * 🅰)
+{
+   return 0;
+}
+
+int retail(void (^ ᐧ)(struct not₋e * ᐧ), struct note₋cons *, struct 
+ note₋cons ** first, struct note₋cons ** last)
 {
    return 0;
 }
@@ -559,7 +572,7 @@ main(
    if (add₋runlink₋keywords()) { exit(4); }
    if (compile₋source₋files(compile₋source₋module)) { exit(5); }
    return 0;
-}
+} /*  must create two binaries 'ferry' and 'toooth'. (Code and documntation.) */
 
 /* run-link may equal bandit-criminal by link and "clang -o run-link '􀐒 retros-compi.c' ". */
 
