@@ -109,7 +109,7 @@ void House(int type, int count, ...)
     fragment = new₋Identifier(called);
     fragment->form.sequenceºª=0;
     fragment->form.sequence₋last=0;
-    break; } /* fast and easy function-call for test purposes. */
+    break; }
    case 🅦: { bagref base = va_unqueue(bagref);
     break; }
    case 🅗: { bagref unit = va_unqueue(bagref);
@@ -151,7 +151,7 @@ void House(int type, int count, ...)
     break; } /* variables. */
    case 🅡1: { Nonabsolute sy = va_unqueue(Nonabsolute);
     void * actual₋and₋detail = va_unqueue(bagref);
-    fragment = new₋User(sy,actual₋and₋detail);
+    fragment = new₋User(sy);
     break; } /* definition located in one compilation unit. */
    case 🅡2: { void * tree = va_unqueue(bagref);
     void * reads = va_unqueue(bagref);
@@ -159,8 +159,8 @@ void House(int type, int count, ...)
    case 🅢: { Nonabsolute token = va_unqueue(Nonabsolute);
     void * params = va_unqueue(bagref);
     fragment = new₋Identifier(token);
-    fragment.form.sequenceºª=params.form.sequenceºª;
-    fragment.form.sequence₋last=params.form.sequence₋last;
+    fragment->form.sequenceºª=params->form.sequenceºª;
+    fragment->form.sequence₋last=params->form.sequence₋last;
     break; } /* uses runtime with no details. */
    }
    va_epilogue
