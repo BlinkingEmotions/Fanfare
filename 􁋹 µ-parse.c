@@ -17,7 +17,7 @@ enum symbol₋class { ident, number, times, divide, plus, minus, lparen,
  serpentsummarysym, settingsym, referencessym, correctionssym, 
  flagsandnotessym, diffusesym, dotifsym, definedsym, dotdefinesym, 
  dotendsym, dotincludesym, systemsym, unicodesym, utf8sym, conceptsym, 
- eot₋and₋file, unarbitrated₋symbol };
+ eot₋and₋file, intrinsicsym, unarbitrated₋symbol };
 
 enum language₋mode { mode₋initial, mode₋integer, mode₋regular, 
  mode₋fixpoint, mode₋quotes₋text, mode₋collection };
@@ -121,7 +121,7 @@ int next₋token₋inner(struct language₋context * ctxt, Symbol * out)
    typedef int (^type)(char32̄_t); ctxt->carrier₁=0;
    type digit = ^(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; };
    type letter = ^(char32̄_t uc) { return (U'a' <= uc && uc <= U'z') || 
-    (U'A' <= uc && uc <= U'Z') || uc == U'₋'; };
+    (U'A' <= uc && uc <= U'Z') || uc == U'₋' || U'􀈂' <= uc <= U'􀣺'; };
    🧵(identifier,machine₋constant,keyword,trouble,completion,unicode_text) {
    case identifier: copy₋identifier(ctxt,out); ctxt->syms₋in₋regular=0; 
     ctxt->state=mode₋initial; return 0;
@@ -424,7 +424,7 @@ struct ship₋relation areel = {
  .sizeof₋bag = sizeof(struct dynamic₋bag)
 };
 
-enum { 🅐=1, 🅑, 🅒, 🅒2, 🅔, 🅕, 🅖, 🅗, 🅙, 🅛1, 🅛2 /* 🅠 */, 🅝, 🅟, 🅠, 🅡1, 🅡2 /* 🅩 */, 🅢, 🅣 };
+enum { 🅐=1, 🅑, 🅒, 🅒2, 🅔, 🅕, 🅖, 🅦, 🅗, 🅙, 🅛1, 🅛2 /* 🅠 */, 🅝, 🅟, 🅠, 🅡1, 🅡2 /* 🅩 */, 🅢, 🅣 };
 
 void House(int type, int count, ...);
 int constant₋compute(struct dynamic₋bag *);
@@ -559,11 +559,11 @@ void statement(void)
    }
    else if (enrich(callsym,ident)) { expect(ident); 
     House(🅖,1,symbol₋passed.gritty.store.regular); }
-   else if (match(beginsym)) { do { statement(); House(🅦,,); } 
+   else if (match(beginsym)) { do { statement(); House(🅦,1,fragment); } 
     while (newline₋match(semicolon)); expect(endsym); House(🅗,1,fragment); }
    else if (match(comparesym)) { bagref select1,select2=0,cond=0;
-     condition(); cond=fragment; expect(thensym); statement(); select1=fragment;
-     at₋opt(elsesym,opt₋etter); select2=fragment; 
+     condition(); cond=fragment; expect(thensym); statement(); 
+     select1=fragment; at₋opt(elsesym,opt₋etter); select2=fragment; 
      House(🅙,3,cond,select1,select2); }
    /* else if (match(whilesym)) { condition(); expect(dosym); statement(); } */
    else { error(2,"statement: syntax error"); next₋token(&Ctxt); }
