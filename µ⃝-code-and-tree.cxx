@@ -159,8 +159,8 @@ void House(int type, int count, ...)
    case 🅢: { Nonabsolute token = va_unqueue(Nonabsolute);
     void * params = va_unqueue(bagref);
     fragment = new₋Identifier(token);
-    fragment->form.sequenceºª=params->form.sequenceºª;
-    fragment->form.sequence₋last=params->form.sequence₋last;
+    fragment->form.sequenceºª=(struct dynamic₋bag *)(params)->form.sequenceºª;
+    fragment->form.sequence₋last=(struct dynamic₋bag *)(params)->form.sequence₋last;
     break; } /* uses runtime with no details. */
    }
    va_epilogue
