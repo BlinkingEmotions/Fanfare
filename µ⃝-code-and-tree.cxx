@@ -66,6 +66,13 @@ bagref new₋Intrinsic(Nonabsolute symbol)
    return node;
 }
 
+bagref new₋Unit()
+{
+   bagref node = Alloc(sizeof(struct dynamic₋bag));
+   /* *node = {}; */
+   return node;
+}
+
 void House(int type, int count, ...)
 { va_prologue(count)
    switch (type)
