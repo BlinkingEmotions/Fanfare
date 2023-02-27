@@ -121,7 +121,7 @@ int next₋token₋inner(struct language₋context * ctxt, Symbol * out)
    typedef int (^type)(char32̄_t); ctxt->carrier₁=0;
    type digit = ^(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; };
    type letter = ^(char32̄_t uc) { return (U'a' <= uc && uc <= U'z') || 
-    (U'A' <= uc && uc <= U'Z') || uc == U'₋' || U'􀈂' <= uc <= U'􀣺'; };
+    (U'A' <= uc && uc <= U'Z') || uc == U'₋' || (U'\x1f600' /*􀈂*/ <= uc && uc <= U'\x1008fa' /*􀣺*/); };
    🧵(identifier,machine₋constant,keyword,trouble,completion,unicode_text) {
    case identifier: copy₋identifier(ctxt,out); ctxt->syms₋in₋regular=0; 
     ctxt->state=mode₋initial; return 0;
@@ -424,7 +424,7 @@ struct ship₋relation areel = {
  .sizeof₋bag = sizeof(struct dynamic₋bag)
 };
 
-enum { 🅐=1, 🅑, 🅒, 🅒2, 🅔, 🅕, 🅖, 🅦, 🅗, 🅙, 🅛1, 🅛2 /* 🅠 */, 🅝, 🅟, 🅠, 🅡1, 🅡2 /* 🅩 */, 🅢, 🅣 };
+enum { 🅐=1, 🅑, 🅒, 🅒2, 🅔, 🅕, 🅖, 🅦, 🅗, 🅙, 🅚, 🅛1, 🅛2 /* 🅠 */, 🅝, 🅟, 🅠, 🅡1, 🅡2 /* 🅩 */, 🅢, 🅣 };
 
 void House(int type, int count, ...);
 int constant₋compute(struct dynamic₋bag *);
@@ -582,8 +582,7 @@ void function₋formal₋list(void)
        item->form.element = fragment;
      },&params,&params₋last)) { Pult(areel.retail₋failure); return; }
    } while(match(comma));
-   fragment->form.formalºª=params;
-   fragment->form.formal₋last=params₋last;
+   House(🅚,2,params,params₋last);
 }
 
 void opt₋void(void) { }
@@ -699,13 +698,10 @@ int main(int argc, char * argv[])
    if (init₋regularpool(text₋unicode)) return 1;
    text₋utf8 = Alloc(sizeof(struct collection));
    if (init₋regularpool(text₋utf8)) return 1;
-   tree = Alloc(sizeof(struct dynamic₋bag));
-   tree->form.machineºª = tree->form.recollectºª = 
-    tree->form.augmentºª = tree->form.exceptionºª = 
-    tree->form.const₋machineºª = 
-    tree->form.exception₋last = tree->form.augment₋last = 
-    tree->form.recollect₋last = tree->form.machine₋last = 
-    tree->form.constmachine₋last = 0;
+   tree = new₋Unit();
+   if (retail(^(struct dynamic₋bag * material) {
+    material->form.formalºª = material->form.sequenceºª = 0;
+   }, &tree->form.machineºª,&tree->form.machine₋last)) return 2;
    text₋program = Run(
 U"constant abcd=321+1,dcba=123;\n"
  "variable cdeg,gec,cgb\n"
@@ -757,8 +753,9 @@ unagain:
    'begin' statement stmt₋se₋p { statment stmt₋se₋p } 'end'
    'if' condition 'then' statement
    / * 'while' condition 'do' statement * /
+  text-and-symbol = U8"" and U8'' and UC"" and UC''
  condition = 'odd' statment | expression ('='|'#'|'<'|'<='|'>'|'>=') expression
-  \also U'0' <= uc <= U'9'
+  \also U'0' <= uc <= U'9'.
  expression = ['+'|'-'] term {'+'|'-' term}
  term = factor {'*'|'/' factor}
  factor = ident | number | '(' expression ')'
