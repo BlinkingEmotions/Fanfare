@@ -113,7 +113,7 @@ void House(int type, int count, ...)
    case 🅦: { bagref base = va_unqueue(bagref);
     break; }
    case 🅗: { bagref fragment₋statementºª = va_unqueue(bagref);
-      tree->form.machine₋last.item.form.sequence₋last = fragment₋statementºª;
+      tree->form.machine₋last->item->form.sequence₋last = fragment₋statementºª->sequenceºª;
       /*
     bagref circul = va_unqueue(bagref);
     if (retail(^(struct dynamic₋bag * material) {
@@ -153,10 +153,11 @@ void House(int type, int count, ...)
     break; } /* variables. */
    case 🅡1: { Nonabsolute sy = va_unqueue(Nonabsolute);
     void * actual₋and₋detail = va_unqueue(bagref);
+    void * detail = va_unqueue(bagref);
     fragment = new₋User(sy);
     break; } /* definition located in one compilation unit. */
    case 🅡2: { void * tree = va_unqueue(bagref);
-    void * reads = va_unqueue(bagref);
+    void * reads_function_and_paramlist = va_unqueue(bagref);
     break; } /* procedures and functions. */
    case 🅢: { Nonabsolute token = va_unqueue(Nonabsolute);
     void * params = va_unqueue(bagref);
