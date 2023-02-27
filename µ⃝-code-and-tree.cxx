@@ -112,14 +112,16 @@ void House(int type, int count, ...)
     break; }
    case 🅦: { bagref base = va_unqueue(bagref);
     break; }
-   case 🅗: { bagref unit = va_unqueue(bagref);
+   case 🅗: { bagref fragment₋statementºª = va_unqueue(bagref);
+      tree->form.machine₋last.item.form.sequence₋last = fragment₋statementºª;
+      /*
     bagref circul = va_unqueue(bagref);
     if (retail(^(struct dynamic₋bag * material) {
       *material = *circul;
     },&unit->form.sequenceºª,&unit->form.sequence₋last)) {
       Pult(areel.retail₋failure); return; }
-    fragment = unit;
-    break; }/* statement list */
+    fragment = unit; */
+    break; } /* statement list */
    case 🅙: { void * condition = va_unqueue(bagref);
     void * compare₋then = va_unqueue(consref);
     void * compare₋else = va_unqueue(consref);
