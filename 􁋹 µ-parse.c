@@ -89,11 +89,11 @@ int symbol₋equal(enum symbol₋class s) { return symbol.class==s; }
 int copy₋identifier(struct language₋context * ctxt, Symbol * out)
 { __builtin_int_t tetras=ctxt->syms₋in₋regular;
    assign₋symbol(ident,out,tetras);
-   Nonabsolute reference = collection₋count(identifiers);
-   char32̄_t * ucs=ctxt->regular;
+   char32̄_t * ucs=ctxt->regular; Nonabsolute reference;
    if (copy₋append₋onto₋regular(identifiers,tetras,ucs,Alloc,&reference)) return -1;
    if (regularpool₋datum₋text(identifiers,tetras,reference)) return -1;
-   out->gritty.kind=1;
+   /* print("storing datum at tetra no ⬚ (⬚ symbols)\n",﹟d(reference),﹟d(tetras)); */
+   out->gritty.kind=1; out->gritty.store.regular=reference;
    return 0;
 }
 
@@ -259,12 +259,17 @@ void next₋token(struct language₋context * ctxt)
   Print token = ^(char * rendition) { print("token ⬚. (col. ⬚-⬚, line ⬚-⬚)\n", 
    ﹟s7(rendition), ﹟d(interval.column₋first), ﹟d(interval.column₋last), 
    ﹟d(interval.lineno₋first), ﹟d(interval.lineno₋last)); };
-  Print fier = ^(char * rendition) { print("token 'ident' and '⬚'. (col. ⬚-⬚, line ⬚-⬚)\n", 
-   ﹟ident(symbol.gritty.store.regular), ﹟d(interval.column₋first), ﹟d(interval.column₋last), 
+  Print fier = ^(char * rendition) { 
+   print("token 'ident' and rel:⬚ is retrieved as '⬚'. (col. ⬚-⬚, line ⬚-⬚)\n", 
+   ﹟d(symbol.gritty.store.regular), ﹟ident(symbol.gritty.store.regular), 
+   ﹟d(interval.column₋first), ﹟d(interval.column₋last), 
+   ﹟d(interval.lineno₋first), ﹟d(interval.lineno₋last)); };
+  Print mber = ^(char * rendition) { print("token 'integer-constant' and ⬚. (col. ⬚-⬚, line ⬚-⬚)\n", 
+   ﹟d(symbol.gritty.store.integer), ﹟d(interval.column₋first), ﹟d(interval.column₋last), 
    ﹟d(interval.lineno₋first), ﹟d(interval.lineno₋last)); };
   switch (symbol.class) {
-  case ident: fier("unused"); break;
-  case number: token("integer-constant"); break; /* for later 'fixpoint-constant'. */
+  case ident: fier("identifier"); break;
+  case number: mber("integer-constant"); break; /* for later 'fixpoint-constant'. */
   case lparen: token("'('"); break;
   case rparen: token("')'"); break;
   case times: token("'*'"); break;
@@ -747,7 +752,7 @@ unagain:
    codegenerate();
    print("*** pult is ***\n");
    print("⬚ retail₋failure\n", ﹟d(areel.retail₋failure));
-   print("*** end-pult ***");
+   print("*** end-pult ***\n");
    return 0;
 }
 
