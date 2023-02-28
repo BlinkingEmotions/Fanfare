@@ -130,13 +130,13 @@ void Statement(int type, int count, ...)
     bu₋fragment->form.sequenceºª=0;
     bu₋fragment->form.sequence₋last=0;
     break; }
-   case 🅘🅦: { bagref base = va_unqueue(bagref);
-    bagref circul = va_unqueue(bagref);
+   case 🅘🅦: {
+    bagref statement₋to₋append = va_unqueue(bagref);
+    consref ftail = td₋tree->form.machine₋last;
     if (retail(^(struct dynamic₋bag * material) {
-      *material = *circul;
-    },&base->form.sequenceºª,&base->form.sequence₋last)) {
+      *material = *statement₋to₋append;
+    },&ftail->item->form.sequenceºª,&ftail->item->form.sequence₋last)) {
       Pult(areel.retail₋failure); return; }
-    bu₋fragment = base;
     break; }
     case 🅙🅗: { bagref fragment₋statementºª = va_unqueue(bagref);
      td₋tree->form.machine₋last->item->form.sequence₋last = fragment₋statementºª->form.sequenceºª;
@@ -174,10 +174,17 @@ void Section(int type, int count, ...)
     bu₋fragment->form.l = new₋Identifier(uninit₋univers);
     bu₋fragment->form.r = new₋AbelianZero();
     break; } /* uninit variable */
-   case 🅡1: { Nonabsolute symbol = va_unqueue(Nonabsolute);
+   case 🅡0: { Nonabsolute symbol = va_unqueue(Nonabsolute);
+    bu₋fragment = new₋User(symbol);
+    if (retail(^(struct dynamic₋bag * material) {
+      *material = *bu₋fragment;
+    },&td₋tree->form.machineºª,&td₋tree->form.machine₋last)) {
+      Pult(areel.retail₋failure); return; }
+    break; } /* ensure User-ast at end of td₋tree->machine₋last */
+   case 🅡1: {
     bagref formal = va_unqueue(bagref);
     bagref detail = va_unqueue(bagref);
-    bu₋fragment = new₋User(symbol);
+    
     bu₋fragment->form.detailsºª = detail->form.detailsºª;
     bu₋fragment->form.details₋last = detail->form.details₋last;
     bu₋fragment->form.formalºª = formal->form.formalºª;
@@ -196,7 +203,7 @@ void Section(int type, int count, ...)
 
 void Serpent₋schema(Nonabsolute name, struct dynamic₋bag * matrix, int columns)
 {
-   vfprint("attempt create association\n");
+   vfprint("attempt to create association\n");
 /*   bu₋fragment = new₋Identifier(name);
    bu₋fragment->form.sequenceºª=params->form.sequenceºª;
    bu₋fragment->form.sequence₋last=params->form.sequence₋last; */
