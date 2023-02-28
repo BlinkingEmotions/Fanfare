@@ -426,9 +426,10 @@ struct ship₋relation areel = {
 
 enum { 🅐=1, 🅑, 🅒, 🅓 };
 enum { 🅔🅔, 🅕🅣, 🅖🅕, 🅗🅖, 🅘🅦, 🅙🅗, 🅚🅙};
-enum { 🅚, 🅛1, 🅛2 /* 🅠 */, 🅝, 🅟, 🅠, 🅡1, 🅡2 /* 🅩 */, 🅢 };
+enum { 🅚, 🅛1, 🅛2, 🅝, 🅡0, 🅡1, 🅡2 };
 
-void House(int type, int count, ...);
+void Expression(int type, int count, ...);
+void Statement(int type, int count, ...);
 int constant₋compute(struct dynamic₋bag *);
 void general₋register(struct dynamic₋bag *);
 void print₋ast(struct dynamic₋bag * tree);
@@ -599,20 +600,21 @@ void block(void)
       case constsym: {
         match(constsym); Nonabsolute name;
         do { expect(ident); name=symbol₋passed.gritty.store.regular; 
-                          expect(eql); condition(); Section(🅛1,2,name,bu₋fragment); 
-                                              Section(🅛2,2,td₋tree,bu₋fragment);
+          expect(eql); condition(); Section(🅛1,2,name,bu₋fragment); 
+          Section(🅛2,2,td₋tree,bu₋fragment);
         } while (match(comma)); at₋opt(semicolon,opt₋void); break; }
       case varsym: {
         match(varsym); { Nonabsolute name;
         do { expect(ident); name=symbol₋passed.gritty.store.regular; 
-         if (match(eql)) { expect(eql); condition(); Section(🅛1,2,name,bu₋fragment); } 
+         if (match(eql)) { expect(eql); condition(); 
+          Section(🅛1,2,name,bu₋fragment); } 
          else { Section(🅝,1,name); } Section(🅛2,2,td₋tree,bu₋fragment);
         } while (match(comma)); at₋opt(semicolon,opt₋void); } break; }
       case procsym: {
         match(procsym); { Nonabsolute cipher; bagref list=ΨΛΩ,detail; 
-        expect(ident); cipher=symbol₋passed.gritty.store.regular; expect(lparen); 
+        expect(ident); cipher=symbol₋passed.gritty.store.regular; Section(🅡0,cipher); expect(lparen); 
         if (!symbol₋equal(rparen)) { function₋formal₋list(); } list=bu₋fragment; expect(rparen); 
-        statement(); detail=bu₋fragment; Section(🅡1,3,cipher,list,detail); Section(🅡2,1,bu₋fragment); }
+        statement(); detail=bu₋fragment; Section(🅡1,2,list,detail); Section(🅡2,1,bu₋fragment); }
         break; }
       default: break;
       }
