@@ -72,7 +72,13 @@ bagref new₋Unit()
    return node;
 }
 
-void House(int type, int count, ...)
+bagref new₋AbelianZero()
+{
+   bagref node = Alloc(sizeof(struct dynamic₋bag));
+   return node;
+}
+
+void Expression(int type, int count, ...)
 { va_prologue(count)
    switch (type)
    {
@@ -86,82 +92,88 @@ void House(int type, int count, ...)
     enum symbol₋class op = va_unqueue(enum symbol₋class);
     bu₋fragment = new₋Expression(left,right,op);
     break; }
-   case 🅔: { Nonabsolute left = va_unqueue(Nonabsolute);
-    bagref right = va_unqueue(bagref);
-    bu₋fragment = new₋Statement(additionssym);
-    bu₋fragment->form.l = new₋Identifier(left);
-    bu₋fragment->form.r = right;
-    break; }
-   case 🅒2: {
+   case 🅓: {
     consref params = va_unqueue(consref);
     consref params₋last = va_unqueue(consref);
     bu₋fragment->form.sequenceºª = params;
     bu₋fragment->form.sequence₋last = params₋last;
     break; }
-   case 🅣: {
+   }
+   va_epilogue
+}
+
+void Statement(int type, int count, ...)
+{ va_prologue(count)
+   switch (type)
+   {
+   case 🅔🅔: { Nonabsolute left = va_unqueue(Nonabsolute);
+    bagref right = va_unqueue(bagref);
+    bu₋fragment = new₋Statement(additionssym);
+    bu₋fragment->form.l = new₋Identifier(left);
+    bu₋fragment->form.r = right;
+    break; }
+   case 🅕🅣: {
     Nonabsolute called = va_unqueue(Nonabsolute);
     bagref params = va_unqueue(bagref);
     bu₋fragment = new₋Identifier(called);
     bu₋fragment->form.sequenceºª = params->form.sequenceºª;
     bu₋fragment->form.sequence₋last = params->form.sequence₋last;
     break; } /* function defined in 'compilation-unit'. */
-   case 🅕: { Nonabsolute identity = va_unqueue(Nonabsolute);
+   case 🅖🅕: { Nonabsolute identity = va_unqueue(Nonabsolute);
     bagref right = va_unqueue(bagref);
     bu₋fragment = new₋Statement(afterward);
     bu₋fragment->form.l = new₋Identifier(identity);
     bu₋fragment->form.r = right;
     break; }
-   case 🅖: { Nonabsolute called = va_unqueue(Nonabsolute);
+   case 🅗🅖: { Nonabsolute called = va_unqueue(Nonabsolute);
     bu₋fragment = new₋Identifier(called);
     bu₋fragment->form.sequenceºª=0;
     bu₋fragment->form.sequence₋last=0;
     break; }
-   case 🅦: { bagref base = va_unqueue(bagref);
-            /*
+   case 🅘🅦: { bagref base = va_unqueue(bagref);
     bagref circul = va_unqueue(bagref);
     if (retail(^(struct dynamic₋bag * material) {
       *material = *circul;
-    },&unit->form.sequenceºª,&unit->form.sequence₋last)) {
+    },&base->form.sequenceºª,&base->form.sequence₋last)) {
       Pult(areel.retail₋failure); return; }
-    fragment = unit; */
+    bu₋fragment = base;
     break; }
- //  case 🅗: { bagref fragment₋statementºª = va_unqueue(bagref);
- //   tree->form.machine₋last->item->form.sequence₋last = fragment₋statementºª->form.sequenceºª;
- //   break; } /* statement list */
-/*   case 🅙: { void * condition = va_unqueue(bagref);
+    case 🅙🅗: { bagref fragment₋statementºª = va_unqueue(bagref);
+     td₋tree->form.machine₋last->item->form.sequence₋last = fragment₋statementºª->form.sequenceºª;
+     break; } /* statement list */
+   case 🅚🅙: { void * condition = va_unqueue(bagref);
     void * compare₋then = va_unqueue(consref);
     void * compare₋else = va_unqueue(consref);
-    fragment = new₋Statement(comparesym);
-    fragment->form.compare₋thenºª = compare₋then;
-    fragment->form.compare₋elseºª = compare₋else;
-    break; } / * condition * /
-   case 🅚: { void * formalºª = va_unqueue(consref);
-     void * formal₋last = va_unqueue(consref);
-     fragment->form.formalºª=formalºª;
-     fragment->form.formal₋last=formal₋last;
-     break; }; / * binds formal parameter list first and last to fragment. * /
+    bu₋fragment = new₋Statement(comparesym);
+    bu₋fragment->form.compare₋thenºª = compare₋then;
+    bu₋fragment->form.compare₋elseºª = compare₋else;
+    break; } /* condition */
+   }
+   va_epilogue
+}
+
+void Section(int type, int count, ...)
+{ va_prologue(count)
+   switch (type)
+   {
    case 🅛1: { Nonabsolute uni₋vers = va_unqueue(Nonabsolute);
-    void * serpent = va_unqueue(bagref);
-    fragment = new₋Statement(afterward);                              / * 'global' key. * 
-    fragment->form.l = new₋Identifier(uni₋vers);
-    fragment->form.r = serpent;
-    break; } / * constant second time. * /
+    void * argument₋serpent = va_unqueue(bagref);
+    bu₋fragment = new₋Statement(afterward);                              /* 'global' key. */
+    bu₋fragment->form.l = new₋Identifier(uni₋vers);
+    bu₋fragment->form.r = argument₋serpent;
+    break; } /* computed alternatively variable. */
    case 🅛2: { bagref circul = va_unqueue(bagref);
     bagref unit = va_unqueue(bagref);
     if (retail(^(struct dynamic₋bag * material) {
-      *material = *circul;                     / * a․𝘬․a 'Copy8Memory'. 'shadow-hallow' * /
+      *material = *circul;                     /* a․𝘬․a 'Copy8Memory'. 'shadow-hallow' */
     },&unit->form.const₋machineºª,&unit->form.constmachine₋last)) {
-      Pult(areel.retail₋failure); return; }                    / * not to be 'overlay'. * /
-    break; } / * computed and expressed constants. * /
-   case 🅝: { Nonabsolute identifier = va_unqueue(Nonabsolute);
-    void * arg₋u₋men = va_unqueue(bagref);
-    fragment = new₋Statement(afterward);
-    fragment->form.l = new₋Identifier(identifier);
-    fragment->form.r = arg₋u₋men;
-    break; }
-   case 🅟: { void * tree = va_unqueue(bagref);
-    void * reads = va_unqueue(bagref);
-    break; } / * variables. * / */
+      Pult(areel.retail₋failure); return; }                    /* not to be 'overlay'. */
+    break; } /* computed alternatively variable. */
+   case 🅝: { Nonabsolute uninit₋univers = va_unqueue(Nonabsolute); 
+    bu₋fragment = new₋Statement(afterward);
+    bu₋fragment->form.l = new₋Identifier(uninit₋univers);
+    bu₋fragment->form.r = new₋AbelianZero();
+    break; } /* uninit variable */
    case 🅡1: { Nonabsolute symbol = va_unqueue(Nonabsolute);
     bagref formal = va_unqueue(bagref);
     bagref detail = va_unqueue(bagref);
@@ -178,12 +190,27 @@ void House(int type, int count, ...)
       Pult(areel.retail₋failure); return;
     }
     break; } /*attach 'procedures' and 'functions' to tree. */
-   case 🅢: { Nonabsolute name₋table = va_unqueue(Nonabsolute);
-    bagref params = va_unqueue(bagref);
-    bu₋fragment = new₋Identifier(name₋table);
-    bu₋fragment->form.sequenceºª=params->form.sequenceºª;
-    bu₋fragment->form.sequence₋last=params->form.sequence₋last;
-    break; } /* uses runtime with no details. */
+   }
+   va_epilogue
+}
+
+void Serpent₋schema(Nonabsolute name, struct dynamic₋bag * matrix, int columns)
+{
+   vfprint("attempt create association\n");
+/*   bu₋fragment = new₋Identifier(name);
+   bu₋fragment->form.sequenceºª=params->form.sequenceºª;
+   bu₋fragment->form.sequence₋last=params->form.sequence₋last; */
+}
+
+void House(int type, int count, ...)
+{ va_prologue(count)
+   switch (type)
+   {
+   case 🅚: { void * formalºª = va_unqueue(consref);
+     void * formal₋last = va_unqueue(consref);
+     bu₋fragment->form.formalºª=formalºª;
+     bu₋fragment->form.formal₋last=formal₋last;
+     break; }; /* binds formal parameter list first and last to fragment. */
    }
    va_epilogue
 } /*  A․𝘬․a 'biblio' and 'redux'. */
