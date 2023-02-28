@@ -81,32 +81,32 @@ void House(int type, int count, ...)
    case 🅑: { struct token₋detail item = va_unqueue(struct token₋detail);
     int type = va_unqueue(int);
     bu₋fragment = new₋Numeric((struct token₋detail)item,1); break; }
-   case 🅒: { void * left = va_unqueue(bagref);
-    void * right = va_unqueue(bagref);
+   case 🅒: { bagref left = va_unqueue(bagref);
+    bagref right = va_unqueue(bagref);
     enum symbol₋class op = va_unqueue(enum symbol₋class);
-    bu₋fragment = new₋Expression((bagref)left,(bagref)right,op);
+    bu₋fragment = new₋Expression(left,right,op);
     break; }
    case 🅔: { Nonabsolute left = va_unqueue(Nonabsolute);
-    void * right = va_unqueue(bagref);
+    bagref right = va_unqueue(bagref);
     bu₋fragment = new₋Statement(additionssym);
     bu₋fragment->form.l = new₋Identifier(left);
     bu₋fragment->form.r = right;
     break; }
    case 🅒2: {
-    void * params = va_unqueue(consref);
-    void * params₋last = va_unqueue(consref);
+    consref params = va_unqueue(consref);
+    consref params₋last = va_unqueue(consref);
     bu₋fragment->form.sequenceºª = params;
     bu₋fragment->form.sequence₋last = params₋last;
     break; }
    case 🅣: {
     Nonabsolute called = va_unqueue(Nonabsolute);
-    void * params = va_unqueue(bagref);
+    bagref params = va_unqueue(bagref);
     bu₋fragment = new₋Identifier(called);
-    bu₋fragment->form.sequenceºª = ((bagref)params)->form.sequenceºª;
-    bu₋fragment->form.sequence₋last = ((bagref)params)->form.sequence₋last;
+    bu₋fragment->form.sequenceºª = params->form.sequenceºª;
+    bu₋fragment->form.sequence₋last = params->form.sequence₋last;
     break; } /* function defined in 'compilation-unit'. */
    case 🅕: { Nonabsolute identity = va_unqueue(Nonabsolute);
-    void * right = va_unqueue(bagref);
+    bagref right = va_unqueue(bagref);
     bu₋fragment = new₋Statement(afterward);
     bu₋fragment->form.l = new₋Identifier(identity);
     bu₋fragment->form.r = right;
@@ -162,14 +162,14 @@ void House(int type, int count, ...)
    case 🅟: { void * tree = va_unqueue(bagref);
     void * reads = va_unqueue(bagref);
     break; } / * variables. * / */
-   case 🅡1: { Nonabsolute sy = va_unqueue(Nonabsolute);
-    void * actual₋and₋detail = va_unqueue(bagref);
-    void * detail = va_unqueue(bagref);
-    bu₋fragment = new₋User(sy);
-    bu₋fragment->form.detailsºª = ((struct dynamic₋bag *)actual₋and₋detail)->form.detailsºª;
-    bu₋fragment->form.details₋last = ((struct dynamic₋bag *)actual₋and₋detail)->form.details₋last;
-    bu₋fragment->form.formalºª = ((struct dynamic₋bag *)actual₋and₋detail)->form.formalºª;
-    bu₋fragment->form.formal₋last = ((struct dynamic₋bag *)actual₋and₋detail)->form.formal₋last;
+   case 🅡1: { Nonabsolute symbol = va_unqueue(Nonabsolute);
+    bagref formal = va_unqueue(bagref);
+    bagref detail = va_unqueue(bagref);
+    bu₋fragment = new₋User(symbol);
+    bu₋fragment->form.detailsºª = detail->form.detailsºª;
+    bu₋fragment->form.details₋last = detail->form.details₋last;
+    bu₋fragment->form.formalºª = formal->form.formalºª;
+    bu₋fragment->form.formal₋last = formal->form.formal₋last;
     break; } /* definition located in one compilation unit. */
    case 🅡2: { void * reads_function_and_paramlist = va_unqueue(bagref);
     if (retail(^(struct dynamic₋bag * material) {
@@ -179,10 +179,10 @@ void House(int type, int count, ...)
     }
     break; } /*attach 'procedures' and 'functions' to tree. */
    case 🅢: { Nonabsolute name₋table = va_unqueue(Nonabsolute);
-    void * params = va_unqueue(bagref);
+    bagref params = va_unqueue(bagref);
     bu₋fragment = new₋Identifier(name₋table);
-    bu₋fragment->form.sequenceºª=((struct dynamic₋bag *)params)->form.sequenceºª;
-    bu₋fragment->form.sequence₋last=((struct dynamic₋bag *)params)->form.sequence₋last;
+    bu₋fragment->form.sequenceºª=params->form.sequenceºª;
+    bu₋fragment->form.sequence₋last=params->form.sequence₋last;
     break; } /* uses runtime with no details. */
    }
    va_epilogue
