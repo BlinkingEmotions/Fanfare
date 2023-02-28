@@ -5,7 +5,7 @@
 import Twinbeam;
 
 enum symbol₋class { ident=1, number, times, divide, plus, minus, lparen, 
- rparen, eql, neq, lss, leq, gtr, geq, callsym, beginsym, endsym, 
+ rparen, eqltwo, neq, lss, leq, gtr, geq, eqlone, callsym, beginsym, endsym, 
  branch₋goto₋optsym, colon, label, afterward, constsym, varsym, procsym, 
  period, comma, semicolon, elsesym, thensym, comparesym, oddsym, 
  additionssym, voidsym, referssym, unicode₋textsym, utf8₋textsym, 
@@ -115,6 +115,11 @@ int copy₋number(struct language₋context * ctxt, Symbol * out, int type)
    return 0;
 }
 
+Argᴾ ﹟ident(Nonabsolute regular)
+{
+   return ﹟regularpool(identifiers,regular);
+}
+
 int next₋token₋inner(struct language₋context * ctxt, Symbol * out)
 { __builtin_int_t i,symbols=text₋program.tetras; char32̄_t uc,uc₊₁,uc₊2; 
     int lift₋count=0,sym;
@@ -163,7 +168,8 @@ again:
    ELIF₋INIT₋WITH₋ONE(U'/') { assign₋symbol(divide,out,1); RET }
    ELIF₋INIT₋WITH₋ONE(U'+') { assign₋symbol(plus,out,1); RET }
    ELIF₋INIT₋WITH₋ONE(U'-') { assign₋symbol(minus,out,1); RET }
-   ELIF₋INIT₋WITH₋ONE(U'=') { assign₋symbol(eql,out,1); RET }
+   ELIF₋INIT₋WITH₋ONE(U'=') { assign₋symbol(eqlone,out,1); RET }
+   ELIF₋INIT₋WITH₋TWO(U'=',U'=') { assign₋symbol(eqltwo,out,2); RET }
    ELIF₋INIT₋WITH₋TWO(U'<',U'>') { ctxt->tip₋unicode+=1; assign₋symbol(neq,out,2); RET }
    ELIF₋INIT₋WITH₋ONE(U'≠') { assign₋symbol(neq,out,1); RET } /* ⌥ + '='. */
    ELIF₋INIT₋WITH₋TWO(U'<',U'=') { ctxt->tip₋unicode+=1; assign₋symbol(leq,out,2); RET }
@@ -253,8 +259,11 @@ void next₋token(struct language₋context * ctxt)
   Print token = ^(char * rendition) { print("token ⬚. (col. ⬚-⬚, line ⬚-⬚.)\n", 
    ﹟s7(rendition), ﹟d(interval.column₋first), ﹟d(interval.column₋last), 
    ﹟d(interval.lineno₋first), ﹟d(interval.lineno₋last)); };
+  Print fier = ^(char * rendition) { print("token 'ident' and '⬚'. (col. ⬚-⬚, line ⬚-⬚.)\n", 
+   ﹟ident(symbol.gritty.store.regular), ﹟d(interval.column₋first), ﹟d(interval.column₋last), 
+   ﹟d(interval.lineno₋first), ﹟d(interval.lineno₋last)); };
   switch (symbol.class) {
-  case ident: token("identifier"); break;
+  case ident: fier("unused"); break;
   case number: token("integer-constant"); break; /* for later 'fixpoint-constant'. */
   case lparen: token("'('"); break;
   case rparen: token("')'"); break;
@@ -262,7 +271,8 @@ void next₋token(struct language₋context * ctxt)
   case divide: token("'/'"); break;
   case plus: token("'+'"); break;
   case minus: token("'-'"); break;
-  case eql: token("'=='"); break;
+  case eqltwo: token("'=='"); break;
+  case eqlone: token("'='"); break;
   case neq: token("'<>'"); break;
   case lss: token("'<'"); break;
   case leq: token("'<='"); break;
@@ -435,10 +445,6 @@ void general₋register(struct dynamic₋bag *);
 void print₋ast(struct dynamic₋bag * tree);
 void generate₋code();
 
-Argᴾ ﹟ident(Nonabsolute regular)
-{
-   return ﹟regularpool(identifiers,regular);
-}
 
 Argᴾ ﹟ref(struct dynamic₋bag₋cons * list) ⓣ
 {
@@ -513,7 +519,7 @@ void condition(void)
    if (match(oddsym)) { expression(); bu₋fragment=new₋Unary(bu₋fragment,oddsym); }
    else {
      expression(); bagref left=bu₋fragment; 
-     if (symbol₋equal(eql) || symbol₋equal(neq) || symbol₋equal(lss) || 
+     if (symbol₋equal(eqltwo) || symbol₋equal(neq) || symbol₋equal(lss) || 
       symbol₋equal(leq) || symbol₋equal(gtr) || symbol₋equal(geq)) 
      { enum symbol₋class op=symbol.class; 
        next₋token(&Ctxt); expression(); Expression(🅒,3,left,bu₋fragment,op);
@@ -550,7 +556,7 @@ void statement(void)
 {
    if (match(additionssym)) { Nonabsolute left; /* a․𝘬․a 'l-value'. */ 
     do { expect(ident); left=symbol₋passed.gritty.store.regular; 
-     if (match(eql)) { expect(eql); condition(); Statement(🅔🅔,2,left,bu₋fragment); }
+     if (match(eqlone)) { expect(eqlone); condition(); Statement(🅔🅔,2,left,bu₋fragment); }
     } while (match(comma)); }
    else if (match(ident)) {
     Nonabsolute token=symbol₋passed.gritty.store.regular;
@@ -600,13 +606,13 @@ void block(void)
       case constsym: {
         match(constsym); Nonabsolute name;
         do { expect(ident); name=symbol₋passed.gritty.store.regular; 
-          expect(eql); condition(); Section(🅛1,2,name,bu₋fragment); 
+          expect(eqlone); condition(); Section(🅛1,2,name,bu₋fragment); 
           Section(🅛2,2,td₋tree,bu₋fragment);
         } while (match(comma)); at₋opt(semicolon,opt₋void); break; }
       case varsym: {
         match(varsym); { Nonabsolute name;
         do { expect(ident); name=symbol₋passed.gritty.store.regular; 
-         if (match(eql)) { expect(eql); condition(); 
+         if (match(eqlone)) { expect(eqlone); condition(); 
           Section(🅛1,2,name,bu₋fragment); } 
          else { Section(🅝,1,name); } Section(🅛2,2,td₋tree,bu₋fragment);
         } while (match(comma)); at₋opt(semicolon,opt₋void); } break; }
@@ -626,7 +632,7 @@ void block(void)
      case schemasym: { Nonabsolute name; int cols=-1,ccnt=0;
        match(schemasym); expect(ident); 
        name = symbol₋passed.gritty.store.regular;
-       expect(eql); expect(lparen);
+       expect(eqlone); expect(lparen);
        while (symbol₋equal(unicode₋textsym)) {
          expect(unicode₋textsym); expect(minus); 
          do { expect(unicode₋textsym); ccnt+=1; } 
@@ -635,15 +641,15 @@ void block(void)
        }
        expect(rparen); 
        Serpent₋schema(name,bu₋fragment,cols); break; }
-     case reelsym: { match(reelsym); expect(eql); break; }
+     case reelsym: { match(reelsym); expect(eqlone); break; }
      case environmentsym: {
        Nonabsolute coroutine,interrupt;
        match(environmentsym); expect(ident); 
        interrupt = symbol₋passed.gritty.store.regular;
-       expect(eql); expect(ident);
+       expect(eqlone); expect(ident);
        coroutine = symbol₋passed.gritty.store.regular;
        break; }
-     case exceptionsym: match(exceptionsym); expect(eql); expect(lparen); 
+     case exceptionsym: match(exceptionsym); expect(eqlone); expect(lparen); 
        expect(rparen); break;
      default: error(2,"unsupported initial serpent-summary keyword"); break;
      }
@@ -739,7 +745,7 @@ unagain:
    print("*** symbols-end ***\n");
 #endif
    codegenerate();
-   print("*** pult is **\n");
+   print("*** pult is ***\n");
    print("⬚ retail₋failure\n", ﹟d(areel.retail₋failure));
    print("*** end-pult ***");
    return 0;
@@ -759,7 +765,7 @@ unagain:
    'if' condition 'then' statement
    / * 'while' condition 'do' statement * /
   text-and-symbol = U8"" and U8'' and UC"" and UC''
- condition = 'odd' statment | expression ('='|'#'|'<'|'<='|'>'|'>=') expression
+ condition = 'odd' statment | expression ('=='|'#'|'<'|'<='|'>'|'>=') expression
   \also U'0' <= uc <= U'9'.
  expression = ['+'|'-'] term {'+'|'-' term}
  term = factor {'*'|'/' factor}
@@ -773,4 +779,6 @@ unagain:
   ../Apps/Additions/monolith-sequent.c 
  
  */
+
+
 
