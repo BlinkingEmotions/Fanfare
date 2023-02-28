@@ -614,7 +614,7 @@ void block(void)
       case procsym: {
         match(procsym); { Nonabsolute cipher; bagref list=ΨΛΩ,detail; 
         expect(ident); cipher=symbol₋passed.gritty.store.regular; expect(lparen); 
-        if (!symbol₋equal(rparen)) { function₋formal₋list(); list=bu₋fragment; } expect(rparen); 
+        if (!symbol₋equal(rparen)) { function₋formal₋list(); } list=bu₋fragment; expect(rparen); 
         statement(); detail=bu₋fragment; House(🅡1,3,cipher,list,detail); House(🅡2,1,bu₋fragment); }
         break; }
       default: break;
@@ -734,9 +734,9 @@ unagain:
    print("*** symbols-end ***\n");
 #endif
    codegenerate();
-   print("*** Pult is **");
+   print("*** pult is **\n");
    print("⬚ retail₋failure\n", ﹟d(areel.retail₋failure));
-   print("*** End Pult ***");
+   print("*** end-pult ***");
    return 0;
 }
 
