@@ -36,10 +36,11 @@ Argᴾ ﹟regularpool(struct collection * 🅗, Nonabsolute relative)
 {
    Symbolfragment job = ^(symbol₋present ucout, void * ctxt) {
      if (regularpool₋at(🅗,relative, 
-       ^(short symbols₋total, short count₋segments, 
-          short symbols₋segment[ᐧ], char32̄_t * segments[ᐧ]) {
-         for (int i=0; i<count₋segments; i+=1)
-           ucout(symbols₋segment[i],segments[i]);
+       ^(short symbols₋total, short fragments, short symbols[], char32̄_t * segment[]) {
+         for (int i=0; i<fragments; i+=1) {
+         /*  print("(segment-length is ⬚ of ⬚ fragments)",﹟d(symbols[i]), ﹟d(fragments)); */
+           ucout(symbols[i],segment[i]);
+         }
        })) { ucout(7,U"<empty>"); }
    };
    return ﹟λ₂(job,0);
@@ -52,7 +53,7 @@ Argᴾ ﹟indent(short times, struct tabcontext * ctxt)
    Serialfragment job = ^(serial₋present u8out, void * ctxt) {
      struct tabcontext * tabs = (struct tabcontext *)ctxt;
 again:
-     if (i >= times) goto again;
+     if (i >= times) goto unagain;
      u8out(U8(" "),1);
      i+=1; goto again;
 unagain:
@@ -60,4 +61,3 @@ unagain:
    };
    return ﹟λ₁(job,ctxt);
 }
-
