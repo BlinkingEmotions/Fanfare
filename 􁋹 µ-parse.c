@@ -260,7 +260,7 @@ void next₋token(struct language₋context * ctxt)
    ﹟s7(rendition), ﹟d(interval.column₋first), ﹟d(interval.column₋last), 
    ﹟d(interval.lineno₋first), ﹟d(interval.lineno₋last)); };
   Print fier = ^(char * rendition) { 
-   print("token 'ident' and rel:⬚ is retrieved as '⬚'. (col. ⬚-⬚, line ⬚-⬚)\n", 
+   print("token 'ident' and regular=⬚ is retrieved as '⬚'. (col. ⬚-⬚, line ⬚-⬚)\n", 
    ﹟d(symbol.gritty.store.regular), ﹟ident(symbol.gritty.store.regular), 
    ﹟d(interval.column₋first), ﹟d(interval.column₋last), 
    ﹟d(interval.lineno₋first), ﹟d(interval.lineno₋last)); };
@@ -435,7 +435,7 @@ struct ship₋relation areel = {
  .special1 = ^(struct dynamic₋bag ** input) { return (void **)input; }, 
  .special2 = ^(void ** input) { return (struct dynamic₋bag **)input; }, 
  .special3 = ^(void * input) { return (struct dynamic₋bag *)input; }, 
- .retail₋failure = 0, /* setting Retail₋failure */
+ .retail₋failure = 0, /* setting accumulated₋retail₋failure */
  .sizeof₋bag = sizeof(struct dynamic₋bag)
 };
 
@@ -612,20 +612,20 @@ void block(void)
         match(constsym); Nonabsolute name;
         do { expect(ident); name=symbol₋passed.gritty.store.regular; 
           expect(eqlone); condition(); Section(🅛1,2,name,bu₋fragment); 
-          Section(🅛2,2,td₋tree,bu₋fragment);
+          Section(🅛2,3,bu₋fragment,&td₋tree->form.const₋machineºª,&td₋tree->form.constmachine₋last);
         } while (match(comma)); at₋opt(semicolon,opt₋void); break; }
       case varsym: {
         match(varsym); { Nonabsolute name;
         do { expect(ident); name=symbol₋passed.gritty.store.regular; 
          if (match(eqlone)) { expect(eqlone); condition(); 
-          Section(🅛1,2,name,bu₋fragment); } 
-         else { Section(🅝,1,name); } Section(🅛2,2,td₋tree,bu₋fragment);
+         Section(🅛1,2,name,bu₋fragment); } else { Section(🅝,1,name); }
+         Section(🅛2,3,bu₋fragment,&td₋tree->form.recollectºª,&td₋tree->form.recollect₋last);
         } while (match(comma)); at₋opt(semicolon,opt₋void); } break; }
       case procsym: {
-        match(procsym); { Nonabsolute cipher; bagref list=ΨΛΩ,detail; 
-        expect(ident); cipher=symbol₋passed.gritty.store.regular; Section(🅡0,cipher); expect(lparen); 
-        if (!symbol₋equal(rparen)) { function₋formal₋list(); } list=bu₋fragment; expect(rparen); 
-        statement(); detail=bu₋fragment; Section(🅡1,2,list,detail); Section(🅡2,1,bu₋fragment); }
+        match(procsym); { Nonabsolute name; bagref formals,detail; 
+        expect(ident); name=symbol₋passed.gritty.store.regular; Section(🅡0,1,name); expect(lparen); 
+        if (!symbol₋equal(rparen)) { function₋formal₋list(); } formals=bu₋fragment; expect(rparen); 
+        statement(); detail=bu₋fragment; Section(🅡1,2,formals,detail); }
         break; }
       default: break;
       }
@@ -725,11 +725,11 @@ U"constant abcd=321+1,dcba=123;\n"
  "transcript fie()\nbegin\n call view\nend\n"
  "transcript fue()\nbegin\n call control\nend\n\n");
    program();
-   if (constant₋compute(td₋tree)) return 3;
-   general₋register(td₋tree);
 #if defined TRACE₋SYNTAX
    print₋ast(td₋tree);
 #endif
+   if (constant₋compute(td₋tree)) return 3;
+   general₋register(td₋tree);
 #if defined TRACE₋SYMBOL
    __builtin_int_t symbol₋count=collection₋count(identifiers);
    Nonabsolute 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 relative=0,previous₋relative=0;
