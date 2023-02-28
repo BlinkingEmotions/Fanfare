@@ -256,10 +256,10 @@ void next₋token(struct language₋context * ctxt)
 #if defined TRACE₋TOKENS
   typedef void (^Print)(char *);
   struct source₋location interval = symbol.gritty.interval;
-  Print token = ^(char * rendition) { print("token ⬚. (col. ⬚-⬚, line ⬚-⬚.)\n", 
+  Print token = ^(char * rendition) { print("token ⬚. (col. ⬚-⬚, line ⬚-⬚)\n", 
    ﹟s7(rendition), ﹟d(interval.column₋first), ﹟d(interval.column₋last), 
    ﹟d(interval.lineno₋first), ﹟d(interval.lineno₋last)); };
-  Print fier = ^(char * rendition) { print("token 'ident' and '⬚'. (col. ⬚-⬚, line ⬚-⬚.)\n", 
+  Print fier = ^(char * rendition) { print("token 'ident' and '⬚'. (col. ⬚-⬚, line ⬚-⬚)\n", 
    ﹟ident(symbol.gritty.store.regular), ﹟d(interval.column₋first), ﹟d(interval.column₋last), 
    ﹟d(interval.lineno₋first), ﹟d(interval.lineno₋last)); };
   switch (symbol.class) {
@@ -271,8 +271,8 @@ void next₋token(struct language₋context * ctxt)
   case divide: token("'/'"); break;
   case plus: token("'+'"); break;
   case minus: token("'-'"); break;
-  case eqltwo: token("'=='"); break;
-  case eqlone: token("'='"); break;
+  case eqltwo: token("'==' (two symbols)"); break;
+  case eqlone: token("'=' (one symbol)"); break;
   case neq: token("'<>'"); break;
   case lss: token("'<'"); break;
   case leq: token("'<='"); break;
@@ -779,6 +779,4 @@ unagain:
   ../Apps/Additions/monolith-sequent.c 
  
  */
-
-
 
