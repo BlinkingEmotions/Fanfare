@@ -19,7 +19,8 @@ void print₋expr(struct tabcontext * tabs, bagref expr)
    case divide: op="÷"; goto tail;
    case plus: op="+"; goto tail;
    case minus: op="-"; goto tail;
-   case eql: op="="; goto tail;
+   case eqltwo: op="=="; goto tail;
+   case eqlone: op="="; goto tail;
    case neq: op="≠"; goto tail;
    case lss: op="<"; goto tail;
    case leq: op="≤"; goto tail;
@@ -28,9 +29,13 @@ void print₋expr(struct tabcontext * tabs, bagref expr)
    default: print("unknown expression and symbol-type '⬚'\n", ﹟d(expr->T)); return;
    }
 tail:
+   ++tabs->indentation;
    print₋expr(tabs,expr->form.l);
-   print("⬚⬚ @⬚\n",﹟ent(0,tabs),﹟s7(op),﹟short(expr->memory));
    print₋expr(tabs,expr->form.r);
+   --tabs->indentation;
+   print("⬚⬚ @⬚\n",﹟ent(0,tabs),﹟s7(op),﹟short(expr->memory));
+   ++tabs->indentation;
+   --tabs->indentation;
 }
 
 void list₋print(consref list₋first, 
@@ -46,9 +51,10 @@ unagain:
 }
 
 void print₋list(struct tabcontext * tabs, consref list)
-{ consref cell=list; bagref memory;
+{ consref cell=list; bagref memory; int i=0;
 again:
    if (cell == 0) return;
+   i+=1; if (i >= 100) return;
    memory=cell->item;
    switch (memory->T)
    {
@@ -86,28 +92,34 @@ again:
      break;
    case varsym:
      print("⬚variable '⬚'\n",﹟ent(0,tabs),﹟fier(memory));
-     if (memory->form.element) { print("⬚inited with\n",﹟ent(0,tabs)); print₋expr(tabs,memory->form.element); }
+     if (memory->form.element) {
+       print("⬚inited with\n",﹟ent(0,tabs));
+       print₋expr(tabs,memory->form.element);
+     }
      else print("⬚uninited\n",﹟ent(0,tabs));
      break;
    case procsym:
      print("transcript '⬚'\n",﹟fier(memory));
+     ++tabs->indentation;
      print₋list(tabs,memory->form.formalºª);
      print₋list(tabs,memory->form.sequenceºª);
+     --tabs->indentation;
      break;
    default:
-     print("⬚unknown tree item and symbol-type '⬚'\n",﹟ent(0,tabs),﹟d(memory->T));
+     print("unknown tree item '⬚' with symbol-type '⬚'\n",﹟d(i),﹟d(memory->T));
+     return;
    }
    cell=cell->nxt.next;
    goto again;
 }
 
 void print₋ast(bagref tree)
-{  struct tabcontext tabs; tabs.indentation=0;
-   print₋list(&tabs,tree->form.const₋machineºª);
-   tabs.indentation=0;
+{  struct tabcontext tabs; 
+   print("*** constants ***\n");
+   tabs.indentation=0; print₋list(&tabs,tree->form.const₋machineºª);
    print("*** start-of function list ***\n");
-   print₋list(&tabs,tree->form.machineºª);
-   print("*** function list ends with found memory ***\n");
-   print₋list(&tabs,tree->form.recollectºª);
+   tabs.indentation=0; print₋list(&tabs,tree->form.machineºª);
+   print("*** function list ends with found memory recollects ***\n");
+   tabs.indentation=0; print₋list(&tabs,tree->form.recollectºª);
 }
 
