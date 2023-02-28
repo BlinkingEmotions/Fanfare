@@ -163,40 +163,36 @@ void Section(int type, int count, ...)
     bu₋fragment->form.r = argument₋serpent;
     break; } /* computed alternatively variable. */
    case 🅛2: { bagref circul = va_unqueue(bagref);
-    bagref unit = va_unqueue(bagref);
+    consref * firstref = va_unqueue(consref *);
+    consref * lastref = va_unqueue(consref *);
     if (retail(^(struct dynamic₋bag * material) {
       *material = *circul;                     /* a․𝘬․a 'Copy8Memory'. 'shadow-hallow' */
-    },&unit->form.const₋machineºª,&unit->form.constmachine₋last)) {
+    },firstref,lastref)) {
       Pult(areel.retail₋failure); return; }                    /* not to be 'overlay'. */
     break; } /* computed alternatively variable. */
    case 🅝: { Nonabsolute uninit₋univers = va_unqueue(Nonabsolute); 
     bu₋fragment = new₋Statement(afterward);
     bu₋fragment->form.l = new₋Identifier(uninit₋univers);
     bu₋fragment->form.r = new₋AbelianZero();
-    break; } /* uninit variable */
+    break; } /* uninited variable. */
    case 🅡0: { Nonabsolute symbol = va_unqueue(Nonabsolute);
-    bu₋fragment = new₋User(symbol);
+    /* print("retailing function named '⬚'\n",﹟ident(symbol)); */
     if (retail(^(struct dynamic₋bag * material) {
-      *material = *bu₋fragment;
+      struct dynamic₋bag init = {.T=procsym,.X.kind=1,.X.store.regular=symbol};
+      *material = init;
     },&td₋tree->form.machineºª,&td₋tree->form.machine₋last)) {
       Pult(areel.retail₋failure); return; }
-    break; } /* ensure User-ast at end of td₋tree->machine₋last */
+    break; } /* ensures a 'User'-ast at 'td₋tree->machine₋last'. */
    case 🅡1: {
     bagref formal = va_unqueue(bagref);
     bagref detail = va_unqueue(bagref);
-    
-    bu₋fragment->form.detailsºª = detail->form.detailsºª;
-    bu₋fragment->form.details₋last = detail->form.details₋last;
-    bu₋fragment->form.formalºª = formal->form.formalºª;
-    bu₋fragment->form.formal₋last = formal->form.formal₋last;
-    break; } /* definition located in one compilation unit. */
+    td₋tree->form.machine₋last->item->form.detailsºª = detail->form.detailsºª;
+    td₋tree->form.machine₋last->item->form.details₋last = detail->form.details₋last;
+    td₋tree->form.machine₋last->item->form.formalºª = formal->form.formalºª;
+    td₋tree->form.machine₋last->item->form.formal₋last = formal->form.formal₋last;
+    break; } /* connect formal and detail to last added 'User'-function. */
    case 🅡2: { void * reads_function_and_paramlist = va_unqueue(bagref);
-    if (retail(^(struct dynamic₋bag * material) {
-      
-    },&td₋tree->form.sequenceºª,&td₋tree->form.sequence₋last)) {
-      Pult(areel.retail₋failure); return;
-    }
-    break; } /*attach 'procedures' and 'functions' to tree. */
+    break; } /* attach 'procedures' and 'functions' to tree. */
    }
    va_epilogue
 }
