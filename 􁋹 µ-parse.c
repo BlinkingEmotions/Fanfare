@@ -4,7 +4,7 @@
 
 import Twinbeam;
 
-enum symbol₋class { ident, number, times, divide, plus, minus, lparen, 
+enum symbol₋class { ident=1, number, times, divide, plus, minus, lparen, 
  rparen, eql, neq, lss, leq, gtr, geq, callsym, beginsym, endsym, 
  branch₋goto₋optsym, colon, label, afterward, constsym, varsym, procsym, 
  period, comma, semicolon, elsesym, thensym, comparesym, oddsym, 
@@ -469,7 +469,7 @@ unagain:
    return;
 }
 
-struct dynamic₋bag *fragment,*tree;
+struct dynamic₋bag *bu₋fragment,*td₋tree;
 
 #include "µ⃝-code-and-tree.cxx"
 #include "µ⃝-verse-const.cxx"
@@ -489,31 +489,31 @@ void factor(void)
 
 void term(void)
 {
-   factor(); bagref left=fragment; enum symbol₋class op; 
+   factor(); bagref left=bu₋fragment; enum symbol₋class op; 
    while (symbol₋equal(times) || symbol₋equal(divide)) { 
     op=symbol.class; next₋token(&Ctxt); factor(); 
-    House(🅒,3,left,fragment,op); }
+    House(🅒,3,left,bu₋fragment,op); }
 } /*  'multiplication' has higher precedence than 'addition'. */
 
 void expression(void)
 { enum symbol₋class op=plus; bagref left;
    if (symbol₋equal(plus) || symbol₋equal(minus)) { 
-    op=symbol.class; next₋token(&Ctxt); } term(); left=fragment; 
+    op=symbol.class; next₋token(&Ctxt); } term(); left=bu₋fragment; 
    if (op==minus) { left=new₋Unary(left,minus); }
    while (symbol₋equal(plus) || symbol₋equal(minus)) { 
     op=symbol.class; next₋token(&Ctxt); term(); 
-    House(🅒,3,left,fragment,op); }
+    House(🅒,3,left,bu₋fragment,op); }
 } /*  'addition' has not as high precedence as 'multiplication'. */
 
 void condition(void)
 {
-   if (match(oddsym)) { expression(); fragment=new₋Unary(fragment,oddsym); }
+   if (match(oddsym)) { expression(); bu₋fragment=new₋Unary(bu₋fragment,oddsym); }
    else {
-     expression(); bagref left=fragment; 
+     expression(); bagref left=bu₋fragment; 
      if (symbol₋equal(eql) || symbol₋equal(neq) || symbol₋equal(lss) || 
       symbol₋equal(leq) || symbol₋equal(gtr) || symbol₋equal(geq)) 
      { enum symbol₋class op=symbol.class; 
-       next₋token(&Ctxt); expression(); House(🅒,3,left,fragment,op);
+       next₋token(&Ctxt); expression(); House(🅒,3,left,bu₋fragment,op);
      } /* else {
        error(2,"condition: invalid operator");
        next₋token(&Ctxt,0);
@@ -525,7 +525,7 @@ void function₋actual₋list(void)
 { consref params=0,params₋last=0;
    do { condition();
      if (retail(^(struct dynamic₋bag * material) {
-       *material = *fragment;
+       *material = *bu₋fragment;
      },&params,&params₋last)) { Pult(areel.retail₋failure); return; }
    } while(match(comma));
    House(🅒2,2,params,params₋last);
@@ -547,23 +547,23 @@ void statement(void)
 {
    if (match(additionssym)) { Nonabsolute left; /* a․𝘬․a 'l-value'. */ 
     do { expect(ident); left=symbol₋passed.gritty.store.regular; 
-     if (match(eql)) { expect(eql); condition(); House(🅔,2,left,fragment); }
+     if (match(eql)) { expect(eql); condition(); House(🅔,2,left,bu₋fragment); }
     } while (match(comma)); }
    else if (match(ident)) {
     Nonabsolute token=symbol₋passed.gritty.store.regular;
     if (match(lparen)) {
      if (!symbol₋equal(rparen)) { function₋actual₋list(); } expect(rparen); 
-     House(🅣,2,token,fragment); }
-    else if (match(afterward)) { condition(); House(🅕,2,token,fragment); }
+     House(🅣,2,token,bu₋fragment); }
+    else if (match(afterward)) { condition(); House(🅕,2,token,bu₋fragment); }
     else { error(2,"neither assignment, call nor variable introduction"); }
    }
    else if (enrich(callsym,ident)) { expect(ident); 
     House(🅖,1,symbol₋passed.gritty.store.regular); }
-   else if (match(beginsym)) { do { statement(); House(🅦,1,fragment); } 
-    while (newline₋match(semicolon)); expect(endsym); House(🅗,1,fragment); }
+   else if (match(beginsym)) { do { statement(); House(🅦,1,bu₋fragment); } 
+    while (newline₋match(semicolon)); expect(endsym); House(🅗,1,bu₋fragment); }
    else if (match(comparesym)) { bagref select1,select2=0,cond=0;
-     condition(); cond=fragment; expect(thensym); statement(); 
-     select1=fragment; at₋opt(elsesym,opt₋etter); select2=fragment; 
+     condition(); cond=bu₋fragment; expect(thensym); statement(); 
+     select1=bu₋fragment; at₋opt(elsesym,opt₋etter); select2=bu₋fragment; 
      House(🅙,3,cond,select1,select2); }
    /* else if (match(whilesym)) { condition(); expect(dosym); statement(); } */
    else { error(2,"statement: syntax error"); next₋token(&Ctxt); }
@@ -579,7 +579,7 @@ void function₋formal₋list(void)
    do { expect(ident); expect(/*left₋*/ ident); 
      one₋alternatively₋two(/*right₋*/ident,opt₋second);
      if (retail(^(struct dynamic₋bag * item) {
-       item->form.element = fragment;
+       item->form.element = bu₋fragment;
      },&params,&params₋last)) { Pult(areel.retail₋failure); return; }
    } while(match(comma));
    House(🅚,2,params,params₋last);
@@ -603,19 +603,19 @@ void block(void)
       case constsym: {
         match(constsym); Nonabsolute serpent;
         do { expect(ident); serpent=symbol₋passed.gritty.store.regular; 
-          expect(eql); condition(); House(🅛1,2,serpent,fragment); House(🅛2,2,tree,fragment);
+          expect(eql); condition(); House(🅛1,2,serpent,bu₋fragment); House(🅛2,2,td₋tree,bu₋fragment);
         } while (match(comma)); at₋opt(semicolon,opt₋void); break; }
       case varsym: {
         match(varsym); { Nonabsolute argument; /* struct dynamic₋bag * list=ΨΛΩ; */
         do { expect(ident); argument=symbol₋passed.gritty.store.regular; 
-         if (match(eql)) { expect(eql); condition(); House(🅝,2,argument,fragment); } 
-         else { House(🅝,2,argument,ΨΛΩ); } House(🅟/*🅡*/,2,tree,fragment);
+         if (match(eql)) { expect(eql); condition(); House(🅝,2,argument,bu₋fragment); } 
+         else { House(🅝,2,argument,ΨΛΩ); } House(🅟/*🅡*/,2,td₋tree,bu₋fragment);
         } while (match(comma)); at₋opt(semicolon,opt₋void); } break; }
       case procsym: {
         match(procsym); { Nonabsolute cipher; bagref list=ΨΛΩ,detail; 
         expect(ident); cipher=symbol₋passed.gritty.store.regular; expect(lparen); 
-        if (!symbol₋equal(rparen)) { function₋formal₋list(); list=fragment; } expect(rparen); 
-        statement(); detail=fragment; House(🅡1/*🅟*/,3,cipher,list,detail); House(🅡2 /*🅩*/,2,tree,fragment); }
+        if (!symbol₋equal(rparen)) { function₋formal₋list(); list=bu₋fragment; } expect(rparen); 
+        statement(); detail=bu₋fragment; House(🅡1,3,cipher,list,detail); House(🅡2,1,bu₋fragment); }
         break; }
       default: break;
       }
@@ -624,12 +624,12 @@ void block(void)
    {
      switch (symbol.class)
      {
-     case schemasym: { Nonabsolute table; 
+     case schemasym: { Nonabsolute name; 
        match(schemasym); expect(ident); 
-       table = symbol₋passed.gritty.store.regular;
+       name = symbol₋passed.gritty.store.regular;
        expect(eql); expect(lparen); 
        opt₋associations(); expect(rparen); 
-       House(🅢,3,table,tree,fragment); break; }
+       /*House(🅢erp₋schema,2,name,fragment); */ break; }
      case reelsym: { match(reelsym); expect(eql); break; }
      case environmentsym: {
        Nonabsolute coroutine,interrupt;
@@ -698,10 +698,7 @@ int main(int argc, char * argv[])
    if (init₋regularpool(text₋unicode)) return 1;
    text₋utf8 = Alloc(sizeof(struct collection));
    if (init₋regularpool(text₋utf8)) return 1;
-   tree = new₋Unit();
-   if (retail(^(struct dynamic₋bag * material) {
-    material->form.formalºª = material->form.sequenceºª = 0;
-   }, &tree->form.machineºª,&tree->form.machine₋last)) return 2;
+   td₋tree = new₋Unit();
    text₋program = Run(
 U"constant abcd=321+1,dcba=123;\n"
  "variable cdeg,gec,cgb\n"
@@ -712,10 +709,10 @@ U"constant abcd=321+1,dcba=123;\n"
  "transcript fie()\nbegin\n call view\nend\n"
  "transcript fue()\nbegin\n call control\nend\n\n");
    program();
-   if (constant₋compute(tree)) return 2;
-   general₋register(tree);
+   if (constant₋compute(td₋tree)) return 3;
+   general₋register(td₋tree);
 #if defined TRACE₋SYNTAX
-   print₋ast(tree);
+   print₋ast(td₋tree);
 #endif
 #if defined TRACE₋SYMBOL
    __builtin_int_t symbol₋count=collection₋count(identifiers);
@@ -731,12 +728,15 @@ again:
        previous₋relative=relative;
        relative+=(symbols₋total + 1);
      }
-   )) { print("unable to locate symbol '⬚' in pool.\n", ﹟d(relative)); return 3; }
+   )) { print("unable to locate symbol '⬚' in pool.\n", ﹟d(relative)); return 4; }
    goto again;
 unagain:
    print("*** symbols-end ***\n");
 #endif
    codegenerate();
+   print("*** Pult is **");
+   print("⬚ retail₋failure\n", ﹟d(areel.retail₋failure));
+   print("*** End Pult ***");
    return 0;
 }
 
