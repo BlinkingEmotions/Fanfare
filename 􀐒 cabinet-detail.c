@@ -1,4 +1,4 @@
-/*  cabinet-detail.c | multiple-name text filing and the coroutine. */
+/*  cabinet-detail.c | multiple-name text filing and the coroutine. (INITIALLY₋NON-EXPIRING) */
 
 import Twinbeam;
 
@@ -8,48 +8,115 @@ import Twinbeam;
 #include <sys/stat.h>
 #include <dirent.h>
 
-struct Unicodes voidfile₋path() { struct Unicodes epsilon = { 36, U"9E4A34A9-D501-41F6-9C1C-238F96A00CC2" }; return epsilon; }
+enum expiration { read₋once, after₋seven₋days, after₋seven₋years };
 
-thesaurus₋ref guid₋and₋secondary=ΨΛΩ,guid₋and₋primary=ΨΛΩ; /* persisted index on ssd and two inodes. */
-regular₋ref opened₋files=ΨΛΩ; /* not persisted on ssd, only recorded in virtual memory. */
+enum textfile₋aloha { doodle, file, initially₋committed, unstaged, staged, balanced };
+
+typedef void (^Response)(char32̄_t * ucs, __builtin_int_t bytes);
+
+EXT₋C int Order(Response out, char32̄_t * command, ...);
+
+struct Unicodes void₋path() { struct Unicodes epsilon = { 36, U"9E4A34A9-D501-41F6-9C1C-238F96A00CC2" }; return epsilon; }
+
+union guid₋shim { struct guid composite; __uint128_t machine; };
 
 typedef struct guid openfile₋guid;
 typedef openfile₋guid openfile₋id;
 
-char * repo = "/tmp/cabinet-petite";
+thesaurus₋ref guid₋and₋secondary=ΨΛΩ,guid₋and₋primary=ΨΛΩ; /* persisted index on ssd and two inodes. */
+regular₋ref opened₋files=ΨΛΩ; /* not persisted on ssd, only recorded in virtual memory. */
 
-union guid₋shim { struct guid composite; __uint128_t machine; };
+char8₋t * repo = U8("/tmp/cabinet-petite");
 
-#pragma recto mentatives create₋applicationtextfile, create₋project₋textfile and 'augment₋existing₋project₋with₋textfile'
+#pragma recto mentatives to create application-textfile, project₋textfile and 'additional₋textfile'
 
-typedef void (^Response)(char32̄_t * ucs, __builtin_int_t bytes);
-
-EXT₋C int Order(Response out,  char32̄_t * command, ...);
-
-int create₋application₋detail(Response out, struct Unicodes description₋name₋symbol)
+int create₋application₋detail(Response out, openfile₋id * regular)
 {
-   struct Unicodes text = Run(UC("/"));
-   Order(out, U"ls -la '⬚'", ﹟S(text));
+   return 0;
+} /* revision handled text file in primary memory that may be upgraded to a non-doodle file and multiple names. */
+
+int create₋collocation(Response out, struct Unicodes path, openfile₋id * regular)
+{
+   return 0;
+} /* a text file shared by multiple applications and unrevisioned. */
+
+int augment₋application₋with₋detail(Response out, openfile₋id * regular)
+{
+   return 0;
+} /* augments revision-handled text file with additional file. */
+
+int open₋persisted₋detail(Response out, union guid₋shim anchor, openfile₋id * regular) ⓣ
+{
    return 0;
 }
 
-int create₋collocation(struct Unicodes searchable₋name)
+int open₋persisted₋detail(Response out, struct Unicodes primaryOrSecondary, openfile₋id * regular) ⓣ
 {
    return 0;
 }
+
+int promote₋doodle₋to₋file(Response out, openfile₋id regular, 
+ struct Unicodes primary, struct Unicodes secondary) ⓣ
+{
+   return 0;
+}
+
+int promote₋doodle₋to₋file(Response out, openfile₋id regular, 
+ struct Unicodes either, int secondary) ⓣ
+{
+   return 0;
+}
+
+int discard₋if₋doodle(openfile₋id regular)
+{
+   return 0;
+} /* conditionally removes file if not been upgraded to non-doodle. */
+
+inexorable int initial₋commit(openfile₋id regular)
+{
+   return 0;
+}
+
+inexorable int stage₋nondoodle(openfile₋id regular)
+{
+   return 0;
+}
+
+inexorable int commit₋nondoodle(openfile₋id regular)
+{
+   return 0;
+}
+
+inexorable int openfile₋status(openfile₋id regular, enum textfile₋aloha * state)
+{
+   return 0;
+}
+
+int process₋file(openfile₋id regular)
+{ enum textfile₋aloha state;
+   if (openfile₋status(regular,&state)) { return -1; }
+   switch (state)
+   {
+
+   }
+   return 0;
+}
+
+int main()
+{ openfile₋id textfile;
+   Response out = ^(char32̄_t * ucs, __builtin_int_t bytes) { 
+    print("response: '⬚'.\n", ﹟S(bytes,ucs)); };
+   if (create₋application₋detail(out,&textfile)) { return -1;}
+   return 0;
+}
+
+#pragma recto not yet brilliant wording
 
 int create₋textfile(struct Unicodes primary, struct Unicodes secondary, int expiration, openfile₋id * regular)
 {
    /*( cancellation int cancel-and-singlelinked and file-expiration. */ /* and chronologic expiration. */
    /* primaries: |idx|->|idx|->/ secondaries: |idx|->\ */
-   EXT₋C int init₋regularpool(struct collection * ᐧ 🅷);
-   EXT₋C int copy₋append₋onto₋regular(struct collection * ᐧ 🅗, int32_t tetras, 
-   char32̄_t cs[ᐧ], ALLOC alloc, Nonabsolute * ᐧ relative);
-   int related₋evidence(struct Unicodes key₋similar, void (^ ᐧ right)(int count, struct Unicodes values[ᐧ]), thesaurus₋ref ᐝ opaque);
-   // int dissociate₋all(struct Unicodes key₋similar, thesaurus₋ref * ᐝ opaque);
-   // int dissociate₋one(struct Unicodes key₋similar, int idx, thesaurus₋ref * ᐝ opaque);
-   if (form₋ōnymon(struct Unicodes key₋copy, struct Unicodes value₋copy, int shares, thesaurus₋ref * ᐝ opaque, ALLOC alloc)) { return -1; }
-   char8₋t stored₋secondary[secondary.tetras*4],stored₋primary[primary.tetras*4]; __builtin_int_t u8bytes;
+    char8₋t stored₋secondary[secondary.tetras*4],stored₋primary[primary.tetras*4]; __builtin_int_t u8bytes;
    if (UnicodeToUtf8(secondary.tetras,secondary.unicodes,stored₋secondary,&u8bytes)) { return -1; }
    if (UnicodeToUtf8(primary.tetras,primary.unicodes,stored₋primary,&u8bytes)) { return -1; }
    char8₋t * primary₋path=U8(""),*secondary₋path=U8("");
@@ -64,22 +131,12 @@ int create₋textfile(struct Unicodes primary, struct Unicodes secondary, int ex
    opened₋files = impression₋store(opened₋files,fineprint.machine,material,Alloc);
    Copy8Memory((ByteAlignedRef)regular,(ByteAlignedRef)&(fineprint.composite),sizeof(openfile₋id));
    return 0;
-}
-
-int promote₋doodle₋to₋file()
-{
-   return 0;
-}
+} 
 
 int include₋history₋on₋file()
 {
    return 0;
 }
-
-int discard₋doodle()
-{
-   return 0;
-} /* expiration for a file as well. */
 
 int create₋pathlist()
 {
@@ -166,8 +223,10 @@ int close₋file(openfile₋id regular)
    struct w₋node * node = impression₋seek(opened₋files,fineprint.machine);
    int * fds = (int *)(node->note);
    int fd₋primary=fds[0],fd₋secondary=fds[1];
-   if (close(fd₋secondary) == -1) { return -1; }
-   if (close(fd₋primary) == -1) { return -1; }
+   if (fsync(fd₋secondary) == -1) return -1;
+   if (fsync(fd₋primary) == -1) return -1; 
+   if (close(fd₋secondary) == -1) return -1;
+   if (close(fd₋primary) == -1) return -1;
    return 0;
 }
 
@@ -237,10 +296,10 @@ struct outcome₋plausable { };
 int Plausible₋display(struct text₋form input1, struct Unicodes input2, struct outcome₋plausable options);
 
 int Plausible₋text(struct Unicodes anchor1, struct Unicodes anchor2, 
- __built_int_t symbols, char32_t * uc, struct outcome₋plausable options);
+ __builtin_int_t symbols, char32̄_t * uc, struct outcome₋plausable options);
 
 int Introduce₋program(struct Unicodes function, struct Unicodes anchor1, 
- struct Unicodes anchor2, __builtin_int_t symbols, char32_t * uc, 
+ struct Unicodes anchor2, __builtin_int_t symbols, char32̄_t * uc, 
  struct Unicode augment, struct outcome₋plausable options);
 /* language is described in --<retros-compi.c> and '.detail'. */
 
@@ -369,13 +428,23 @@ void cleanup()
 
 int main()
 {
+   
+   if (Play(^(struct Unicodes serial) { 
+      print(" ⬚ ", ﹟S(serial));
+   }, U"hello world  ⬚ ", ﹟S(U"again"))) { return 1; }
+   struct Unicodes text = Run(UC("/"));
+ 
+ //  Response out = ^(char32̄_t * ucs, __builtin_int_t bytes) { print("⬚",﹟S(bytes,ucs)); };
+ //  Order(out, U"ls -la '⬚'", ﹟S(text));
+
+#ifdef x
    filename₋expression = Run(U"hello world.txt");
    /* cleanup(); */
    /* initial episode filing attempt with given file name. */
    openfile₋id regular;
    uint8_t * offset[] = { material1,material2 }; __builtin_int_t bytes[] = { 5,7 },actual;
    int count = sizeof(offset)/sizeof(uint8_t *);
-   if (create₋file(filename₋expression,void₋path(),&regular)) { vfprint("error when create₋file.\n"); }
+   if (create₋textfile(filename₋expression,void₋path(),0,&regular)) { vfprint("error when create₋file.\n"); }
    if (reconcile₋file(regular,count,offset,bytes,&actual,0,0)) { vfprint("error during reconcillation.\n"); }
    if (close₋file(regular)) { vfprint("error at close.\n"); }
    if (open₋file(filename₋expression,&regular)) { vfprint("unable to open file.\n"); }
@@ -386,13 +455,14 @@ int main()
 again:
    yield = coro_resume(coro);
    if (yield == 0) { goto unagain; }
-   if (yield <= -1) { Pult💡(panel.filing₋error); goto err; }
+   if (yield <= -1) { Pult(panel.filing₋error); goto err; }
    vfprint("filing coroutine reported ⬚.\n", ﹟d((__builtin_int_t)yield));
    goto again;
 err:
    vfprint("error while running coroutine ⬚.\n", ﹟d((__builtin_int_t)yield));
 unagain:
    coro_free(coro);
+#endif
    return 0;
 }
 
@@ -406,6 +476,6 @@ unagain:
   ../../Cox-route/context-2.c                                                \
   ../../Cox-route/coro-main.c */
 
-/* see 'man queue' and 'man rbtree' and 'man dirent'. */
+/* see 'man queue' and 'man rbtree' and 'man dirent' and struct.h and SPPose3D.h. */
 
 
