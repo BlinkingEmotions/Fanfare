@@ -1,4 +1,4 @@
-/*  cabinet-detail.c | multiple-name filename filing and file operation notification. */
+/*  cabinet-detail.c | multiple-name text filing and the coroutine. */
 
 import Twinbeam;
 
