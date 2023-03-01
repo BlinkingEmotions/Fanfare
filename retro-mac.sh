@@ -3,24 +3,25 @@
 builtin typeset progname=$0
 builtin typeset -a sku_sequence # declares an array.
 builtin typeset flag_and_debugger
-builtin typeset -A components # declares an associative a․𝘬․a 'sources' and 'reference-list'.
+builtin typeset -A components # declares an associative a․𝘬․a 'sources' and 
+# 'reference-list'.
 builtin typeset -A output
 
-# sku_keys are retros-compi, c-maskin, reconnaissance-turbin, parent-kabinett, 
-# intel-hex, uql-gen, micro-parse, linguistics-epi, enforce-beskow and 
-# cabinet-detail.
+# sku_keys are retros-compi, c-maskin, reconnaissance-turbin, 
+# parent-kabinett, intel-hex, uql-gen, micro-parse, linguistics-epi, 
+# enforce-beskow and cabinet-detail.
 
 components=(
-  'retros-compi' '􀐒 retros-compi.c'              /* c2x */
-  'c-maskin' '􀖆 ⒞-maskin.c'                      /* c2x */
-  'reconnaissance-turbin' '􀖆 turbin-normal.c'    /* c2x */
-  'parent-kabinett' '􀖆 parent-kabinett.c'        /* c2x */
-  'intel-hex' '🥽 Intelhex.cpp'                   /* c++20 */
-  'uql-gen' '🥽⋆UQL.cpp 🥽⋆UQL₂.cpp'              /* c++20 */
-  'micro-parse' '􁋹 µ-parse.c'                     /* c2x */
-  'linguistics-epi' '􀥳 lingustics-epi.c'          /* c2x */
-  'enforce-beskow' '􁕊 enforce-beskow.c'           /* c2x */
-  'cabinet-detail' '􀐒 cabinet-detail.c'          /* c2x */
+  'retros-compi' '􀐒 retros-compi.c'              # c2x
+  'c-maskin' '􀖆 ⒞-maskin.c'                     # c2x
+  'reconnaissance-turbin' '􀖆 turbin-normal.c'    # c2x
+  'parent-kabinett' '􀖆 parent-kabinett.c'        # c2x
+  'intel-hex' '🥽 Intelhex.cpp'                   # c++20
+  'uql-gen' '🥽⋆UQL.cpp 🥽⋆UQL₂.cpp'              # c++20
+  'micro-parse' '􁋹 µ-parse.c'                     # c2x
+  'linguistics-epi' '􀥳 lingustics-epi.c'          # c2x
+  'enforce-beskow' '􁕊 enforce-beskow.c'           # c2x
+  'cabinet-detail' '∎|∎ cabinet-detail.c'          # c2x
 )
 
 output=(
@@ -85,7 +86,7 @@ function compile_and_run()
    for sku_key ($sku_sequence) {
      builtin command clang -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules \
       $flag_and_debugger -std=c2x -DSHA1GIT=\"`git log -1 '--pretty=format:%h'`\"       \
-      "$components[$sku_key]" -fblocks -fno-signed-char -fno-builtin                    \
+      "$components[$sku_key]" -fblocks -fno-signed-char -fno-builtin -g                 \
       ../Apps/Source/Releases/libTwinbeam-x86_64.a                                      \
       ../Apps/Additions/monolith-sequent.c                                              \
       ../../Cox-route/context-1.S                                                       \
