@@ -4,7 +4,7 @@ import Twinbeam;
 
 #include <unistd.h> /* declaration of 'readlink'. */
 #include <fcntl.h>
-#define _POSIX_C_SOURCE /* high-precision stat and the modern inode. */
+#define _POSIX_C_SOURCE /* selects high-precision stat and a modern inode. */
 #include <sys/stat.h>
 #include <dirent.h>
 
