@@ -48,16 +48,17 @@ Argᴾ ﹟regularpool(struct collection * 🅗, Nonabsolute relative)
 
 struct tabcontext { short indentation; };
 
-Argᴾ ﹟indent(short times, struct tabcontext * ctxt)
-{ int 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 i=0;
-   Serialfragment job = ^(serial₋present u8out, void * ctxt) {
-     struct tabcontext * tabs = (struct tabcontext *)ctxt;
+Argᴾ ﹟indent(int times, struct tabcontext * ctxt)
+{
+   Serialfragment job = copy₋block(^(serial₋present u8out, void * cxt) {
+     int i=0;
 again:
-     if (i >= times) goto unagain;
+     if (i >= times + ctxt->indentation) goto unagain;
      u8out(U8(" "),1);
      i+=1; goto again;
 unagain:
-     tabs->indentation += times;
-   };
-   return ﹟λ₁(job,ctxt);
+     ;
+   });
+   return ﹟λ₁(job,0);
 }
+
