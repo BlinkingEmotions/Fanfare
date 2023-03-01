@@ -476,6 +476,6 @@ unagain:
   ../../Cox-route/context-2.c                                                \
   ../../Cox-route/coro-main.c */
 
-/* see 'man queue' and 'man rbtree' and 'man dirent' and struct.h and SPPose3D.h. */
+/* see 'man queue' and 'man rbtree' and 'man dirent'. */
 
 
