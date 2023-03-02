@@ -43,14 +43,14 @@ Argᴾ ﹟regularpool(struct collection * 🅗, Nonabsolute relative)
          }
        })) { ucout(7,U"<empty>"); }
    };
-   return ﹟λ₂(job,0);
+   return ﹟λ₂(copy₋block(job),0);
 }
 
 struct tabcontext { short indentation; };
 
 Argᴾ ﹟indent(int times, struct tabcontext * ctxt)
 {
-   Serialfragment job = copy₋block(^(serial₋present u8out, void * cxt) {
+   Serialfragment job = ^(serial₋present u8out, void * cxt) {
      int i=0;
 again:
      if (i >= times + ctxt->indentation) goto unagain;
@@ -58,7 +58,7 @@ again:
      i+=1; goto again;
 unagain:
      ;
-   });
-   return ﹟λ₁(job,0);
+   };
+   return ﹟λ₁(copy₋block(job),0);
 }
 
