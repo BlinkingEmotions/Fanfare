@@ -180,13 +180,13 @@ again:
      registers[count-i-1]=register₋name;
     }
    else { print(
-"    push   ⬚\n",﹟s7(register₋name)
+"      push   ⬚\n",﹟s7(register₋name)
    ); }
    i+=1; goto again;
 unagain:
    if (restore) { for (i=0; i<count; i+=1) {
      print(
-"    pop    ⬚\n",﹟s7(registers[i])
+"      pop    ⬚\n",﹟s7(registers[i])
    );
    } }
    va_epilogue
@@ -216,15 +216,14 @@ void codegenerate()
 "/*  assembly.S | compiled material. */\n"
 "#define END(symbol)\n"
 "#define START(symbol)\n"
-"\n    .data\n" /* initialized and placed in object file. */
-"abc4: dd 0xffff1a92, 0xffff1a93"
-"\n    .bss\n" /* uninitialized and placed in ram. */
-"abc5: .reb 64\n" /* sixty-four bits uninitialized reserved. */
-"abc3: .fill 1,28,0\n" /* three parameters repeat, size, value. */
-"\n    .section __TEXT,__rodata\n" /* initialization for global and static. */
+"\n      .section __DATA,__data\n" /* initialized and placed in object file. */
+"\n      .comm _abc4,8\n"
+"\n      .bss\n" /* uninitialized and placed in ram. */
+"\nabc3: .fill 1,8,0\n" /* three parameters repeat, size, value. */
+"\n      .section __TEXT,__rodata\n" /* initialization for global and static. */
 "abc1: .asciz \"\41\42\43 \"\n"
 "abc2: .long 0x41,0x44,0\n"
-"\n    .section __TEXT,__text\n\n"
+"\n      .section __TEXT,__text\n\n"
    );
    struct dynamic₋bag * material; Nonabsolute symbol;
    struct dynamic₋bag₋cons *cell₋machine=td₋tree->form.machineºª,*statement₋cell;
@@ -234,14 +233,14 @@ function₋again:
    if (material==0) error(99,"unable to form abstract syntax");
    symbol = material->X.store.regular;
    print(
-"\n    .globl _⬚\n"
-"    .intel_syntax\n"
-"    START(_⬚)\n"
+"\n      .globl _⬚\n"
+"      .intel_syntax\n"
+"      START(_⬚)\n"
 "_⬚:\n",﹟ident(symbol),﹟ident(symbol),﹟ident(symbol),﹟ident(symbol));
    print(
-"    push   rbp             /* store frame pointer in stack. */\n"
-"    mov    rsp,rbp         /* assign 'rbp' to 'rsp'. */\n"
-"    sub    rsp,24          /* stack pointer points to top of frame. */\n"
+"      push   rbp               /* store frame pointer in stack. */\n"
+"      mov    rsp,rbp           /* assign 'rbp' to 'rsp'. */\n"
+"      sub    rsp,24            /* stack pointer points to top of frame. */\n"
    );
    /* preserve and restore the listed registers exercised in this 'material' function. */
    preserve(0,7,"rbx","rsp","rbp","r12","r13","r14","r15"); /* preserve calle-save registers. */
@@ -250,26 +249,26 @@ function₋again:
    /* the registers must be preserved before calling is made. */
    short signature[] = { INTEGER, INTEGER, INTEGER };
    print(
-"    mov    [rbp-8], ⬚    /* frame pointer finds address to material 'automatic' in frame. */\n", 
+"      mov    [rbp-8], ⬚      /* frame pointer finds address to material 'automatic' in frame. */\n", 
    ﹟intel₋passed(3, signature, 1));
    /* use up to 128 bytes below 'rsp' (on macos coined 'the red-area'). */
    statement₋cell = material->form.sequenceºª;
 statement₋again:
    if (statement₋cell == 0) goto statement₋unagain;
    print(
-"    mov   rax, 17            /* real statement. */\n"
+"      mov    rax, 17           /* real statement. */\n"
    );
    statement₋cell = statement₋cell->nxt.next; goto statement₋again;
 statement₋unagain:
    print(
-"    mov    rax, 13           /* return integer in 'rax'. */\n"
+"      mov    rax, 13           /* return integer in 'rax'. */\n"
    );
    preserve(1,7,"rbx","rsp","rbp","r12","r13","r14","r15"); /* restore callee-save registers. */
    print(
-"    mov    rbp, rsp          /* dealloc automatic variables. */\n"
-"    pop    rbp               /* restore frame pointer from stack. */\n"
-"    ret\n" /*  if 'lexical nesting on intel x86-64' see 'enter', 'leave' and 'ret'. */
-"    END(_⬚)\n", 
+"      mov    rbp, rsp          /* dealloc automatic variables. */\n"
+"      pop    rbp               /* restore frame pointer from stack. */\n"
+"      ret\n" /*  if 'lexical nesting on intel x86-64' see 'enter', 'leave' and 'ret'. */
+"      END(_⬚)\n", 
    ﹟ident(symbol));
    /* item = item->form.next₋machineºª; */
    cell₋machine = cell₋machine->nxt.next; goto function₋again;
