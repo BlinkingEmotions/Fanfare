@@ -108,6 +108,12 @@ again:
      print₋list(tabs,memory->form.detailsºª);
      --tabs->indentation;
      break;
+   case formalparamsym:
+     print("⬚formal param\n",﹟ent(0,tabs));
+     print("⬚type '⬚'\n",﹟ent(1,tabs),﹟fier(memory->form.element));
+     print("⬚left '⬚'\n",﹟ent(1,tabs),﹟fier(memory->form.l));
+     // print("⬚right '⬚'\n",﹟ent(1,tabs));
+     break;
    default:
      print("unknown tree item '⬚' with symbol-type '⬚'\n",﹟d(i),﹟d(memory->T));
      return;
