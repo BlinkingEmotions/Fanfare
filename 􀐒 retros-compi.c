@@ -202,8 +202,8 @@ struct token₋detail {
   __builtin_int_t lineno₋first,lineno₋last,column₋first,column₋last;
 };
 
-enum language₋mode { mode₋inexplanatoria, mode₋initial, mode₋fraction, 
- mode₋integer, mode₋regular, mode₋text, mode₋single₋ekunem };
+enum language₋mode { mode₋inexplanatoria, mode₋initial, mode₋integer, 
+ mode₋fraction, mode₋regular, mode₋text, mode₋single₋ekunem, mode₋multi₋ekunem };
 
 struct language₋context {
   struct Unicodes text;
@@ -261,15 +261,22 @@ typedef int64_t NoteReference; /* a․𝘬․a 'Note₋idx'. */
 struct note₋form {
   struct note₋idx l,r,element;
   struct notecons₋idx compare₋thenºªidx, 
-   compare₋elseºªidx;
+   compare₋elseºªidx,compare₋else₋next₋idx, 
+   compare₋else₋last₋idx;
 };
 
-struct not₋e {
+partial struct not₋e {
   struct token₋detail D;
   struct note₋form form;
   enum symbol₋class C;
   struct not₋e *l,*r;
 };
+
+partial struct not₋e {
+
+};
+
+union amorph₋note { struct not₋e material; int32_t cons₋idx; };
 
 int spawn₋replik(struct Unicodes filepath, struct not₋e * 🅵, struct collection * 🅰)
 { __builtin_int_t ﹟₋segments=5,i;
@@ -290,7 +297,7 @@ int retail(void (^ ᐧ)(struct not₋e * ᐧ), struct note₋cons *, struct
    return 0;
 }
 
-struct collection notes₋ess;
+struct collection *notes₋ess,*identifiers,*text₋unicode,*text₋utf8;
 
 /* man har ett med oversikt och block just for den. */
 
@@ -536,10 +543,12 @@ void help()
 " -h  display help.\n"
 " -c  do not link.\n"
 " -T  incorporate instrumentation with deliverable.\n"
-" -exclude <symbol>  when '-T', unincorporate instrumentation from symbol\n"
-" -library  build library and not executable\n"
-" -deliverable  build not library but executable\n"
-" -put <path and .asm file>  indicate location for intermediate\n" /* .cumpani alternatively a.out alternatively 'ess-pe'. */
+" -exclude <symbol>  when '-T', unincorporate instrumentation from symbol.\n"
+" -mindful call|coroutine|branch|overflow|store|load|gate  enable flow trace.\n"
+" -skip call <function name>  omit/lollop indicated symbol from flow trace.\n "
+" -library  build library and not executable.\n"
+" -deliverable  build not library but executable.\n"
+" -put <path and .asm file>  indicate location for intermediate.\n" /* .cumpani alternatively a.out alternatively 'ess-pe'. */
 "\nplatforms\n\n"
 " -intel-mac\n"
 " -pic-mips\n"
