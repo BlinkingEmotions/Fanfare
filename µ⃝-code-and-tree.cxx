@@ -61,7 +61,7 @@ bagref new₋User(Nonabsolute symbol)
 bagref new₋Intrinsic(Nonabsolute symbol)
 {
    bagref node = Alloc(sizeof(struct dynamic₋bag));
-   struct dynamic₋bag init = {.T=procsym,.X.kind=1.,.X.store.regular=symbol};
+   struct dynamic₋bag init = {.T=procsym,.X.kind=1,.X.store.regular=symbol};
    *node=init;
    return node;
 }
@@ -75,6 +75,8 @@ bagref new₋Unit()
 bagref new₋AbelianZero()
 {
    bagref node = Alloc(sizeof(struct dynamic₋bag));
+   struct dynamic₋bag init = {.T=unarbitrated₋symbol,.X.kind=2};
+   *node=init;
    return node;
 }
 
