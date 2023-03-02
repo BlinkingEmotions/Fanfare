@@ -61,9 +61,9 @@ Symbol symbol₋passed,symbol,retrospect;
 /*  a․𝘬․a 'memory after reading passed'/'ground₋fold', 'current' and 'next'. */
 
 #define STATE(s) (s == ctxt->state)
-/* #define TRACE₋TOKENS */
+#define TRACE₋TOKENS
 #define TRACE₋SYNTAX
-/* #define TRACE₋SYMBOL */
+#define TRACE₋SYMBOL
 
 typedef void (^Utf8)(char8₋t *,__builtin_int_t);
 
@@ -584,11 +584,10 @@ void statement(void)
    }
    else if (enrich(callsym,ident)) { expect(ident); 
     Statement(🅗🅖,1,symbol₋passed.gritty.store.regular);
-    print("parameterless call\n");
    } /* parameterless call. */
-   else if (match(beginsym)) { do { statement(); 
-    Statement(🅘🅦,1,bu₋fragment); } while (newline₋match(semicolon)); 
-    expect(endsym); Statement(🅙🅗,1,bu₋fragment); } /* statement list. */
+   else if (match(beginsym)) { do { statement(); } 
+    while (newline₋match(semicolon)); expect(endsym); 
+    goto no_augment; } /* statement list. */
    else if (match(comparesym)) { bagref select1,select2=0,cond=0;
      condition(); cond=bu₋fragment; expect(thensym); statement(); 
      select1=bu₋fragment; at₋opt(elsesym,opt₋etter); select2=bu₋fragment; 
@@ -600,6 +599,8 @@ void statement(void)
     &td₋tree->form.machine₋last->item->form.details₋last)) {
      Pult(areel.retail₋failure); return;
    }
+no_augment:
+   ;
 }
 
 void opt₋second(void)
@@ -651,7 +652,7 @@ void block(void)
         expect(ident); name=symbol₋passed.gritty.store.regular; 
         Section(🅡0,1,name); expect(lparen); 
         if (!symbol₋equal(rparen)) { function₋formal₋list(); } expect(rparen); 
-        statement(); /* Section(🅡1,1,bu₋fragment); */ }
+        statement(); }
         break; }
       default: break;
       }
