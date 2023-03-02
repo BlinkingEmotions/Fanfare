@@ -61,9 +61,9 @@ Symbol symbol₋passed,symbol,retrospect;
 /*  a․𝘬․a 'memory after reading passed'/'ground₋fold', 'current' and 'next'. */
 
 #define STATE(s) (s == ctxt->state)
-#define TRACE₋TOKENS
+/* #define TRACE₋TOKENS */
 #define TRACE₋SYNTAX
-#define TRACE₋SYMBOL
+/* #define TRACE₋SYMBOL */
 
 typedef void (^Utf8)(char8₋t *,__builtin_int_t);
 
@@ -569,26 +569,37 @@ void statement(void)
 {
    if (match(additionssym)) { Nonabsolute left; /* a․𝘬․a 'l-value'. */ 
     do { expect(ident); left=symbol₋passed.gritty.store.regular; 
-     if (match(eqlone)) { expect(eqlone); condition(); Statement(🅔🅔,2,left,bu₋fragment); }
-    } while (match(comma)); }
+     if (symbol₋equal(eqlone)) { expect(eqlone); condition(); 
+      bagref right = bu₋fragment; Statement(🅔🅔,2,left,right); }
+     else Statement(🅔🅔,2,left,new₋AbelianZero());
+    } while (match(comma)); } /* multiple assignments after 'additions. */
    else if (match(ident)) {
     Nonabsolute token=symbol₋passed.gritty.store.regular;
     if (match(lparen)) {
      if (!symbol₋equal(rparen)) { function₋actual₋list(); } expect(rparen); 
-     Statement(🅕🅣,2,token,bu₋fragment); }
-    else if (match(afterward)) { condition(); Statement(🅖🅕,2,token,bu₋fragment); }
+     Statement(🅕🅣,2,token,bu₋fragment); } /* general call. */
+    else if (match(afterward)) { condition();
+      Statement(🅖🅕,2,token,bu₋fragment); } /* assignment. */
     else { error(2,"neither assignment, call nor variable introduction"); }
    }
    else if (enrich(callsym,ident)) { expect(ident); 
-    Statement(🅗🅖,1,symbol₋passed.gritty.store.regular); }
-   else if (match(beginsym)) { do { statement(); Statement(🅘🅦,1,bu₋fragment); } 
-    while (newline₋match(semicolon)); expect(endsym); Statement(🅙🅗,1,bu₋fragment); }
+    Statement(🅗🅖,1,symbol₋passed.gritty.store.regular);
+    print("parameterless call\n");
+   } /* parameterless call. */
+   else if (match(beginsym)) { do { statement(); 
+    Statement(🅘🅦,1,bu₋fragment); } while (newline₋match(semicolon)); 
+    expect(endsym); Statement(🅙🅗,1,bu₋fragment); } /* statement list. */
    else if (match(comparesym)) { bagref select1,select2=0,cond=0;
      condition(); cond=bu₋fragment; expect(thensym); statement(); 
      select1=bu₋fragment; at₋opt(elsesym,opt₋etter); select2=bu₋fragment; 
-     Statement(🅚🅙,3,cond,select1,select2); }
-   /* else if (match(whilesym)) { condition(); expect(dosym); statement(); } */
+     Statement(🅚🅙,3,cond,select1,select2); } /* 'compare', 'if'. */
    else { error(2,"statement: syntax error"); next₋token(&Ctxt); }
+   if (retail(^(struct dynamic₋bag * item) {
+     *item = *bu₋fragment;
+   },&td₋tree->form.machine₋last->item->form.detailsºª,
+    &td₋tree->form.machine₋last->item->form.details₋last)) {
+     Pult(areel.retail₋failure); return;
+   }
 }
 
 void opt₋second(void)
@@ -640,7 +651,7 @@ void block(void)
         expect(ident); name=symbol₋passed.gritty.store.regular; 
         Section(🅡0,1,name); expect(lparen); 
         if (!symbol₋equal(rparen)) { function₋formal₋list(); } expect(rparen); 
-        statement(); Section(🅡1,1,bu₋fragment); }
+        statement(); /* Section(🅡1,1,bu₋fragment); */ }
         break; }
       default: break;
       }
@@ -697,7 +708,39 @@ void program(void)
    next₋token(&Ctxt); block(); valid(2,eot₋and₋file,"incorrect signature");
 }
 
-/* -mindful call|couroutine|branch|overflow|store|load|gate */
+BITMASK(uint32_t) {
+  Mindful_Call      = 0x00000001,
+  Mindful_Return    = 0x00000002,
+  Mindful_Coroutine = 0x00000004,
+  Mindful_Branch    = 0x00000008,
+  Mindful_Overflow  = 0x00000010,
+  Mindful_Store     = 0x00000020,
+  Mindful_Load      = 0x00000040,
+  Mindful_Gate      = 0x00000080,
+};
+
+Bitfield Mindful[] = {
+  { U"Mindful_Call", Mindful_Call, U"Emit log when calling function." },
+  { U"Mindful_Return", Mindful_Return, U"Emit log when returning from function call." },
+  { U"Mindful_Coroutine", Mindful_Coroutine, U"Emit log on yield/awake/return." },
+  { U"Mindful_Branch", Mindful_Branch, U"Emit log on 'compare' and 'if'." },
+  { U"Mindful_Overflow", Mindful_Overflow, U"Emit log when arithmetic overflow." },
+  { U"Mindful_Store", Mindful_Store, U"Write to log on memory write." },
+  { U"Mindful_Load", Mindful_Load, U"Log when memory is read." },
+  { U"Mindful_Gate", Mindful_Gate, U"Log when entering/exiting operating system gate." }
+};
+
+struct AnnotatedRegister AR_Mindful = {
+  U"Mindful: Command line options indicating selected logging.", 
+  8, Mindful, 0x00000000, 
+  U"footnote: mindful logging is writing to stderr using 'vfprint'."
+};
+
+uint32_t mindful = 0x00000000;
+
+struct collection /* char8₋t * */ *callskip,*coroutskip,*brskip;
+
+/* -mindful call|coroutine|branch|overflow|store|load|gate */
 /* -skip call multiply */
 
 int main(int argc, char * argv[])
@@ -736,7 +779,7 @@ int main(int argc, char * argv[])
    if (init₋regularpool(text₋utf8)) return 1;
    td₋tree = new₋Unit();
    text₋program = Run(
-    U"transcript hello(binary16 arg1, binary32 arg2) begin call control end\n\n");
+    U"transcript hello(binary16 arg1, binary32 arg2) begin call control0; call control1; call control2 end\n\n");
 /*
 U"constant abcd=321+1,dcba=123;\n"
  "variable cdeg,gec,cgb\n"
