@@ -41,18 +41,6 @@ tail:
    --tabs->indentation;
 }
 
-void list₋print(consref list₋first, 
- void (^element)(struct dynamic₋bag * item))
-{ consref memory = list₋first;
-   print("[");
-again:
-   if (memory == 0) goto unagain;
-   element(memory->item);
-   memory = memory->nxt.next; goto again;
-unagain:
-   print("]");
-}
-
 void print₋list(struct tabcontext * tabs, consref list)
 { consref cell=list; bagref memory; int i=0;
 again:
@@ -62,7 +50,7 @@ again:
    switch (memory->T)
    {
    case callsym:
-     print("⬚call '⬚'\n",﹟ent(0,tabs),﹟fier(memory));
+     print("⬚call '⬚' (@ 0x⬚)\n",﹟ent(0,tabs),﹟fier(memory),﹟ref(memory));
      break;
    case branch₋goto₋optsym:
      print("⬚branch to '⬚'\n",﹟ent(0,tabs),﹟fier(memory));
@@ -102,14 +90,14 @@ again:
      else print("⬚uninited\n",﹟ent(0,tabs));
      break;
    case procsym:
-     print("transcript '⬚'\n",﹟fier(memory));
+     print("transcript '⬚' (@ 0x⬚)\n",﹟fier(memory),﹟ref(memory));
      ++tabs->indentation;
      print₋list(tabs,memory->form.formalºª);
      print₋list(tabs,memory->form.detailsºª);
      --tabs->indentation;
      break;
    case formalparamsym:
-     print("⬚formal param\n",﹟ent(0,tabs));
+     print("⬚formal param (@ 0x⬚)\n",﹟ent(0,tabs),﹟ref(memory));
      print("⬚type '⬚'\n",﹟ent(1,tabs),﹟fier(memory->form.element));
      print("⬚left '⬚'\n",﹟ent(1,tabs),﹟fier(memory->form.l));
      // print("⬚right '⬚'\n",﹟ent(1,tabs));
