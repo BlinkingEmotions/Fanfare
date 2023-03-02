@@ -15,6 +15,9 @@ void print₋expr(struct tabcontext * tabs, bagref expr)
     ﹟fier(expr),﹟short(expr->memory)); return;
    case number: print("⬚number '⬚' @⬚\n",﹟ent(0,tabs), 
     ﹟d(expr->X.store.integer),﹟short(expr->memory)); return;
+   case unarbitrated₋symbol:
+    print("⬚unarbitrated\n",﹟ent(0,tabs));
+    return;
    case times: op="*"; goto tail;
    case divide: op="÷"; goto tail;
    case plus: op="+"; goto tail;
@@ -102,7 +105,7 @@ again:
      print("transcript '⬚'\n",﹟fier(memory));
      ++tabs->indentation;
      print₋list(tabs,memory->form.formalºª);
-     print₋list(tabs,memory->form.sequenceºª);
+     print₋list(tabs,memory->form.detailsºª);
      --tabs->indentation;
      break;
    default:
