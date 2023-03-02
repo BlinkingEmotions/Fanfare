@@ -17,7 +17,8 @@ enum symbol₋class { ident=1, number, times, divide, plus, minus, lparen,
  serpentsummarysym, settingsym, referencessym, correctionssym, 
  flagsandnotessym, diffusesym, dotifsym, definedsym, dotdefinesym, 
  dotendsym, dotincludesym, systemsym, unicodesym, utf8sym, conceptsym, 
- eot₋and₋file, intrinsicsym, unarbitrated₋symbol };
+ invariantsym, eot₋and₋file, intrinsicsym, unarbitrated₋symbol, 
+ formalparamsym };
 
 enum language₋mode { mode₋initial, mode₋integer, mode₋regular, 
  mode₋fixpoint, mode₋quotes₋text, mode₋collection };
@@ -448,7 +449,7 @@ struct ship₋relation areel = {
 
 enum { 🅐=1, 🅑, 🅒, 🅓 };
 enum { 🅔🅔, 🅕🅣, 🅖🅕, 🅗🅖, 🅘🅦, 🅙🅗, 🅚🅙};
-enum { 🅚, 🅛1, 🅛2, 🅝, 🅡0, 🅡1, 🅡2 };
+enum { 🅚, 🅛1, 🅛2, 🅝, 🅡0, 🅡1 };
 
 void Expression(int type, int count, ...);
 void Statement(int type, int count, ...);
@@ -596,14 +597,20 @@ void opt₋second(void)
 }
 
 void function₋formal₋list(void)
-{ consref params=0,params₋last=0;
-   do { expect(ident); expect(/*left₋*/ ident); 
-     one₋alternatively₋two(/*right₋*/ident,opt₋second);
+{ consref params=0,params₋last=0; Nonabsolute type,name1,name2=-1;
+   do { match(ident); type=symbol₋passed.gritty.store.regular;
+      expect(/*left₋*/ ident); name1=symbol₋passed.gritty.store.regular;
+     if (symbol₋equal(ident)) { match(ident); name2=symbol₋passed.gritty.store.regular; }
      if (retail(^(struct dynamic₋bag * item) {
-       item->form.element = bu₋fragment;
+       item->T = formalparamsym;
+       item->form.element = new₋Identifier(type);
+       item->form.l = new₋Identifier(name1);
+       item->form.r = new₋Identifier(name2);
      },&params,&params₋last)) { Pult(areel.retail₋failure); return; }
    } while(match(comma));
-   House(🅚,2,params,params₋last);
+   /* type element, l and r is optional argument-label and inner identifiers. */
+   td₋tree->form.machine₋last->item->form.formalºª = params;
+   td₋tree->form.machine₋last->item->form.formal₋last = params₋last;
 }
 
 void opt₋void(void) { }
@@ -629,10 +636,11 @@ void block(void)
          Section(🅛2,3,bu₋fragment,&td₋tree->form.recollectºª,&td₋tree->form.recollect₋last);
         } while (match(comma)); at₋opt(semicolon,opt₋void); } break; }
       case procsym: {
-        match(procsym); { Nonabsolute name; bagref formals,detail; 
-        expect(ident); name=symbol₋passed.gritty.store.regular; Section(🅡0,1,name); expect(lparen); 
-        if (!symbol₋equal(rparen)) { function₋formal₋list(); } formals=bu₋fragment; expect(rparen); 
-        statement(); detail=bu₋fragment; Section(🅡1,2,formals,detail); }
+        match(procsym); { Nonabsolute name; 
+        expect(ident); name=symbol₋passed.gritty.store.regular; 
+        Section(🅡0,1,name); expect(lparen); 
+        if (!symbol₋equal(rparen)) { function₋formal₋list(); } expect(rparen); 
+        statement(); Section(🅡1,1,bu₋fragment); }
         break; }
       default: break;
       }
@@ -689,6 +697,9 @@ void program(void)
    next₋token(&Ctxt); block(); valid(2,eot₋and₋file,"incorrect signature");
 }
 
+/* -mindful call|couroutine|branch|overflow|store|load|gate */
+/* -skip call multiply */
+
 int main(int argc, char * argv[])
 {
    char32̄_t * keywords[] = { U"constant", U"variable", U"call", U"begin", 
@@ -697,15 +708,17 @@ int main(int argc, char * argv[])
     U"schema", U"reel", U"environment", U"exception", 
     U"serpent₋summary", U"settings", U"references", U"corrections", 
     U"flags₋and₋notes", U"diffuse", U".IF.", U"DEFINED", U".DEFINE.", 
-    U".END.", U".INCLUDE.", U"system", U"unicode", U"utf₋8", U"concept" };
+    U".END.", U".INCLUDE.", U"system", U"unicode", U"utf₋8", U"concept",
+    U"invariant" };
    int symbols[] = { constsym,varsym,callsym,beginsym,endsym,comparesym, 
     thensym,oddsym,procsym,elsesym,voidsym,branch₋goto₋optsym,insym, 
     presentsym,referssym,additionssym,utf8₋textsym,unicode₋textsym, 
     schemasym,reelsym,environmentsym,exceptionsym, 
     serpentsummarysym,settingsym,referencessym,correctionssym, 
     flagsandnotessym,diffusesym,dotifsym,definedsym,dotdefinesym, 
-    dotendsym,dotincludesym,systemsym,unicodesym,utf8sym, conceptsym };
-   merge₋to₋trie(35,keywords,symbols,&Ctxt.keys);
+    dotendsym,dotincludesym,systemsym,unicodesym,utf8sym,conceptsym,
+    invariantsym };
+   merge₋to₋trie(36,keywords,symbols,&Ctxt.keys);
    Ctxt.state=mode₋initial;
    Ctxt.tip₋unicode=0;
    Ctxt.syms₋in₋regular=0;
@@ -723,14 +736,16 @@ int main(int argc, char * argv[])
    if (init₋regularpool(text₋utf8)) return 1;
    td₋tree = new₋Unit();
    text₋program = Run(
+    U"transcript hello(binary16 arg1, binary32 arg2) begin call control end\n\n");
+/*
 U"constant abcd=321+1,dcba=123;\n"
  "variable cdeg,gec,cgb\n"
  "transcript foo() begin\n"
  "  call window1; call window2;\n"
  "  if cdeg <> gec then begin cgb:=1+1; abcd() end "
  "  else begin cgb:=1-1 end end\n"
- "transcript fie()\nbegin\n call view\nend\n"
- "transcript fue()\nbegin\n call control\nend\n\n");
+ "transcript fie( int )\nbegin\n call view\nend\n"
+ "transcript fue()\nbegin\n call control\nend\n\n");*/
    program();
 #if defined TRACE₋SYNTAX
    print₋ast(td₋tree);
