@@ -110,14 +110,15 @@ void Statement(int type, int count, ...)
    {
    case 🅔🅔: { Nonabsolute left = va_unqueue(Nonabsolute);
     bagref right = va_unqueue(bagref);
-    bu₋fragment = new₋Statement(additionssym);
+    bu₋fragment = new₋Statement(afterward);
     bu₋fragment->form.l = new₋Identifier(left);
     bu₋fragment->form.r = right;
     break; }
    case 🅕🅣: {
     Nonabsolute called = va_unqueue(Nonabsolute);
     bagref params = va_unqueue(bagref);
-    bu₋fragment = new₋Identifier(called);
+    bu₋fragment = new₋Statement(callsym);
+    bu₋fragment->X.store.regular = called;
     bu₋fragment->form.sequenceºª = params->form.sequenceºª;
     bu₋fragment->form.sequence₋last = params->form.sequence₋last;
     break; } /* function defined in 'compilation-unit'. */
@@ -128,25 +129,16 @@ void Statement(int type, int count, ...)
     bu₋fragment->form.r = right;
     break; }
    case 🅗🅖: { Nonabsolute called = va_unqueue(Nonabsolute);
-    bu₋fragment = new₋Identifier(called);
+    bu₋fragment = new₋Statement(callsym);
+    bu₋fragment->X.store.regular = called;
     bu₋fragment->form.sequenceºª=0;
     bu₋fragment->form.sequence₋last=0;
     break; }
-   case 🅘🅦: {
-    bagref statement₋to₋append = va_unqueue(bagref);
-    consref ftail = td₋tree->form.machine₋last;
-    if (retail(^(struct dynamic₋bag * material) {
-      *material = *statement₋to₋append;
-    },&ftail->item->form.sequenceºª,&ftail->item->form.sequence₋last)) {
-      Pult(areel.retail₋failure); return; }
-    break; }
-    case 🅙🅗: { bagref fragment₋statementºª = va_unqueue(bagref);
-     td₋tree->form.machine₋last->item->form.sequence₋last = fragment₋statementºª->form.sequenceºª;
-     break; } /* statement list */
    case 🅚🅙: { void * condition = va_unqueue(bagref);
     void * compare₋then = va_unqueue(consref);
     void * compare₋else = va_unqueue(consref);
     bu₋fragment = new₋Statement(comparesym);
+    bu₋fragment->form.element = condition;
     bu₋fragment->form.compare₋thenºª = compare₋then;
     bu₋fragment->form.compare₋elseºª = compare₋else;
     break; } /* condition */
@@ -185,11 +177,6 @@ void Section(int type, int count, ...)
     },&td₋tree->form.machineºª,&td₋tree->form.machine₋last)) {
       Pult(areel.retail₋failure); return; }
     break; } /* ensures a 'User'-ast at 'td₋tree->machine₋last'. */
-   case 🅡1: {
-    bagref detail = va_unqueue(bagref);
-    td₋tree->form.machine₋last->item->form.detailsºª = detail->form.detailsºª;
-    td₋tree->form.machine₋last->item->form.details₋last = detail->form.details₋last;
-    break; } /* connect detail to last added 'User'-function. */
    }
    va_epilogue
 }
