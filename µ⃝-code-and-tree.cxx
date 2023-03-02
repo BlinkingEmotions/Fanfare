@@ -186,15 +186,10 @@ void Section(int type, int count, ...)
       Pult(areel.retail₋failure); return; }
     break; } /* ensures a 'User'-ast at 'td₋tree->machine₋last'. */
    case 🅡1: {
-    bagref formal = va_unqueue(bagref);
     bagref detail = va_unqueue(bagref);
     td₋tree->form.machine₋last->item->form.detailsºª = detail->form.detailsºª;
     td₋tree->form.machine₋last->item->form.details₋last = detail->form.details₋last;
-    td₋tree->form.machine₋last->item->form.formalºª = formal->form.formalºª;
-    td₋tree->form.machine₋last->item->form.formal₋last = formal->form.formal₋last;
-    break; } /* connect formal and detail to last added 'User'-function. */
-   case 🅡2: { void * reads_function_and_paramlist = va_unqueue(bagref);
-    break; } /* attach 'procedures' and 'functions' to tree. */
+    break; } /* connect detail to last added 'User'-function. */
    }
    va_epilogue
 }
@@ -211,11 +206,6 @@ void House(int type, int count, ...)
 { va_prologue(count)
    switch (type)
    {
-   case 🅚: { void * formalºª = va_unqueue(consref);
-     void * formal₋last = va_unqueue(consref);
-     bu₋fragment->form.formalºª=formalºª;
-     bu₋fragment->form.formal₋last=formal₋last;
-     break; }; /* binds formal parameter list first and last to fragment. */
    }
    va_epilogue
 } /*  A․𝘬․a 'biblio' and 'redux'. */
