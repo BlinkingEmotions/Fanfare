@@ -344,7 +344,7 @@ void next₋token(struct language₋context * ctxt)
   case systemsym: token("'system'"); break;
   case eot₋and₋file: token("completion"); break;
   case unarbitrated₋symbol: token("'𝘶𝘯𝘢𝘳𝘣𝘪𝘵𝘳𝘢𝘵𝘦𝘥'"); break;
-  default: vfprint("non-sorted generalization.\n");
+  default: vfprint("token '⬚' not recognized.\n", ﹟d(symbol.class));
   }
 #endif
 }
