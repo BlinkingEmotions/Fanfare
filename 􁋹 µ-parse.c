@@ -16,7 +16,7 @@ enum symbol₋class { ident=1, number, times, divide, plus, minus, lparen,
  dowsingsym, ellipsissym, leftrightread, insym, presentsym, 
  serpentsummarysym, settingsym, referencessym, correctionssym, 
  flagsandnotessym, diffusesym, dotifsym, definedsym, dotdefinesym, 
- dotendsym, dotincludesym, systemsym, unicodesym, utf8sym, conceptsym, 
+ dotendsym, dotincludesym, systemsym, unicodesym, utf8sym, conceptsym, /* ⬷ ship-relation to do .*/
  invariantsym, eot₋and₋file, intrinsicsym, unarbitrated₋symbol, 
  formalparamsym };
 
@@ -135,10 +135,13 @@ int next₋token₋inner(struct language₋context * ctxt, Symbol * out)
    type digit = ^(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; };
    type letter = ^(char32̄_t uc) { return (U'a' <= uc && uc <= U'z') || 
     (U'A' <= uc && uc <= U'Z') || uc == U'₋' || (U'\x1f600' /*􀈂*/ <= uc && uc <= U'\x1008fa' /*􀣺*/); };
-   🧵(identifier,machine₋constant,keyword,trouble,completion,unicode_text) {
+   🧵(identifier,machine₋constant,fixpoint₋constant,keyword,trouble,completion,unicode_text) {
    case identifier: copy₋identifier(ctxt,out); ctxt->syms₋in₋regular=0; 
     ctxt->state=mode₋initial; return 0;
    case machine₋constant: copy₋number(ctxt,out,1); ctxt->ongoing₋number=0; 
+    ctxt->syms₋in₋number=ctxt->syms₋in₋fraction=0; ctxt->state=mode₋initial;
+    return 0;
+   case fixpoint₋constant: copy₋number(ctxt,out,2); ctxt->ongoing₋number=0; 
     ctxt->syms₋in₋number=ctxt->syms₋in₋fraction=0; ctxt->state=mode₋initial;
     return 0;
    case keyword: assign₋symbol₋noforward(sym,out,ctxt->syms₋in₋regular); 
@@ -205,15 +208,13 @@ again:
    /* else if (STATE(mode₋initial) && uc == U'\x----') { assign₋symbol(symbol₋for₋prominent₋toggle); } ⁄* display text in bold-face. */
    /* else if (STATE(mode₋initial) && uc == U'\x----') { assign₋symbol(symbol₋for₋guttertext); } ⁄* line-oriented material rendered left to editor (gutter) at hoover. */
    /* else if (STATE(mode₋initial) && UC == U'\x----') { assign₋SYMBOL(symbol₋for₋popovertext); } ⁄* multiple-line material rendered as popover inside editor at hoover. */
-   ELIF₋INIT₋WITH₋ONE(U'\x2405') { assign₋symbol(symbol₋for₋enquery,out,1); RET } /* toggle fold/unfold at double-click. */
    /* \later 'text-block rendition-interpretation and painters-knife' (\see 77995 Sat, 18 Feb 2023 05:25). ⌥ + '-' is '–' and ⌥ + shift + '-' is '—'. */
-   ELIF₋INIT₋WITH₋ONE(U'.') { assign₋symbol(period,out,1); print("754 period\n"); RET }
-   ELIF₋INIT₋WITH₋ONE(U'"') {
+   ELIF₋INIT₋WITH₋ONE(U'\x2405') { assign₋symbol(symbol₋for₋enquery,out,1); RET } /* toggle fold/unfold at double-click. */
+   else if (STATE(mode₋initial) && uc == U'"') {
      ctxt->reference₋quoted = collection₋count(text₋unicode);
      ctxt->syms₋in₋quotes=0;
      ctxt->state = mode₋quotes₋text;
      location₋nextcolumn(&ctxt->interval);
-     /* RET */
    }
    else if (STATE(mode₋quotes₋text)) {
      if (uc == U'"') {
@@ -222,6 +223,11 @@ again:
      else { if (uc == U'\\' && uc₊₁ == U'"') { ctxt->tip₋unicode+=1; uc=U'"'; }
        if (copy₋append₋onto₋regular(text₋unicode,1,&uc,Alloc,&ctxt->reference₋quoted)) confess(trouble);
      }
+   }
+   else if (STATE(mode₋fixpoint) && digit(uc)) {
+     ctxt->zero₋to₋nines[ctxt->syms₋in₋fraction] = uc;
+     ctxt->syms₋in₋fraction+=1;
+     if (!digit(uc₊₁)) confess(fixpoint₋constant);
    }
    else if ((STATE(mode₋initial) && letter(uc)) || (STATE(mode₋regular) && (letter(uc) || digit(uc)))) {
      if (ctxt->syms₋in₋regular == 2048) { error(1,"identifier and keyword too long"); confess(trouble); }
@@ -238,7 +244,8 @@ again:
      ctxt->ongoing₋number+=(uc - U'0');
      ctxt->syms₋in₋number+=1;
      ctxt->state = mode₋integer;
-     if (!digit(uc₊₁)) confess(machine₋constant);
+     if (uc₊₁ == U'.') { ctxt->state = mode₋fixpoint; ctxt->tip₋unicode+=1; }
+     else if (!digit(uc₊₁)) confess(machine₋constant);
    } /* else if mode₋fixpoint \also in --<􀥳 lingustics-epi.c>{array buffer the}. */
      /* @= #include "u-arithmetic.cxx" */ /* if (x==0) @<array buffer the@> */
    EL₋CONFESS
@@ -410,11 +417,10 @@ typedef struct dynamic₋bag * bagref;
 /* int retail(void (^)(refers), address₋of refers first, address₋of 
  refers last) */
 
-int retail(void (^ ᐧ)(struct dynamic₋bag * ᐧ ), struct dynamic₋bag₋cons * ᐧ 
+int retail(void (^ ᐧ)(bagref ᐧ ), struct dynamic₋bag₋cons * ᐧ 
  * ᐧ /* ᐝ */, struct dynamic₋bag₋cons * ᐧ * ᐧ /* ᐝ */);
 
-int retail(void (^section)(struct dynamic₋bag * material), struct 
- dynamic₋bag₋cons ** first, struct dynamic₋bag₋cons ** last)
+int retail(void (^section)(bagref material), consref * first, consref * last)
 { int bag₋size = sizeof(struct dynamic₋bag), 
     cons₋size = sizeof(struct dynamic₋bag₋cons);
    consref cell = (consref)Heap₋alloc(cons₋size);
@@ -430,6 +436,23 @@ int retail(void (^section)(struct dynamic₋bag * material), struct
    if (*first == 0) *first=cell;
    return 0;
 } /*  a․𝘬․a 'append₋at₋end'. */
+
+void recollect(void (^material)(bagref,int), consref first)
+{ consref select = first; int index=0;
+again:
+   if (select == 0) goto unagain;
+   material(select->item,index);
+   select = select->nxt.next;
+   index+=1; goto again;
+unagain:
+   return;
+}
+
+int elem₋count(consref first)
+{ int 𝑓𝑙𝑢𝑐𝑡𝑢𝑎𝑛𝑡 cnt=0;
+   recollect(^(bagref,int) { cnt+=1; },first);
+   return cnt;
+}
 
 struct dynamic₋bag * summary₋groundfold;
 
