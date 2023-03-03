@@ -192,6 +192,18 @@ end-of-file
 
  **/
 
+enum language₋mode { mode₋inexplanatoria, mode₋initial, mode₋integer, 
+ mode₋fraction, mode₋regular, mode₋text, mode₋single₋ekunem, 
+ mode₋multi₋ekunem };
+
+#include "Ω⃝-translate-formal.cxx"
+
+struct language₋context {
+  __builtin_int_t tip₋unicode;
+  enum language₋mode state;
+  Trie keys;
+};
+
 struct token₋detail {
   union {
     __builtin_int_t machine;
@@ -199,55 +211,56 @@ struct token₋detail {
     Nonabsolute identifier;
   } material;
   int32_t kind;
-  __builtin_int_t lineno₋first,lineno₋last,column₋first,column₋last;
+  __builtin_int_t lineno₋first,lineno₋last,
+   column₋first,column₋last;
 };
 
-enum language₋mode { mode₋inexplanatoria, mode₋initial, mode₋integer, 
- mode₋fraction, mode₋regular, mode₋text, mode₋single₋ekunem, mode₋multi₋ekunem };
 
-struct language₋context {
-  struct Unicodes text;
-  __builtin_int_t tip₋unicode;
-  enum language₋mode state;
-};
+struct Unicodes text₋program; struct language₋context Ctxt;
 
-Trie keyword₋set; /* the preprocessor, keywords and the operations for one selected processor. */
-
-struct language₋context l₋ctxt;
-
-typedef struct Symbolinterval { short symbols; char32̄_t * start; } Symbolinterval;
-
-typedef struct Symbol { enum symbol₋class item; struct token₋detail gritty; } Symbol;
+typedef struct Symbol { enum symbol₋class class; struct token₋detail gritty; } Symbol;
 
 #define STATE(s) (s == ctxt->state)
 
 int inner₋next₋symbol(struct language₋context * ctxt)
-{ char32̄_t uc₊₁,uc,uc₊₂; int lift₋count=0; __builtin_int_t idx,symbols=ctxt->text.tetras;
+{ char32̄_t uc₊₁,uc,uc₊₂; int lift₋count=0; 
+   __builtin_int_t i,symbols=text₋program.tetras;
    typedef int (^non₋coalescent)(char32̄_t uc);
    non₋coalescent digit = ^(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; };
-   non₋coalescent letter = ^(char32̄_t uc) { return U'A' <= uc && uc <= U'Z' || (U'a' <= uc && uc <= U'z'); };
-   non₋coalescent miscella₋augment = ^(char32̄_t uc) { return uc == U'₋' || 
+   non₋coalescent arabic = ^(char32̄_t uc) { return U'A' <= uc && uc <= U'Z' || 
+    (U'a' <= uc && uc <= U'z'); };
+   non₋coalescent miscella = ^(char32̄_t uc) { return uc == U'₋' || 
     uc == U'ᵦ' || uc == U'ƒ' || uc == U'﹟' || uc == U'■' || uc == U'□' || 
-    uc == U'º' /* ⌥ + '0' */ || uc == U'ª' /* ⌥ + '9' */ || uc == U'⁻' || uc == U'⁺' || uc == U'⁽' || uc == U'⁾' || 
-    uc == U'⁄' || uc == U'₊' || uc == U'₍' || uc == U'₎' || uc == U'µ' || 
-    uc == U'√' || uc == U'∫' || uc == U'∂' || uc == U'–' || uc == U'𝐊'; };
-   non₋coalescent script = ^(char32̄_t uc) { return (U'⁰' <= uc && uc <= U'⁹') || (U'₀' <= uc && uc <= U'₉'); };
-   /* non₋coalescent indent = ^(char32̄_t uc) { return uc == U'↹' || uc == U'↩︎'; }; */ /* sort₋keyword₋array₋these₋days₋unalter and 'angāende sortering-sõkning utavarray med tvā processorer' */
-   non₋coalescent greek = ^(char32̄_t uc) { return (U'α' <= uc && uc <= U'ω') || (U'Α' <= uc && uc <= U'Ω'); };
+    uc == U'º' || uc == U'ª' || uc == U'⁻' || uc == U'⁺' || uc == U'⁽' || 
+    uc == U'⁾' || uc == U'⁄' || uc == U'₊' || uc == U'₍' || uc == U'₎' || 
+    uc == U'µ' || uc == U'√' || uc == U'∫' || uc == U'∂' || uc == U'–' || 
+    uc == U'𝐊'; };
+   non₋coalescent script = ^(char32̄_t uc) { return (U'⁰' <= uc && 
+    uc <= U'⁹') || (U'₀' <= uc && uc <= U'₉'); };
+   non₋coalescent greek = ^(char32̄_t uc) { return (U'α' <= uc && 
+    uc <= U'ω') || (U'Α' <= uc && uc <= U'Ω'); };
+   non₋coalescent letter = ^(char32̄_t uc) { return arabic(uc) || 
+    miscella(uc) || script(uc) || greek(uc); };
+ /* non₋coalescent indent = ^(char32̄_t uc) { return uc == U'↹' || uc == 
+     U'↩︎'; }; */
    🧵(identifier,trouble,completion) {
    case identifier: return 0;
    case completion: return 0;
    case trouble: return -1;
    }
 again:
-   
-   if (idx >= symbols) { confess(completion); }
-   if (idx == symbols - 1) { lift₋count=2; }
-   if (idx == symbols - 2) { lift₋count=1; }
+   i=ctxt->tip₋unicode,ctxt->tip₋unicode+=1;
+   if (i >= symbols) { confess(completion); }
+   if (i == symbols - 1) { lift₋count=2; }
+   if (i == symbols - 2) { lift₋count=1; }
+   uc = *(text₋program.unicodes + i);
+   uc₊₁ = lift₋count >= 2 ? U' ' : *(text₋program.unicodes + i + 1);
+   uc₊₂ = lift₋count >= 1 ? U' ' : *(text₋program.unicodes + i + 2);
    if (STATE(mode₋initial) && uc == U'\xa') { }
    else if (uc == U'?' && uc₊₁ == U'#') { ctxt->state = mode₋single₋ekunem; }
    else if (uc == U'#' && uc₊₁ == U'?') { ctxt->state = mode₋single₋ekunem; }
-   else if (miscella₋augment(uc) || script(uc) || greek(uc) || digit(uc) || letter(uc)) { confess(identifier); }
+   else if ((STATE(mode₋initial) && letter(uc)) || (STATE(mode₋regular) && 
+    (letter(uc) || digit(uc)))) { confess(identifier); }
    goto again;
 }
 
@@ -256,24 +269,19 @@ int next₋symbol(struct language₋context * ctxt)
    return 0;
 }
 
-typedef int64_t NoteReference; /* a․𝘬․a 'Note₋idx'. */
+typedef int64_t NoteIndex,ConsIndex; /* a․𝘬․a 'Note₋idx'. */
 
 struct note₋form {
-  struct note₋idx l,r,element;
-  struct notecons₋idx compare₋thenºªidx, 
-   compare₋elseºªidx,compare₋else₋next₋idx, 
-   compare₋else₋last₋idx;
+  NoteIndex l,r,element;
+  ConsIndex compare₋thenºª, 
+   compare₋elseºª,compare₋then₋last, 
+   compare₋else₋last;
 };
 
-partial struct not₋e {
+struct not₋e {
   struct token₋detail D;
   struct note₋form form;
   enum symbol₋class C;
-  struct not₋e *l,*r;
-};
-
-partial struct not₋e {
-
 };
 
 union amorph₋note { struct not₋e material; int32_t cons₋idx; };
@@ -291,15 +299,17 @@ int load₋cells(struct Unicodes filepath, struct not₋e * 🅵, struct collect
    return 0;
 }
 
-int retail(void (^ ᐧ)(struct not₋e * ᐧ), struct note₋cons *, struct 
+int retail(void (^)(struct not₋e *), struct 
  note₋cons ** first, struct note₋cons ** last)
 {
    return 0;
 }
 
-struct collection *notes₋ess,*identifiers,*text₋unicode,*text₋utf8;
+uint32_t mindful = 0x00000000;
 
-/* man har ett med oversikt och block just for den. */
+struct collection /* char8₋t * */ *callskip,*coroutskip,*brskip;
+
+struct collection *notes₋ess,*identifiers,*text₋unicode,*text₋utf8;
 
 struct collection /* char8₋t * */ filepaths;
 
@@ -321,7 +331,7 @@ int library₋alt₋executable = 0; /* library=1, executable=2. */
 
 int do₋not₋link = 0;  /*  only compile to assembly listing. Do not produce binary file. */
 
-int control₋branch; struct collection /* char8₋t * */ symbols₋uninstrumented;
+int control₋branch; struct collection /* char8₋t * */ symbols₋uninstrummed;
 /*  for automatic inclusion of 'vfprint' in source. */
 
 thesaurus₋ref modulename₋and₋filepaths;
@@ -362,7 +372,7 @@ int add₋runlink₋keywords()
     tertary32sym, tertary128sym, decimal128sym, binary128sym, unsignedsym, 
     schemasym, prominentsym, prominentsym, addressofsym, nonaltersym };
    int keyword₋count=sizeof(keyword₋texts)/sizeof(char32̄_t *);
-   merge₋to₋trie(keyword₋count,keyword₋texts,keyword₋constant,&keyword₋set);
+   merge₋to₋trie(keyword₋count,keyword₋texts,keyword₋constant,&Ctxt.keys);
    extern int arm₋keyword₋count(); extern char32̄_t ** arm₋keyword₋list(); 
     extern int * arm₋constant₋list();
    extern int intel₋keyword₋count(); extern char32̄_t ** intel₋keyword₋list(); 
@@ -374,16 +384,16 @@ int add₋runlink₋keywords()
    switch (platform₋chip)
    {
    case 1:
-     merge₋to₋trie(arm₋keyword₋count(),arm₋keyword₋list(),arm₋constant₋list(),&keyword₋set);
+     merge₋to₋trie(arm₋keyword₋count(),arm₋keyword₋list(),arm₋constant₋list(),&Ctxt.keys);
      break;
    case 2:
-     merge₋to₋trie(intel₋keyword₋count(),intel₋keyword₋list(),intel₋constant₋list(),&keyword₋set);
+     merge₋to₋trie(intel₋keyword₋count(),intel₋keyword₋list(),intel₋constant₋list(),&Ctxt.keys);
      break;
    case 3:
-     merge₋to₋trie(mips₋keyword₋count(),mips₋keyword₋list(),mips₋constant₋list(),&keyword₋set);
+     merge₋to₋trie(mips₋keyword₋count(),mips₋keyword₋list(),mips₋constant₋list(),&Ctxt.keys);
      break;
    case 4:
-     merge₋to₋trie(kirkbridge₋keyword₋count(),kirkbridge₋keyword₋list(),kirkbridge₋constant₋list(),&keyword₋set);
+     merge₋to₋trie(kirkbridge₋keyword₋count(),kirkbridge₋keyword₋list(),kirkbridge₋constant₋list(),&Ctxt.keys);
      break;
    }
    return 0;
@@ -397,13 +407,15 @@ int add₋runlink₋keywords()
 #include "╳-canoni-inclusion.cxx"
 #include "╳-art-linear-arm.cxx"
 #include <fcntl.h> /* the 'open' function. */
+#define _POSIX_C_SOURCE 202302L /* selects high-precision stat and a modern inode. */
 #include <sys/stat.h>
 #include <unistd.h>
+#include <string.h>
 
 int compile₋source₋files(int (*module₋compile)(struct Unicodes,char8₋t *))
 { int fd; struct stat sb; __builtin_int_t u8bytes,i=0; char8₋t * u8path,*u8text;
    __builtin_int_t count=collection₋count(&filepaths),tetras; char32̄_t * ucs=
-    l₋ctxt.text.unicodes; ssize_t actual;
+    text₋program.unicodes; ssize_t actual;
 again:
    if (i >= count) { goto unagain; }
    u8path = (char8₋t *)collection₋relative(i,&filepaths);
@@ -471,31 +483,76 @@ unagain:
 } /* yongest header (with included and diffused files) is older compared to 
  object file does not require compilation when ast is kept. */
 
-int IsFileSuffix(const char * suffix, char8₋t * one₋filepath)
-{ __builtin_int_t u8bytes=Utf8BytesUntilZero(one₋filepath,BUILTIN₋INT₋MAX);
-  char32̄_t ucs[4*u8bytes],uc; __builtin_int_t pathtetras;
-   if (Utf8ToUnicode(u8bytes,one₋filepath,ucs,&pathtetras)) { return 0; }
-   int suffix₋length=strlen(suffix),i=0,identic=1;
-   if (pathtetras < suffix₋length) { return false; } /* path shorter than suffix. */
-again:
-   if (i == suffix₋length) { return identic; } /* equal length. */
-   if (suffix₋length < pathtetras && i == suffix₋length) { return identic; } /* suffix shorter than path. */
-   uc = *(suffix + suffix₋length - i - 1);
-   if (ucs[i] != uc) { identic=0;  }
-   i+=1; goto again;
-} /* normalization and naturalization non-identic. */
+BITMASK(uint32_t) {
+  Mindful_Call      = 0x00000001,
+  Mindful_Return    = 0x00000002,
+  Mindful_Coroutine = 0x00000004,
+  Mindful_Branch    = 0x00000008,
+  Mindful_Overflow  = 0x00000010,
+  Mindful_Store     = 0x00000020,
+  Mindful_Load      = 0x00000040,
+  Mindful_Gate      = 0x00000080,
+};
 
-void keyput₋rewrite(char8₋t * utf8) { }
+Bitfield Mindful[] = {
+  { U"Mindful_Call", Mindful_Call, U"Emit log when calling function." },
+  { U"Mindful_Return", Mindful_Return, U"Emit log when returning from function call." },
+  { U"Mindful_Coroutine", Mindful_Coroutine, U"Emit log on yield/awake/return." },
+  { U"Mindful_Branch", Mindful_Branch, U"Emit log on 'compare' and 'if'." },
+  { U"Mindful_Overflow", Mindful_Overflow, U"Emit log when arithmetic overflow." },
+  { U"Mindful_Store", Mindful_Store, U"Write to log on memory write." },
+  { U"Mindful_Load", Mindful_Load, U"Log when memory is read." },
+  { U"Mindful_Gate", Mindful_Gate, U"Log when entering/exiting operating system gate." }
+};
+
+struct AnnotatedRegister AR_Mindful = {
+  U"Mindful: Command line options indicating selected logging.", 
+  8, Mindful, 0x00000000, 
+  U"footnote: mindful logging is writing to stderr using 'vfprint'."
+};
+
+
+
+void SetOrClear(int soc, uint32_t mask, uint32_t * word)
+{
+   if (f) *w |= mask; else *w &= ~mask;
+}
+
+int Masked(uint32_t mask, uint32_t word) { return mask & word; }
+
+void mindful_bitmap(char8₋t * token)
+{
+   if (strcmp(token, "call") == 0) { 
+     SetOrClear(1,Mindful_Call,&mindful); }
+   else if (strcmp(token, "return") == 0) { 
+     SetOrClear(1,Mindful_Return,&mindful); }
+   else if (strcmp(token, "coroutine") { 
+     SetOrClear(1,Mindful_Coroutine,&mindful); }
+}
+int IsFileSuffix(const char * suffix, char8₋t * one₋filepath)
+{
+   char * lastdot = strrchr((const char *)one₋filepath, '.');
+   if (lastdot == 0) return 0;
+   return strcmp(lastdot,suffix) == 0;
+}
 
 int option₋machine₋interprets(int argc, char8₋t ** argv)
-{ int i=1,y,output₋filepath=0,symbol₋exclude=0; char8₋t * token, *msg=U8("");
+{ int i=1,y,output₋filepath=0,control₋stream=0,symbol₋exclude=0,
+   mindful₋state=0,skipping₋state=0; char8₋t * token, *msg=U8("");
 again:
-   if (i>=argc) { goto unagain; }
+   if (i>=argc) goto unagain;
    token = *(argv + i);
-   keyput₋rewrite(token);
-   if (output₋filepath) { vfprint("output is ⬚\n",﹟s8(token)); outputfile₋path=token; output₋filepath=0; goto next; }
-   if (symbol₋exclude) { vfprint("control added to ⬚\n",﹟s8(token)); if (copy₋append₋items(1,token,&symbols₋uninstrumented,Alloc)) { goto generic₋error; } goto next; }
-   symbol₋exclude=0; goto next; }
+   if (output₋filepath) { vfprint("output is ⬚\n",﹟s8(token)); 
+    outputfile₋path=token; output₋filepath=0; goto next; }
+   if (symbol₋exclude) { vfprint("control added to ⬚\n",﹟s8(token)); if (
+    copy₋append₋items(1,token,&symbols₋uninstrummed,Alloc)) { 
+      goto generic₋error; } symbol₋exclude=0; goto next; }
+   if (control₋stream) { vfprint("control₋stream gets ⬚\n",﹟s8(token));
+    control₋stream=0; goto next; }
+   if (mindful₋state) { vfprint("mindful₋state gets ⬚\n",﹟s8(token)); 
+    mindful_bitmap(token); mindful₋state=0; goto next; }
+   if (skipping₋state) { vfprint("skipping₋state gets ⬚\n",﹟s8(token)); 
+    skipping₋state=0; goto next; }
    y = IsPrefixOrEqual((const char *)token,"-v");
    if (y == 0) { salutant=true; goto next; }
    y = IsPrefixOrEqual((const char *)token,"-h");
@@ -506,6 +563,10 @@ again:
    if (y == 0) { control₋stream=true; goto next; }
    y = IsPrefixOrEqual((const char *)token,"-exclude");
    if (y == 0) { symbol₋exclude=1; }
+   y = IsPrefixOrEqual((const char *)token,"-mindful");
+   if (y == 0) { mindful₋state=1; }
+   y = IsPrefixOrEqual((const char *)token,"-skip");
+   if (y == 0) { skipping₋state=1; }
    y = IsPrefixOrEqual((const char *)token,"-library");
    if (y == 0) { library₋alt₋executable=1; goto next; }
    y = IsPrefixOrEqual((const char *)token,"-deliverable");
@@ -518,9 +579,12 @@ again:
    if (y == 0) { platform₋chip=3; goto next; }
    y = IsPrefixOrEqual((const char *)token,"-arm-mac");
    if (y == 0) { platform₋chip=1; goto next; }
-   if (IsFileSuffix(".detail",token)) { if (copy₋append₋items(1,token,&filepaths,Alloc)) { goto generic₋error; } goto next; }
-   if (IsFileSuffix(".modulemap",token)) { if (copy₋append₋items(1,token,&modulemap₋files,Alloc)) { goto generic₋error; } goto next; }
-   if (IsFileSuffix(".modules",token)) { if (copy₋append₋items(1,token,&modules₋files,Alloc)) { goto generic₋error; } goto next; }
+   if (IsFileSuffix(".detail",token)) { if (copy₋append₋items(1,token,
+    &filepaths,Alloc)) { goto generic₋error; } goto next; }
+   if (IsFileSuffix(".modulemap",token)) { if (copy₋append₋items(1,token,
+    &modulemap₋files,Alloc)) { goto generic₋error; } goto next; }
+   if (IsFileSuffix(".modules",token)) { if (copy₋append₋items(1,token,
+    &modules₋files,Alloc)) { goto generic₋error; } goto next; }
    goto generic₋error;
 next:
    i+=1; goto again;
@@ -528,10 +592,11 @@ descriptive₋error:
    vfprint("Command-line interpretation error '⬚'\n",﹟s8(msg));
    return -1;
 generic₋error:
-   vfprint("Abridged command-line interpretation error\n"); /* Summary-general */
+   vfprint("General command-line interpretation error\n"); /*  summary-abridged. */
    return -1;
 unagain:
-   if (output₋filepath) { msg=U8("no output filepath given"); goto descriptive₋error; }
+   if (output₋filepath) { msg=U8("no output filepath given"); 
+    goto descriptive₋error; }
    return 0;
 }
 
@@ -545,7 +610,7 @@ void help()
 " -T  incorporate instrumentation with deliverable.\n"
 " -exclude <symbol>  when '-T', unincorporate instrumentation from symbol.\n"
 " -mindful call|coroutine|branch|overflow|store|load|gate  enable flow trace.\n"
-" -skip call <function name>  omit/lollop indicated symbol from flow trace.\n "
+" -skip call <function name>  lollop/omit indicated symbol from flow trace.\n "
 " -library  build library and not executable.\n"
 " -deliverable  build not library but executable.\n"
 " -put <path and .asm file>  indicate location for intermediate.\n" /* .cumpani alternatively a.out alternatively 'ess-pe'. */
@@ -571,15 +636,15 @@ main(
   const char * argv[]
 )
 {
-   if (collection₋init(sizeof(char8₋t *),4096,&filepaths)) { exit(1); }
-   if (collection₋init(sizeof(char8₋t *),4096,&modulemap₋files)) { exit(1); }
-   if (collection₋init(sizeof(char8₋t *),4096,&modules₋files)) { exit(1); }
-   if (collection₋init(sizeof(char8₋t *),4096,&symbols₋uninstrumented)) { exit(1); }
-   if (option₋machine₋interprets(argc,(char8₋t **)argv)) { exit(2); }
-   if (salutant) { greeting(); }
+   if (collection₋init(sizeof(char8₋t *),4096,&filepaths)) exit(1);
+   if (collection₋init(sizeof(char8₋t *),4096,&modulemap₋files)) exit(1);
+   if (collection₋init(sizeof(char8₋t *),4096,&modules₋files)) exit(1);
+   if (collection₋init(sizeof(char8₋t *),4096,&symbols₋uninstrummed)) exit(1);
+   if (option₋machine₋interprets(argc,(char8₋t **)argv)) exit(2);
+   if (salutant) greeting();
    if (procuratio) { help(); exit(3); }
-   if (add₋runlink₋keywords()) { exit(4); }
-   if (compile₋source₋files(compile₋source₋module)) { exit(5); }
+   if (add₋runlink₋keywords()) exit(4);
+   if (compile₋source₋files(compile₋source₋module)) exit(5);
    return 0;
 } /*  must create two binaries 'ferry' and 'toooth'. (Code and documntation.) */
 
