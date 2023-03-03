@@ -732,38 +732,6 @@ void program(void)
    next₋token(&Ctxt); block(); valid(2,eot₋and₋file,"incorrect signature");
 }
 
-BITMASK(uint32_t) {
-  Mindful_Call      = 0x00000001,
-  Mindful_Return    = 0x00000002,
-  Mindful_Coroutine = 0x00000004,
-  Mindful_Branch    = 0x00000008,
-  Mindful_Overflow  = 0x00000010,
-  Mindful_Store     = 0x00000020,
-  Mindful_Load      = 0x00000040,
-  Mindful_Gate      = 0x00000080,
-};
-
-Bitfield Mindful[] = {
-  { U"Mindful_Call", Mindful_Call, U"Emit log when calling function." },
-  { U"Mindful_Return", Mindful_Return, U"Emit log when returning from function call." },
-  { U"Mindful_Coroutine", Mindful_Coroutine, U"Emit log on yield/awake/return." },
-  { U"Mindful_Branch", Mindful_Branch, U"Emit log on 'compare' and 'if'." },
-  { U"Mindful_Overflow", Mindful_Overflow, U"Emit log when arithmetic overflow." },
-  { U"Mindful_Store", Mindful_Store, U"Write to log on memory write." },
-  { U"Mindful_Load", Mindful_Load, U"Log when memory is read." },
-  { U"Mindful_Gate", Mindful_Gate, U"Log when entering/exiting operating system gate." }
-};
-
-struct AnnotatedRegister AR_Mindful = {
-  U"Mindful: Command line options indicating selected logging.", 
-  8, Mindful, 0x00000000, 
-  U"footnote: mindful logging is writing to stderr using 'vfprint'."
-};
-
-uint32_t mindful = 0x00000000;
-
-struct collection /* char8₋t * */ *callskip,*coroutskip,*brskip;
-
 /* -mindful call|coroutine|branch|overflow|store|load|gate */
 /* -skip call multiply */
 
