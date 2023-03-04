@@ -14,15 +14,21 @@ import Twinbeam;
 
 struct perform {
   int a,b,c;
-  LIST_ENTRY(perform) entries; /* instead of 'next'. */
+  STAILQ_ENTRY(perform) entries; /* instead of 'next'. */
 };
 
 struct assemblage {
-   LIST_HEAD(distinctives,perform) steps; /* actual double-linked list. */
+  STAILQ_HEAD(distinctive1,perform) steps; /* actual single-linked list. */
 }; 
 
+struct instruction {
+  int a,b,c;
+  TAILQ_ENTRY(instruction) entries;
+};
 
-struct disjucinct₋ops { };
+struct disjunct₋ops { 
+  TAILQ_HEAD(distinctive2,instruction) multiple; /* actual double-linked list. */
+};
 
 int Order(void (^out)(char32̄_t *, __builtin_int_t), char32̄_t * command, ...);
 
@@ -32,18 +38,18 @@ main(
   char * argv[]
 )
 {
-   struct assemblage wrench = LIST_HEAD_INITIALIZER(steps);
+   struct assemblage wrench = STAILQ_HEAD_INITIALIZER(wrench.steps);
    
-   LIST_INIT(&wrench.steps);
+   STAILQ_INIT(&wrench.steps);
    
-   struct perform * step₋head = malloc(sizeof(struct perform));
-   LIST_INSERT_HEAD(&wrench.steps,step₋head,entries);
+   struct perform * step₋one = malloc(sizeof(struct perform));
+   STAILQ_INSERT_HEAD(&wrench.steps,step₋one,entries);
    
-   struct perform * step₋item = malloc(sizeof(struct perform));
-   LIST_INSERT_AFTER(step₋head,step₋item,entries);
+   struct perform * step₋two = malloc(sizeof(struct perform));
+   STAILQ_INSERT_AFTER(&wrench.steps,step₋one,step₋two,entries);
    
    struct perform * np;
-   LIST_FOREACH(np,&wrench.steps,entries) {
+   STAILQ_FOREACH(np,&wrench.steps,entries) {
      print("element");
    }
 
@@ -51,7 +57,7 @@ main(
     print("response '⬚'.\n",﹟S(bytes,ucs)); }, U"ls -la '⬚' ", ﹟S(U"/"))) { return 1; } */
    
    return 0;
-} /* STAILQ_INSERT_TAIL(step_head,step_head,entries) and TAILQ prefix. */
+}
 
 /* clang -g -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules      \
  '∎|∎ eff.c' ../Apps/Source/Releases/libTwinbeam-x86_64.a */
