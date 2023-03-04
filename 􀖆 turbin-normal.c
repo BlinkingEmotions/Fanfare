@@ -1,4 +1,4 @@
-/*  turbin-normal | modellers' traveller companion. (CORP. EDITION.) */
+/*  turbin-normal.c | modellers' traveller companion. (CORP. EDITION.) */
 
 import Twinbeam; /*  he is sitting in a box 𝘦․𝘨 T-FOR-D and De-la-v-all. */
 
@@ -83,6 +83,11 @@ int Init₋translation₋unit(char8₋t * program, struct translation * t) ⓣ
    return 0;
 }
 
+#define STATE(s) (s == ctxt->state)
+#define TRACE₋TOKENS  /* while reading .streck and .table files, print-out tokens on stdout. */
+#define TRACE₋SYNTAX /* after parsing .streck files, print the indented syntax tree on stdout. */
+#define TRACE₋ENCODING /* after decoding utf-8 output the decoded Unicodes to stdout. */
+
 void Diagnos(int type, char8₋t * src₋path, struct source₋location * l, int bye, 
    const char * sevenbit₋utf8, ...)
 {  va_prologue(sevenbit₋utf8); ;
@@ -103,72 +108,46 @@ void Diagnos(int type, char8₋t * src₋path, struct source₋location * l, int
    if (bye) { exit(1); } else { error₋panel.diagnosis₋count += 1; }
 } /* type determines void, sevenbit text starts with 'info', 'warning', 'error', 'intern'. */
 
-#define STATE(s) (s == ctxt->state)
-#define TRACE₋TOKENS  /* while reading .streck and .table files, print-out tokens on stdout. */
-#define TRACE₋SYNTAX /* after parsing .streck files, print the indented syntax tree on stdout. */
-#define TRACE₋ENCODING /* after decoding utf-8 output the decoded Unicodes to stdout. */
-
-struct location { __builtin_int_t u8offset₋start,lineno₋first,lineno₋last, 
- first₋column,last₋column,ucs₋offset; char8₋t * source₋path; };
-
-typedef int (^type)(char32̄_t);
-type digit = ^(char32̄_t c) { return U'0' <= c && c <= U'9'; };
-type derender₋newline = ^(char32̄_t c) { return c == U'\xa'; };
-type newline = ^(char32̄_t c) { return derender₋newline(c) || c == U'\xd'; };
-type whitespace = ^(char32̄_t c) { return c == U' ' || U'\t' == c || newline(c); };
-type period = ^(char32̄_t c) { return c == U'.'; };
-#define STATE(s) (s == ctxt->state)
-#define NEXT(s) ctxt->state = s
-#define INTERVAL(l,u) { U##l, U##u }
-#define ALSO(c,UC) (c == UC)
-
-struct identifier₋interval { char32̄_t first,last; } sorted₋identifier₋also₁[] = 
-{
-  INTERVAL('⁰','⁹'), INTERVAL('₀','₉'), INTERVAL('\x0','\x0')
-};
-
-char32̄_t sorted₋identifier₋also₂[] = 
-{ U'ٖ', U'ᵢ',U'ᵣ',U'ᵤ',U'ᵥ',U'ᵦ',U'ᵧ',U'ᵨ',U'ᵩ',U'ᵪ', 
-  U'₊',U'₋',U'₌',U'₍',U'₎',U'⨧',U'ₐ',U'ₑ',U'ₒ',U'ₓ', 
-  U'ₔ',U'ⱼ',U'ₕ',U'ₖ',U'ₗ',U'ₘ',U'ₙ',U'ₚ',U'ₛ',U'ₜ', 0x0
-};
-
-int regular₋symbol(char32̄_t c)
-{ char32̄_t inclus; struct identifier₋interval interval; int i;
-   if ((c <= U'a' && c <= U'z') || (c <= U'A' && c <= U'Z')) return true;
-   if (digit(c)) return true;
-again₁:
-   interval = sorted₋identifier₋also₁[i];
-   if (interval.first == 0x0 && interval.last == 0x0) { goto again₂; }
-   if (interval.first <= c && c <= interval.last) return true;
-   i += 1; goto again₁;
-again₂:
-   i=0; inclus = sorted₋identifier₋also₂[i];
-   if (inclus == 0x0) goto unagain;
-   if (ALSO(c,sorted₋identifier₋also₂[i])) return true;
-   i += 1; goto again₂;
-unagain:
-   return false;
+void assign₋symbol(enum symbol₋class s, Symbol * sym, short count₋impression)
+{ sym->class=s;
+   if (count₋impression >= 2) Ctxt.tip₋unicode+=count₋impression-1;
+   location₋symbol(&Ctxt.interval,count₋impression,&sym->gritty.interval);
 }
 
-int identifier₋start₋symbol(char32̄_t uc) { return regular₋symbol(uc); }
-
-void print₋decoded₋text(struct Unicodes ucs)
-{ char32̄_t uc;
-   __builtin_int_t ext₋count=0,i=0;
+int special(char32̄_t uc)
+{ int i=0;
+   static char32̄_t sorted₋cases[] = {
+     U'ٖ', U'ᵢ',U'ᵣ',U'ᵤ',U'ᵥ',U'ᵦ',U'ᵧ',U'ᵨ',U'ᵩ',U'ᵪ', 
+     U'₊',U'₋',U'₌',U'₍',U'₎',U'⨧',U'ₐ',U'ₑ',U'ₒ',U'ₓ', 
+     U'ₔ',U'ⱼ',U'ₕ',U'ₖ',U'ₗ',U'ₘ',U'ₙ',U'ₚ',U'ₛ',U'ₜ' };
 again:
-   if (i >= ucs.tetras) { goto unagain; }
-   uc = *(i + ucs.unicodes);
-   print("U+");
-   Base𝕟((__builtin_uint_t)uc,16,4,^(char zero₋to₋nine) { 
-     print("⬚", ﹟c7(zero₋to₋nine));
-   });
-   if (uc & 0xffff0000) { ext₋count += 1; print("⌜"); } else { print(" "); }
+    if (i>=30) goto unagain
+    if (uc == sorted₋cases[i]) return true;
+    i+=1; goto again;
 unagain:
-   print("(ext₋count=⬚)\n", ﹟d(ext₋count));
-}
+    return false;
+};
 
-void append₋reference(void * pointer, struct collection * 🅰);
+int next₋token₋inner(struct language₋context * ctxt, Symbol * out)
+{
+   typedef int (^type)(char32̄_t);
+   type digit = ^(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; };
+   type arabic = ^(char32̄_t uc) { return (U'a' <= uc && uc <= U'z') || 
+    (U'A' <= uc && uc <= U'Z') || uc == U'₋'; };
+   type subscript = ^(char32̄_t uc) { return U'₀' <= uc && uc <= U'₉'; };
+   type superscript = ^(char32̄_t uc) { return U'⁰' <= uc && uc <= U'⁹'; };
+   type letter = ^(char32̄_t uc) { return arabic(uc) || subscript(uc); || 
+    superscript(uc) || special(uc); };
+
+   🧵(identifier,machine₋constant,fixpoint₋constant,keyword,trouble,completion,unicodes)
+   {
+   case completion: assign₋symbol(eot₋and₋file,out,0); return 0;
+   case trouble: print("trouble occurred at ⬚.\n", ﹟d(ctxt->tip₋unicode)); return -1;
+   }
+again:
+   i=ctxt->tip₋unicode; ctxt->tip₋unicode+=1;
+   if (i>=symbols) confess(completion)
+}
 
 #pragma recto outcome from reading events
 
