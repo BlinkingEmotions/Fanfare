@@ -60,16 +60,16 @@ struct token₋detail
 
 typedef struct Symbol { enum symbol₋class class; struct token₋detail gritty; } Symbol;
 
-struct translation {
+struct dynamic₋bag { };
+
+typedef struct translation {
   struct streck₋context ctxt;
   Symbol symbol₋passed,symbol,retrospect;
   struct collection *ident,*text;
   struct dynamic₋bag * bu₋fragment,*td₋tree;
-};
+} Translation;
 
-struct { __builtin_uint_t diagnosis₋count,bitmap; } error₋panel;
-
-int Init₋translation₋unit(char8₋t * program, struct translation * t) ⓣ
+int Init₋translation₋unit(char8₋t * program, Translation * t) ⓣ
 {
    t->ctxt.tip₋unicode=0;
    t->ctxt.state=mode₋initial;
@@ -80,8 +80,16 @@ int Init₋translation₋unit(char8₋t * program, struct translation * t) ⓣ
    t->ctxt.source₋path = program;
    location₋init(&t->ctxt.interval);
    t->symbol₋passed.class = unarbitrated₋symbol;
+   t->ident = Alloc(sizeof(struct collection));
+   if (init₋regularpool(t->ident)) return 1;
+   t->text = Alloc(sizeof(struct collection));
+   if (init₋regularpool(t->text)) return 1;
+   /* td₋tree = new₋Unit(); */
+   t->ctxt.program₋text = Run(U"2023-01-01 12:00:00 PRINT 'Starting simulation.'\n");
    return 0;
 }
+
+struct { __builtin_uint_t diagnosis₋count,bitmap; } error₋panel;
 
 #define STATE(s) (s == ctxt->state)
 #define TRACE₋TOKENS  /* while reading .streck and .table files, print-out tokens on stdout. */
@@ -108,12 +116,6 @@ void Diagnos(int type, char8₋t * src₋path, struct source₋location * l, int
    if (bye) { exit(1); } else { error₋panel.diagnosis₋count += 1; }
 } /* type determines void, sevenbit text starts with 'info', 'warning', 'error', 'intern'. */
 
-void assign₋symbol(enum symbol₋class s, Symbol * sym, short count₋impression)
-{ sym->class=s;
-   if (count₋impression >= 2) Ctxt.tip₋unicode+=count₋impression-1;
-   location₋symbol(&Ctxt.interval,count₋impression,&sym->gritty.interval);
-}
-
 int special(char32̄_t uc)
 { int i=0;
    static char32̄_t sorted₋cases[] = {
@@ -121,142 +123,88 @@ int special(char32̄_t uc)
      U'₊',U'₋',U'₌',U'₍',U'₎',U'⨧',U'ₐ',U'ₑ',U'ₒ',U'ₓ', 
      U'ₔ',U'ⱼ',U'ₕ',U'ₖ',U'ₗ',U'ₘ',U'ₙ',U'ₚ',U'ₛ',U'ₜ' };
 again:
-    if (i>=30) goto unagain
+    if (i>=30) goto unagain;
     if (uc == sorted₋cases[i]) return true;
     i+=1; goto again;
 unagain:
     return false;
 };
 
-int next₋token₋inner(struct language₋context * ctxt, Symbol * out)
-{
+void assign₋symbol(enum symbol₋class s, Symbol * sym, short count₋impression)
+{ sym->class=s;
+   if (count₋impression >= 2) Ctxt.tip₋unicode+=count₋impression-1;
+   location₋symbol(&Ctxt.interval,count₋impression,&sym->gritty.interval);
+}
+
+int next₋token₋inner(Translation * t, Symbol * out)
+{ __builtin_int_t i,symbols=t->ctxt.program₋text.tetras; char32̄_t uc,uc₊₁,uc₊2;
+    int lift₋count=0,sym;
    typedef int (^type)(char32̄_t);
    type digit = ^(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; };
    type arabic = ^(char32̄_t uc) { return (U'a' <= uc && uc <= U'z') || 
     (U'A' <= uc && uc <= U'Z') || uc == U'₋'; };
    type subscript = ^(char32̄_t uc) { return U'₀' <= uc && uc <= U'₉'; };
-   type superscript = ^(char32̄_t uc) { return U'⁰' <= uc && uc <= U'⁹'; };
-   type letter = ^(char32̄_t uc) { return arabic(uc) || subscript(uc); || 
-    superscript(uc) || special(uc); };
+   type supscript = ^(char32̄_t uc) { return U'⁰' <= uc && uc <= U'⁹'; };
+   type letter = ^(char32̄_t uc) { return arabic(uc) || subscript(uc) || 
+    supscript(uc) || special(uc); };
 
    🧵(identifier,machine₋constant,fixpoint₋constant,keyword,trouble,completion,unicodes)
    {
    case completion: assign₋symbol(eot₋and₋file,out,0); return 0;
-   case trouble: print("trouble occurred at ⬚.\n", ﹟d(ctxt->tip₋unicode)); return -1;
+   case trouble: print("trouble occurred at ⬚.\n", ﹟d(t->ctxt.tip₋unicode)); return -1;
    }
 again:
-   i=ctxt->tip₋unicode; ctxt->tip₋unicode+=1;
-   if (i>=symbols) confess(completion)
+   i=t->ctxt.tip₋unicode; t->ctxt.tip₋unicode+=1;
+   if (i>=symbols) confess(completion);
+   goto again;
 }
 
-#pragma recto outcome from reading events
+#pragma recto outcometh and abstract
 
-struct Expression; typedef struct Expression Expression;
-typedef struct { Expression *left,*right; } arithmetic₋add;
-typedef struct { Expression *left,*right; } arithmetic₋sub;
-typedef struct { Expression *left,*right; } arithmetic₋mul;
-/* typedef struct { Expression *actu; } arithmetic₋rec; */
-typedef struct { Expression *left,*right; } arithmetic₋div;
-typedef struct { Expression *left,*right; } arithmetic₋neg;
-typedef struct { __uint128_t token₋regular; } token;
-typedef struct { __uint128_t text₋token; } text₋literal;
-typedef struct { uint64_t bits; } 🅩₋literal;
-typedef struct { double figure; } 🅡₋literal;
-typedef struct { Expression * param; } string₋to₋🅽;
-typedef struct { Expression * param; } 🅩₋to₋🅡;
-union Arithmetics {
-  arithmetic₋add add;
-  arithmetic₋sub sub;
-  arithmetic₋mul mul;
-  arithmetic₋div div;
-  arithmetic₋neg neg;
-  🅩₋literal constant₁;
-  🅡₋literal constant₂;
-  text₋literal constant₃;
-  token regular;
-};
+typedef struct dynamic₋bag expression;
+typedef struct dynamic₋bag statement;
+typedef struct dynamic₋bag statements;
 
-typedef struct { Expression *left,*right; } logical₋or;
-typedef struct { Expression *left,*right; } logical₋and;
-typedef struct { Expression * actu; } logical₋not;
-union Proposionals {
-  logical₋or or;
-  logical₋and and;
-  logical₋not not;
-  union Arithmetics comput₋at;
-};
+struct sequence { chronology₋instant stamp; statements stmts; };
 
-struct Statement; typedef struct Statement Statement;
+typedef struct dynamic₋bag sequences;
 
-typedef struct collection /* __uint128_t */ formal₋arguments;
-typedef struct { __uint128_t regular₋ident; formal₋arguments list; int is₋procedure; 
- struct collection /* Statement * */ statements; } programming₋def;
-typedef struct { __uint128_t regular₋ident; Expression *expr,*unit; } programming₋let;
-typedef struct collection /* Expression * */ actual₋arguments;
-typedef struct { __uint128_t regular₋ident; actual₋arguments actuals; } programming₋call;
-typedef struct { Expression *condition; Statement *then, *optional₋else; } programming₋if;
-typedef struct { Expression * summar; } programming₋return;
-
-struct Expression { union Proposionals e; __builtin_int_t kind; struct location there; };
-
-union single₋statement {
-  programming₋def definition;
-  programming₋let let;
-  programming₋call call;
-  programming₋if compare;
-  programming₋return record;
-};
-
-struct Statement { union single₋statement stmt; __builtin_int_t kind; 
- struct location there; };
-
-struct Sequence { chronology₋instant instant; struct collection /* Statement * */ statements; };
-
-typedef struct collection /* Sequence * */ Sequences;
+/*  🅩₋literal, 🅡₋literal, string₋to₋🅽, 🅩₋to₋🅡 */
 
 #pragma recto parsing northern 'således' tran-sact-ions and veri-fi-c-at-es
 
 /* a․𝘬․a bokföringssed, custom and recollect. 𝘤𝘧․ anglo-saxian 'modelling', scandinavian 
  'nogsamhet' and 'likely-surely'. And a․𝘬․a 'table₋parser' and terminals-and-nonterminals․ */
 
-/* gama en-gāng a-tõf och i-0- fõrdelningar och avsaknad licersresonemang och liten stil uttrykt givare utav fõrvārvet. */
-
-struct virtu₋context { Sequences program; chronology₋instant last; };
-
-int Apparatus(struct virtu₋context * ctxt) ⓣ
+typedef struct virtu₋context
 {
-  if (collection₋init(sizeof(struct Sequences *),4096,&ctxt->program)) { return -1; }
-  return 0;
-}
+  sequences program;
+  chronology₋instant last;
+} simul₋context;
 
-int Deinit₋context(struct virtu₋context * ctxt) ⓣ { return 0; }
+extern int BsimParse(struct language₋context * ctxt, simul₋context * ctxt₋out);
 
-extern int BsimParse(struct language₋context * ctxt, struct virtu₋context * 
- ctxt₋out);
-extern void tokenize₋streck(struct language₋context * ctxt);
-extern char * tokenname(int token);
-
-#include "ⓔ-Frontend.cxx"
+/* #include "ⓔ-Frontend.cxx" */
 
 #pragma recto stochastic and deterministic simulation
 
 /* #include <Additions/History.h> */ typedef struct History { } History;
 
-fostrat₋defi Simulator { History history; version₋ts revision; } Simulator;
+typedef struct Simulator { History history; version₋ts revision; } Simulator;
 
 extern void EnterInteractiveMode(Simulator * 🅢);
 extern int Simulate(struct virtu₋context * 🆂, Simulator * 🅢);
 /* extern int Zebra(int count, chronology₋instant toggles[], chronology₋instant now, double * out);
   sometime uniform and normal not same time. */
 
-#include "ⓔ-Simulator.cxx"
+/* #include "ⓔ-Simulator.cxx" */
 
 #pragma recto computation two tables 'annual return' and 'profit and loss'
 
 extern int Rendertable(struct language₋context * ctxt, History * history, 
  struct Unicodes computation₋program, chronology₋instant when);
 
-#include "ⓔ-table-grammar.cxx"
+/* #include "ⓔ-table.cxx" */
 
 #pragma recto command line (zsh compsys and Minimum completion)
 
@@ -285,7 +233,7 @@ int interactive=0;  /*  end with bye when file is read and report is written. */
 
 int read₋until₋row=0;  /*  parse-interpret only start of file. */
 
-Casette filepaths₋sequence; /* with 'char8-t *' pointing on the .event files from command-line. */
+struct collection filepaths₋sequence; /* with 'char8-t *' pointing on the .event files from command-line. */
 
 unicode₋shatter figures, rules;  /*  unicodes with program text. */
 
@@ -330,7 +278,7 @@ next:
 descriptive₋error:
    vfprint("Command-line interpretation error '⬚'\n",﹟s8(msg));
 unagain:
-   if (figures₋option) { msg=U("no figures file given"); goto descriptive₋error; }
+   if (figures₋option) { msg=U8("no figures file given"); goto descriptive₋error; }
    if (rule₋option) { msg=U8("no rule file given"); goto descriptive₋error; }
    return 0;
 } /* todo: add -first 2023-01-01 12:12:12 and -last 2023-12-22 00:00:00. */
@@ -360,6 +308,7 @@ unicode₋shatter ᐝ open₋and₋decode(char8₋t * textfile, int expand₋til
    if (Utf8ToUnicode(1+u8bytes,material,text,&symbols)) { *err=8; return ΨΛΩ; }
 #if defined TRACE₋ENCODING
    struct Unicodes debug₋text = { symbols, text };
+   EXT₋C void print₋decoded₋text(struct Unicodes);
    print₋decoded₋text(debug₋text);
 #endif
    return text;
@@ -402,8 +351,8 @@ main(
   const char * argv[]
 )
 { Simulator sim; unicode₋shatter events;
-   struct language₋context streck₋ctxt;
-    struct virtu₋context machine₋ctxt;
+   struct streck₋context source₋ctxt;
+    simul₋context machine₋ctxt;
     error₋panel.diagnosis₋count = 0;
     Apparatus(&machine₋ctxt);
     if (collection₋init(sizeof(char8₋t *),4096,&filepaths₋sequence)) { exit(1); }
@@ -416,7 +365,7 @@ main(
     } __builtin_int_t idx=0,fd,symbols; char8₋t * file₋ref; int err;
     
     if (rule₋path) {
-      if (Prepared(rule₋path,&streck₋ctxt)) { exit(4); }
+      if (Prepared(rule₋path,&source₋ctxt)) { exit(4); }
       symbols = Heap₋object₋size(rules);
       struct Unicodes program = { symbols, rules };
       streck₋ctxt.text₋program = program;
