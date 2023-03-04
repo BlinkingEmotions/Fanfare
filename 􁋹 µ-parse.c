@@ -21,7 +21,8 @@ enum symbol₋class { ident=1, number, times, divide, plus, minus, lparen,
  formalparamsym };
 
 enum language₋mode { mode₋initial, mode₋integer, mode₋regular, 
- mode₋fixpoint, mode₋quotes₋text, mode₋collection };
+ mode₋fraction, mode₋quotes₋text, mode₋multi₋ekunem, 
+ mode₋single₋ekunem };
 
 #include "Ω⃝-translate-formal.cxx" /* defines 'source₋location'. */
 
@@ -210,6 +211,10 @@ again:
    /* else if (STATE(mode₋initial) && UC == U'\x----') { assign₋SYMBOL(symbol₋for₋popovertext); } ⁄* multiple-line material rendered as popover inside editor at hoover. */
    /* \later 'text-block rendition-interpretation and painters-knife' (\see 77995 Sat, 18 Feb 2023 05:25). ⌥ + '-' is '–' and ⌥ + shift + '-' is '—'. */
    ELIF₋INIT₋WITH₋ONE(U'\x2405') { assign₋symbol(symbol₋for₋enquery,out,1); RET } /* toggle fold/unfold at double-click. */
+   else if (STATE(mode₋single₋ekunem) && uc == '\xa') { ctxt->state=mode₋initial; }
+   else if (STATE(mode₋multi₋ekunem) && uc == U'*' && uc₊₁ == U'/') { ctxt->state=mode₋initial; }
+   else if (STATE(mode₋initial) && uc == U'/' && uc₊₁ == U'*') { ctxt->state=mode₋multi₋ekunem; }
+   else if (STATE(mode₋initial) && uc == U'/' && uc₊₁ == U'/') { ctxt->state=mode₋single₋ekunem; }
    else if (STATE(mode₋initial) && uc == U'"') {
      ctxt->reference₋quoted = collection₋count(text₋unicode);
      ctxt->syms₋in₋quotes=0;
@@ -224,7 +229,7 @@ again:
        if (copy₋append₋onto₋regular(text₋unicode,1,&uc,Alloc,&ctxt->reference₋quoted)) confess(trouble);
      }
    }
-   else if (STATE(mode₋fixpoint) && digit(uc)) {
+   else if (STATE(mode₋fraction) && digit(uc)) {
      ctxt->zero₋to₋nines[ctxt->syms₋in₋fraction] = uc;
      ctxt->syms₋in₋fraction+=1;
      if (!digit(uc₊₁)) confess(fixpoint₋constant);
@@ -244,7 +249,7 @@ again:
      ctxt->ongoing₋number+=(uc - U'0');
      ctxt->syms₋in₋number+=1;
      ctxt->state = mode₋integer;
-     if (uc₊₁ == U'.') { ctxt->state = mode₋fixpoint; ctxt->tip₋unicode+=1; }
+     if (uc₊₁ == U'.') { ctxt->state = mode₋fraction; ctxt->tip₋unicode+=1; }
      else if (!digit(uc₊₁)) confess(machine₋constant);
    } /* else if mode₋fixpoint \also in --<􀥳 lingustics-epi.c>{array buffer the}. */
      /* @= #include "u-arithmetic.cxx" */ /* if (x==0) @<array buffer the@> */
@@ -284,7 +289,10 @@ void next₋token(struct language₋context * ctxt)
    ﹟d(interval.lineno₋first), ﹟d(interval.lineno₋last)); };
   switch (symbol.class) {
   case ident: fier("identifier"); break;
-  case number: mber("integer-constant"); break; /* for later 'fixpoint-constant'. */
+  case number: 
+   if (symbol.gritty.kind == 3) mber("integer-constant"); 
+   else if (symbol.gritty.kind == 2) mber("fixpoint-constant");
+   break;
   case lparen: token("'('"); break;
   case rparen: token("')'"); break;
   case times: token("'*'"); break;
