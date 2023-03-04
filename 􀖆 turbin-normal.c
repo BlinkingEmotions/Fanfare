@@ -2,72 +2,74 @@
 
 import Twinbeam; /*  he is sitting in a box 𝘦․𝘨 T-FOR-D and De-la-v-all. */
 
-/* ./retro-mac.sh reconnaissance-turbin to compile. */
+enum symbol₋class { ident=1, machine, monetary, times, divide, plus, minus, 
+ lparen, rparen, eqltwo, neg, lss, leq, gtr, geq, eqlone,
+ functionsym, instant, bookkeepsym, debetsym, creditsym, commentsym, varsym, 
+ printsym, breaksym, setsym, returnsym, dosym, ifsym, thensym, elsesym, 
+ endsym, beforesym, andsym, orsym, notsym, xorsym, entitysym, accountsym, 
+ tablesym, fromsym, createsym, namedsym, tradingsym, residentsym, withsym, 
+ schedulesym, startingsym, occurringsym, exchangesym, currencysym, lbracksym, 
+ rbracksym, popsym, swapsym, dupsym, reportsym, boldsym, eot₋and₋file 
+};
+
+/* compile with ./retro-mac.sh essence-turbin */
+
+enum language₋mode {
+  mode₋initial, mode₋integer, mode₋regular, mode₋fraction, 
+  mode₋singleline₋comment, mode₋multiline₋comment, 
+  mode₋quotes₋text 
+};
 
 typedef int64_t     Integer;
 typedef Sequenta    Real; /*  here we attempt base two and ten hardware 
  Ieee754 and software arithmetics. */
 
-/* #define TRACE₋TOKENS  while reading .streck and .table files, print-out token on stdout. */
-#define TRACE₋ENCODING /* after decoding utf-8 output the decoded Unicodes to stdout. */
-#define TRACE₋SYNTAX /* after parsing .streck files, print the indented syntax tree on stdout. */
+#include "Ω⃝-translate-formal.cxx"
 
-enum /* common language */ {
-  END₋OF₋TRANSMISSION, QUOTED₋TEXT, PLUS_SYMBOL, MINUS_SYMBOL, MULT_SYMBOL, 
-  DIV_SYMBOL, SEPARATING₋END₋OF₋LINE
-};
-
-enum /* streck language */ {
-  REGULAR=100, MONETARY, FUNCTION_KEYWORD, INSTANT, 
-  BOOKKEEP_KEYWORD, DEBET_KEYWORD, CREDIT_KEYWORD, COMMENT_KEYWORD, 
-  VAR_KEYWORD, PRINT_KEYWORD, BREAK_KEYWORD, SET_KEYWORD, RETURN_KEYWORD, 
-  DO_KEYWORD, IF_KEYWORD, THEN_KEYWORD, ELSE_KEYWORD, END_KEYWORD, 
-  BEFORE_KEYWORD, AND_SYMBOLS, OR_SYMBOLS, NOT_SYMBOL, XOR_SYMBOL, 
-  ENTITY_KEYWORD, ACCOUNT_KEYWORD, TABLE_KEYWORD, DISPLAY_KEYWORD, 
-  FROM_KEYWORD, CREATE_KEYWORD, NAMED_KEYWORD, TRADING_KEYWORD, IN_KEYWORD, 
-  RESIDENT_KEYWORD, WITH_KEYWORD, IS_KEYWORD, TO_KEYWORD, SCHEDULE_KEYWORD, 
-  STARTING_KEYWORD, OCCURING_KEYWORD, ENDING_KEYWORD, DROP₋SCHEDULE_KEYWORD, 
-  EXCHANGE_KEYWORD, RATE_KEYWORD, CURRENCY_KEYWORD, LEFT₋BRACKET, 
-  RIGHT₋BRACKET, PERIOD₋SYMBOL, LEFT₋PAREN, RIGHT₋PAREN, LEQ₋SYMBOLS, 
-  GEQ₋SYMBOLS, LT₋SYMBOL, GT₋SYMBOL, EQUAL₋SYMBOL, SEMICOLON₋SYMBOL
-};
-
-enum /* table language */ {
-  POP_KEYWORD=1000, SWAP_KEYWORD, DUP_KEYWORD, 
-  REPORT_KEYWORD, BOLD_KEYWORD, report, opt₋bold
-};
-
-enum Scanner₋mode {
-  mode₋initial, singline₋comment, multiline₋comment, quoted₋text
-};
-
-struct language₋context
+struct streck₋context
 {
-  enum Scanner₋mode state; int negative;
-  __builtin_int_t symbols₋in₋regular,symbols₋in₋frac;
-  __builtin_int_t tip₋unicode,lineno₋first, 
-   lineno₋last,column₋first,column₋last;
-  struct sequent ongoing₋real;
-  struct Unicodes text₋program;
+  __builtin_int_t tip₋unicode;
+  enum language₋mode state; 
+  char32̄_t regular[2048];
+  double ongoing₋number;
+  short zero₋to₋nines[100];
+  Nonabsolute reference₋quoted;
+  short syms₋in₋regular;
+  short syms₋in₋number;
+  short syms₋in₋fraction;
+  short syms₋in₋quotes;
+  struct source₋location interval;
+  struct Unicodes program₋text;
   char8₋t * source₋path;
-} Ctxt; /*  a․𝘬․a 'verificate₋parser and token-i-sa-tio-n. */
-
-union token₋store
-{
-  struct Unicodes regular₋ident;
-  double figure₋1;
-  int64_t figure₋2;
-};
+  Trie keys;
+  int negative;
+} Ctxt; /*  a․𝘬․a 'verificate₋parser and token-i-sa-tio-n. language and code library is exercised in a separate language for auctions and the agreement. */
 
 struct token₋detail
 {
-  union token₋store store;
-  int kind,token;
-  __builtin_int_t lineno₋first,column₋first,column₋last,lineno₋last;
+  union { 
+    Nonabsolute regular;
+    double number;
+    __builtin_int_t integer;
+  } store;
+  int kind;
+  struct source₋location interval;
   struct language₋context * predecessor₋src;
 };
 
-struct translation₋context { struct token₋detail primary₋piece, lookahead /*, reminicent₋plan, distant */; };
+typedef struct Symbol { enum symbol₋class class; struct token₋detail gritty; } Symbol;
+
+struct translation {
+  struct streck₋context ctxt;
+  Symbol symbol₋passed, symbol,retrospect;
+  struct token₋detail primary₋piece, lookahead;
+};
+
+#define STATE(s) (s == ctxt->state)
+#define TRACE₋TOKENS  /* while reading .streck and .table files, print-out tokens on stdout. */
+#define TRACE₋SYNTAX /* after parsing .streck files, print the indented syntax tree on stdout. */
+#define TRACE₋ENCODING /* after decoding utf-8 output the decoded Unicodes to stdout. */
+
 
 struct { __builtin_uint_t diagnosis₋count,bitmap; } error₋panel;
 
@@ -249,6 +251,8 @@ typedef struct collection /* Sequence * */ Sequences;
 /* a․𝘬․a bokföringssed, custom and recollect. 𝘤𝘧․ anglo-saxian 'modelling', scandinavian 
  'nogsamhet' and 'likely-surely'. And a․𝘬․a 'table₋parser' and terminals-and-nonterminals․ */
 
+/* gama en-gāng a-tõf och i-0- fõrdelningar och avsaknad licersresonemang och liten stil uttrykt givare utav fõrvārvet. */
+
 struct virtu₋context { Sequences program; chronology₋instant last; };
 
 int Apparatus(struct virtu₋context * ctxt) ⓣ
@@ -329,34 +333,39 @@ void append₋reference(void * pointer, struct collection * 🅰)
 }
 
 int option₋machine₋interprets(int argc, char8₋t *ᐧ* argv)
-{ int i=0,y,figures₋option=0,rule₋option=0,only₋until₋row=0; char8₋t * token;
+{ int i=0,y,figures₋option=0,rule₋option=0,only₋until₋row=0; 
+   char8₋t * token, *msg=U8("");
 again:
    if (i>=argc) { goto unagain; }
-   token = (char8₋t *)*(argv + i);
+   token = *(argv + i);
    if (figures₋option) { figures₋path=token; figures₋option=0; goto next; }
    if (rule₋option) { rule₋path=token; rule₋option=0; goto next; }
    if (only₋until₋row) { read₋until₋row=atoi((char *)token); only₋until₋row=0; goto next; }
-   y = IsPrefixOrEqual((const char *)token, (const char *)"-h");
+   y = IsPrefixOrEqual((const char *)token,"-h");
    if (y == 0) { vfprint("Usage ⬚ [-f <figures.table file>] [-r <business.rule file>] [-g] [-l] " 
     "<event file>\n", ﹟s8(argv[0])); exit(2); }
-   y = IsPrefixOrEqual((const char *)token, (const char *)"-f");
+   y = IsPrefixOrEqual((const char *)token,"-f");
    if (y == 0) { figures₋option=1; goto next; }
-   y = IsPrefixOrEqual((const char *)token, (const char *)"-r");
+   y = IsPrefixOrEqual((const char *)token,"-r");
    if (y == 0) { rule₋option=1; goto next; }
-   y = IsPrefixOrEqual((const char *)token, (const char *)"-g");
+   y = IsPrefixOrEqual((const char *)token,"-g");
    if (y == 0) { interactive=1; goto next; }
-   y = IsPrefixOrEqual((const char *)token, (const char *)"-v");
+   y = IsPrefixOrEqual((const char *)token,"-v");
    if (y == 0) { vfprint("⬚ version ⬚\n", argv[0], "0x" QUOTE(SHA1GIT)); goto next; }
-   y = IsPrefixOrEqual((const char *)token, (const char *)"-l"); /* rows to process. */
+   y = IsPrefixOrEqual((const char *)token,"-l"); /* rows to process. */
    if (y == 0) { only₋until₋row=1; goto next; }
-   y = IsPrefixOrEqual((const char *)token, (const char *)"-");
+   y = IsPrefixOrEqual((const char *)token,"-");
    if (y > 0) { vfprint("Unknown command-line argument\n"); exit(3); }
    append₋reference(token,&filepaths₋sequence);
 next:
    i+=1; goto again;
+descriptive₋error:
+   vfprint("Command-line interpretation error '⬚'\n",﹟s8(msg));
 unagain:
+   if (figures₋option) { msg=U("no figures file given"); goto descriptive₋error; }
+   if (rule₋option) { msg=U8("no rule file given"); goto descriptive₋error; }
    return 0;
-}
+} /* todo: add -first 2023-01-01 12:12:12 and -last 2023-12-22 00:00:00. */
 
 unicode₋shatter ᐝ open₋and₋decode(char8₋t * textfile, int expand₋tilde, int * err)
 {
@@ -430,20 +439,20 @@ main(
     error₋panel.diagnosis₋count = 0;
     Apparatus(&machine₋ctxt);
     if (collection₋init(sizeof(char8₋t *),4096,&filepaths₋sequence)) { exit(1); }
-    option₋machine₋interprets(argc,(char8₋t *ᐧ*)argv);
+    if (option₋machine₋interprets(argc,(char8₋t *ᐧ*)argv)) { exit(2); }
     if (figures₋path) { branch₋figures₋file(); } /*  optional. */
     if (rule₋path) { branch₋rule₋file(); }/*  optional and upper half of event file. */
     if (collection₋count(&filepaths₋sequence) == 0)
     {
-      vfprint("No event file given at command line.\n"); exit(2);
+      vfprint("No event file given at command line.\n"); exit(3);
     } __builtin_int_t idx=0,fd,symbols; char8₋t * file₋ref; int err;
     
     if (rule₋path) {
-      if (Prepared(rule₋path,&streck₋ctxt)) { exit(10); }
+      if (Prepared(rule₋path,&streck₋ctxt)) { exit(4); }
       symbols = Heap₋object₋size(rules);
       struct Unicodes program = { symbols, rules };
       streck₋ctxt.text₋program = program;
-      if (BsimParse(&streck₋ctxt,&machine₋ctxt)) { exit(12); }
+      if (BsimParse(&streck₋ctxt,&machine₋ctxt)) { exit(5); }
     }
     
 again:
@@ -454,25 +463,25 @@ again:
     symbols = Heap₋object₋size(events);
     struct Unicodes program = { symbols, events };
     streck₋ctxt.text₋program = program;
-    if (Prepared(file₋ref,&streck₋ctxt)) { exit(10); }
+    if (Prepared(file₋ref,&streck₋ctxt)) { exit(7); }
 #if defined TRACE₋TOKENS
     tokenize₋streck(&streck₋ctxt);
 #endif
-    if (BsimParse(&streck₋ctxt,&machine₋ctxt)) { exit(12); }
+    if (BsimParse(&streck₋ctxt,&machine₋ctxt)) { exit(8); }
     Fallow(events); idx+=1; goto again;
     
 unagain:
     
     if (interactive) { EnterInteractiveMode(&sim); }
-    if (Simulate(&machine₋ctxt,&sim)) { exit(13); }
+    if (Simulate(&machine₋ctxt,&sim)) { exit(9); }
     
     if (figures₋path) /* ta-bell. */
     { chronology₋instant bye₋ts; /* 𝘦․𝘨 'material ending 2019-12-24 23:59:59 rendered 2022-09-23 17:05'. */
       symbols = Heap₋object₋size(figures)/4;
       struct Unicodes program = { symbols, figures };
       struct language₋context table₋ctxt;
-      if (Prepared(figures₋path,&table₋ctxt)) { exit(15); }
-      if (Rendertable(&table₋ctxt,&sim.history,program,bye₋ts)) { exit(17); }
+      if (Prepared(figures₋path,&table₋ctxt)) { exit(10); }
+      if (Rendertable(&table₋ctxt,&sim.history,program,bye₋ts)) { exit(11); }
     }
     
     Deinit₋context(&machine₋ctxt);
