@@ -83,24 +83,12 @@ int Init₋translation₋unit(char8₋t * program, struct translation * t) ⓣ
    return 0;
 }
 
-void Diagnos(int type, void * langctxt₋alt₋location, int bye, const char * sevenbit₋utf8, ...)
-{  va_prologue(sevenbit₋utf8); char8₋t * src₋path;
-   __builtin_int_t lineno₋first,linecount,column₋first,column₋last;
-   if (type == 2) {
-     struct location * l = (struct location *)langctxt₋alt₋location;
-     lineno₋first = l->lineno₋first;
-     linecount = l->lineno₋last - l->lineno₋first + 1;
-     column₋first = l->first₋column;
-     column₋last = l->last₋column;
-     src₋path = l->source₋path;
-   } else if (type == 1) {
-     struct language₋context * ctxt = (struct language₋context *)langctxt₋alt₋location;
-     lineno₋first = ctxt->lineno₋first;
-     linecount = ctxt->lineno₋last - ctxt->lineno₋first + 1;
-     column₋last = ctxt->column₋last;
-     column₋first = ctxt->column₋first;
-     src₋path = ctxt->source₋path;
-   }
+void Diagnos(int type, char8₋t * src₋path, struct source₋location * l, int bye, 
+   const char * sevenbit₋utf8, ...)
+{  va_prologue(sevenbit₋utf8); ;
+   __builtin_int_t lineno₋first=l->lineno₋first, 
+    linecount=(l->lineno₋last-l->lineno₋first+1),column₋first=l->column₋first,
+    column₋last=l->column₋last;
    vfprint("⬚ (⬚) ⫶ ⬚—⬚ ⬚.", ﹟s8(src₋path), ﹟d(lineno₋first), 
     ﹟d(column₋last), ﹟d(column₋last));
    vfprint(" (⬚ line", ﹟d(linecount));
