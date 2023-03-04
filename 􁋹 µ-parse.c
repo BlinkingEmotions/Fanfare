@@ -212,7 +212,7 @@ again:
    /* \later 'text-block rendition-interpretation and painters-knife' (\see 77995 Sat, 18 Feb 2023 05:25). ⌥ + '-' is '–' and ⌥ + shift + '-' is '—'. */
    ELIF₋INIT₋WITH₋ONE(U'\x2405') { assign₋symbol(symbol₋for₋enquery,out,1); RET } /* toggle fold/unfold at double-click. */
    else if (STATE(mode₋single₋ekunem) && uc == '\xa') { ctxt->state=mode₋initial; }
-   else if (STATE(mode₋multi₋ekunem) && uc == U'*' && uc₊₁ == U'/') { ctxt->state=mode₋initial; }
+   else if (STATE(mode₋multi₋ekunem) && uc == U'*' && uc₊₁ == U'/') { ctxt->tip₋unicode+=1,ctxt->state=mode₋initial; }
    else if (STATE(mode₋initial) && uc == U'/' && uc₊₁ == U'*') { ctxt->state=mode₋multi₋ekunem; }
    else if (STATE(mode₋initial) && uc == U'/' && uc₊₁ == U'/') { ctxt->state=mode₋single₋ekunem; }
    else if (STATE(mode₋initial) && uc == U'"') {
