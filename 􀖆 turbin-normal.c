@@ -9,7 +9,8 @@ enum symbol₋class { ident=1, machine, monetary, times, divide, plus, minus,
  endsym, beforesym, andsym, orsym, notsym, xorsym, entitysym, accountsym, 
  tablesym, fromsym, createsym, namedsym, tradingsym, residentsym, withsym, 
  schedulesym, startingsym, occurringsym, exchangesym, currencysym, lbracksym, 
- rbracksym, popsym, swapsym, dupsym, reportsym, boldsym, eot₋and₋file 
+ rbracksym, popsym, swapsym, dupsym, reportsym, boldsym, eot₋and₋file, 
+ unarbitrated₋symbol 
 };
 
 /* compile with ./retro-mac.sh essence-turbin */
@@ -61,32 +62,24 @@ typedef struct Symbol { enum symbol₋class class; struct token₋detail gritty;
 
 struct translation {
   struct streck₋context ctxt;
-  Symbol symbol₋passed, symbol,retrospect;
-  struct token₋detail primary₋piece, lookahead;
+  Symbol symbol₋passed,symbol,retrospect;
+  struct collection *ident,*text;
+  struct dynamic₋bag * bu₋fragment,*td₋tree;
 };
-
-#define STATE(s) (s == ctxt->state)
-#define TRACE₋TOKENS  /* while reading .streck and .table files, print-out tokens on stdout. */
-#define TRACE₋SYNTAX /* after parsing .streck files, print the indented syntax tree on stdout. */
-#define TRACE₋ENCODING /* after decoding utf-8 output the decoded Unicodes to stdout. */
-
 
 struct { __builtin_uint_t diagnosis₋count,bitmap; } error₋panel;
 
-struct location { __builtin_int_t u8offset₋start,lineno₋first,lineno₋last, 
- first₋column,last₋column,ucs₋offset; char8₋t * source₋path; };
-
-int Prepared(char8₋t * program, struct language₋context * ctxt) ⓣ
+int Init₋translation₋unit(char8₋t * program, struct translation * t) ⓣ
 {
-   ctxt->state=mode₋initial;
-   ctxt->tip₋unicode=0;
-   ctxt->lineno₋first=1;
-   ctxt->lineno₋last=1;
-   ctxt->column₋first=1;
-   ctxt->column₋last=1;
-   ctxt->negative=0;
-   ctxt->source₋path = program;
-   if (ctxt->source₋path==ΨΛΩ) return -1;
+   t->ctxt.tip₋unicode=0;
+   t->ctxt.state=mode₋initial;
+   t->ctxt.syms₋in₋regular = 0;
+   t->ctxt.syms₋in₋number = 0;
+   t->ctxt.syms₋in₋fraction = 0;
+   t->ctxt.ongoing₋number = 0;
+   t->ctxt.source₋path = program;
+   location₋init(&t->ctxt.interval);
+   t->symbol₋passed.class = unarbitrated₋symbol;
    return 0;
 }
 
@@ -121,6 +114,14 @@ void Diagnos(int type, void * langctxt₋alt₋location, int bye, const char * s
    va_epilogue;
    if (bye) { exit(1); } else { error₋panel.diagnosis₋count += 1; }
 } /* type determines void, sevenbit text starts with 'info', 'warning', 'error', 'intern'. */
+
+#define STATE(s) (s == ctxt->state)
+#define TRACE₋TOKENS  /* while reading .streck and .table files, print-out tokens on stdout. */
+#define TRACE₋SYNTAX /* after parsing .streck files, print the indented syntax tree on stdout. */
+#define TRACE₋ENCODING /* after decoding utf-8 output the decoded Unicodes to stdout. */
+
+struct location { __builtin_int_t u8offset₋start,lineno₋first,lineno₋last, 
+ first₋column,last₋column,ucs₋offset; char8₋t * source₋path; };
 
 typedef int (^type)(char32̄_t);
 type digit = ^(char32̄_t c) { return U'0' <= c && c <= U'9'; };
