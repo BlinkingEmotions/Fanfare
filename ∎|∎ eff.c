@@ -51,8 +51,9 @@ main(
     print("response '⬚'.\n",﹟S(bytes,ucs)); }, U"ls -la '⬚' ", ﹟S(U"/"))) { return 1; } */
    
    return 0;
-}
+} /* STAILQ_INSERT_TAIL(step_head,step_head,entries) and TAILQ prefix. */
 
 /* clang -g -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules      \
  '∎|∎ eff.c' ../Apps/Source/Releases/libTwinbeam-x86_64.a */
+
 
