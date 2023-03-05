@@ -108,6 +108,6 @@ void trace₋streck₋token(Symbol symbol, struct collection * identifiers)
    case boldsym: token("'BOLD'"); break;
    case eot₋and₋file: return token("eot"); break;
    case unarbitrated₋symbol: token("unarbitrated"); break;
-   default: vfprint("token '' not recognized.\n",﹟d(symbol.class));
+   default: vfprint("token '⬚' not recognized.\n",﹟d(symbol.class));
    }
 }
