@@ -59,7 +59,7 @@ main(
    
    struct perform * np;
    STAILQ_FOREACH(np,&wrench.steps,entries) {
-     print("element");
+     print("element\n");
    }
 
   /* if (Order(^(char32̄_t * ucs, __builtin_int_t bytes) { 
@@ -75,8 +75,9 @@ main(
    if (insertedOrExisting2 != m2) { print("Unable to insert node2.\n"); }   
    size_t count = rb_tree_count(&rbt);
    print("count is ⬚.\n",﹟d(count));
-   void * found = rb_tree_find_node(&rbt,"world");
+   struct material * found = rb_tree_find_node(&rbt,"world");
    if (found == 0) print("Unable to find selected node\n.");
+   else print("payload is ⬚\n",﹟d(found->payload));
    return 0;
 }
 
