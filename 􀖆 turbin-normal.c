@@ -69,7 +69,7 @@ typedef struct translation {
   struct dynamic₋bag * bu₋fragment,*td₋tree;
 } Translation;
 
-int Init₋translation₋unit(char8₋t * program, Translation * t) ⓣ
+int Init₋translation₋unit(char8₋t * src₋path, Translation * t)
 {
    t->ctxt.tip₋unicode=0;
    t->ctxt.state=mode₋initial;
@@ -77,7 +77,7 @@ int Init₋translation₋unit(char8₋t * program, Translation * t) ⓣ
    t->ctxt.syms₋in₋number = 0;
    t->ctxt.syms₋in₋fraction = 0;
    t->ctxt.ongoing₋number = 0;
-   t->ctxt.source₋path = program;
+   t->ctxt.source₋path = src₋path;
    location₋init(&t->ctxt.interval);
    t->symbol₋passed.class = unarbitrated₋symbol;
    t->ident = Alloc(sizeof(struct collection));
@@ -113,7 +113,7 @@ void Diagnos(int type, char8₋t * src₋path, struct source₋location * l, int
    print﹟(output,sevenbit₋utf8,__various);
    vfprint(")\n");
    va_epilogue;
-   if (bye) { exit(1); } else { error₋panel.diagnosis₋count += 1; }
+   if (bye) { exit(29); } else { error₋panel.diagnosis₋count += 1; }
 } /* type determines void, sevenbit text starts with 'info', 'warning', 'error', 'intern'. */
 
 int special(char32̄_t uc)
@@ -159,6 +159,15 @@ again:
    goto again;
 }
 
+int next₋token(Translation * t)
+{
+#if defined TRACE₋TOKENS
+   void trace₋streck₋token(Symbol symbol);
+   trace₋streck₋token(t->symbol);
+#endif
+   return 0;
+}
+
 #pragma recto outcometh and abstract
 
 typedef struct dynamic₋bag expression;
@@ -182,7 +191,8 @@ typedef struct virtu₋context
   chronology₋instant last;
 } simul₋context;
 
-extern int BsimParse(struct language₋context * ctxt, simul₋context * ctxt₋out);
+extern int Prepared(char8₋t * streck₋source₋path, Translation * t);
+extern int BsimParse(Translation * t, simul₋context * ctxt₋out);
 
 /* #include "ⓔ-Frontend.cxx" */
 
@@ -193,9 +203,9 @@ extern int BsimParse(struct language₋context * ctxt, simul₋context * ctxt₋
 typedef struct Simulator { History history; version₋ts revision; } Simulator;
 
 extern void EnterInteractiveMode(Simulator * 🅢);
-extern int Simulate(struct virtu₋context * 🆂, Simulator * 🅢);
-/* extern int Zebra(int count, chronology₋instant toggles[], chronology₋instant now, double * out);
-  sometime uniform and normal not same time. */
+extern int Simulate(simul₋context * 🆂, Simulator * 🅢);
+/* extern int Zebra(int count, chronology₋instant toggles[], chronology₋instant 
+ now, double * out); sometime uniform and normal not same time. */
 
 /* #include "ⓔ-Simulator.cxx" */
 
@@ -221,7 +231,7 @@ extern int Rendertable(struct language₋context * ctxt, History * history,
  `fseek`, `fclose`, `SEEK_SET`, `stdout` and `stderr`… */
 #include <stdlib.h> /* …together with `malloc` and `exit`. */
 #include <wordexp.h> /* and of course: figures file path ~ expansion. */
-#include <sys/stat.h>
+#include <sys/stat.h> /* for 'FileSystemItemOpenable'. */
 #include <unistd.h>
 #include <fcntl.h>
 
@@ -259,7 +269,7 @@ again:
    if (only₋until₋row) { read₋until₋row=atoi((char *)token); only₋until₋row=0; goto next; }
    y = IsPrefixOrEqual((const char *)token,"-h");
    if (y == 0) { vfprint("Usage ⬚ [-f <figures.table file>] [-r <business.rule file>] [-g] [-l] " 
-    "<event file>\n", ﹟s8(argv[0])); exit(2); }
+    "<event file>\n", ﹟s8(argv[0])); exit(27); }
    y = IsPrefixOrEqual((const char *)token,"-f");
    if (y == 0) { figures₋option=1; goto next; }
    y = IsPrefixOrEqual((const char *)token,"-r");
@@ -267,11 +277,12 @@ again:
    y = IsPrefixOrEqual((const char *)token,"-g");
    if (y == 0) { interactive=1; goto next; }
    y = IsPrefixOrEqual((const char *)token,"-v");
-   if (y == 0) { vfprint("⬚ version ⬚\n", argv[0], "0x" QUOTE(SHA1GIT)); goto next; }
+   if (y == 0) { char * tb; Identity₋Tb(&tb); vfprint("⬚ version ⬚ and tb-⬚\n", 
+    argv[0], QUOTE(SHA1GIT), tb); goto next; }
    y = IsPrefixOrEqual((const char *)token,"-l"); /* rows to process. */
    if (y == 0) { only₋until₋row=1; goto next; }
    y = IsPrefixOrEqual((const char *)token,"-");
-   if (y > 0) { vfprint("Unknown command-line argument\n"); exit(3); }
+   if (y > 0) { vfprint("Unknown command-line argument\n"); exit(21); }
    append₋reference(token,&filepaths₋sequence);
 next:
    i+=1; goto again;
@@ -281,7 +292,7 @@ unagain:
    if (figures₋option) { msg=U8("no figures file given"); goto descriptive₋error; }
    if (rule₋option) { msg=U8("no rule file given"); goto descriptive₋error; }
    return 0;
-} /* todo: add -first 2023-01-01 12:12:12 and -last 2023-12-22 00:00:00. */
+}
 
 unicode₋shatter ᐝ open₋and₋decode(char8₋t * textfile, int expand₋tilde, int * err)
 {
@@ -295,14 +306,10 @@ unicode₋shatter ᐝ open₋and₋decode(char8₋t * textfile, int expand₋til
    if (!FileSystemItemOpenable(u8path𝘖r𝙽𝚄𝙻𝙻,&u8bytes)) { *err=2; return ΨΛΩ; }
    int fd = open(u8path𝘖r𝙽𝚄𝙻𝙻,O_RDONLY);
    if (fd == -1) { *err=3; return ΨΛΩ; }
-   /* void * p = mmap(0, 1 + u8bytes,PROT_READ,MAP_SHARED,fd,0);
-    the abstraction 'mmap' is too descriptive. */
    char8₋t * material = (char8₋t *)Heap₋alloc(u8bytes + 1);
    ssize_t bytesread = read(fd,material,u8bytes);
    if (bytesread != u8bytes) { *err=5; return ΨΛΩ; }
-   if (close(fd) == -1) { *err=7; return ΨΛΩ; } /* det kan ju /vara-lõst/ pā olika sātt 
-    och 'det har vi aldrig sagt'. */
-   /* if (p == MAP_FAILED) { exit(8); } */
+   if (close(fd) == -1) { *err=7; return ΨΛΩ; }
    *(material + u8bytes) = 0x04;
    unicode₋shatter text = (unicode₋shatter)Heap₋alloc(4*(u8bytes + 1));
    if (Utf8ToUnicode(1+u8bytes,material,text,&symbols)) { *err=8; return ΨΛΩ; }
@@ -326,7 +333,7 @@ void branch₋rule₋file()
    case 7: vfprint("Lingering relat from '⬚'.\n", one); break;
    case 8: vfprint("Incomprehensible encoding in '⬚'.\n", one); break;
    }
-   if (rules == ΨΛΩ) { exit(5); }
+   if (rules == ΨΛΩ) { exit(17); }
 }
 
 void branch₋figures₋file()
@@ -342,7 +349,7 @@ void branch₋figures₋file()
    case 7: vfprint("Lingering relat from '⬚'.\n", one); break;
    case 8: vfprint("Incomprehensible encoding in '⬚'.\n", one); break;
    }
-   if (figures == ΨΛΩ) { exit(7); }
+   if (figures == ΨΛΩ) { exit(13); }
 }
 
 int
@@ -351,10 +358,9 @@ main(
   const char * argv[]
 )
 { Simulator sim; unicode₋shatter events;
-   struct streck₋context source₋ctxt;
+   Translation trans;
     simul₋context machine₋ctxt;
     error₋panel.diagnosis₋count = 0;
-    Apparatus(&machine₋ctxt);
     if (collection₋init(sizeof(char8₋t *),4096,&filepaths₋sequence)) { exit(1); }
     if (option₋machine₋interprets(argc,(char8₋t *ᐧ*)argv)) { exit(2); }
     if (figures₋path) { branch₋figures₋file(); } /*  optional. */
@@ -365,11 +371,12 @@ main(
     } __builtin_int_t idx=0,fd,symbols; char8₋t * file₋ref; int err;
     
     if (rule₋path) {
-      if (Prepared(rule₋path,&source₋ctxt)) { exit(4); }
-      symbols = Heap₋object₋size(rules);
-      struct Unicodes program = { symbols, rules };
-      streck₋ctxt.text₋program = program;
-      if (BsimParse(&streck₋ctxt,&machine₋ctxt)) { exit(5); }
+      symbols = Heap₋object₋size(rules)/4;
+      struct Unicodes initial₋program = { symbols, rules };
+      trans.ctxt.program₋text = initial₋program;
+      if (Init₋translation₋unit(rule₋path,&trans)) { exit(31); }
+      if (Prepared(rule₋path,&trans)) { exit(4); }
+      if (BsimParse(&trans,&machine₋ctxt)) { exit(5); }
     }
     
 again:
@@ -377,14 +384,12 @@ again:
     if (idx >= argc) { goto unagain; }
     file₋ref = (char8₋t *)collection₋relative(idx,&filepaths₋sequence);
     events = open₋and₋decode(file₋ref,true,&err);
-    symbols = Heap₋object₋size(events);
-    struct Unicodes program = { symbols, events };
-    streck₋ctxt.text₋program = program;
-    if (Prepared(file₋ref,&streck₋ctxt)) { exit(7); }
-#if defined TRACE₋TOKENS
-    tokenize₋streck(&streck₋ctxt);
-#endif
-    if (BsimParse(&streck₋ctxt,&machine₋ctxt)) { exit(8); }
+    symbols = Heap₋object₋size(events)/4;
+    struct Unicodes main₋program = { symbols, events };
+    trans.ctxt.program₋text = main₋program;
+    if (Init₋translation₋unit(file₋ref,&trans)) { exit(33); }
+    if (Prepared(file₋ref,&trans)) { exit(7); }
+    if (BsimParse(&trans,&machine₋ctxt)) { exit(8); }
     Fallow(events); idx+=1; goto again;
     
 unagain:
@@ -396,7 +401,7 @@ unagain:
     { chronology₋instant bye₋ts; /* 𝘦․𝘨 'material ending 2019-12-24 23:59:59 rendered 2022-09-23 17:05'. */
       symbols = Heap₋object₋size(figures)/4;
       struct Unicodes program = { symbols, figures };
-      struct language₋context table₋ctxt;
+      struct table₋context table₋ctxt;
       if (Prepared(figures₋path,&table₋ctxt)) { exit(10); }
       if (Rendertable(&table₋ctxt,&sim.history,program,bye₋ts)) { exit(11); }
     }
@@ -405,4 +410,6 @@ unagain:
     
     return 0;
 } /*  simulate events and output figures often at end-of-simulation. */
+
+#include "ⓔ-debug.cxx"
 
