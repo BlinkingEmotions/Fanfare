@@ -136,7 +136,7 @@ int next₋token₋inner(struct language₋context * ctxt, Symbol * out)
    type digit = ^(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; };
    type letter = ^(char32̄_t uc) { return (U'a' <= uc && uc <= U'z') || 
     (U'A' <= uc && uc <= U'Z') || uc == U'₋' || (U'\x1f600' /*􀈂*/ <= uc && uc <= U'\x1008fa' /*􀣺*/); };
-   🧵(identifier,machine₋constant,fixpoint₋constant,keyword,trouble,completion,unicode_text) {
+   🧵(identifier,machine₋constant,fixpoint₋constant,keyword,trouble,completion,unicodes) {
    case identifier: copy₋identifier(ctxt,out); ctxt->syms₋in₋regular=0; 
     ctxt->state=mode₋initial; return 0;
    case machine₋constant: copy₋number(ctxt,out,1); ctxt->ongoing₋number=0; 
@@ -148,7 +148,7 @@ int next₋token₋inner(struct language₋context * ctxt, Symbol * out)
    case keyword: assign₋symbol₋noforward(sym,out,ctxt->syms₋in₋regular); 
     ctxt->syms₋in₋regular=0; ctxt->state=mode₋initial; return 0;
    case completion: assign₋symbol(eot₋and₋file,out,0); return 0;
-   case trouble: print("trouble occurred at ⬚\n",﹟d(ctxt->tip₋unicode)); return -1;
+   case trouble: print("trouble occurred at ⬚.\n",﹟d(ctxt->tip₋unicode)); return -1;
    }
 again:
    i=ctxt->tip₋unicode,ctxt->tip₋unicode+=1;
@@ -228,6 +228,7 @@ again:
      else { if (uc == U'\\' && uc₊₁ == U'"') { ctxt->tip₋unicode+=1; uc=U'"'; }
        if (copy₋append₋onto₋regular(text₋unicode,1,&uc,Alloc,&ctxt->reference₋quoted)) confess(trouble);
      }
+     confess(unicodes);
    }
    else if (STATE(mode₋fraction) && digit(uc)) {
      ctxt->zero₋to₋nines[ctxt->syms₋in₋fraction] = uc;
@@ -274,24 +275,27 @@ void next₋token(struct language₋context * ctxt)
   if (y != 0) { error(1,"scanner error: advanced failure"); exit(2); }
 
 #if defined TRACE₋TOKENS
-  typedef void (^Print)(char *);
+  typedef void (^Print1)(char *); typedef void (^Print2)(Symbol);
   struct source₋location interval = symbol.gritty.interval;
-  Print token = ^(char * rendition) { print("token ⬚. (col. ⬚-⬚, line ⬚-⬚)\n", 
+  Print1 token = ^(char * rendition) { print("token ⬚. (col. ⬚-⬚, line ⬚-⬚)\n", 
    ﹟s7(rendition), ﹟d(interval.column₋first), ﹟d(interval.column₋last), 
    ﹟d(interval.lineno₋first), ﹟d(interval.lineno₋last)); };
-  Print fier = ^(char * rendition) { 
+  Print2 fier = ^(Symbol symbol) { 
    print("token 'ident' and regular=⬚ is retrieved as '⬚'. (col. ⬚-⬚, line ⬚-⬚)\n", 
    ﹟d(symbol.gritty.store.regular), ﹟ident(symbol.gritty.store.regular), 
    ﹟d(interval.column₋first), ﹟d(interval.column₋last), 
    ﹟d(interval.lineno₋first), ﹟d(interval.lineno₋last)); };
-  Print mber = ^(char * rendition) { print("token 'integer-constant' and ⬚. (col. ⬚-⬚, line ⬚-⬚)\n", 
+  Print2 mger = ^(Symbol symbol) { print("token 'integer-constant' and ⬚. (col. ⬚-⬚, line ⬚-⬚)\n", 
    ﹟d(symbol.gritty.store.integer), ﹟d(interval.column₋first), ﹟d(interval.column₋last), 
    ﹟d(interval.lineno₋first), ﹟d(interval.lineno₋last)); };
+  Print2 fger = ^(Symbol symbol) { print("token 'fixpoint₋constant' and '⬚'. (col. ⬚-⬚, line ⬚-⬚)\n", 
+    ﹟d(symbol.gritty.store.integer), ﹟d(interval.column₋first), ﹟d(interval.column₋last), 
+    ﹟d(interval.lineno₋first), ﹟d(interval.lineno₋last)); };
   switch (symbol.class) {
-  case ident: fier("identifier"); break;
+  case ident: fier(symbol); break;
   case number: 
-   if (symbol.gritty.kind == 3) mber("integer-constant"); 
-   else if (symbol.gritty.kind == 2) mber("fixpoint-constant");
+   if (symbol.gritty.kind == 3) mger(symbol); 
+   else if (symbol.gritty.kind == 2) fger(symbol);
    break;
   case lparen: token("'('"); break;
   case rparen: token("')'"); break;
