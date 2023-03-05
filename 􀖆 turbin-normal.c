@@ -81,12 +81,17 @@ int Init₋translation₋unit(char8₋t * src₋path, Translation * t)
    location₋init(&t->ctxt.interval);
    t->symbol₋passed.class = unarbitrated₋symbol;
    t->ident = Alloc(sizeof(struct collection));
-   if (init₋regularpool(t->ident)) return 1;
+   if (init₋regularpool(t->ident)) return -1;
    t->text = Alloc(sizeof(struct collection));
-   if (init₋regularpool(t->text)) return 1;
+   if (init₋regularpool(t->text)) return -1;
    /* td₋tree = new₋Unit(); */
    t->ctxt.program₋text = Run(U"2023-01-01 12:00:00 PRINT 'Starting simulation.'\n");
    return 0;
+}
+
+Argᴾ ﹟ident(struct collection * ident, Nonabsolute relative)
+{
+   return ﹟regularpool(ident,relative);
 }
 
 struct { __builtin_uint_t diagnosis₋count,bitmap; } error₋panel;
@@ -162,8 +167,8 @@ again:
 int next₋token(Translation * t)
 {
 #if defined TRACE₋TOKENS
-   void trace₋streck₋token(Symbol symbol);
-   trace₋streck₋token(t->symbol);
+   void trace₋streck₋token(Symbol symbol, struct collection * ident);
+   trace₋streck₋token(t->symbol,t->ident);
 #endif
    return 0;
 }
@@ -191,6 +196,8 @@ typedef struct virtu₋context
   chronology₋instant last;
 } simul₋context;
 
+struct table₋context { };
+
 extern int Prepared(char8₋t * streck₋source₋path, Translation * t);
 extern int BsimParse(Translation * t, simul₋context * ctxt₋out);
 
@@ -211,10 +218,17 @@ extern int Simulate(simul₋context * 🆂, Simulator * 🅢);
 
 #pragma recto computation two tables 'annual return' and 'profit and loss'
 
-extern int Rendertable(struct language₋context * ctxt, History * history, 
- struct Unicodes computation₋program, chronology₋instant when);
+extern int Rendertable(struct table₋context * ctxt, History * history, 
+ chronology₋instant when);
+extern int Tableparse(struct Unicodes program, char8₋t * path, 
+ struct table₋context * ctxt);
 
 /* #include "ⓔ-table.cxx" */
+
+void Deinit₋context(simul₋context * ctxt)
+{
+
+}
 
 #pragma recto command line (zsh compsys and Minimum completion)
 
@@ -313,6 +327,7 @@ unicode₋shatter ᐝ open₋and₋decode(char8₋t * textfile, int expand₋til
    *(material + u8bytes) = 0x04;
    unicode₋shatter text = (unicode₋shatter)Heap₋alloc(4*(u8bytes + 1));
    if (Utf8ToUnicode(1+u8bytes,material,text,&symbols)) { *err=8; return ΨΛΩ; }
+   Heap₋unalloc(material);
 #if defined TRACE₋ENCODING
    struct Unicodes debug₋text = { symbols, text };
    EXT₋C void print₋decoded₋text(struct Unicodes);
@@ -402,8 +417,8 @@ unagain:
       symbols = Heap₋object₋size(figures)/4;
       struct Unicodes program = { symbols, figures };
       struct table₋context table₋ctxt;
-      if (Prepared(figures₋path,&table₋ctxt)) { exit(10); }
-      if (Rendertable(&table₋ctxt,&sim.history,program,bye₋ts)) { exit(11); }
+      if (Tableparse(program,figures₋path,&table₋ctxt)) { exit(10); }
+      if (Rendertable(&table₋ctxt,&sim.history,bye₋ts)) { exit(11); }
     }
     
     Deinit₋context(&machine₋ctxt);
