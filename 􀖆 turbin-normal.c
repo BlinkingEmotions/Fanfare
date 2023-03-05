@@ -105,7 +105,8 @@ void Diagnos(int type, char8₋t * src₋path, struct source₋location * l, int
    const char * sevenbit₋utf8, ...)
 {  va_prologue(sevenbit₋utf8); ;
    __builtin_int_t lineno₋first=l->lineno₋first, 
-    linecount=(l->lineno₋last-l->lineno₋first+1),column₋first=l->column₋first,
+    linecount=(l->lineno₋last-l->lineno₋first+1), 
+    column₋first=l->column₋first, 
     column₋last=l->column₋last;
    vfprint("⬚ (⬚) ⫶ ⬚—⬚ ⬚.", ﹟s8(src₋path), ﹟d(lineno₋first), 
     ﹟d(column₋last), ﹟d(column₋last));
@@ -165,7 +166,16 @@ again:
 }
 
 int next₋token(Translation * t)
-{
+{ int y;
+   if (t->ctxt.tip₋unicode == 0) {
+     y = next₋token₋inner(t,&t->symbol);
+     if (y != 0) { Diagnos(1,t->ctxt.source₋path,&t->symbol.gritty.interval,1,"scanner error: initial trouble"); exit(2); }
+   } else {
+     t->symbol₋passed = t->symbol;
+     t->symbol = t->retrospect;
+   }
+   y = next₋token₋inner(t,&t->retrospect);
+   if (y != 0) { Diagnos(1,t->ctxt.source₋path,&t->symbol.gritty.interval,1,"scanner error: advance failure"); exit(3); }
 #if defined TRACE₋TOKENS
    void trace₋streck₋token(Symbol symbol, struct collection * ident);
    trace₋streck₋token(t->symbol,t->ident);
@@ -205,7 +215,7 @@ extern int BsimParse(Translation * t, simul₋context * ctxt₋out);
 
 #pragma recto stochastic and deterministic simulation
 
-/* #include <Additions/History.h> */ typedef struct History { } History;
+typedef struct History { } History;
 
 typedef struct Simulator { History history; version₋ts revision; } Simulator;
 
@@ -427,4 +437,5 @@ unagain:
 } /*  simulate events and output figures often at end-of-simulation. */
 
 #include "ⓔ-debug.cxx"
+
 
