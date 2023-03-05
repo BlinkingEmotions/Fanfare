@@ -165,7 +165,7 @@ again:
    goto again;
 }
 
-int next₋token(Translation * t)
+int next₋token₋streck(Translation * t)
 { int y;
    if (t->ctxt.tip₋unicode == 0) {
      y = next₋token₋inner(t,&t->symbol);
@@ -208,10 +208,15 @@ typedef struct virtu₋context
 
 struct table₋context { };
 
-extern int Prepared(char8₋t * streck₋source₋path, Translation * t);
-extern int BsimParse(Translation * t, simul₋context * ctxt₋out);
+int Prepared(char8₋t * streck₋source₋path, Translation * t)
+{
+   return 0;
+}
 
-/* #include "ⓔ-Frontend.cxx" */
+int BsimParse(Translation * t, simul₋context * ctxt₋out)
+{
+   return 0;
+}
 
 #pragma recto stochastic and deterministic simulation
 
@@ -224,7 +229,7 @@ extern int Simulate(simul₋context * 🆂, Simulator * 🅢);
 /* extern int Zebra(int count, chronology₋instant toggles[], chronology₋instant 
  now, double * out); sometime uniform and normal not same time. */
 
-/* #include "ⓔ-Simulator.cxx" */
+#include "ⓔ-simulator.cxx"
 
 #pragma recto computation two tables 'annual return' and 'profit and loss'
 
@@ -233,7 +238,7 @@ extern int Rendertable(struct table₋context * ctxt, History * history,
 extern int Tableparse(struct Unicodes program, char8₋t * path, 
  struct table₋context * ctxt);
 
-/* #include "ⓔ-table.cxx" */
+#include "ⓔ-table.cxx"
 
 void Deinit₋context(simul₋context * ctxt)
 {
@@ -437,5 +442,6 @@ unagain:
 } /*  simulate events and output figures often at end-of-simulation. */
 
 #include "ⓔ-debug.cxx"
+
 
 
