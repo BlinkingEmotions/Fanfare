@@ -237,6 +237,8 @@ int BsimParse(Translation * t, simul₋context * ctxt₋out)
 #include <sys/rbtree.h>
 #include <unicode/ustring.h>
 #include <readline/readline.h>
+#undef true
+#include <string.h>
 
 typedef struct History { } History;
 
@@ -259,7 +261,7 @@ extern int Simulate(simul₋context * 🆂, Simulator * 🅢);
 
 #pragma recto computation two tables 'annual return' and 'profit and loss'
 
-extern int Rendertable(Translation * t, History * history, 
+extern int Rendertable(Translation * t, Simulator * sim, 
  chronology₋instant when);
 extern int Tableparse(struct Unicodes program, char8₋t * path, 
  Translation * t);
@@ -414,7 +416,7 @@ main(
   int argc, 
   const char * argv[]
 )
-{ Simulator sim; unicode₋shatter events;
+{ Simulator simulator; unicode₋shatter events;
    Translation trans;
     simul₋context machine₋ctxt;
     error₋panel.diagnosis₋count = 0;
@@ -451,16 +453,15 @@ again:
     
 unagain:
     
-    if (interactive) { int quit; EnterInteractiveMode(&quit,&sim); }
-    if (Simulate(&machine₋ctxt,&sim)) { exit(9); }
+    if (interactive) { int quit; EnterInteractiveMode(&quit,&simulator); }
+    if (Simulate(&machine₋ctxt,&simulator)) { exit(9); }
     
     if (figures₋path) /* ta-bell. */
     { chronology₋instant bye₋ts; /* 𝘦․𝘨 'material ending 2019-12-24 23:59:59 rendered 2022-09-23 17:05'. */
       symbols = Heap₋object₋size(figures)/4;
       struct Unicodes program = { symbols, figures };
-      struct table₋context table₋ctxt;
-      if (Tableparse(program,figures₋path,&table₋ctxt)) { exit(10); }
-      if (Rendertable(&table₋ctxt,&sim.history,bye₋ts)) { exit(11); }
+      if (Tableparse(program,figures₋path,&trans)) { exit(10); }
+      if (Rendertable(&trans,&simulator,bye₋ts)) { exit(11); }
     }
     
     Deinit₋context(&machine₋ctxt);
