@@ -37,9 +37,9 @@ signed int compare_key(void * context, const void *node,
 UChar * to_unicode1(char * cstr)
 {
    size_t srclen = strlen(cstr);
-   int32_t capacity = srclen*4;
+   int32_t capacity = (srclen + 1)*4;
    UChar * eight=malloc(capacity);
-   eight = u_uastrcpy(eight,cstr); /* UErrorCode error; dst = u_strFromUTF8(dst,capacity,&actual,cstr,srclen,&error); */
+   eight = u_uastrcpy(eight,cstr);
    return eight;
 }
 
@@ -67,6 +67,19 @@ int IsFileSuffix(const char * suffix, char8₋t * one₋filepath)
    UChar * lastdot = u_strrstr(filepath,dot); 
    UChar * u_suffix = to_unicode1((char *)suffix);
    return u_strcmp(lastdot,u_suffix) == 0;
+}
+
+UChar * to_unicode2(char8₋t * cstr, int32_t * actual)
+{ UErrorCode error=U_ZERO_ERROR; int32_t found;
+   u_strFromUTF8(NULL,0,&found,(char *)cstr,-1,&error);
+   int32_t capacity = (found + 1)*sizeof(UChar);
+   UChar * dst = malloc(capacity);
+   size_t srclen = strlen((char *)cstr); /* replace with 'Utf8BytesUntilZero'. */
+   error=U_ZERO_ERROR;
+   dst = u_strFromUTF8(dst,capacity,
+    ((actual==0) ? &found : actual), 
+    (char *)cstr,srclen,&error);
+   return dst;
 }
 
 int
@@ -112,7 +125,8 @@ main(
    if (u_strcmp(left,right) == 0) print("equal");
    else print("non-equal\n");
    
-   UChar * str = to_unicode1("hello world");
+   int32_t actual;
+   UChar * str = to_unicode2(U8("hello world"),0);
    static const UChar delim[]={ 0x20, 0x00 };
 
    if (tokenize(str,delim, ^(UChar * word) {
