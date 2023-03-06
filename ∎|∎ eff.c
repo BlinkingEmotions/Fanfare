@@ -4,7 +4,9 @@ import Twinbeam;
 
 #include <sys/queue.h>
 #include <sys/rbtree.h>
+#include <unicode/ustring.h>
 #include <string.h>
+#include <stdio.h>
 
 struct perform {
   int a,b,c;
@@ -57,7 +59,7 @@ main(
   /* if (Order(^(char32̄_t * ucs, __builtin_int_t bytes) { 
     print("response '⬚'.\n",﹟S(bytes,ucs)); }, U"ls -la '⬚' ", ﹟S(U"/"))) { return 1; } */
    
-  material * m1=Alloc(sizeof(material)),*m2=Alloc(sizeof(material));
+   material * m1=Alloc(sizeof(material)),*m2=Alloc(sizeof(material));
    m1->name="hello",m1->payload=5,m2->name="world",m2->payload=7;
    rb_tree_t rbt; rb_tree_ops_t ops = {compare_nodes,compare_key,0,0};
    rb_tree_init(&rbt,&ops);
@@ -67,13 +69,34 @@ main(
    if (insertedOrExisting2 != m2) { print("Unable to insert node2.\n"); }   
    size_t count = rb_tree_count(&rbt);
    print("count is ⬚.\n",﹟d(count));
-  material * found = rb_tree_find_node(&rbt,"world");
+   material * found = rb_tree_find_node(&rbt,"world");
    if (found == 0) print("Unable to find selected node\n.");
    else print("payload is ⬚\n",﹟d(found->payload));
+   
+   static const UChar left[]={ 0x41, 0x42, 0x43, 0 };    /* "ABC" */
+   static const UChar right[]={ 0x61, 0x62, 0x63, 0 };    /* "abc" */
+   if (u_strcmp(left,right) == 0) print("equal");
+   else print("non-equal\n");
+   
+   UChar myUString[256];
+   u_memset(myUString, 0x2a, sizeof(myUString)/sizeof(*myUString));
+   
+   UChar * eight=malloc(12*4);
+   eight = u_uastrcpy(eight,"hello world");
+   
+   static const UChar delim[]={ 0x20 };
+   UChar * state;
+   UChar * first = u_strtok_r(eight,delim,&state);
+
+   char * thirtytwo=malloc(12*4);
+   thirtytwo = u_austrcpy(thirtytwo,first);
+   printf("text2 is '%s'\n",thirtytwo);
+   free(eight); free(thirtytwo);
+   
+   /* u_strrstr, u_strtok_r, u_strcpy */
    return 0;
 }
 
 /* clang -g -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules      \
  '∎|∎ eff.c' ../Apps/Source/Releases/libTwinbeam-x86_64.a */
-
 
