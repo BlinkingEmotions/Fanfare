@@ -4,13 +4,12 @@ import Twinbeam; /*  he is sitting in a box 𝘦․𝘨 T-FOR-D and De-la-v-all.
 
 enum symbol₋class { ident=1, machine, monetary, times, divide, plus, minus, 
  lparen, rparen, eqltwo, neg, lss, leq, gtr, geq, eqlone, transcriptsym, 
- instant, bookkeepsym, debetsym, creditsym, commentsym, varsym, 
- printsym, breaksym, setsym, returnsym, dosym, ifsym, thensym, elsesym, 
- endsym, beforesym, andsym, orsym, notsym, xorsym, entitysym, accountsym, 
- tablesym, fromsym, createsym, namedsym, tradingsym, residentsym, withsym, 
- schedulesym, startingsym, occurringsym, exchangesym, currencysym, lbracksym, 
- rbracksym, popsym, swapsym, dupsym, reportsym, boldsym, eot₋and₋file, 
- unarbitrated₋symbol 
+ instant, bookkeepsym, debetsym, creditsym, commentsym, varsym, printsym, 
+ breaksym, setsym, returnsym, dosym, ifsym, thensym, elsesym, endsym, 
+ beforesym, andsym, orsym, notsym, xorsym, entitysym, accountsym, tablesym, 
+ createsym, namedsym, tradingsym, residentsym, withsym, schedulesym, 
+ startssym, occurssym, exchangesym, currencysym, lbracksym, rbracksym, popsym, 
+ swapsym, dupsym, reportsym, boldsym, eot₋and₋file, unarbitrated₋symbol 
 };
 
 /* compile with ./retro-mac.sh essence-turbin */
@@ -27,7 +26,7 @@ typedef Sequenta    Real; /*  here we attempt base two and ten hardware
 
 #include "Ω⃝-translate-formal.cxx"
 
-struct streck₋context
+struct language₋context
 {
   __builtin_int_t tip₋unicode;
   enum language₋mode state; 
@@ -44,19 +43,8 @@ struct streck₋context
   char8₋t * source₋path;
   Trie keys;
   int negative;
-}; /*  a․𝘬․a 'verificate₋parser and token-i-sa-tio-n. language and code library is exercised in a separate language for auctions and the agreement. */
-
-struct table₋context
-{
-  __builtin_int_t tip₋unicode;
-  enum language₋mode state; 
-  char32̄_t regular[2048];
-  short syms₋in₋regular;
-  struct source₋location interval;
-  struct Unicodes program₋text;
-  char8₋t * source₋path;
-  Trie keys;
- };
+}; /*  a․𝘬․a 'verificate₋parser and token-i-sa-tio-n. language and code 
+ library is exercised in a separate language for auctions and the agreement. */
 
 struct token₋detail
 {
@@ -75,30 +63,52 @@ typedef struct Symbol { enum symbol₋class class; struct token₋detail gritty;
 struct dynamic₋bag { };
 
 typedef struct translation {
-  struct streck₋context s₋ctxt;
-  struct table₋context t₋ctxt;
+  struct language₋context ctxt;
   Symbol symbol₋passed,symbol,retrospect;
   struct collection *ident,*text;
   struct dynamic₋bag * bu₋fragment,*td₋tree;
 } Translation;
 
-int Init₋translation₋unit(char8₋t * src₋path, Translation * t)
+int Init₋translation₋unit(char8₋t * src₋path, Translation * t, int language)
 {
-   t->s₋ctxt.tip₋unicode=0;
-   t->s₋ctxt.state=mode₋initial;
-   t->s₋ctxt.syms₋in₋regular = 0;
-   t->s₋ctxt.syms₋in₋number = 0;
-   t->s₋ctxt.syms₋in₋fraction = 0;
-   t->s₋ctxt.ongoing₋number = 0;
-   t->s₋ctxt.source₋path = src₋path;
-   location₋init(&t->s₋ctxt.interval);
+   t->ctxt.tip₋unicode=0;
+   t->ctxt.state=mode₋initial;
+   t->ctxt.syms₋in₋regular = 0;
+   t->ctxt.syms₋in₋number = 0;
+   t->ctxt.syms₋in₋fraction = 0;
+   t->ctxt.ongoing₋number = 0;
+   t->ctxt.source₋path = src₋path;
+   location₋init(&t->ctxt.interval);
    t->symbol₋passed.class = unarbitrated₋symbol;
    t->ident = Alloc(sizeof(struct collection));
    if (init₋regularpool(t->ident)) return -1;
    t->text = Alloc(sizeof(struct collection));
    if (init₋regularpool(t->text)) return -1;
-   /* td₋tree = new₋Unit(); */
-   t->s₋ctxt.program₋text = Run(U"2023-01-01 12:00:00 PRINT 'Starting simulation.'\n");
+   /* td₋tree = new₋Unit(), bu-fragment */
+   t->ctxt.program₋text = Run(U"2023-01-01 12:00:00 PRINT 'Starting simulation.'\n");
+   switch (language)
+   {
+   case 1: {
+    char32̄_t * keywords[] = { U"TRANSCRIPT", U"BOOKKEEP", U"DEBET", 
+     U"CREDIT", U"COMMENT", U"VAR", U"PRINT", U"BREAK", U"SET", U"RETURN", 
+     U"DO", U"IF", U"THEN", U"ELSE", U"END", U"BEFORE", U"ENTITY", 
+     U"ACCOUNT", U"TABLE", U"CREATE", U"NAMED", U"TRADING", U"RESIDENT", 
+     U"WITH", U"SCHEDULE", U"STARTS", U"OCCURS", U"EXCHANGE", 
+     U"CURRENCY" };
+    int symbols[] = { transcriptsym, bookkeepsym, debetsym, creditsym, 
+     commentsym, varsym, printsym, breaksym, setsym, returnsym, 
+     dosym, ifsym, thensym, elsesym, endsym, beforesym, entitysym, 
+     accountsym, tablesym, createsym, namedsym, tradingsym, residentsym, 
+     withsym, schedulesym, startssym, occurssym, exchangesym, 
+     currencysym };
+    merge₋to₋trie(29,keywords,symbols,&t->ctxt.keys);
+    break; }
+   case 2: {
+    char32̄_t * keywords[] = { U"DUP", U"POP", U"SWAP", U"REPORT", U"BOLD" };
+    int symbols[] = { dupsym, popsym, swapsym, reportsym, boldsym };
+    merge₋to₋trie(5,keywords,symbols,&t->ctxt.keys);
+    break; }
+   }
    return 0;
 }
 
@@ -150,14 +160,14 @@ unagain:
     return false;
 };
 
-void assign₋symbol(enum symbol₋class s, Symbol * sym, Translation * t, short count₋impression)
-{ sym->symbol.class=s;
-   if (count₋impression >= 2) t->s₋ctxt.tip₋unicode+=count₋impression-1;
-   location₋symbol(&t->s₋ctxt.interval,count₋impression,&t->symbol.gritty.interval);
+void assign₋symbol(enum symbol₋class s, Symbol * sym, struct language₋context * ctxt, short count₋impression)
+{ sym->class=s;
+   if (count₋impression >= 2) ctxt->tip₋unicode+=count₋impression-1;
+   location₋symbol(&ctxt->interval,count₋impression,&sym->gritty.interval);
 }
 
-int next₋token₋inner(Translation * t, Symbol * sym)
-{ __builtin_int_t i,symbols=t->s₋ctxt.program₋text.tetras; char32̄_t uc,uc₊₁,uc₊2;
+int next₋token₋inner(Translation * t, Symbol * out)
+{ __builtin_int_t i,symbols=t->ctxt.program₋text.tetras; char32̄_t uc,uc₊₁,uc₊2;
     int lift₋count=0,sym;
    typedef int (^type)(char32̄_t);
    type digit = ^(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; };
@@ -170,26 +180,26 @@ int next₋token₋inner(Translation * t, Symbol * sym)
 
    🧵(identifier,machine₋constant,fixpoint₋constant,keyword,trouble,completion,unicodes)
    {
-   case completion: assign₋symbol(eot₋and₋file,t,0); return 0;
-   case trouble: print("trouble occurred at ⬚.\n", ﹟d(t->s₋ctxt.tip₋unicode)); return -1;
+   case completion: assign₋symbol(eot₋and₋file,out,&t->ctxt,0); return 0;
+   case trouble: print("trouble occurred at ⬚.\n", ﹟d(t->ctxt.tip₋unicode)); return -1;
    }
 again:
-   i=t->s₋ctxt.tip₋unicode; t->s₋ctxt.tip₋unicode+=1;
+   i=t->ctxt.tip₋unicode; t->ctxt.tip₋unicode+=1;
    if (i>=symbols) confess(completion);
    goto again;
 }
 
 int next₋token₋streck(Translation * t)
 { int y;
-   if (t->s₋ctxt.tip₋unicode == 0) {
-     y = next₋token₋inner(t);
-     if (y != 0) { Diagnos(1,t->s₋ctxt.source₋path,&t->symbol.gritty.interval,1,"scanner error: initial trouble"); exit(2); }
+   if (t->ctxt.tip₋unicode == 0) {
+     y = next₋token₋inner(t,&t->symbol);
+     if (y != 0) { Diagnos(1,t->ctxt.source₋path,&t->symbol.gritty.interval,1,"scanner error: initial trouble"); exit(2); }
    } else {
      t->symbol₋passed = t->symbol;
      t->symbol = t->retrospect;
    }
    y = next₋token₋inner(t,&t->retrospect);
-   if (y != 0) { Diagnos(1,t->s₋ctxt.source₋path,&t->symbol.gritty.interval,1,"scanner error: advance failure"); exit(3); }
+   if (y != 0) { Diagnos(1,t->ctxt.source₋path,&t->retrospect.gritty.interval,1,"scanner error: advance failure"); exit(3); }
 #if defined TRACE₋TOKENS
    void trace₋streck₋token(Symbol symbol, struct collection * ident);
    trace₋streck₋token(t->symbol,t->ident);
@@ -432,8 +442,8 @@ main(
     if (rule₋path) {
       symbols = Heap₋object₋size(rules)/4;
       struct Unicodes initial₋program = { symbols, rules };
-      trans.s₋ctxt.program₋text = initial₋program;
-      if (Init₋translation₋unit(rule₋path,&trans)) { exit(31); }
+      trans.ctxt.program₋text = initial₋program;
+      if (Init₋translation₋unit(rule₋path,&trans,1)) { exit(31); }
       if (Prepared(rule₋path,&trans)) { exit(4); }
       if (BsimParse(&trans,&machine₋ctxt)) { exit(5); }
     }
@@ -445,8 +455,8 @@ again:
     events = open₋and₋decode(file₋ref,true,&err);
     symbols = Heap₋object₋size(events)/4;
     struct Unicodes main₋program = { symbols, events };
-    trans.s₋ctxt.program₋text = main₋program;
-    if (Init₋translation₋unit(file₋ref,&trans)) { exit(33); }
+    trans.ctxt.program₋text = main₋program;
+    if (Init₋translation₋unit(file₋ref,&trans,1)) { exit(33); }
     if (Prepared(file₋ref,&trans)) { exit(7); }
     if (BsimParse(&trans,&machine₋ctxt)) { exit(8); }
     Fallow(events); idx+=1; goto again;
@@ -460,6 +470,7 @@ unagain:
     { chronology₋instant bye₋ts; /* 𝘦․𝘨 'material ending 2019-12-24 23:59:59 rendered 2022-09-23 17:05'. */
       symbols = Heap₋object₋size(figures)/4;
       struct Unicodes program = { symbols, figures };
+      if (Init₋translation₋unit(rule₋path,&trans,2)) { exit(37); }
       if (Tableparse(program,figures₋path,&trans)) { exit(10); }
       if (Rendertable(&trans,&simulator,bye₋ts)) { exit(11); }
     }
