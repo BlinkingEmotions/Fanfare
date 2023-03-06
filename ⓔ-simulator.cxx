@@ -53,8 +53,9 @@ int EvaluateCommand(char8₋t * entered)
    char * first = strtok_r((char *)entered,delim,&state);
    if (first == NULL) return CONTINUE_INTERACT;
    char * second = strtok_r(NULL,delim,&state);
-   if (second == NULL) return Execute(1,{first});
-   else return Execute(2,{first,second});
+   char * one[] = { first }, *two[] = { first, second };
+   if (second == NULL) return Execute(1,one);
+   else return Execute(2,two);
    return CONTINUE_INTERACT;
 } /* recognize keyword and zero alternatively one arguments: 
   quit, help, list schedule|entity|currency|exchange, 
