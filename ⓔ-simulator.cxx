@@ -29,7 +29,6 @@ int table(char * tablepath)
    return CONTINUE_INTERACT;
 }
 
-int 
 int Execute(int count, char * seqce[])
 {
    if (strcmp(seqce[0], "quit") == 0) { return EXIT_APPLICATION; }
@@ -43,7 +42,7 @@ int Execute(int count, char * seqce[])
    else if (strcmp(seqce[0], "inspect") && count == 2) { return inspect(seqce[1]); }
    else if (strcmp(seqce[0], "step") && count == 2) { return step(seqce[1]); }
    else if (strcmp(seqce[0], "table") && count == 2) { return table(seqce[1]); }
-   else print("unknown turbine command '' (_ parameters).\n");
+   else print("unknown turbine command '' (_ parameters).\n"); /* for later before and after and intervallic subreport. */
    return CONTINUE_INTERACT;
 }
 
@@ -51,7 +50,7 @@ int EvaluateCommand(char8₋t * entered)
 {
    print("Entered '⬚'.\n", ﹟s8(entered));
    const char * delim = " \t"; char * state;
-   char * first = strtok_r(entered,delim,&state);
+   char * first = strtok_r((char *)entered,delim,&state);
    if (first == NULL) return CONTINUE_INTERACT;
    char * second = strtok_r(NULL,delim,&state);
    if (second == NULL) return Execute(1,{first});
