@@ -6,7 +6,6 @@ import Twinbeam;
 #include <sys/rbtree.h>
 #include <unicode/ustring.h>
 #include <string.h>
-#include <stdio.h>
 
 struct perform {
   int a,b,c;
@@ -34,6 +33,41 @@ signed int compare_nodes(void * context, const  void *node1, const void *node2)
 { return strcmp(((material *)node1)->name,((material *)node2)->name); }
 signed int compare_key(void * context, const void *node, 
  const void * key) { return strcmp(((material *)node)->name,(const char *)key); }
+
+UChar * to_unicode1(char * cstr)
+{
+   size_t srclen = strlen(cstr);
+   int32_t capacity = srclen*4;
+   UChar * eight=malloc(capacity);
+   eight = u_uastrcpy(eight,cstr); /* UErrorCode error; dst = u_strFromUTF8(dst,capacity,&actual,cstr,srclen,&error); */
+   return eight;
+}
+
+char * to_cstring(UChar * str)
+{
+   int32_t len = u_strlen(str);
+   char * thirtytwo = malloc(len*4);
+   thirtytwo = u_austrcpy(thirtytwo,str);
+   return thirtytwo;
+}
+
+int tokenize(UChar * str, const UChar * delim, void (^token)(UChar * word))
+{
+   UChar *state,*first; int initial=1;
+again:
+   first = u_strtok_r(initial ? str : NULL,delim,&state);
+   if (first != NULL) { token(first); initial=0; goto again; }
+   return 0;
+}
+
+int IsFileSuffix(const char * suffix, char8₋t * one₋filepath)
+{
+   UChar * filepath = to_unicode1((char *)one₋filepath);
+   static const UChar dot[]={ 0x46, 0x00 };
+   UChar * lastdot = u_strrstr(filepath,dot); 
+   UChar * u_suffix = to_unicode1((char *)suffix);
+   return u_strcmp(lastdot,u_suffix) == 0;
+}
 
 int
 main(
@@ -78,25 +112,19 @@ main(
    if (u_strcmp(left,right) == 0) print("equal");
    else print("non-equal\n");
    
-   UChar myUString[256];
-   u_memset(myUString, 0x2a, sizeof(myUString)/sizeof(*myUString));
-   
-   UChar * eight=malloc(12*4);
-   eight = u_uastrcpy(eight,"hello world");
-   
-   static const UChar delim[]={ 0x20 };
-   UChar * state;
-   UChar * first = u_strtok_r(eight,delim,&state);
+   UChar * str = to_unicode1("hello world");
+   static const UChar delim[]={ 0x20, 0x00 };
 
-   char * thirtytwo=malloc(12*4);
-   thirtytwo = u_austrcpy(thirtytwo,first);
-   printf("text2 is '%s'\n",thirtytwo);
-   free(eight); free(thirtytwo);
-   
-   /* u_strrstr, u_strtok_r, u_strcpy */
+   if (tokenize(str,delim, ^(UChar * word) {
+     char * cstr = to_cstring(word);
+     print("token is '⬚'.\n",﹟s7(cstr));
+     free(cstr);
+   })) { return 1; }
+   free(str);
    return 0;
-}
+   }
 
 /* clang -g -fmodules-ts -fimplicit-modules -fmodule-map-file=🚦.modules      \
  '∎|∎ eff.c' ../Apps/Source/Releases/libTwinbeam-x86_64.a */
+
 
