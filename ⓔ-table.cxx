@@ -1,9 +1,15 @@
 /*  ⓔ-table.cxx | render table with scalars and intervals. */
 
 int next₋token₋inner₂(Translation * t, struct token₋detail * detail₋out)
-{
+{ __builtin_int_t i,symbols=t->ctxt.program₋text.tetras; char32̄_t uc,uc₊₁,uc₊₂;
+   int lift₋count=0,sym;
+   🧵(identifer,keyword,trouble,completion)
+   {
+   case completion: break;
+   case trouble: break;
+   }
 again:
-   i=t₋ctxt->tip₋unicode,t₋ctxt->tip₋unicode+=1;
+   i=t->ctxt.tip₋unicode,t->ctxt.tip₋unicode+=1;
    if (i >= symbols) confess(completion);
    return 0;
 }
