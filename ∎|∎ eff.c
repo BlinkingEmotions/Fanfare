@@ -74,11 +74,11 @@ UChar * to_unicode2(char8₋t * cstr, int32_t * actual)
    u_strFromUTF8(NULL,0,&found,(char *)cstr,-1,&error);
    int32_t capacity = (found + 1)*sizeof(UChar);
    UChar * dst = malloc(capacity);
-   size_t srclen = strlen((char *)cstr); /* replace with 'Utf8BytesUntilZero'. */
+   /* size_t srclen = strlen((char *)cstr); / * replace with 'Utf8BytesUntilZero'. */
    error=U_ZERO_ERROR;
    dst = u_strFromUTF8(dst,capacity,
     ((actual==0) ? &found : actual), 
-    (char *)cstr,srclen,&error);
+    (char *)cstr,-1,&error);
    return dst;
 }
 
