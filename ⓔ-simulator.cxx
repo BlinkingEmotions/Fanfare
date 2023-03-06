@@ -37,7 +37,7 @@ int Execute(int count, char * seqce[])
      "The turbin shell responds to a selection of keywords with zero "
      "alternatively one argument:\n\n  list schedule|entity|"
      "currency|exchange,\n  general <entity>,\n  inspect <entity>,\n  continue,\n  "
-     "step statement|iteration,\n  table <filepath>.\n  'quit',\n  'help'.\n\n"); }
+     "step statement|iteration,\n  table <filepath>,\n  'quit',\n  'help'.\n\n"); }
    else if (strcmp(seqce[0], "continue") == 0) { return EXIT_INTERACTIVE; }
    else if (strcmp(seqce[0], "list") && count == 2) { return list(seqce[1]); }
    else if (strcmp(seqce[0], "general") && count == 2) { return general(seqce[1]); }
