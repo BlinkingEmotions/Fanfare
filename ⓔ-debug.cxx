@@ -64,7 +64,7 @@ void trace₋streck₋token(Symbol symbol, struct collection * identifiers)
    case gtr: token("'>'"); break;
    case geq: token("'>='"); break;
    case eqlone: token("'=' (one symbol)"); break;
-   case functionsym: token("FUNCTION"); break;
+   case transcriptsym: token("TRANSCRIPT"); break;
    case instant: token("<instant>"); break;
    case bookkeepsym: token("'BOOKKEEP"); break;
    case debetsym: token("'DEBET'"); break;
@@ -88,15 +88,14 @@ void trace₋streck₋token(Symbol symbol, struct collection * identifiers)
    case entitysym: token("'ENTITY'"); break;
    case accountsym: token("'ACCOUNT'"); break;
    case tablesym: token("'TABLE'"); break;
-   case fromsym: token("'FROM'"); break;
    case createsym: token("'CREATE'"); break;
    case namedsym: token("'NAMED'"); break;
    case tradingsym: token("'TRADING'"); break;
    case residentsym: token("'RESIDENT'"); break;
    case withsym: token("'WITH'"); break;
    case schedulesym: token("'SCHEDULE'"); break;
-   case startingsym: token("'STARTING'"); break;
-   case occurringsym: token("'OCCURRING'"); break;
+   case startssym: token("'STARTS'"); break;
+   case occurssym: token("'OCCURS'"); break;
    case exchangesym: token("'EXCHANGE'"); break;
    case currencysym: token("'CURRENCY'"); break;
    case lbracksym: token("'['"); break;
