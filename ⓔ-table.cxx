@@ -3,9 +3,9 @@
 int next₋token₋inner₂(Translation * t, Symbol * detail₋out)
 { __builtin_int_t i,symbols=t->ctxt.program₋text.tetras; char32̄_t uc,uc₊₁,uc₊₂;
    int lift₋count=0,sym;
-   🧵(identifer,keyword,unicodes,trouble,completion)
+   🧵(identifier,keyword,unicodes,trouble,completion)
    {
-   case identifer: copy₋identifier(&t->ctxt,t->ident,detail₋out); t->ctxt.syms₋in₋regular=0; 
+   case identifier: copy₋identifier(&t->ctxt,t->ident,detail₋out); t->ctxt.syms₋in₋regular=0; 
     t->ctxt.state=mode₋initial; return 0;
    case keyword: assign₋symbol₋noforward(sym,detail₋out,&t->ctxt,t->ctxt.syms₋in₋regular); 
     t->ctxt.syms₋in₋regular=0; t->ctxt.state=mode₋initial; return 0;
@@ -45,29 +45,32 @@ again:
    ELIF₋INIT₋WITH₋ONE(U'+') { assign₋symbol(plus,detail₋out,&t->ctxt,1); RET }
    ELIF₋INIT₋WITH₋ONE(U'-') { assign₋symbol(minus,detail₋out,&t->ctxt,1); RET }
    else if (STATE(mode₋initial) && uc == U'\'') {
-     t->ctxt.reference₋quoted = collection₋count(text₋unicode);
-     if (copy₋prepare₋datum(text₋unicode,Alloc)) confess(trouble);
+     t->ctxt.reference₋quoted = collection₋count(t->text);
+     if (copy₋prepare₋datum(t->text,Alloc)) confess(trouble);
      t->ctxt.syms₋in₋quotes=0;
      t->ctxt.state = mode₋quotes₋text;
-     location₋legion(&ctxt->interval);
+     location₋legion(&t->ctxt.interval);
    }
    else if (STATE(mode₋quotes₋text) && uc != U'\'') {
-     if (uc == U'\\' && uc₊₁ == U'"') { ctxt->tip₋unicode+=1; uc=U'"'; }
-     if (copy₋append₋onto₋regular(text₋unicode,1,&uc,Alloc)) confess(trouble);
+     if (uc == U'\\' && uc₊₁ == U'"') { t->ctxt.tip₋unicode+=1; uc=U'"'; }
+     if (copy₋append₋onto₋regular(t->text,1,&uc,Alloc)) confess(trouble);
    }
    else if (STATE(mode₋quotes₋text) && uc == U'\'') {
-     if (regularpool₋datum₋text(text₋unicode,ctxt->syms₋in₋quotes, 
-      ctxt->reference₋quoted)) return -1;
-     assign₋symbol₋noforward(unicode₋textsym,ctxt->syms₋in₋quotes,out);
+     if (regularpool₋datum₋text(t->text,t->ctxt.syms₋in₋quotes, 
+      t->ctxt.reference₋quoted)) return -1;
+     assign₋symbol₋noforward(quotesym,detail₋out,&t->ctxt,t->ctxt.syms₋in₋quotes);
      confess(unicodes);
    }
    else if ((STATE(mode₋initial) && letter(uc)) || (STATE(mode₋regular) && (letter(uc) || digit(uc)))) {
-     if (ctxt->syms₋in₋regular == 2048) { error(1,"identifier and keyword too long"); confess(trouble); }
-     ctxt->regular[ctxt->syms₋in₋regular]=uc;
-     ctxt->syms₋in₋regular+=1;
-     ctxt->state = mode₋regular;
+     if (t->ctxt.syms₋in₋regular == 2048) { 
+      Diagnos(1,t->ctxt.source₋path,&t->symbol.gritty.interval,1,
+         "identifier and keyword too long"); 
+      confess(trouble); }
+     t->ctxt.regular[t->ctxt.syms₋in₋regular]=uc;
+     t->ctxt.syms₋in₋regular+=1;
+     t->ctxt.state = mode₋regular;
      if (!letter(uc₊₁) && !digit(uc₊₁)) {
-       if (!trie₋keyword(ctxt->syms₋in₋regular,ctxt->regular,&sym,&(Ctxt.keys))) { confess(keyword); }
+       if (!trie₋keyword(t->ctxt.syms₋in₋regular,t->ctxt.regular,&sym,&t->ctxt.keys)) { confess(keyword); }
        confess(identifier);
      }
    }
