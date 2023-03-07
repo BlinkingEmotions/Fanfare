@@ -88,13 +88,16 @@ void assign₋symbol(enum symbol₋class s, short advance, Symbol * sym)
 }
 
 int copy₋identifier(struct language₋context * ctxt, Symbol * out)
-{ __builtin_int_t tetras=ctxt->syms₋in₋regular;
-   out->class=ident; location₋symbol(&ctxt->interval,tetras,&out->gritty.interval);
-   char32̄_t * ucs=ctxt->regular; Nonabsolute reference;
-   if (copy₋append₋onto₋regular(identifiers,tetras,ucs,Alloc,&reference)) return -1;
+{ char32̄_t * ucs=ctxt->regular;
+   __builtin_int_t tetras=ctxt->syms₋in₋regular;
+   Nonabsolute reference = collection₋count(identifiers);
+   if (copy₋prepare₋datum(identifiers,Alloc)) return -1;
+   if (copy₋append₋onto₋regular(identifiers,tetras,ucs,Alloc)) return -1;
    if (regularpool₋datum₋text(identifiers,tetras,reference)) return -1;
+   location₋symbol(&ctxt->interval,tetras,&out->gritty.interval);
+   out->class=ident; out->gritty.kind=1;
+   out->gritty.store.regular=reference;
    /* print("storing datum at tetra no ⬚ (⬚ symbols)\n",﹟d(reference),﹟d(tetras)); */
-   out->gritty.kind=1; out->gritty.store.regular=reference;
    return 0;
 }
 
@@ -155,7 +158,7 @@ int next₋token₋inner(struct language₋context * ctxt, Symbol * out)
     return 0;
    case keyword: assign₋symbol₋noforward(sym,ctxt->syms₋in₋regular,out); 
     ctxt->syms₋in₋regular=0; ctxt->state=mode₋initial; return 0;
-   case unicodes: return 0;
+   case unicodes: ctxt->state=mode₋initial; return 0;
    case completion: assign₋symbol(eot₋and₋file,0,out); return 0;
    case trouble: print("trouble occurred at ⬚.\n",﹟d(ctxt->tip₋unicode)); 
     return -1;
@@ -174,7 +177,6 @@ again:
      location₋nextline(&ctxt->interval);
    }
    else if (STATE(mode₋initial) && uc == U'\xd') { /* do nothing */ }
-   
    else if (STATE(mode₋initial) && uc == U'/' && uc₊₁ == U'*') { 
     ctxt->tip₋unicode+=1,ctxt->state=mode₋multi₋ekunem; }
    else if (STATE(mode₋multi₋ekunem) && uc == U'\n') { 
@@ -182,12 +184,10 @@ again:
    else if (STATE(mode₋multi₋ekunem) && uc == U'*' && uc₊₁ == U'/') {
     ctxt->tip₋unicode+=1,ctxt->state=mode₋initial; }
    else if (STATE(mode₋multi₋ekunem)) { /* do nothing */ }
-   
    else if (STATE(mode₋initial) && uc == U'/' && uc₊₁ == U'/') { 
     ctxt->tip₋unicode+=1,ctxt->state=mode₋single₋ekunem; }
    else if (STATE(mode₋single₋ekunem) && uc == '\xa') { ctxt->state=mode₋initial; location₋nextline(&ctxt->interval); }
    else if (STATE(mode₋single₋ekunem)) { /* do nothing */ }
-   
    ELIF₋INIT₋WITH₋ONE(U' ') location₋legion(&ctxt->interval);
    ELIF₋INIT₋WITH₋ONE(U'\t') location₋legion(&ctxt->interval);
    ELIF₋INIT₋WITH₋ONE(U'(') { assign₋symbol(lparen,1,out); RET }
@@ -231,23 +231,21 @@ again:
    /* else if (STATE(mode₋initial) && UC == U'\x----') { assign₋SYMBOL(symbol₋for₋popovertext,1,out); } ⁄* multiple-line material rendered as popover inside editor at hoover. */
    /* \later 'text-block rendition-interpretation and painters-knife' (\see 77995 Sat, 18 Feb 2023 05:25). ⌥ + '-' is '–' and ⌥ + shift + '-' is '—'. */
    ELIF₋INIT₋WITH₋ONE(U'\x2405') { assign₋symbol(symbol₋for₋enquery,1,out); RET } /* toggle fold/unfold at double-click. */
- 
    else if (STATE(mode₋initial) && uc == U'"') {
      ctxt->reference₋quoted = collection₋count(text₋unicode);
+     if (copy₋prepare₋datum(text₋unicode,Alloc)) confess(trouble);
      ctxt->syms₋in₋quotes=0;
      ctxt->state = mode₋quotes₋text;
      location₋legion(&ctxt->interval);
    }
-   else if (STATE(mode₋quotes₋text)) {
-     if (uc == U'"') {
-       if (regularpool₋datum₋text(text₋unicode,ctxt->syms₋in₋quotes, 
-        ctxt->reference₋quoted)) confess(trouble);
-       assign₋symbol₋noforward(unicode₋textsym,ctxt->syms₋in₋quotes,out); 
-       ctxt->state = mode₋initial; return 0; }
-     else { if (uc == U'\\' && uc₊₁ == U'"') { ctxt->tip₋unicode+=1; uc=U'"'; }
-       if (copy₋append₋onto₋regular(text₋unicode,1,&uc,Alloc,
-        &ctxt->reference₋quoted)) confess(trouble);
-     }
+   else if (STATE(mode₋quotes₋text) && uc != U'"') {
+     if (uc == U'\\' && uc₊₁ == U'"') { ctxt->tip₋unicode+=1; uc=U'"'; }
+     if (copy₋append₋onto₋regular(text₋unicode,1,&uc,Alloc)) confess(trouble);
+   }
+   else if (STATE(mode₋quotes₋text) && uc == U'"') {
+     if (regularpool₋datum₋text(text₋unicode,ctxt->syms₋in₋quotes, 
+       ctxt->reference₋quoted)) return -1;
+     assign₋symbol₋noforward(unicode₋textsym,ctxt->syms₋in₋quotes,out);
      confess(unicodes);
    }
    else if (STATE(mode₋fraction) && digit(uc)) {
