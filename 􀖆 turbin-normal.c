@@ -9,15 +9,15 @@ enum symbol₋class { ident=1, machine, monetary, times, divide, plus, minus,
  beforesym, andsym, orsym, notsym, xorsym, entitysym, accountsym, tablesym, 
  createsym, namedsym, tradingsym, residentsym, withsym, schedulesym, 
  startssym, occurssym, exchangesym, currencysym, lbracksym, rbracksym, popsym, 
- swapsym, dupsym, reportsym, boldsym, eot₋and₋file, unarbitrated₋symbol 
+ swapsym, dupsym, reportsym, boldsym, quotesym, eot₋and₋file, 
+ unarbitrated₋symbol 
 };
 
 /* compile with ./retro-mac.sh essence-turbin */
 
 enum language₋mode {
   mode₋initial, mode₋integer, mode₋regular, mode₋fraction, 
-  mode₋singleline₋comment, mode₋multiline₋comment, 
-  mode₋quotes₋text 
+  mode₋single₋ekunem, mode₋multi₋ekunem, mode₋quotes₋text 
 };
 
 typedef int64_t     Integer;
@@ -46,7 +46,7 @@ struct language₋context
 }; /*  a․𝘬․a 'verificate₋parser and token-i-sa-tio-n. language and code 
  library is exercised in a separate language for auctions and the agreement. */
 
-struct token₋detail
+typedef struct token₋detail
 {
   union { 
     Nonabsolute regular;
@@ -56,9 +56,9 @@ struct token₋detail
   int kind;
   struct language₋context * predecessor;
   struct source₋location interval;
-};
+} Td;
 
-typedef struct Symbol { enum symbol₋class class; struct token₋detail gritty; } Symbol;
+typedef struct Symbol { enum symbol₋class class; Td gritty; } Symbol;
 
 struct dynamic₋bag { };
 
@@ -119,14 +119,14 @@ Argᴾ ﹟ident(struct collection * ident, Nonabsolute relative)
 
 struct { __builtin_uint_t diagnosis₋count,bitmap; } error₋panel;
 
-#define STATE1(s) (s == s₋ctxt->state)
+#define STATE(s) (s == t->ctxt.state)
 #define TRACE₋TOKENS  /* while reading .streck and .table files, print-out tokens on stdout. */
 #define TRACE₋SYNTAX /* after parsing .streck files, print the indented syntax tree on stdout. */
 #define TRACE₋SYMBOLS /* emit all symbols in string pool. */
 #define TRACE₋ENCODING /* after decoding utf-8 output the decoded Unicodes to stdout. */
 
-void Diagnos(int type, char8₋t * src₋path, struct source₋location * l, int bye, 
-   const char * sevenbit₋utf8, ...)
+void Diagnos(int type, char8₋t * src₋path, struct source₋location * l, 
+ int bye, const char * sevenbit₋utf8, ...)
 {  va_prologue(sevenbit₋utf8); ;
    __builtin_int_t lineno₋first=l->lineno₋first, 
     linecount=(l->lineno₋last-l->lineno₋first+1), 
@@ -139,12 +139,14 @@ void Diagnos(int type, char8₋t * src₋path, struct source₋location * l, int
    typedef void (^Output)(char8₋t * u8s, __builtin_int_t bytes);
    extern int print﹟(Output,const char *,__builtin_va_list);
    extern int write(int,const void *,int);
-   Output output = ^(char8₋t * u8s, __builtin_int_t bytes) { write(2,(const void *)u8s,bytes); };
+   Output output = ^(char8₋t * u8s, __builtin_int_t bytes) { 
+    write(2,(const void *)u8s,bytes); };
    print﹟(output,sevenbit₋utf8,__various);
    vfprint(")\n");
    va_epilogue;
    if (bye) { exit(29); } else { error₋panel.diagnosis₋count += 1; }
-} /* type determines void, sevenbit text starts with 'info', 'warning', 'error', 'intern'. */
+} /* type determines void, sevenbit text starts with 'info', 'warning', 
+ 'error', 'intern'. */
 
 int special(char32̄_t uc)
 { int i=0;
@@ -160,28 +162,79 @@ unagain:
     return false;
 };
 
-void assign₋symbol(enum symbol₋class s, Symbol * sym, struct language₋context * ctxt, short count₋impression)
+int digit(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; }
+int arabic(char32̄_t uc) { return (U'a' <= uc && uc <= U'z') || 
+ (U'A' <= uc && uc <= U'Z') || uc == U'₋'; }
+int subscript(char32̄_t uc) { return U'₀' <= uc && uc <= U'₉'; }
+int supscript(char32̄_t uc) { return U'⁰' <= uc && uc <= U'⁹'; }
+int letter(char32̄_t uc) { return arabic(uc) || subscript(uc) || 
+ supscript(uc) || special(uc); };
+
+void assign₋symbol(enum symbol₋class s, Symbol * sym, struct language₋context 
+ * ctxt, short count₋impression)
 { sym->class=s;
    if (count₋impression >= 2) ctxt->tip₋unicode+=count₋impression-1;
    location₋symbol(&ctxt->interval,count₋impression,&sym->gritty.interval);
 }
 
+int copy₋identifier(struct language₋context * ctxt, struct collection * 
+ identifiers, Symbol * out) 
+{ char32̄_t * ucs=ctxt->regular;
+   __builtin_int_t tetras=ctxt->syms₋in₋regular;
+   Nonabsolute reference = collection₋count(identifiers);
+   if (copy₋prepare₋datum(identifiers,Alloc)) return -1;
+   if (copy₋append₋onto₋regular(identifiers,tetras,ucs,Alloc)) return -1;
+   if (regularpool₋datum₋text(identifiers,tetras,reference)) return -1;
+   location₋symbol(&ctxt->interval,tetras,&out->gritty.interval);
+   out->class=ident; out->gritty.kind=1;
+   out->gritty.store.regular=reference;
+   return 0;
+}
+
+int copy₋number(struct language₋context * ctxt, Symbol * out, int type)
+{
+   location₋symbol(&ctxt->interval,ctxt->syms₋in₋number,&out->gritty.interval);
+   switch (type)
+   {
+   case 1:
+     out->class=machine; 
+     out->gritty.store.integer = ctxt->ongoing₋number;
+     out->gritty.kind=3;
+     break;
+   case 2:
+     out->class=monetary;
+     out->gritty.store.number = (double)ctxt->ongoing₋number;
+     out->gritty.store.number += 0.0; /* ! \see --<Additions>--<monolith-sequent.c>{fraction₋to₋sequent}. */
+     out->gritty.kind=2;
+     break;
+   }
+   return 0;
+}
+
+void assign₋symbol₋noforward(enum symbol₋class s, Symbol * sym, struct language₋context 
+ * ctxt, short count₋impression)
+{ sym->class=s;
+   location₋symbol(&ctxt->interval,count₋impression,&sym->gritty.interval);
+}
+
+#define ELIF₋INIT₋WITH₋ONE(sym) else if (STATE(mode₋initial) && uc == sym)
+#define ELIF₋INIT₋WITH₋TWO(sym1,sym2) else if (STATE(mode₋initial) &&        \
+ uc == sym1 && uc₊₁ == sym2) 
+#define ELIF₋INIT₋WITH₋TEE(sym1,sym2,sym3) else if (STATE(mode₋initial) &&   \
+ uc == sym1 && uc₊₁ == sym2 && uc₊₂ == sym3)
+#define RET return 0;
+#define EL₋CONFESS else confess(trouble);
+
 int next₋token₋inner(Translation * t, Symbol * out)
 { __builtin_int_t i,symbols=t->ctxt.program₋text.tetras; char32̄_t uc,uc₊₁,uc₊2;
     int lift₋count=0,sym;
-   typedef int (^type)(char32̄_t);
-   type digit = ^(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; };
-   type arabic = ^(char32̄_t uc) { return (U'a' <= uc && uc <= U'z') || 
-    (U'A' <= uc && uc <= U'Z') || uc == U'₋'; };
-   type subscript = ^(char32̄_t uc) { return U'₀' <= uc && uc <= U'₉'; };
-   type supscript = ^(char32̄_t uc) { return U'⁰' <= uc && uc <= U'⁹'; };
-   type letter = ^(char32̄_t uc) { return arabic(uc) || subscript(uc) || 
-    supscript(uc) || special(uc); };
-
-   🧵(identifier,machine₋constant,fixpoint₋constant,keyword,trouble,completion,unicodes)
+ 
+   🧵(identifier,machine₋constant,fixpoint₋constant,keyword,trouble, \
+    completion,unicodes)
    {
    case completion: assign₋symbol(eot₋and₋file,out,&t->ctxt,0); return 0;
-   case trouble: print("trouble occurred at ⬚.\n", ﹟d(t->ctxt.tip₋unicode)); return -1;
+   case trouble: vfprint("trouble occurred at ⬚.\n", ﹟d(t->ctxt.tip₋unicode)); 
+    return -1;
    }
 again:
    i=t->ctxt.tip₋unicode; t->ctxt.tip₋unicode+=1;
@@ -193,16 +246,18 @@ int next₋token₋streck(Translation * t)
 { int y;
    if (t->ctxt.tip₋unicode == 0) {
      y = next₋token₋inner(t,&t->symbol);
-     if (y != 0) { Diagnos(1,t->ctxt.source₋path,&t->symbol.gritty.interval,1,"scanner error: initial trouble"); exit(2); }
+     if (y != 0) { Diagnos(1,t->ctxt.source₋path,&t->symbol.gritty.interval,1, 
+      "streck scanner error, initial trouble"); exit(2); }
    } else {
      t->symbol₋passed = t->symbol;
      t->symbol = t->retrospect;
    }
    y = next₋token₋inner(t,&t->retrospect);
-   if (y != 0) { Diagnos(1,t->ctxt.source₋path,&t->retrospect.gritty.interval,1,"scanner error: advance failure"); exit(3); }
+   if (y != 0) { Diagnos(1,t->ctxt.source₋path,&t->retrospect.gritty.interval, 
+    1,"streck scanner error, advance failure"); exit(3); }
 #if defined TRACE₋TOKENS
-   void trace₋streck₋token(Symbol symbol, struct collection * ident);
-   trace₋streck₋token(t->symbol,t->ident);
+   void trace₋token(Symbol, struct collection *);
+   trace₋token(t->symbol,t->ident);
 #endif
    return 0;
 }
@@ -221,8 +276,9 @@ typedef struct dynamic₋bag sequences;
 
 #pragma recto parsing northern 'således' tran-sact-ions and veri-fi-c-at-es
 
-/* a․𝘬․a bokföringssed, custom and recollect. 𝘤𝘧․ anglo-saxian 'modelling', scandinavian 
- 'nogsamhet' and 'likely-surely'. And a․𝘬․a 'table₋parser' and terminals-and-nonterminals․ */
+/* a․𝘬․a bokföringssed, custom and recollect. 𝘤𝘧․ anglo-saxian 'modelling', 
+ scandinavian 'nogsamhet' and 'likely-surely'. And a․𝘬․a 'table₋parser' and 
+ terminals-and-nonterminals․ */
 
 typedef struct virtu₋context
 {
@@ -264,8 +320,8 @@ typedef struct Simulator {
 
 extern void EnterInteractiveMode(int * quit, Simulator * 🅢);
 extern int Simulate(simul₋context * 🆂, Simulator * 🅢);
-/* extern int Zebra(int count, chronology₋instant toggles[], chronology₋instant 
- now, double * out); sometime uniform and normal not same time. */
+/* extern int Zebra(int count, chronology₋instant toggles[], chronology₋
+ instant now, double * out); sometime uniform and normal not same time. */
 
 #include "ⓔ-simulator.cxx"
 
@@ -302,15 +358,19 @@ void Deinit₋context(simul₋context * ctxt)
 #include <unistd.h>
 #include <fcntl.h>
 
-char8₋t * figures₋path=ΨΛΩ;  /*  figures file and implicit DISPLAY TABLE at end-of-file. */
+char8₋t * figures₋path=ΨΛΩ;  /*  figures file and implicit DISPLAY TABLE at 
+ end-of-file. */
 
-char8₋t * rule₋path=ΨΛΩ; /*  rules file when not included in upper half of event file. */
+char8₋t * rule₋path=ΨΛΩ; /*  rules file when not included in upper half of 
+ event file. */
 
-int interactive=0;  /*  end with bye when file is read and report is written. */
+int interactive=0;  /*  end with bye when file is read and report is
+  written. */
 
 int read₋until₋row=0;  /*  parse-interpret only start of file. */
 
-struct collection filepaths₋sequence; /* with 'char8-t *' pointing on the .event files from command-line. */
+struct collection filepaths₋sequence; /* with 'char8-t *' pointing on the 
+ .event files from command-line. */
 
 unicode₋shatter figures, rules;  /*  unicodes with program text. */
 
@@ -333,9 +393,11 @@ again:
    token = *(argv + i);
    if (figures₋option) { figures₋path=token; figures₋option=0; goto next; }
    if (rule₋option) { rule₋path=token; rule₋option=0; goto next; }
-   if (only₋until₋row) { read₋until₋row=atoi((char *)token); only₋until₋row=0; goto next; }
+   if (only₋until₋row) { read₋until₋row=atoi((char *)token); 
+    only₋until₋row=0; goto next; }
    y = IsPrefixOrEqual((const char *)token,"-h");
-   if (y == -1) { vfprint("Usage ⬚ [-f <figures.table file>] [-r <business.streck file>] [-g] [-l] " 
+   if (y == -1) { vfprint("Usage ⬚ [-f <figures.table file>] [-r "
+    "<business.streck file>] [-g] [-l <lineno>] " 
     "<.streck files>\n", ﹟s8(argv[0])); exit(27); }
    y = IsPrefixOrEqual((const char *)token,"-f");
    if (y == -1) { figures₋option=1; goto next; }
@@ -344,25 +406,28 @@ again:
    y = IsPrefixOrEqual((const char *)token,"-g");
    if (y == -1) { interactive=1; goto next; }
    y = IsPrefixOrEqual((const char *)token,"-v");
-   if (y == -1) { char * tb; Identity₋Tb(&tb); vfprint("⬚ version ⬚ and tb-⬚.\n", 
-    ﹟s8(argv[0]), ﹟s7(SHA1GIT), ﹟s7(tb)); goto next; }
+   if (y == -1) { char * tb; Identity₋Tb(&tb); 
+    vfprint("⬚ version ⬚ and tb-⬚.\n",﹟s8(argv[0]),﹟s7(SHA1GIT),﹟s7(tb));
+    goto next; }
    y = IsPrefixOrEqual((const char *)token,"-l"); /* rows to process. */
    if (y == -1) { only₋until₋row=1; goto next; }
    y = IsPrefixOrEqual((const char *)token,"-");
-   if (y > 0 || y == 0) { vfprint("Unknown turbin parameter '⬚'.\n",﹟s8(token)); exit(21); }
+   if (y > 0 || y == 0) { vfprint("Unknown turbin parameter '⬚'.\n", 
+    ﹟s8(token)); exit(21); }
    append₋reference(token,&filepaths₋sequence);
 next:
    i+=1; goto again;
-descriptive₋error:
+descriptive:
    vfprint("turbin command-line error '⬚'\n",﹟s8(msg));
    return -1;
 unagain:
-   if (figures₋option) { msg=U8("no figures file given"); goto descriptive₋error; }
-   if (rule₋option) { msg=U8("no rule file given"); goto descriptive₋error; }
+   if (figures₋option) { msg=U8("no figures file given"); goto descriptive; }
+   if (rule₋option) { msg=U8("no rule file given"); goto descriptive; }
    return 0;
 }
 
-unicode₋shatter ᐝ open₋and₋decode(char8₋t * textfile, int expand₋tilde, int * err)
+unicode₋shatter ᐝ open₋and₋decode(char8₋t * textfile, int expand₋tilde, 
+ int * err)
 {
    const char * u8path𝘖r𝙽𝚄𝙻𝙻 = (const char *)textfile;
    if (expand₋tilde) { wordexp_t expansion₂; 
@@ -430,7 +495,8 @@ main(
    Translation trans;
     simul₋context machine₋ctxt;
     error₋panel.diagnosis₋count = 0;
-    if (collection₋init(sizeof(char8₋t *),4096,&filepaths₋sequence)) { exit(1); }
+    if (collection₋init(sizeof(char8₋t *),4096,&filepaths₋sequence)) { 
+     exit(1); }
     if (option₋machine₋interprets(argc,(char8₋t *ᐧ*)argv)) { exit(2); }
     if (figures₋path) { branch₋figures₋file(); } /*  optional .table file rendered at end. */
     if (rule₋path) { branch₋rule₋file(); }/*  optional and upper half of event file. */
@@ -447,9 +513,7 @@ main(
       if (Prepared(rule₋path,&trans)) { exit(4); }
       if (BsimParse(&trans,&machine₋ctxt)) { exit(5); }
     }
-    
 again:
-    
     if (idx >= collection₋count(&filepaths₋sequence)) { goto unagain; }
     file₋ref = (char8₋t *)collection₋relative(idx,&filepaths₋sequence);
     events = open₋and₋decode(file₋ref,true,&err);
@@ -460,9 +524,7 @@ again:
     if (Prepared(file₋ref,&trans)) { exit(7); }
     if (BsimParse(&trans,&machine₋ctxt)) { exit(8); }
     Fallow(events); idx+=1; goto again;
-    
 unagain:
-    
     if (interactive) { int quit; EnterInteractiveMode(&quit,&simulator); }
     if (Simulate(&machine₋ctxt,&simulator)) { exit(9); }
     
