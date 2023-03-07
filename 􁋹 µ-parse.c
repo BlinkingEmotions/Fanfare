@@ -16,7 +16,7 @@ enum symbol₋class { ident=1, number, times, divide, plus, minus, lparen,
  dowsingsym, ellipsissym, leftrightread, insym, presentsym, 
  serpentsummarysym, settingsym, referencessym, correctionssym, 
  flagsandnotessym, diffusesym, dotifsym, definedsym, dotdefinesym, 
- dotendsym, dotincludesym, systemsym, unicodesym, utf8sym, conceptsym, /* ⬷ ship-relation to do .*/
+ dotendsym, dotincludesym, systemsym, unicodesym, utf8sym, conceptsym, /* ⬷ ship-relation to do. */
  invariantsym, eot₋and₋file, intrinsicsym, unarbitrated₋symbol, 
  formalparamsym };
 
@@ -81,18 +81,11 @@ void error(int type, char text[], ...)
 
 struct collection *identifiers,*text₋unicode,*text₋utf8;
 
-void assign₋symbol(enum symbol₋class s, Symbol * sym, short count₋impression)
+void assign₋symbol(enum symbol₋class s, short advance, Symbol * sym)
 { sym->class=s;
-   if (count₋impression >= 2) Ctxt.tip₋unicode+=count₋impression-1;
-   location₋symbol(&Ctxt.interval,count₋impression,&sym->gritty.interval);
+   if (advance >= 2) Ctxt.tip₋unicode+=advance-1;
+   location₋symbol(&Ctxt.interval,advance,&sym->gritty.interval);
 }
-
-void assign₋symbol₋noforward(enum symbol₋class s, Symbol * sym, short count₋impression)
-{ sym->class=s;
-   location₋symbol(&Ctxt.interval,count₋impression,&sym->gritty.interval);
-}
-
-int symbol₋equal(enum symbol₋class s) { return symbol.class==s; }
 
 int copy₋identifier(struct language₋context * ctxt, Symbol * out)
 { __builtin_int_t tetras=ctxt->syms₋in₋regular;
@@ -124,10 +117,23 @@ int copy₋number(struct language₋context * ctxt, Symbol * out, int type)
    return 0;
 }
 
+void assign₋symbol₋noforward(enum symbol₋class s, short advance, Symbol * sym)
+{ sym->class=s;
+   location₋symbol(&Ctxt.interval,advance,&sym->gritty.interval);
+}
+
 Argᴾ ﹟ident(Nonabsolute regular)
 {
    return ﹟regularpool(identifiers,regular);
 }
+
+#define ELIF₋INIT₋WITH₋ONE(sym) else if (STATE(mode₋initial) && uc == sym)
+#define ELIF₋INIT₋WITH₋TWO(sym1,sym2) else if (STATE(mode₋initial) &&        \
+ uc == sym1 && uc₊₁ == sym2)
+#define ELIF₋INIT₋WITH₋TEE(sym1,sym2,sym3) else if (STATE(mode₋initial) &&   \
+ uc == sym1 && uc₊₁ == sym2 && uc₊2 == sym3)
+#define RET return 0;
+#define EL₋CONFESS else confess(trouble);
 
 int next₋token₋inner(struct language₋context * ctxt, Symbol * out)
 { __builtin_int_t i,symbols=text₋program.tetras; char32̄_t uc,uc₊₁,uc₊2; 
@@ -135,8 +141,10 @@ int next₋token₋inner(struct language₋context * ctxt, Symbol * out)
    typedef int (^type)(char32̄_t); ctxt->carrier₁=0;
    type digit = ^(char32̄_t uc) { return U'0' <= uc && uc <= U'9'; };
    type letter = ^(char32̄_t uc) { return (U'a' <= uc && uc <= U'z') || 
-    (U'A' <= uc && uc <= U'Z') || uc == U'₋' || (U'\x1f600' /*􀈂*/ <= uc && uc <= U'\x1008fa' /*􀣺*/); };
-   🧵(identifier,machine₋constant,fixpoint₋constant,keyword,trouble,completion,unicodes) {
+    (U'A' <= uc && uc <= U'Z') || uc == U'₋' || (U'\x1f600' /*􀈂*/ <= uc && 
+    uc <= U'\x1008fa' /*􀣺*/); };
+   🧵(identifier,machine₋constant,fixpoint₋constant,keyword,unicodes,        \
+    trouble,completion) {
    case identifier: copy₋identifier(ctxt,out); ctxt->syms₋in₋regular=0; 
     ctxt->state=mode₋initial; return 0;
    case machine₋constant: copy₋number(ctxt,out,1); ctxt->ongoing₋number=0; 
@@ -145,10 +153,12 @@ int next₋token₋inner(struct language₋context * ctxt, Symbol * out)
    case fixpoint₋constant: copy₋number(ctxt,out,2); ctxt->ongoing₋number=0; 
     ctxt->syms₋in₋number=ctxt->syms₋in₋fraction=0; ctxt->state=mode₋initial;
     return 0;
-   case keyword: assign₋symbol₋noforward(sym,out,ctxt->syms₋in₋regular); 
+   case keyword: assign₋symbol₋noforward(sym,ctxt->syms₋in₋regular,out); 
     ctxt->syms₋in₋regular=0; ctxt->state=mode₋initial; return 0;
-   case completion: assign₋symbol(eot₋and₋file,out,0); return 0;
-   case trouble: print("trouble occurred at ⬚.\n",﹟d(ctxt->tip₋unicode)); return -1;
+   case unicodes: return 0;
+   case completion: assign₋symbol(eot₋and₋file,0,out); return 0;
+   case trouble: print("trouble occurred at ⬚.\n",﹟d(ctxt->tip₋unicode)); 
+    return -1;
    }
 again:
    i=ctxt->tip₋unicode,ctxt->tip₋unicode+=1;
@@ -160,73 +170,83 @@ again:
    uc₊2 = lift₋count >= 1 ? U' ' : *(text₋program.unicodes + i + 2);
    if (STATE(mode₋initial) && uc == U'\xa') {
      /* lexer indicates 'semicolon on carriage return' (after reading retrospect) */
-     ctxt->carrier₁=1; /* assign₋symbol2(semicolon,out,1); */
+     ctxt->carrier₁=1; /* assign₋symbol2(semicolon,1,out); */
      location₋nextline(&ctxt->interval);
    }
-#define ELIF₋INIT₋WITH₋ONE(sym) else if (STATE(mode₋initial) && uc == sym)
-#define ELIF₋INIT₋WITH₋TWO(sym1,sym2) else if (STATE(mode₋initial) &&        \
- uc == sym1 && uc₊₁ == sym2)
-#define ELIF₋INIT₋WITH₋TEE(sym1,sym2,sym3) else if (STATE(mode₋initial) &&   \
- uc == sym1 && uc₊₁ == sym2 && uc₊2 == sym3)
-#define RET return 0;
-#define EL₋CONFESS else confess(trouble);
-   ELIF₋INIT₋WITH₋ONE(U'\xd') { /* do nothing */ }
-   ELIF₋INIT₋WITH₋ONE(U' ') location₋nextcolumn(&ctxt->interval);
-   ELIF₋INIT₋WITH₋ONE(U'\t') location₋nextcolumn(&ctxt->interval);
-   ELIF₋INIT₋WITH₋ONE(U'(') { assign₋symbol(lparen,out,1); RET }
-   ELIF₋INIT₋WITH₋ONE(U')') { assign₋symbol(rparen,out,1); RET }
-   ELIF₋INIT₋WITH₋ONE(U'*') { assign₋symbol(times,out,1); RET }
-   ELIF₋INIT₋WITH₋ONE(U'÷') { assign₋symbol(divide,out,1); RET } /* ⌥ + '/'. */
-   ELIF₋INIT₋WITH₋ONE(U'/') { assign₋symbol(divide,out,1); RET }
-   ELIF₋INIT₋WITH₋ONE(U'+') { assign₋symbol(plus,out,1); RET }
-   ELIF₋INIT₋WITH₋ONE(U'-') { assign₋symbol(minus,out,1); RET }
-   ELIF₋INIT₋WITH₋ONE(U'=') { assign₋symbol(eqlone,out,1); RET }
-   ELIF₋INIT₋WITH₋TWO(U'=',U'=') { assign₋symbol(eqltwo,out,2); RET }
-   ELIF₋INIT₋WITH₋TWO(U'<',U'>') { assign₋symbol(neq,out,2); RET }
-   ELIF₋INIT₋WITH₋ONE(U'≠') { assign₋symbol(neq,out,1); RET } /* ⌥ + '='. */
-   ELIF₋INIT₋WITH₋TWO(U'<',U'=') { assign₋symbol(leq,out,2); RET }
-   ELIF₋INIT₋WITH₋ONE(U'≤') { assign₋symbol(leq,out,1); RET } /* ⌥ + '<'. */
-   ELIF₋INIT₋WITH₋ONE(U'<') { assign₋symbol(lss,out,1); RET }
-   ELIF₋INIT₋WITH₋TWO(U'>',U'=') { assign₋symbol(geq,out,2); RET }
-   ELIF₋INIT₋WITH₋ONE(U'≥') { assign₋symbol(geq,out,1); RET } /* ⌥ + '>'. */
-   ELIF₋INIT₋WITH₋ONE(U'>') { assign₋symbol(gtr,out,1); RET }
-   ELIF₋INIT₋WITH₋ONE(U'¬') { assign₋symbol(logical₋not,out,1); RET } /* ⌥ + 'l'. ∧∨. */
-   ELIF₋INIT₋WITH₋ONE(U';') { assign₋symbol(semicolon,out,1); RET } /* @<semicolon₋processed@> twice. */
-   ELIF₋INIT₋WITH₋TWO(U':',U'=') { assign₋symbol(afterward,out,2); RET }
-   ELIF₋INIT₋WITH₋ONE(U':') { assign₋symbol(colon,out,1); RET }
-   ELIF₋INIT₋WITH₋ONE(U',') { assign₋symbol(comma,out,1); RET }
-   ELIF₋INIT₋WITH₋TWO(U'@',U'*') { assign₋symbol(paragraphsym,out,2); RET } /* paragraph, subsection and article. */
-   ELIF₋INIT₋WITH₋ONE(U'@') { assign₋symbol(subsectionsym,out,1); RET } /* section, claim, report and changes and subclause. */
-   ELIF₋INIT₋WITH₋TEE(U'@',U'>',U'=') { assign₋symbol(start₋indenturesym,out,3); RET } /* schedule, expenditures, jurisdiction. */
-   ELIF₋INIT₋WITH₋TWO(U'@',U'<') { assign₋symbol(referenceindenture₋startsym,out,2); RET } /* exhibit, annex and addendum. */
-   ELIF₋INIT₋WITH₋TWO(U'@',U'>') { assign₋symbol(end₋referenceindenturesym,out,2); RET }
-   ELIF₋INIT₋WITH₋TEE(U'.',U'.',U'.') { assign₋symbol(ellipsissym,out,3); RET }
-   ELIF₋INIT₋WITH₋ONE(U'…') { assign₋symbol(ellipsissym,out,1); RET } /* ⌥ + ';'. */
-   ELIF₋INIT₋WITH₋TEE(U'-',U'-',U'<') { assign₋symbol(dowsingsym,out,3); RET }
-   ELIF₋INIT₋WITH₋TWO(U'@',U'@') { assign₋symbol(leftrightread,out,2); RET }
+   else if (STATE(mode₋initial) && uc == U'\xd') { /* do nothing */ }
+   
+   else if (STATE(mode₋initial) && uc == U'/' && uc₊₁ == U'*') { 
+    ctxt->tip₋unicode+=1,ctxt->state=mode₋multi₋ekunem; }
+   else if (STATE(mode₋multi₋ekunem) && uc == U'\n') { 
+    location₋nextline(&ctxt->interval); }
+   else if (STATE(mode₋multi₋ekunem) && uc == U'*' && uc₊₁ == U'/') {
+    ctxt->tip₋unicode+=1,ctxt->state=mode₋initial; }
+   else if (STATE(mode₋multi₋ekunem)) { /* do nothing */ }
+   
+   else if (STATE(mode₋initial) && uc == U'/' && uc₊₁ == U'/') { 
+    ctxt->tip₋unicode+=1,ctxt->state=mode₋single₋ekunem; }
+   else if (STATE(mode₋single₋ekunem) && uc == '\xa') { ctxt->state=mode₋initial; location₋nextline(&ctxt->interval); }
+   else if (STATE(mode₋single₋ekunem)) { /* do nothing */ }
+   
+   ELIF₋INIT₋WITH₋ONE(U' ') location₋legion(&ctxt->interval);
+   ELIF₋INIT₋WITH₋ONE(U'\t') location₋legion(&ctxt->interval);
+   ELIF₋INIT₋WITH₋ONE(U'(') { assign₋symbol(lparen,1,out); RET }
+   ELIF₋INIT₋WITH₋ONE(U')') { assign₋symbol(rparen,1,out); RET }
+   ELIF₋INIT₋WITH₋ONE(U'*') { assign₋symbol(times,1,out); RET }
+   ELIF₋INIT₋WITH₋ONE(U'÷') { assign₋symbol(divide,1,out); RET } /* ⌥ + '/'. */
+   ELIF₋INIT₋WITH₋ONE(U'/') { assign₋symbol(divide,1,out); RET }
+   ELIF₋INIT₋WITH₋ONE(U'+') { assign₋symbol(plus,1,out); RET }
+   ELIF₋INIT₋WITH₋ONE(U'-') { assign₋symbol(minus,1,out); RET }
+   ELIF₋INIT₋WITH₋ONE(U'=') { assign₋symbol(eqlone,1,out); RET }
+   ELIF₋INIT₋WITH₋TWO(U'=',U'=') { assign₋symbol(eqltwo,2,out); RET }
+   ELIF₋INIT₋WITH₋TWO(U'<',U'>') { assign₋symbol(neq,2,out); RET }
+   ELIF₋INIT₋WITH₋ONE(U'≠') { assign₋symbol(neq,1,out); RET } /* ⌥ + '='. */
+   ELIF₋INIT₋WITH₋TWO(U'<',U'=') { assign₋symbol(leq,2,out); RET }
+   ELIF₋INIT₋WITH₋ONE(U'≤') { assign₋symbol(leq,1,out); RET } /* ⌥ + '<'. */
+   ELIF₋INIT₋WITH₋ONE(U'<') { assign₋symbol(lss,1,out); RET }
+   ELIF₋INIT₋WITH₋TWO(U'>',U'=') { assign₋symbol(geq,2,out); RET }
+   ELIF₋INIT₋WITH₋ONE(U'≥') { assign₋symbol(geq,1,out); RET } /* ⌥ + '>'. */
+   ELIF₋INIT₋WITH₋ONE(U'>') { assign₋symbol(gtr,1,out); RET }
+   ELIF₋INIT₋WITH₋ONE(U'¬') { assign₋symbol(logical₋not,1,out); RET } /* ⌥ + 'l'. ∧∨. */
+   ELIF₋INIT₋WITH₋ONE(U';') { assign₋symbol(semicolon,1,out); RET } /* @<semicolon₋processed@> twice. */
+   ELIF₋INIT₋WITH₋TWO(U':',U'=') { assign₋symbol(afterward,2,out); RET }
+   ELIF₋INIT₋WITH₋ONE(U':') { assign₋symbol(colon,1,out); RET }
+   ELIF₋INIT₋WITH₋ONE(U',') { assign₋symbol(comma,1,out); RET }
+   ELIF₋INIT₋WITH₋TWO(U'@',U'*') { assign₋symbol(paragraphsym,2,out); RET } /* paragraph, subsection and article. */
+   ELIF₋INIT₋WITH₋ONE(U'@') { assign₋symbol(subsectionsym,1,out); RET } /* section, claim, report and changes and subclause. */
+   ELIF₋INIT₋WITH₋TEE(U'@',U'>',U'=') { assign₋symbol(start₋indenturesym,3, 
+    out); RET } /* schedule, expenditures, jurisdiction. */
+   ELIF₋INIT₋WITH₋TWO(U'@',U'<') { assign₋symbol(referenceindenture₋startsym, 
+    2,out); RET } /* exhibit, annex and addendum. */
+   ELIF₋INIT₋WITH₋TWO(U'@',U'>') { assign₋symbol(end₋referenceindenturesym, 
+    2,out); RET }
+   ELIF₋INIT₋WITH₋TEE(U'.',U'.',U'.') { assign₋symbol(ellipsissym,3,out); RET }
+   ELIF₋INIT₋WITH₋ONE(U'…') { assign₋symbol(ellipsissym,1,out); RET } /* ⌥ + ';'. */
+   ELIF₋INIT₋WITH₋TEE(U'-',U'-',U'<') { assign₋symbol(dowsingsym,3,out); RET }
+   ELIF₋INIT₋WITH₋TWO(U'@',U'@') { assign₋symbol(leftrightread,2,out); RET }
    /* first and final 'render' alternatively 'do-not-render' and 'requires modification' in text editor. */
-   /* else if (STATE(mode₋initial) && uc == U'\x----') { assign₋symbol(symbol₋for₋clipbook₋exclusion₋toggle,out,1) } ⁄* will not include material in clipbook. */
-   /* else if (STATE(mode₋initial) && uc == U'\x----') { assign₋symbol(symbol₋for₋prominent₋toggle); } ⁄* display text in bold-face. */
-   /* else if (STATE(mode₋initial) && uc == U'\x----') { assign₋symbol(symbol₋for₋guttertext); } ⁄* line-oriented material rendered left to editor (gutter) at hoover. */
-   /* else if (STATE(mode₋initial) && UC == U'\x----') { assign₋SYMBOL(symbol₋for₋popovertext); } ⁄* multiple-line material rendered as popover inside editor at hoover. */
+   /* else if (STATE(mode₋initial) && uc == U'\x----') { assign₋symbol(symbol₋for₋clipbook₋exclusion₋toggle,1,out) } ⁄* will not include material in clipbook. */
+   /* else if (STATE(mode₋initial) && uc == U'\x----') { assign₋symbol(symbol₋for₋prominent₋toggle,1,out); } ⁄* display text in bold-face. */
+   /* else if (STATE(mode₋initial) && uc == U'\x----') { assign₋symbol(symbol₋for₋guttertext,1,out); } ⁄* line-oriented material rendered left to editor (gutter) at hoover. */
+   /* else if (STATE(mode₋initial) && UC == U'\x----') { assign₋SYMBOL(symbol₋for₋popovertext,1,out); } ⁄* multiple-line material rendered as popover inside editor at hoover. */
    /* \later 'text-block rendition-interpretation and painters-knife' (\see 77995 Sat, 18 Feb 2023 05:25). ⌥ + '-' is '–' and ⌥ + shift + '-' is '—'. */
-   ELIF₋INIT₋WITH₋ONE(U'\x2405') { assign₋symbol(symbol₋for₋enquery,out,1); RET } /* toggle fold/unfold at double-click. */
-   else if (STATE(mode₋single₋ekunem) && uc == '\xa') { ctxt->state=mode₋initial; }
-   else if (STATE(mode₋multi₋ekunem) && uc == U'*' && uc₊₁ == U'/') { ctxt->tip₋unicode+=1,ctxt->state=mode₋initial; }
-   else if (STATE(mode₋initial) && uc == U'/' && uc₊₁ == U'*') { ctxt->state=mode₋multi₋ekunem; }
-   else if (STATE(mode₋initial) && uc == U'/' && uc₊₁ == U'/') { ctxt->state=mode₋single₋ekunem; }
+   ELIF₋INIT₋WITH₋ONE(U'\x2405') { assign₋symbol(symbol₋for₋enquery,1,out); RET } /* toggle fold/unfold at double-click. */
+ 
    else if (STATE(mode₋initial) && uc == U'"') {
      ctxt->reference₋quoted = collection₋count(text₋unicode);
      ctxt->syms₋in₋quotes=0;
      ctxt->state = mode₋quotes₋text;
-     location₋nextcolumn(&ctxt->interval);
+     location₋legion(&ctxt->interval);
    }
    else if (STATE(mode₋quotes₋text)) {
      if (uc == U'"') {
-       if (regularpool₋datum₋text(text₋unicode,ctxt->syms₋in₋quotes,ctxt->reference₋quoted)) confess(trouble);
-       assign₋symbol₋noforward(unicode₋textsym,out,ctxt->syms₋in₋quotes); ctxt->state = mode₋initial; return 0; }
+       if (regularpool₋datum₋text(text₋unicode,ctxt->syms₋in₋quotes, 
+        ctxt->reference₋quoted)) confess(trouble);
+       assign₋symbol₋noforward(unicode₋textsym,ctxt->syms₋in₋quotes,out); 
+       ctxt->state = mode₋initial; return 0; }
      else { if (uc == U'\\' && uc₊₁ == U'"') { ctxt->tip₋unicode+=1; uc=U'"'; }
-       if (copy₋append₋onto₋regular(text₋unicode,1,&uc,Alloc,&ctxt->reference₋quoted)) confess(trouble);
+       if (copy₋append₋onto₋regular(text₋unicode,1,&uc,Alloc,
+        &ctxt->reference₋quoted)) confess(trouble);
      }
      confess(unicodes);
    }
@@ -272,7 +292,7 @@ void next₋token(struct language₋context * ctxt)
   if (retrospect₋class == ident || retrospect₋class == callsym ||
    retrospect₋class == beginsym || retrospect₋class == comparesym) 
   { ctxt->carrier₂=1; } else { ctxt->carrier₂=0; }
-  if (y != 0) { error(1,"scanner error: advanced failure"); exit(2); }
+  if (y != 0) { error(1,"scanner error: advance failure"); exit(2); }
 
 #if defined TRACE₋TOKENS
   typedef void (^Print1)(char *); typedef void (^Print2)(Symbol);
@@ -303,8 +323,8 @@ void next₋token(struct language₋context * ctxt)
   case divide: token("'/'"); break;
   case plus: token("'+'"); break;
   case minus: token("'-'"); break;
-  case eqltwo: token("'==' (two symbols)"); break;
-  case eqlone: token("'=' (one symbol)"); break;
+  case eqltwo: token("'==' (two letters)"); break;
+  case eqlone: token("'=' (one )"); break;
   case neq: token("'<>'"); break;
   case lss: token("'<'"); break;
   case leq: token("'<='"); break;
@@ -369,7 +389,7 @@ void next₋token(struct language₋context * ctxt)
 #endif
 }
 
-void expression(void);
+int symbol₋equal(enum symbol₋class s) { return symbol.class==s; }
 
 int match(enum symbol₋class s) { if (symbol₋equal(s)) { next₋token(&Ctxt); return 1; } return 0; }
 
@@ -525,6 +545,8 @@ again:
 unagain:
    return;
 }
+
+void expression(void);
 
 struct dynamic₋bag *bu₋fragment,*td₋tree;
 
@@ -783,7 +805,7 @@ int main(int argc, char * argv[])
    if (init₋regularpool(text₋utf8)) return 1;
    td₋tree = new₋Unit();
    text₋program = Run(
-    U"transcript hello(binary16 arg1, binary32 arg2) begin call control0; call control1; call control2 end\n\n");
+    U"/* comment */ transcript hello(binary16 arg1, binary32 arg2) begin call control0; call control1; call control2 end\n\n");
 /*
 U"constant abcd=321+1,dcba=123;\n"
  "variable cdeg,gec,cgb\n"
