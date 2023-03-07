@@ -10,7 +10,7 @@ void location₋init(struct source₋location * location)
    *location = initial;
 }
 
-void location₋nextcolumn(struct source₋location * location)
+void location₋legion(struct source₋location * location)
 {
    location->column₋first = 1 + location->column₋last;
    location->column₋last = location->column₋first;
