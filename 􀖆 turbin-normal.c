@@ -170,11 +170,11 @@ int supscript(char32̄_t uc) { return U'⁰' <= uc && uc <= U'⁹'; }
 int letter(char32̄_t uc) { return arabic(uc) || subscript(uc) || 
  supscript(uc) || special(uc); };
 
-void assign₋symbol(enum symbol₋class s, Symbol * sym, struct language₋context 
- * ctxt, short count₋impression)
+void assign₋symbol(enum symbol₋class s, short advance, 
+ struct language₋context * ctxt, Symbol * sym)
 { sym->class=s;
-   if (count₋impression >= 2) ctxt->tip₋unicode+=count₋impression-1;
-   location₋symbol(&ctxt->interval,count₋impression,&sym->gritty.interval);
+   if (advance >= 2) ctxt->tip₋unicode+=advance-1;
+   location₋symbol(&ctxt->interval,advance,&sym->gritty.interval);
 }
 
 int copy₋identifier(struct language₋context * ctxt, struct collection * 
@@ -211,8 +211,8 @@ int copy₋number(struct language₋context * ctxt, Symbol * out, int type)
    return 0;
 }
 
-void assign₋symbol₋noforward(enum symbol₋class s, Symbol * sym, struct language₋context 
- * ctxt, short count₋impression)
+void assign₋symbol₋noforward(enum symbol₋class s, short count₋impression, 
+ struct language₋context * ctxt, Symbol * sym)
 { sym->class=s;
    location₋symbol(&ctxt->interval,count₋impression,&sym->gritty.interval);
 }
@@ -228,17 +228,66 @@ void assign₋symbol₋noforward(enum symbol₋class s, Symbol * sym, struct lan
 int next₋token₋inner(Translation * t, Symbol * out)
 { __builtin_int_t i,symbols=t->ctxt.program₋text.tetras; char32̄_t uc,uc₊₁,uc₊2;
     int lift₋count=0,sym;
- 
-   🧵(identifier,machine₋constant,fixpoint₋constant,keyword,trouble, \
-    completion,unicodes)
+    struct language₋context * ctxt = &t->ctxt;
+
+   🧵(identifier,machine₋constant,fixpoint₋constant,quoted,keyword,trouble, \
+    completion)
    {
-   case completion: assign₋symbol(eot₋and₋file,out,&t->ctxt,0); return 0;
+   case identifier: copy₋identifier(ctxt,t->ident,out); 
+    t->ctxt.syms₋in₋regular=0; t->ctxt.state=mode₋initial; return 0;
+   case machine₋constant: return 0;
+   case fixpoint₋constant: return 0;
+   case quoted: t->ctxt.state=mode₋initial; return 0;
+   case keyword: assign₋symbol₋noforward(sym,t->ctxt.syms₋in₋regular,ctxt,out); 
+    t->ctxt.syms₋in₋regular=0; t->ctxt.state=mode₋initial; return 0;
+   case completion: assign₋symbol(eot₋and₋file,0,ctxt,out); return 0;
    case trouble: vfprint("trouble occurred at ⬚.\n", ﹟d(t->ctxt.tip₋unicode)); 
     return -1;
    }
 again:
    i=t->ctxt.tip₋unicode; t->ctxt.tip₋unicode+=1;
-   if (i>=symbols) confess(completion);
+   if (i >= symbols) confess(completion);
+   if (i == symbols - 1) lift₋count=2;
+   if (i == symbols - 2) lift₋count=1;
+   char32̄_t * unicodes = t->ctxt.program₋text.unicodes;
+   uc = *(unicodes + i);
+   uc₊₁ = lift₋count >= 2 ? U' ' : *(unicodes + i + 1);
+   uc₊2 = lift₋count >= 1 ? U' ' : *(unicodes + i + 2);
+   struct source₋location * intervalref = &t->ctxt.interval;
+   if (STATE(mode₋initial) && uc == U'\xa') {
+     location₋nextline(intervalref);
+   }
+   else if (STATE(mode₋initial) && uc == U'\xd') { /* do nothing. */}
+   else if (STATE(mode₋initial) && uc == U'/' && uc₊₁ == U'*') {
+     t->ctxt.tip₋unicode+=1,t->ctxt.state=mode₋multi₋ekunem; }
+   else if (STATE(mode₋multi₋ekunem) && uc == U'\xa') { 
+     location₋nextline(intervalref); }
+   else if (STATE(mode₋multi₋ekunem) && uc == U'*' && uc₊₁ == U'/') { 
+     t->ctxt.tip₋unicode+=1,t->ctxt.state=mode₋initial; }
+   else if (STATE(mode₋multi₋ekunem)) { /* do nothing. */ }
+   else if (STATE(mode₋initial) && uc == U'/' && uc₊₁ == U'/')
+   { t->ctxt.tip₋unicode+=1,t->ctxt.state=mode₋single₋ekunem; }
+   else if (STATE(mode₋single₋ekunem) && uc == '\xa') {
+     t->ctxt.state=mode₋initial; location₋nextline(intervalref); }
+   else if (STATE(mode₋single₋ekunem)) { /* do nothimg. */ }
+   ELIF₋INIT₋WITH₋ONE(U' ') { location₋legion(intervalref); }
+   ELIF₋INIT₋WITH₋ONE(U'\t') { location₋legion(intervalref); }
+   ELIF₋INIT₋WITH₋ONE(U'(') { assign₋symbol(lparen,1,ctxt,out); RET }
+   ELIF₋INIT₋WITH₋ONE(U')') { assign₋symbol(rparen,1,ctxt,out); RET }
+   ELIF₋INIT₋WITH₋ONE(U'*') { assign₋symbol(times,1,ctxt,out); RET }
+   ELIF₋INIT₋WITH₋ONE(U'/') { assign₋symbol(divide,1,ctxt,out); RET }
+   ELIF₋INIT₋WITH₋ONE(U'+') { assign₋symbol(plus,1,ctxt,out); RET }
+   ELIF₋INIT₋WITH₋ONE(U'-') { assign₋symbol(minus,1,ctxt,out); RET }
+   ELIF₋INIT₋WITH₋TWO(U'=',U'=') { assign₋symbol(eqltwo,1,ctxt,out); RET }
+   ELIF₋INIT₋WITH₋TWO(U'<',U'>') { assign₋symbol(minus,1,ctxt,out); RET }
+   ELIF₋INIT₋WITH₋ONE(U'<') { assign₋symbol(lss,1,ctxt,out); RET }
+   ELIF₋INIT₋WITH₋TWO(U'<',U'=') { assign₋symbol(leq,1,ctxt,out); RET }
+   ELIF₋INIT₋WITH₋ONE(U'>') { assign₋symbol(gtr,1,ctxt,out); RET }
+   ELIF₋INIT₋WITH₋TWO(U'>',U'=') { assign₋symbol(geq,1,ctxt,out); RET }
+   /* eqltwo, eqlone, instant, lbrack, rbrack */
+
+
+   ELIF₋INIT₋WITH₋ONE(U'*') { assign₋symbol(times,1,ctxt,out); RET }
    goto again;
 }
 
