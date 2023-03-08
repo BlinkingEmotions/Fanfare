@@ -7,10 +7,10 @@ int next₋token₋inner₂(Translation * t, Symbol * detail₋out)
    {
    case identifier: copy₋identifier(&t->ctxt,t->ident,detail₋out); t->ctxt.syms₋in₋regular=0; 
     t->ctxt.state=mode₋initial; return 0;
-   case keyword: assign₋symbol₋noforward(sym,detail₋out,&t->ctxt,t->ctxt.syms₋in₋regular); 
+   case keyword: assign₋symbol₋noforward(sym,t->ctxt.syms₋in₋regular,&t->ctxt,detail₋out); 
     t->ctxt.syms₋in₋regular=0; t->ctxt.state=mode₋initial; return 0;
    case unicodes: t->ctxt.state=mode₋initial; return 0;
-   case completion: assign₋symbol(eot₋and₋file,detail₋out,&t->ctxt,0); return 0;
+   case completion: assign₋symbol(eot₋and₋file,0,&t->ctxt,detail₋out); return 0;
    case trouble: vfprint("trouble occurred at ⬚.\n",﹟d(t->ctxt.tip₋unicode));
     return -1;
    }
@@ -40,10 +40,10 @@ again:
    else if (STATE(mode₋single₋ekunem)) { /* do nothing. */}
    ELIF₋INIT₋WITH₋ONE(U' ') { location₋legion(&t->ctxt.interval); }
    ELIF₋INIT₋WITH₋ONE(U'\t') { location₋legion(&t->ctxt.interval); }
-   ELIF₋INIT₋WITH₋ONE(U'*') { assign₋symbol(times,detail₋out,&t->ctxt,1); RET }
-   ELIF₋INIT₋WITH₋ONE(U'/') { assign₋symbol(divide,detail₋out,&t->ctxt,1); RET }
-   ELIF₋INIT₋WITH₋ONE(U'+') { assign₋symbol(plus,detail₋out,&t->ctxt,1); RET }
-   ELIF₋INIT₋WITH₋ONE(U'-') { assign₋symbol(minus,detail₋out,&t->ctxt,1); RET }
+   ELIF₋INIT₋WITH₋ONE(U'*') { assign₋symbol(times,1,&t->ctxt,detail₋out); RET }
+   ELIF₋INIT₋WITH₋ONE(U'/') { assign₋symbol(divide,1,&t->ctxt,detail₋out); RET }
+   ELIF₋INIT₋WITH₋ONE(U'+') { assign₋symbol(plus,1,&t->ctxt,detail₋out); RET }
+   ELIF₋INIT₋WITH₋ONE(U'-') { assign₋symbol(minus,1,&t->ctxt,detail₋out); RET }
    else if (STATE(mode₋initial) && uc == U'\'') {
      t->ctxt.reference₋quoted = collection₋count(t->text);
      if (copy₋prepare₋datum(t->text,Alloc)) confess(trouble);
@@ -58,7 +58,7 @@ again:
    else if (STATE(mode₋quotes₋text) && uc == U'\'') {
      if (regularpool₋datum₋text(t->text,t->ctxt.syms₋in₋quotes, 
       t->ctxt.reference₋quoted)) return -1;
-     assign₋symbol₋noforward(quotesym,detail₋out,&t->ctxt,t->ctxt.syms₋in₋quotes);
+     assign₋symbol₋noforward(quotesym,t->ctxt.syms₋in₋quotes,&t->ctxt,detail₋out);
      confess(unicodes);
    }
    else if ((STATE(mode₋initial) && letter(uc)) || (STATE(mode₋regular) && (letter(uc) || digit(uc)))) {
