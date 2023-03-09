@@ -7,23 +7,18 @@ int Conversion(Instant instant, Real value, Nonabsolute src, Nonabsolute dst, Re
 
 int IsReversed(Nonabsolute left, Nonabsolute right, struct collection * ident)
 {
-   __builtin_int_t left₋ment = regularpool₋segments(left,ident);
-   __builtin_int_t right₋ment = regularpool₋segments(right,ident);
-   short symbols1[left₋ment]; char32̄_t * segment1[left₋ment];
-   short symbols2[right₋ment]; char32̄_t * segment2[right₋ment];
-   if (regularpool₋token(left₋ment,symbols1,segment1,ident)) return -1;
-   if (regularpool₋token(right₋ment,symbols2,segment2,ident)) return -1;
-   int cl=0,cr=0,sl=0,sr=0; char32̄_t ucl,ucr; int ldx=1,rdx=1;
+   __builtin_int_t ﹟₋left = *(uint32_t *)collection₋relative(left,ident);
+   __builtin_int_t ﹟₋right = *(uint32_t *)collection₋relative(right,ident);
+   char32̄_t ucl,ucr; int ldx=1,rdx=1;
 again:
-   if (sl >= left₋ment || sr >= right₋ment) goto unagain;
-   ucl = *(char32̄_t *)collection₋relative(ldx,ident);
-   ucr = *(char32̄_t *)collection₋relative(rdx,ident);
-   if (ucr != ucl) goto notagain;
-   ldx+=1,cl+=1; if (cl == segment1[sl]) { cl=0,sl+=1; }
-   rdx+=1,cr+=1; if (cr == segment2[sr]) { cr=0,sr+=1; }
+   if (ldx >= ﹟₋left || rdx >= ﹟₋right) goto unagain;
+   ucl = *(char32̄_t *)collection₋relative(ldx+left,ident);
+   ucr = *(char32̄_t *)collection₋relative(rdx+right,ident);
+   if (ucr != ucl) goto not₋again;
+   ldx+=1,rdx+=1;
    goto again;
-notagain:
-   return sl == left₋ment && sr == right₋ment;
+not₋again:
+   return ldx == ﹟₋left && rdx == ﹟₋right;
 }
 
 #define EXIT_INTERACTIVE 1
