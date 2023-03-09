@@ -89,16 +89,14 @@ int Init₋translation₋unit(char8₋t * src₋path, Translation * t, int langu
    case 1: {
     char32̄_t * keywords[] = { U"TRANSCRIPT", U"BOOKKEEP", U"DEBET", 
      U"CREDIT", U"COMMENT", U"VAR", U"PRINT", U"BREAK", U"SET", U"RETURN", 
-     U"DO", /* U"IF", U"THEN", U"ELSE", */ U"END", U"BEFORE", U"ENTITY", 
-     U"ACCOUNT", U"TABLE", U"CREATE", U"NAMED", U"TRADING", U"RESIDENT", 
-     U"WITH", U"SCHEDULE", U"STARTS", U"OCCURS", U"EXCHANGE", 
-     U"CURRENCY" };
+     U"DO", U"END", U"BEFORE", U"ENTITY", U"ACCOUNT", U"TABLE", U"CREATE", 
+     U"NAMED", U"TRADING", U"RESIDENT", U"WITH", U"SCHEDULE", U"STARTS", 
+     U"OCCURS", U"EXCHANGE", U"CURRENCY" };
     int symbols[] = { transcriptsym, bookkeepsym, debetsym, creditsym, 
-     commentsym, varsym, printsym, breaksym, setsym, returnsym, 
-     dosym, /* ifsym, thensym, elsesym, */ endsym, beforesym, entitysym, 
-     accountsym, tablesym, createsym, namedsym, tradingsym, residentsym, 
-     withsym, schedulesym, startssym, occurssym, exchangesym, 
-     currencysym };
+     commentsym, varsym, printsym, breaksym, setsym, returnsym, dosym, 
+     endsym, beforesym, entitysym, accountsym, tablesym, createsym, 
+     namedsym, tradingsym, residentsym, withsym, schedulesym, startssym, 
+     occurssym, exchangesym, currencysym };
     merge₋to₋trie(29,keywords,symbols,&t->ctxt.keys);
     break; }
    case 2: {
@@ -318,8 +316,12 @@ again:
      ctxt->ongoing₋number+=(uc - U'0');
      ctxt->syms₋in₋number+=1;
      if (uc₊₁ == U'.') { ctxt->state = mode₋fraction; ctxt->tip₋unicode+=1; }
-     else if (!digit(uc₊₁)) confess(machine₋constant);
-   } /* integer, instant and monetary (separator) */
+     else if (!digit(uc₊₁)) {
+      /* if ctxt->syms₋in₋number == 4 && uc+1 == U'-'' attempt Timestamp... from tip₋unicode - 4 and X onward. */
+      confess(machine₋constant);
+   }
+   /* int Timestamp(enum Encoding type, int bytes, uint8_t * material, 
+ chronology₋instant * v) */
    EL₋CONFESS
    goto again;
 }
