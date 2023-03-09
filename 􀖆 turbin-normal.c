@@ -316,12 +316,18 @@ again:
      ctxt->ongoing₋number+=(uc - U'0');
      ctxt->syms₋in₋number+=1;
      if (uc₊₁ == U'.') { ctxt->state = mode₋fraction; ctxt->tip₋unicode+=1; }
-     else if (!digit(uc₊₁)) {
-      /* if ctxt->syms₋in₋number == 4 && uc+1 == U'-'' attempt Timestamp... from tip₋unicode - 4 and X onward. */
-      confess(machine₋constant);
+     if (ctxt->syms₋in₋number == 4 && uc₊₁ == U'-') {
+       /* attempt Timestamp... from tip₋unicode - 4 and X onward. */
+       chronology₋instant stamp; 
+       int bytes=min(symbols - ctxt->tip₋unicode, 19);
+       uint8_t * material=(uint8_t *)(ctxt->tip₋unicode - 3);
+       if (bytes != 19) goto atlast;
+       int y =Timestamp(encoding₋unicode,bytes,material,&stamp);
+       if (y != 0) goto atlast;
+     }
+atlast:
+     if (!digit(uc₊₁)) confess(machine₋constant);
    }
-   /* int Timestamp(enum Encoding type, int bytes, uint8_t * material, 
- chronology₋instant * v) */
    EL₋CONFESS
    goto again;
 }
