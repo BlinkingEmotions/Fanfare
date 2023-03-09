@@ -5,10 +5,10 @@ import Twinbeam; /*  he is sitting in a box 𝘦․𝘨 T-FOR-D and De-la-v-all.
 enum symbol₋class { ident=1, machine, monetary, times, divide, plus, minus, 
  lparen, rparen, eqlone, transcriptsym, instant, bookkeepsym, debetsym, 
  creditsym, commentsym, varsym, printsym, breaksym, setsym, returnsym, dosym, 
- /* ifsym, thensym, elsesym, */ endsym, beforesym, /* andsym, orsym, notsym, xorsym, */
- entitysym, accountsym, tablesym, createsym, namedsym, tradingsym, residentsym, 
- withsym, schedulesym, startssym, occurssym, exchangesym, currencysym, popsym, 
- swapsym, dupsym, reportsym, boldsym, quotesym, eot₋and₋file, unarbitrated₋symbol 
+ endsym, beforesym, entitysym, accountsym, tablesym, createsym, namedsym, 
+ tradingsym, residentsym, withsym, schedulesym, startssym, occurssym, 
+ exchangesym, currencysym, popsym, swapsym, dupsym, reportsym, boldsym, 
+ quotesym, eot₋and₋file, unarbitrated₋symbol 
 };
 
 /* compile with ./retro-mac.sh essence-turbin */
@@ -308,7 +308,18 @@ again:
       confess(identifier);
      } 
    }
-   /* else if integer, instant and monetary (separator) */
+   else if (STATE(mode₋fraction) && digit(uc)) {
+     ctxt->zero₋to₋nines[ctxt->syms₋in₋fraction] = uc;
+     ctxt->syms₋in₋fraction+=1;
+     if (!digit(uc₊₁)) confess(fixpoint₋constant);
+   }
+   else if ((STATE(mode₋initial) && digit(uc))) {
+     ctxt->ongoing₋number*=10;
+     ctxt->ongoing₋number+=(uc - U'0');
+     ctxt->syms₋in₋number+=1;
+     if (uc₊₁ == U'.') { ctxt->state = mode₋fraction; ctxt->tip₋unicode+=1; }
+     else if (!digit(uc₊₁)) confess(machine₋constant);
+   } /* integer, instant and monetary (separator) */
    EL₋CONFESS
    goto again;
 }
@@ -478,9 +489,9 @@ int FileSystemItemOpenable(const char * u8path, __builtin_int_t * bytes)
    return y == 0 ? 1 : 0;
 }
 
-void append₋streck₋path(void * refer, struct collection * 🅰)
+void append₋reference(void * path, struct collection * 🅰)
 {
-   if (copy₋append₋items(1,&refer,🅰,Heap₋alloc)) { return; }
+   if (copy₋append₋items(1,&path,🅰,Heap₋alloc)) { return; }
 }
 
 int option₋machine₋interprets(int argc, char8₋t *ᐧ* argv)
@@ -512,7 +523,7 @@ again:
    y = IsPrefixOrEqual((const char *)token,"-");
    if (y > 0 || y == 0) { vfprint("Unknown turbin parameter '⬚'.\n", 
     ﹟s8(token)); exit(21); }
-   append₋streck₋path(token,&filepaths₋sequence);
+   append₋reference(token,&filepaths₋sequence);
 next:
    i+=1; goto again;
 descriptive:
