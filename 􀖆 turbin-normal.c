@@ -3,14 +3,12 @@
 import Twinbeam; /*  he is sitting in a box 𝘦․𝘨 T-FOR-D and De-la-v-all. */
 
 enum symbol₋class { ident=1, machine, monetary, times, divide, plus, minus, 
- lparen, rparen, eqltwo, neg, lss, leq, gtr, geq, eqlone, transcriptsym, 
- instant, bookkeepsym, debetsym, creditsym, commentsym, varsym, printsym, 
- breaksym, setsym, returnsym, dosym, ifsym, thensym, elsesym, endsym, 
- beforesym, andsym, orsym, notsym, xorsym, entitysym, accountsym, tablesym, 
- createsym, namedsym, tradingsym, residentsym, withsym, schedulesym, 
- startssym, occurssym, exchangesym, currencysym, lbracksym, rbracksym, popsym, 
- swapsym, dupsym, reportsym, boldsym, quotesym, eot₋and₋file, 
- unarbitrated₋symbol 
+ lparen, rparen, eqlone, transcriptsym, instant, bookkeepsym, debetsym, 
+ creditsym, commentsym, varsym, printsym, breaksym, setsym, returnsym, dosym, 
+ /* ifsym, thensym, elsesym, */ endsym, beforesym, /* andsym, orsym, notsym, xorsym, */
+ entitysym, accountsym, tablesym, createsym, namedsym, tradingsym, residentsym, 
+ withsym, schedulesym, startssym, occurssym, exchangesym, currencysym, popsym, 
+ swapsym, dupsym, reportsym, boldsym, quotesym, eot₋and₋file, unarbitrated₋symbol 
 };
 
 /* compile with ./retro-mac.sh essence-turbin */
@@ -20,9 +18,9 @@ enum language₋mode {
   mode₋single₋ekunem, mode₋multi₋ekunem, mode₋quotes₋text 
 };
 
-typedef int64_t     Integer;
-typedef Sequenta    Real; /*  here we attempt base two and ten hardware 
- Ieee754 and software arithmetics. */
+typedef int64_t Integer;
+typedef Sequenta Real; /*  base two and ten hardware Ieee754 and software arithmetics. */
+typedef chronology₋instant Instant;
 
 #include "Ω⃝-translate-formal.cxx"
 
@@ -91,13 +89,13 @@ int Init₋translation₋unit(char8₋t * src₋path, Translation * t, int langu
    case 1: {
     char32̄_t * keywords[] = { U"TRANSCRIPT", U"BOOKKEEP", U"DEBET", 
      U"CREDIT", U"COMMENT", U"VAR", U"PRINT", U"BREAK", U"SET", U"RETURN", 
-     U"DO", U"IF", U"THEN", U"ELSE", U"END", U"BEFORE", U"ENTITY", 
+     U"DO", /* U"IF", U"THEN", U"ELSE", */ U"END", U"BEFORE", U"ENTITY", 
      U"ACCOUNT", U"TABLE", U"CREATE", U"NAMED", U"TRADING", U"RESIDENT", 
      U"WITH", U"SCHEDULE", U"STARTS", U"OCCURS", U"EXCHANGE", 
      U"CURRENCY" };
     int symbols[] = { transcriptsym, bookkeepsym, debetsym, creditsym, 
      commentsym, varsym, printsym, breaksym, setsym, returnsym, 
-     dosym, ifsym, thensym, elsesym, endsym, beforesym, entitysym, 
+     dosym, /* ifsym, thensym, elsesym, */ endsym, beforesym, entitysym, 
      accountsym, tablesym, createsym, namedsym, tradingsym, residentsym, 
      withsym, schedulesym, startssym, occurssym, exchangesym, 
      currencysym };
@@ -278,16 +276,40 @@ again:
    ELIF₋INIT₋WITH₋ONE(U'/') { assign₋symbol(divide,1,ctxt,out); RET }
    ELIF₋INIT₋WITH₋ONE(U'+') { assign₋symbol(plus,1,ctxt,out); RET }
    ELIF₋INIT₋WITH₋ONE(U'-') { assign₋symbol(minus,1,ctxt,out); RET }
-   ELIF₋INIT₋WITH₋TWO(U'=',U'=') { assign₋symbol(eqltwo,1,ctxt,out); RET }
-   ELIF₋INIT₋WITH₋TWO(U'<',U'>') { assign₋symbol(minus,1,ctxt,out); RET }
-   ELIF₋INIT₋WITH₋ONE(U'<') { assign₋symbol(lss,1,ctxt,out); RET }
-   ELIF₋INIT₋WITH₋TWO(U'<',U'=') { assign₋symbol(leq,1,ctxt,out); RET }
-   ELIF₋INIT₋WITH₋ONE(U'>') { assign₋symbol(gtr,1,ctxt,out); RET }
-   ELIF₋INIT₋WITH₋TWO(U'>',U'=') { assign₋symbol(geq,1,ctxt,out); RET }
-   /* eqltwo, eqlone, instant, lbrack, rbrack */
-
-
-   ELIF₋INIT₋WITH₋ONE(U'*') { assign₋symbol(times,1,ctxt,out); RET }
+   ELIF₋INIT₋WITH₋ONE(U'=') { assign₋symbol(eqlone,1,ctxt,out); RET }
+   else if (STATE(mode₋initial) && uc == U'\'') {
+     ctxt->reference₋quoted = collection₋count(t->text);
+     if (copy₋prepare₋datum(t->text,Alloc)) confess(trouble);
+     ctxt->syms₋in₋quotes=0;
+     ctxt->state = mode₋quotes₋text;
+     location₋legion(&ctxt->interval);
+   }
+   else if (STATE(mode₋quotes₋text) && uc != U'\'') {
+     if (uc == U'\\' && uc₊₁ == U'"') { ctxt->tip₋unicode+=1; uc=U'"'; }
+     if (copy₋append₋onto₋regular(t->text,1,&uc,Alloc)) confess(trouble);
+   }
+   else if (STATE(mode₋quotes₋text) && uc == U'\'') {
+     if (regularpool₋datum₋text(t->text,ctxt->syms₋in₋quotes, 
+      ctxt->reference₋quoted)) return -1;
+     assign₋symbol₋noforward(quotesym,ctxt->syms₋in₋quotes,ctxt,out);
+     confess(quoted);
+   }
+   else if ((STATE(mode₋initial) && letter(uc)) || (STATE(mode₋regular) && (letter(uc) || digit(uc)))) {
+    if (ctxt->syms₋in₋regular == 2048) {
+      Diagnos(1,ctxt->source₋path,&t->symbol.gritty.interval,1,
+        "identifier and keyword too long");
+      confess(trouble); }
+     ctxt->regular[ctxt->syms₋in₋regular]=uc;
+     ctxt->syms₋in₋regular+=1;
+     ctxt->state=mode₋regular;
+     if(!letter(uc₊₁) && !digit(uc₊₁)) {
+      if (!trie₋keyword(ctxt->syms₋in₋regular,ctxt->regular,&sym,&ctxt->keys))
+        confess(keyword);
+      confess(identifier);
+     } 
+   }
+   /* else if integer, instant and monetary (separator) */
+   EL₋CONFESS
    goto again;
 }
 
@@ -355,20 +377,47 @@ int BsimParse(Translation * t, simul₋context * ctxt₋out)
 #undef true
 #include <string.h>
 
-typedef struct History { } History;
+typedef struct Itwiż₋Cuideam {
+   Instant effect;
+   Real weight₋lo, weight₋hi;
+   Nonabsolute unit₋lo, unit₋hi;
+ } Exchange; /* the two units are sorted on sha-256. */
+
+typedef struct Currency { 
+  rb_node_t node;
+  UChar * name;
+} Munita;
 
 typedef struct Entity {
-  History history;
+  rb_node_t node;
+  UChar * name;
+  struct timeserie history; /* a․𝘬․a 'book'. */
+  version₋ts revision;
 } Entity;
 
+typedef struct Schedule {
+  rb_node_t node;
+  UChar * name;
+  chronology₋instant starts;
+  struct chronology₋relative period;
+} Schedule;
+
 typedef struct Simulator {
-  TAILQ_ENTRY(Simulator) entries;
-  version₋ts revision;
+  rb_tree_t entities; rb_tree_ops_t entity₋ops;
   __builtin_int_t prompt_number;
 } Simulator;
 
-extern void EnterInteractiveMode(int * quit, Simulator * 🅢);
-extern int Simulate(simul₋context * 🆂, Simulator * 🅢);
+int IsReversed(Nonabsolute left, Nonabsolute right, struct collection * ident);
+int Append(Real vleft, Nonabsolute uleft, Real vright, Nonabsolute uright, 
+ int reversed, Exchange * exch) ⓣ;
+int Append(UChar name, Entity * entity) ⓣ;
+int Append(UChar name, Munita * currency) ⓣ;
+int Conversion(Instant instant, Real value, Nonabsolute src, Nonabsolute dst, Real * also);
+
+/* #include "ⓔ-helper.h" */
+
+void EnterInteractiveMode(int * quit, Simulator * 🅢);
+int Simulate(simul₋context * 🆂, Simulator * 🅢);
 /* extern int Zebra(int count, chronology₋instant toggles[], chronology₋
  instant now, double * out); sometime uniform and normal not same time. */
 
@@ -376,9 +425,9 @@ extern int Simulate(simul₋context * 🆂, Simulator * 🅢);
 
 #pragma recto computation two tables 'annual return' and 'profit and loss'
 
-extern int Rendertable(Translation * t, Simulator * sim, 
+int Rendertable(Translation * t, Simulator * sim, 
  chronology₋instant when);
-extern int Tableparse(struct Unicodes program, char8₋t * path, 
+int Tableparse(struct Unicodes program, char8₋t * path, 
  Translation * t);
 
 #include "ⓔ-table.cxx"
@@ -429,9 +478,9 @@ int FileSystemItemOpenable(const char * u8path, __builtin_int_t * bytes)
    return y == 0 ? 1 : 0;
 }
 
-void append₋reference(void * pointer, struct collection * 🅰)
+void append₋streck₋path(void * refer, struct collection * 🅰)
 {
-   if (copy₋append₋items(1,&pointer,🅰,Heap₋alloc)) { return; }
+   if (copy₋append₋items(1,&refer,🅰,Heap₋alloc)) { return; }
 }
 
 int option₋machine₋interprets(int argc, char8₋t *ᐧ* argv)
@@ -463,7 +512,7 @@ again:
    y = IsPrefixOrEqual((const char *)token,"-");
    if (y > 0 || y == 0) { vfprint("Unknown turbin parameter '⬚'.\n", 
     ﹟s8(token)); exit(21); }
-   append₋reference(token,&filepaths₋sequence);
+   append₋streck₋path(token,&filepaths₋sequence);
 next:
    i+=1; goto again;
 descriptive:
