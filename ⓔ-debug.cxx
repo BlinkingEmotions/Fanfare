@@ -38,7 +38,7 @@ inexorable void fger(Symbol symbol)
     ﹟d(interval.lineno₋first), ﹟d(interval.lineno₋last));
 }
 
-void trace₋streck₋token(Symbol symbol, struct collection * identifiers)
+void trace₋token(Symbol symbol, struct collection * identifiers)
 { struct source₋location interval = symbol.gritty.interval;
    typedef void (^Print)(char *);
    Print token = ^(char * rendition)
@@ -57,12 +57,12 @@ void trace₋streck₋token(Symbol symbol, struct collection * identifiers)
    case minus: token("'-'"); break;
    case lparen: token("'('"); break;
    case rparen: token("')'"); break;
-   case eqltwo: token("'==' (two letters)"); break;
-   case neg: token("'<>'"); break;
-   case lss: token("'<'"); break;
-   case leq: token("'<='"); break;
-   case gtr: token("'>'"); break;
-   case geq: token("'>='"); break;
+   /*  case eqltwo: token("'==' (two letters)"); break;     
+   case neg: token("'<>'"); break;     
+   case lss: token("'<'"); break;      
+   case leq: token("'<='"); break;     
+   case gtr: token("'>'"); break;      
+   case geq: token("'>='"); break; */
    case eqlone: token("'=' (one symbol)"); break;
    case transcriptsym: token("TRANSCRIPT"); break;
    case instant: token("<instant>"); break;
@@ -76,15 +76,15 @@ void trace₋streck₋token(Symbol symbol, struct collection * identifiers)
    case setsym: token("'SET'"); break;
    case returnsym: token("'RETURN'"); break;
    case dosym: token("'DO'"); break;
-   case ifsym: token("'IF'"); break;
+   /* case ifsym: token("'IF'"); break;
    case thensym: token("'THEN'"); break;
-   case elsesym: token("'ELSE'"); break;
+   case elsesym: token("'ELSE'"); break; */
    case endsym: token("'END'"); break;
    case beforesym: token("'BEFORE'"); break;
-   case andsym: token("'AND'"); break;
+   /* case andsym: token("'AND'"); break;
    case orsym: token("'OR'"); break;
    case notsym: token("'NOT'"); break;
-   case xorsym: token("'XOR'"); break;
+   case xorsym: token("'XOR'"); break; */
    case entitysym: token("'ENTITY'"); break;
    case accountsym: token("'ACCOUNT'"); break;
    case tablesym: token("'TABLE'"); break;
@@ -98,8 +98,8 @@ void trace₋streck₋token(Symbol symbol, struct collection * identifiers)
    case occurssym: token("'OCCURS'"); break;
    case exchangesym: token("'EXCHANGE'"); break;
    case currencysym: token("'CURRENCY'"); break;
-   case lbracksym: token("'['"); break;
-   case rbracksym: token("']'"); break;
+   /* case lbracksym: token("'['"); break;      
+   case rbracksym: token("']'"); break; */
    case popsym: token("'POP'"); break;
    case swapsym: token("'SWAP'"); break;
    case dupsym: token("'DUP'"); break;
