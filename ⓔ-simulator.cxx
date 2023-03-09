@@ -10,14 +10,14 @@ int IsReversed(Nonabsolute left, Nonabsolute right, struct collection * ident)
    __builtin_int_t ﹟₋left = *(uint32_t *)collection₋relative(left,ident);
    __builtin_int_t ﹟₋right = *(uint32_t *)collection₋relative(right,ident);
    char32̄_t ucl,ucr; int ldx=1,rdx=1;
-again:
-   if (ldx >= ﹟₋left || rdx >= ﹟₋right) goto unagain;
+agai:
+   if (ldx >= ﹟₋left || rdx >= ﹟₋right) goto note;
    ucl = *(char32̄_t *)collection₋relative(ldx+left,ident);
    ucr = *(char32̄_t *)collection₋relative(rdx+right,ident);
-   if (ucr != ucl) goto not₋again;
+   if (ucr != ucl) goto note;
    ldx+=1,rdx+=1;
-   goto again;
-not₋again:
+   goto agai;
+note:
    return ldx == ﹟₋left && rdx == ﹟₋right;
 }
 
