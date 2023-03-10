@@ -14,9 +14,9 @@ enum symbol₋class { ident=1, number, times, divide, plus, minus, lparen,
  logical₋alternate, logical₋and, logical₋or, logical₋not, 
  schemasym, reelsym, environmentsym, exceptionsym, 
  dowsingsym, ellipsissym, leftrightread, insym, presentsym, 
- serpentsummarysym, settingsym, referencessym, correctionssym, 
+ serpentsummarysym, settingsym, referencessym, correctionssym, /* indexing and location-description. */
  flagsandnotessym, diffusesym, dotifsym, definedsym, dotdefinesym, 
- dotendsym, dotincludesym, systemsym, unicodesym, utf8sym, conceptsym, /* ⬷ ship-relation to do. */
+ dotendsym, dotincludesym, systemsym, unicodesym, utf8sym, conceptsym, /* ⬷ ship-relation and SAT-with-constraints. */
  invariantsym, eot₋and₋file, intrinsicsym, unarbitrated₋symbol, 
  formalparamsym };
 
@@ -146,7 +146,7 @@ int next₋token₋inner(struct language₋context * ctxt, Symbol * out)
    type letter = ^(char32̄_t uc) { return (U'a' <= uc && uc <= U'z') || 
     (U'A' <= uc && uc <= U'Z') || uc == U'₋' || (U'\x1f600' /*􀈂*/ <= uc && 
     uc <= U'\x1008fa' /*􀣺*/); };
-   🧵(identifier,machine₋constant,fixpoint₋constant,keyword,unicodes,        \
+   🧵(identifier,machine₋constant,fixpoint₋constant,keyword,quoted,          \
     trouble,completion) {
    case identifier: copy₋identifier(ctxt,out); ctxt->syms₋in₋regular=0; 
     ctxt->state=mode₋initial; return 0;
@@ -158,7 +158,7 @@ int next₋token₋inner(struct language₋context * ctxt, Symbol * out)
     return 0;
    case keyword: assign₋symbol₋noforward(sym,ctxt->syms₋in₋regular,out); 
     ctxt->syms₋in₋regular=0; ctxt->state=mode₋initial; return 0;
-   case unicodes: ctxt->state=mode₋initial; return 0;
+   case quoted: ctxt->state=mode₋initial; return 0;
    case completion: assign₋symbol(eot₋and₋file,0,out); return 0;
    case trouble: print("trouble occurred at ⬚.\n",﹟d(ctxt->tip₋unicode)); 
     return -1;
@@ -179,14 +179,15 @@ again:
    else if (STATE(mode₋initial) && uc == U'\xd') { /* do nothing */ }
    else if (STATE(mode₋initial) && uc == U'/' && uc₊₁ == U'*') { 
     ctxt->tip₋unicode+=1,ctxt->state=mode₋multi₋ekunem; }
-   else if (STATE(mode₋multi₋ekunem) && uc == U'\n') { 
+   else if (STATE(mode₋multi₋ekunem) && uc == U'\xa') { 
     location₋nextline(&ctxt->interval); }
    else if (STATE(mode₋multi₋ekunem) && uc == U'*' && uc₊₁ == U'/') {
     ctxt->tip₋unicode+=1,ctxt->state=mode₋initial; }
    else if (STATE(mode₋multi₋ekunem)) { /* do nothing */ }
    else if (STATE(mode₋initial) && uc == U'/' && uc₊₁ == U'/') { 
     ctxt->tip₋unicode+=1,ctxt->state=mode₋single₋ekunem; }
-   else if (STATE(mode₋single₋ekunem) && uc == '\xa') { ctxt->state=mode₋initial; location₋nextline(&ctxt->interval); }
+   else if (STATE(mode₋single₋ekunem) && uc == '\xa') { 
+    ctxt->state=mode₋initial; location₋nextline(&ctxt->interval); }
    else if (STATE(mode₋single₋ekunem)) { /* do nothing */ }
    ELIF₋INIT₋WITH₋ONE(U' ') location₋legion(&ctxt->interval);
    ELIF₋INIT₋WITH₋ONE(U'\t') location₋legion(&ctxt->interval);
@@ -246,7 +247,7 @@ again:
      if (regularpool₋datum₋text(text₋unicode,ctxt->syms₋in₋quotes, 
        ctxt->reference₋quoted)) return -1;
      assign₋symbol₋noforward(unicode₋textsym,ctxt->syms₋in₋quotes,out);
-     confess(unicodes);
+     confess(quoted);
    }
    else if (STATE(mode₋fraction) && digit(uc)) {
      ctxt->zero₋to₋nines[ctxt->syms₋in₋fraction] = uc;
