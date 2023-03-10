@@ -131,6 +131,8 @@ serpent₋summary
     "retros-compi" - "∎|∎⋆᛭Solenoid.cpp" "-std=c++20" "../Apps/Additions/monolith-sequent.c" "-std=c2x"
     "c-maskin" - "􀖆⋆⁻¹Fetus.cpp" "-std=c++20" "../Apps/Additions/monolith-sequent.c" "-std=c2x"
   )
+  concept F = x1 ¬x2 && x2 x3 && ¬x1 ¬x3 && ¬x1 ¬x2 x3
+  
   ⁄* add 'actor, 'coordinator' alternatively 'police' required mid 'transmit' and 'rendition'. *⁄
 settings
   
@@ -192,9 +194,8 @@ end-of-file
 
  **/
 
-enum language₋mode { mode₋inexplanatoria, mode₋initial, mode₋integer, 
- mode₋fraction, mode₋regular, mode₋text, mode₋single₋ekunem, 
- mode₋multi₋ekunem };
+enum language₋mode { mode₋initial, mode₋integer, mode₋fraction, mode₋regular, 
+ mode₋text, mode₋single₋ekunem, mode₋multi₋ekunem }; /* mode₋inexplanatoria */
 
 #include "Ω⃝-translate-formal.cxx"
 
@@ -273,18 +274,23 @@ typedef int64_t NoteIndex,ConsIndex; /* a․𝘬․a 'Note₋idx'. */
 
 struct note₋form {
   NoteIndex l,r,element;
-  ConsIndex compare₋thenºª, 
+  NoteIndex compare₋thenºª, 
    compare₋elseºª,compare₋then₋last, 
    compare₋else₋last;
+  NoteIndex machineºª, machine₋last;
+};
+
+struct note₋list {
+  NoteIndex compare₋then₋next, 
+   compare₋else₋next;
 };
 
 struct not₋e {
-  struct token₋detail D;
+  struct token₋detail X;
   struct note₋form form;
-  enum symbol₋class C;
+  struct note₋list list;
+  enum symbol₋class T;
 };
-
-union amorph₋note { struct not₋e material; int32_t cons₋idx; };
 
 int spawn₋replik(struct Unicodes filepath, struct not₋e * 🅵, struct collection * 🅰)
 { __builtin_int_t ﹟₋segments=5,i;
@@ -299,8 +305,7 @@ int load₋cells(struct Unicodes filepath, struct not₋e * 🅵, struct collect
    return 0;
 }
 
-int retail(void (^)(struct not₋e *), struct 
- note₋cons ** first, struct note₋cons ** last)
+int retail(void (^)(struct not₋e *), NoteIndex first, NoteIndex last)
 {
    return 0;
 }
@@ -319,7 +324,7 @@ struct collection /* char8₋t * */ modules₋files;
 
 char8₋t * cumpani₋filepath = ΨΛΩ;  /*  file path to cumpani-file with no default name. (object collection and index-header at end.) */
 
-char8₋t * output₋filepath = U8("oiu"); /* formerly 'a.out', 'a.o'. */
+char8₋t * binary₋filepath = U8("oiu"); /* formerly 'a.out', 'a.o'. */
 
 int platform₋chip=0;
 
@@ -451,13 +456,15 @@ int source₋files(struct Unicodes modulename, char8₋t *** sources, int * sour
      *source₋count += 1;
    },areel.special1(&filepathsºª),areel.special1(&last₋filepath),sizeof(char8₋t *))) { return -1; }
    *sources = Alloc(*source₋count * sizeof(char8₋t *));
-   recollect(^(char8₋t * path, int i) { *sources[i] = path; },areel.special2(filepathsºª), 
+   recollect(^(Material * path, int i) { *sources[i] = (char8₋t *)path; },areel.special2(filepathsºª), 
     areel.special2(last₋filepath)); char8₋t * next₋element;
    uninit₋list(^(Material * item, Material ** address₋of₋next) { 
     *address₋of₋next=item;
-   },areel.special2(filepathsºª),areel.special2(last₋filepath),&next₋element);
+   },areel.special2(filepathsºª),areel.special2(last₋filepath),sizeof(char8₋t *));
    return 0;
 }
+
+void recompile₋and₋keep₋syntax₋tree(char8₋t * object₋path₋unexpired) { }
 
 int compile₋source₋module(struct Unicodes modulename, char8₋t * object₋path₋unexpired)
 { uint64_t diffused₋object₋modified,last₋modified; struct stat sb2,sb1; int i,do₋recompile=0;
@@ -511,24 +518,23 @@ struct AnnotatedRegister AR_Mindful = {
   U"footnote: mindful logging is writing to stderr using 'vfprint'."
 };
 
-
-
 void SetOrClear(int soc, uint32_t mask, uint32_t * word)
 {
-   if (f) *w |= mask; else *w &= ~mask;
+   if (soc) *word |= mask; else *word &= ~mask;
 }
 
 int Masked(uint32_t mask, uint32_t word) { return mask & word; }
 
 void mindful_bitmap(char8₋t * token)
 {
-   if (strcmp(token, "call") == 0) { 
+   if (strcmp((const char *)token, "call") == 0) { 
      SetOrClear(1,Mindful_Call,&mindful); }
-   else if (strcmp(token, "return") == 0) { 
+   else if (strcmp((const char *)token, "return") == 0) { 
      SetOrClear(1,Mindful_Return,&mindful); }
-   else if (strcmp(token, "coroutine") { 
+   else if (strcmp((const char *)token, "coroutine") == 0) { 
      SetOrClear(1,Mindful_Coroutine,&mindful); }
 }
+
 int IsFileSuffix(const char * suffix, char8₋t * one₋filepath)
 {
    char * lastdot = strrchr((const char *)one₋filepath, '.');
@@ -543,7 +549,7 @@ again:
    if (i>=argc) goto unagain;
    token = *(argv + i);
    if (output₋filepath) { vfprint("output is ⬚\n",﹟s8(token)); 
-    outputfile₋path=token; output₋filepath=0; goto next; }
+    binary₋filepath=token; output₋filepath=0; goto next; }
    if (symbol₋exclude) { vfprint("control added to ⬚\n",﹟s8(token)); if (
     copy₋append₋items(1,token,&symbols₋uninstrummed,Alloc)) { 
       goto generic₋error; } symbol₋exclude=0; goto next; }
