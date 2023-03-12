@@ -116,7 +116,7 @@ int₋to₋sequent:
     4(one₋filename) = '\u2425' 
   END(dereference₋and₋swap)
   
-  TRANSCRIPT(attempt₋progress)
+  TRANSCRIPT(attempt₋progress) instrument py ⁄* writes 'at retros-compi.c:44 foo <-- '100' *⁄
     additions px,py as indirect traditional₋material ⁄* and 'void *' and 'refer'. *⁄
     *px=21,*py=13;
     dereference₋and₋swap(px,py)
@@ -147,7 +147,8 @@ references ⁄* a․𝘬․a append source augment when 'trace'. *⁄
 --< middle₋to₋include; @@ } > in prepare₋myrtle
   print("allocate middle at idx=⬚.\n",﹟d(idx))
   print("did₋prepare₋myrtle.\n")
-  
+  .
+
 corrections extended₋characterset ⁄* with implicit 'emboss' and 'replace' to rename 'stroke', 'append' and 'change'. *⁄
   
 --< @@ else if ((STATE(mode₋initial) > in next₋token₋inner
