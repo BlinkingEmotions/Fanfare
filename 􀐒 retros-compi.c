@@ -121,6 +121,11 @@ int₋to₋sequent:
     *px=21,*py=13;
     dereference₋and₋swap(px,py)
   END(attempth₋progress)
+  ⁄* texts are 'computed value ⬚ is '⬚' { at location ⬚ in '⬚' }
+     function ⬚ recieves out-parameters ⬚, ⬚ and ⬚.
+     variable ⬚ is ⬚.
+     symbol ⬚ returned '⬚'.
+     selection randomized and fixed and selected from mangled sha-computation. *⁄
   
 serpent₋summary
   
