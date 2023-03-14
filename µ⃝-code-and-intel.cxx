@@ -1,14 +1,24 @@
 /*  µ⃝-code-and-intel.cxx | (fine-)print assembly for Intel x86-64. */
 
-#define MACHINE₋TYPE 1 /* Binary32 alternatively binary64 a.k.a 'machine'. */
-#define REAL₋TYPE    2 /* Float32 alternatively float64 a.k.a 'real'. */
-#define UNICODE₋TYPE 3 /* Binary32 a.k.a 'unicode'. */
-#define UTF8₋TYPE    4 /* Binary8 a.k.a 'utf₋8'. */
-#define REFERS₋TYPE  5 /* 'pointer' a.k.a 'indirect reference'. */
+#define MACHINE₋TYPE    1 /* Binary32 alternatively binary64 a․𝘬․a 'Machine'. */
+#define REAL₋TYPE       2 /* Float32 alternatively float64 a․𝘬․a 'Real'. */
+#define UNICODE₋TYPE    3 /* Binary32 a․𝘬․a 'Unicode'. */
+#define UTF8₋TYPE       4 /* Binary8 a․𝘬․a 'Utf₋8'. */
+#define REFERS₋TYPE     5 /* 'pointer' a․𝘬․a 'Indirect reference'. */
+#define SIMD4x4₋TYPE    7 /* four float32 a․𝘬․a simd_t. */
+#define BINARY128₋UTYPE 8 /* signed long long integer. */
+#define BINARY128₋STYPE 9 /* unsigned long long integer. */
 
 void typename₋to₋type(Nonabsolute typename, short * fundamen)
 {
-   *fundamen = MACHINE₋TYPE;
+   *fundamen = MACHINE₋TYPE; /* union-find and makeset(binary128), find(binary128), and union(binary128, binary128) */
+   binary128 root = SHA256(U"MACHINE-TYPE");
+   binary128 query = SHA256(typename);
+   binary128 base = find(query);
+   switch (base) {
+   case 0x123456789ABCDEFull: break;
+   default: vfprint("unknown fundamental type.\n"); break;
+   }
 }
 
 int signature(bagref transcript, int * count, short ** signature)
