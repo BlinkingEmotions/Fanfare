@@ -2,10 +2,10 @@
 
 #define MACHINE₋TYPE    1 /* Binary32 alternatively binary64 a․𝘬․a 'Machine'. */
 #define REAL₋TYPE       2 /* Float32 alternatively float64 a․𝘬․a 'Real'. */
-#define UNICODE₋TYPE    3 /* Binary32 a․𝘬․a 'Unicode'. */
-#define UTF8₋TYPE       4 /* Binary8 a․𝘬․a 'Utf₋8'. */
+#define UNICODE₋TYPE    3 /* Binary32 a․𝘬․a 'Unicode' and char32̄_t. */
+#define UTF8₋TYPE       4 /* Binary8 a․𝘬․a 'Utf₋8' and char8₋t. */
 #define REFERS₋TYPE     5 /* 'pointer' a․𝘬․a 'Indirect reference'. */
-#define SIMD4x4₋TYPE    7 /* four float32 a․𝘬․a simd_t. */
+#define SIMDRx2₋TYPE    7 /* four float64 a․𝘬․a simd_tᵦ. */
 #define BINARY128₋UTYPE 8 /* signed long long integer. */
 #define BINARY128₋STYPE 9 /* unsigned long long integer. */
 
@@ -244,19 +244,28 @@ void generate₋call(struct dynamic₋bag * called₋to₋recieve)
    preserve(1,7,"rbx","rsp","rbp","r12","r13","r14","r15"); /* restore caller-save registers after call. */
 }
 
+void generate₋store()
+{
+   print(
+"\n      .section __DATA,__data\n" /* initialized and placed in object file. */
+"\n      .comm _abc4,8\n"
+"\n      .bss\n" /* uninitialized and placed in ram. */
+"\nabc3: .fill 1,8,0\n" /* three parameters repeat, size, value. */
+"\n      .section __TEXT,__rodata\n" /* initialization for global and static. */
+"\nabc1: .asciz \"\41\42\43 \"\n"
+"\nabc2: .long 0x41,0x44,0\n"
+   );
+}
+
 void generate₋unit()
 {
    print(
 "/*  assembly.S | compiled material. */\n"
 "#define END(symbol)\n"
 "#define START(symbol)\n"
-"\n      .section __DATA,__data\n" /* initialized and placed in object file. */
-"\n      .comm _abc4,8\n"
-"\n      .bss\n" /* uninitialized and placed in ram. */
-"\nabc3: .fill 1,8,0\n" /* three parameters repeat, size, value. */
-"\n      .section __TEXT,__rodata\n" /* initialization for global and static. */
-"abc1: .asciz \"\41\42\43 \"\n"
-"abc2: .long 0x41,0x44,0\n"
+   );
+   generate₋store();
+   print(
 "\n      .section __TEXT,__text\n\n"
    );
    struct dynamic₋bag * material; Nonabsolute symbol;
