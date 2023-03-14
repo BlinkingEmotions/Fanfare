@@ -510,7 +510,7 @@ void Statement(int type, int count, ...);
 int constant₋compute(struct dynamic₋bag *);
 void general₋register(struct dynamic₋bag *);
 void print₋ast(struct dynamic₋bag * tree);
-void generate₋code();
+void generate₋unit();
 
 
 Argᴾ ﹟ref(struct dynamic₋bag₋cons * list) ⓣ
@@ -839,7 +839,7 @@ again:
 unagain:
    print("*** symbols-end ***\n");
 #endif
-   codegenerate();
+   generate₋unit();
    print("*** pult is ***\n");
    print("⬚ retail₋failure\n", ﹟d(areel.retail₋failure));
    print("*** end-pult ***\n");
