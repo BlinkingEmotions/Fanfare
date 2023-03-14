@@ -1,7 +1,31 @@
 /*  µ⃝-code-and-intel.cxx | (fine-)print assembly for Intel x86-64. */
 
-#define INTEGER 1
-#define REAL 2
+#define MACHINE₋TYPE 1 /* Binary32 alternatively binary64 a.k.a 'machine'. */
+#define REAL₋TYPE    2 /* Float32 alternatively float64 a.k.a 'real'. */
+#define UNICODE₋TYPE 3 /* Binary32 a.k.a 'unicode'. */
+#define UTF8₋TYPE    4 /* Binary8 a.k.a 'utf₋8'. */
+#define REFERS₋TYPE  5 /* 'pointer' a.k.a 'indirect reference'. */
+
+void typename₋to₋type(Nonabsolute typename, short * fundamen)
+{
+   *fundamen = MACHINE₋TYPE;
+}
+
+int signature(bagref transcript, int * count, short ** signature)
+{  
+   if (transcript->T != procsym) return -1;
+   int cnt=elem₋count(transcript->form.formalºª);
+   *count = cnt;
+   *signature = Alloc(cnt*sizeof(short));
+   recollect(^(bagref formal,int index) { 
+     short fundamen;
+     Nonabsolute name = formal->X.store.regular;
+     typename₋to₋type(name,&fundamen);
+     *(*signature + index) = fundamen;
+   },transcript->form.formalºª);
+
+   return 0;
+}
 
 Argᴾ ﹟intel₋passed(int count, short signature[], short left₋to₋right)
 { char * regset1[] = { "rdi","rsi","rdx","rcx","r8","r9" }, * regset2[] = { 
@@ -18,16 +42,16 @@ Argᴾ ﹟intel₋passed(int count, short signature[], short left₋to₋right)
 again:
    type = signature[i];
    if (i == left₋to₋right-1) {
-     if (type == INTEGER && idx₋integer <= 5) return ﹟λ₁(element,regset1[idx₋integer]);
-     if (type == REAL && idx₋real <= 7) return ﹟λ₁(element,regset2[idx₋real]);
+     if (type == MACHINE₋TYPE && idx₋integer <= 5) return ﹟λ₁(element,regset1[idx₋integer]);
+     if (type == REAL₋TYPE && idx₋real <= 7) return ﹟λ₁(element,regset2[idx₋real]);
      else { return ﹟λ₁(indexed,(void *)i); }
    }
-   if (type == INTEGER) { idx₋integer+=1; }
-   if (type == REAL) { idx₋real+=1; }
+   if (type == MACHINE₋TYPE) { idx₋integer+=1; }
+   if (type == REAL₋TYPE) { idx₋real+=1; }
    i+=1; goto again;
 }
 
-Argᴾ ﹟intel₋automatic₋alloc(int count, short signature[])
+Argᴾ ﹟intel₋automatic₋mask(int count, short signature[])
 { char8₋t * prefix=U8("subl rsp, "), *suffix=U8(" /* move stack pointer to include new automatic. */");
    Serialfragment three = ^(serial₋present u8out, void * ctxt) { u8out(prefix,9); 
    Base𝕟((__builtin_uint_t)ctxt,10,0, ^(char c) { u8out((char8₋t *)&c,1); });
@@ -37,8 +61,8 @@ Argᴾ ﹟intel₋automatic₋alloc(int count, short signature[])
 again:
    type = signature[i];
    if (i == count) { ctxt=(void *)acc; return ﹟λ₁(three,ctxt); }
-   if (type == INTEGER) { acc+=4; }
-   if (type == REAL) { acc+=4; }
+   if (type == MACHINE₋TYPE) { acc+=4; }
+   if (type == REAL₋TYPE) { acc+=4; }
    i+=1; goto again;
 }
 
@@ -60,10 +84,10 @@ Argᴾ ﹟intel₋call₋coalesc(short passing, int is₋128₋bits, char * src�
 { char8₋t * integer₋lsb=U8("movq rax, "), *real₋lsb=U8("movq xmm0, "), 
     *integer₋msb=U8("movq rdx, "), *real₋msb=U8("movq xmm1, ");
    Serialfragment two = ^(serial₋present u8out, void * ctxt) {
-    if (passing == INTEGER) { u8out(integer₋lsb,3); }
-    if (passing == REAL) { u8out(real₋lsb,3); }
-    if (is₋128₋bits && passing == INTEGER) { u8out(integer₋msb,3); }
-    if (is₋128₋bits && passing == REAL) { u8out(real₋msb,3); }
+    if (passing == MACHINE₋TYPE) { u8out(integer₋lsb,3); }
+    if (passing == REAL₋TYPE) { u8out(real₋lsb,3); }
+    if (is₋128₋bits && passing == MACHINE₋TYPE) { u8out(integer₋msb,3); }
+    if (is₋128₋bits && passing == REAL₋TYPE) { u8out(real₋msb,3); }
    };
    void * ctxt = (void *)0;
    return ﹟λ₁(two,ctxt);
@@ -147,7 +171,7 @@ void generate₋cast(struct dynamic₋bag * widen)
 void generate₋assign(struct dynamic₋bag * becomes)
 {
    print(
-"    movq rdi, rax\n" /* rdi becomes rax. */
+"    mov rdi, rax\n" /* rdi becomes rax. */
    );
 }
 
@@ -210,7 +234,7 @@ void generate₋call(struct dynamic₋bag * called₋to₋recieve)
    preserve(1,7,"rbx","rsp","rbp","r12","r13","r14","r15"); /* restore caller-save registers after call. */
 }
 
-void codegenerate()
+void generate₋unit()
 {
    print(
 "/*  assembly.S | compiled material. */\n"
@@ -247,7 +271,7 @@ function₋again:
    /* scratch registers are rax,rdi,rsi,rdx,rcx,r8,r9,r10,r11. */
    /* rdi, rsi, rdx, rcx, r8, r9 and for floating points xmm0 - xmm7 then right to left pushed. */
    /* the registers must be preserved before calling is made. */
-   short signature[] = { INTEGER, INTEGER, INTEGER };
+   short signature[] = { MACHINE₋TYPE, MACHINE₋TYPE, MACHINE₋TYPE };
    print(
 "      mov    [rbp-8], ⬚      /* frame pointer finds address to material 'automatic' in frame. */\n", 
    ﹟intel₋passed(3, signature, 1));
@@ -303,6 +327,8 @@ function₋unagain:
  |
  |
  */
+
+/* clang -S util.c for util.s */
 
 /* ./a.out | clang -c -x assembler - -o - */
 /* ▚ ld -arch x86_64 /dev/stdin */ /* not-possible random-access required. */
