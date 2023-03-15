@@ -549,13 +549,14 @@ void expression(void);
 
 struct dynamic₋bag *bu₋fragment,*td₋tree;
 
-#include "µ⃝-code-and-tree.cxx"
+#include "µ⃝-type-union.cxx"
 #include "µ⃝-verse-const.cxx"
+#include "µ⃝-code-and-tree.cxx"
 #include "µ⃝-general-register.cxx"
+#include "µ⃝-syntax-pretty.cxx"
 /* #include "µ⃝-semantic-register.cxx"
 #include "µ⃝-code-and-arm.cxx" */
 #include "µ⃝-code-and-intel.cxx"
-#include "µ⃝-syntax-pretty.cxx"
 
 void factor(void)
 {
