@@ -10,7 +10,8 @@ enum symbol₋class { diffusesym, preproc₋if, preproc₋else, preproc₋elif,
  indirectsym, voluntarysym, isomorphsym, iteratesym, iteratedsym, referssym, 
  intsym, char8₋tsym, char32̄_tsym, binary32sym, decimal32sym, tertary32sym, 
  binary128sym, decimal128sym, tertary128sym, unsignedsym, schemasym, 
- attributessym, prominentsym, addressofsym, nonaltersym, 
+ attributessym, prominentsym, addressofsym, nonaltersym, invariantsym, 
  end₋of₋transmission₋and₋file };
+
 
 
