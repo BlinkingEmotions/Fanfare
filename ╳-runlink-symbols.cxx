@@ -4,7 +4,7 @@ enum symbol₋class { diffusesym, preproc₋if, preproc₋else, preproc₋elif,
  preproc₋end, preproc₋include, preproc₋system, preproc₋defined, 
  preproc₋define, partialsym, fostratdefisym, structsym, definitesym, 
  end₋and₋dotsym, big₋endiansym, little₋endiansym, unionsym, apriorisym, 
- typedefsym, constantsym, computesym, collide, comparesym, ifsym, /* likely and unlikely */
+ typedefsym, constantsym, computesym, collide, comparesym, ifsym, /* possibly/unlikely and likely */
  gotosym, transcriptsym, inexorablesym, mentativesym, startsym, inlinesym, 
  coroutinesym, endsym, additionssym, ident, number, assym /* lāngs utstreckning */, 
  indirectsym, voluntarysym, isomorphsym, iteratesym, iteratedsym, referssym, 
