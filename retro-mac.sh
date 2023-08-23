@@ -2,7 +2,7 @@
 
 builtin typeset progname=$0
 builtin typeset -a sequence # array declaration.
-builtin typeset debugger=""
+builtin typeset introspect=""
 builtin typeset -A components # associative array.
 builtin typeset -A output
 builtin typeset scriptpath=`realpath $progname`
@@ -42,7 +42,7 @@ function usage
    
    optional arguments:
      -h, --help          show this help message and exit.
-     -n, --nodebug       start debugger after compilation.
+     -i, --introspect    start debugger after compilation.
    
    Sku-keys are:
    
@@ -62,9 +62,9 @@ fi
 
 while [[ $# -gt 0 ]]; do
   case $1 in 
-   -n | --nodebug )
+   -i | --introspect )
      builtin shift
-     debugger="y"
+     introspect="y"
      ;;
    -help | --help | -h | --h | -\? )
      usage
@@ -91,7 +91,7 @@ function compile_and_run()
       "$directory/../../Cox-route/context-2.c"                                          \
       "$directory/../../Cox-route/coro-main.c"                                          \
        -lreadline
-     if [[ -n "$debugger" ]]; then
+     if [[ -n "$introspect" ]]; then
        builtin command xcrun lldb $directory/$output[$sku]
      fi
    }
