@@ -85,7 +85,7 @@ function compile_and_run()
       -I "$directory/../Apps/"                                                          \
       -o "$directory/$output[$sku]"                                                     \
       "$directory/$components[$sku]"                                                    \
-      "$directory/../Apps/Source/Releases/libTwinbeam-x86_64.a"                         \
+      "$directory/../Apps/Source/Releases/libTwinbeam-macos.a"                          \
       "$directory/../Apps/Additions/monolith-sequent.c"                                 \
       "$directory/../../Cox-route/context-1.S"                                          \
       "$directory/../../Cox-route/context-2.c"                                          \
