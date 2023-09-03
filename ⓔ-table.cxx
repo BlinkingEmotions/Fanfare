@@ -1,7 +1,7 @@
 /*  ⓔ-table.cxx | render table with scalars and intervals. */
 
 int next₋token₋inner₂(Translation * t, Symbol * detail₋out)
-{ __builtin_int_t i,symbols=t->ctxt.program₋text.tetras; char32̄_t uc,uc₊₁,uc₊₂;
+{ __builtin_int_t i,symbols=t->program₋text.tetras; char32̄_t uc,uc₊₁,uc₊₂;
    int lift₋count=0,sym;
    🧵(identifier,keyword,unicodes,trouble,completion)
    {
@@ -19,9 +19,9 @@ again:
    if (i >= symbols) confess(completion);
    if (i == symbols - 1) lift₋count=2;
    if (i == symbols - 2) lift₋count=1;
-   uc = *(t->ctxt.program₋text.unicodes + i);
-   uc₊₁ = lift₋count >= 2 ? U' ' : *(t->ctxt.program₋text.unicodes + i + 1);
-   uc₊₂ = lift₋count >= 1 ? U' ' : *(t->ctxt.program₋text.unicodes + i + 2);
+   uc = *(t->program₋text.unicodes + i);
+   uc₊₁ = lift₋count >= 2 ? U' ' : *(t->program₋text.unicodes + i + 1);
+   uc₊₂ = lift₋count >= 1 ? U' ' : *(t->program₋text.unicodes + i + 2);
    if (STATE(mode₋initial) && uc == U'\xa') {
      location₋nextline(&t->ctxt.interval);
    }
@@ -58,19 +58,20 @@ again:
    else if (STATE(mode₋quotes₋text) && uc == U'\'') {
      if (regularpool₋datum₋text(t->text,t->ctxt.syms₋in₋quotes, 
       t->ctxt.reference₋quoted)) return -1;
-     assign₋symbol₋noforward(quotesym,t->ctxt.syms₋in₋quotes,&t->ctxt,detail₋out);
+     assign₋symbol₋noforward(quote,t->ctxt.syms₋in₋quotes,&t->ctxt,detail₋out);
      confess(unicodes);
    }
    else if ((STATE(mode₋initial) && letter(uc)) || (STATE(mode₋regular) && (letter(uc) || digit(uc)))) {
      if (t->ctxt.syms₋in₋regular == 2048) { 
-      Diagnos(1,t->ctxt.source₋path,&t->symbol.gritty.interval,1,
+      Log(t->source₋path,&t->symbol.gritty.interval,1,
          "identifier and keyword too long"); 
       confess(trouble); }
      t->ctxt.regular[t->ctxt.syms₋in₋regular]=uc;
      t->ctxt.syms₋in₋regular+=1;
      t->ctxt.state = mode₋regular;
      if (!letter(uc₊₁) && !digit(uc₊₁)) {
-       if (!trie₋keyword(t->ctxt.syms₋in₋regular,t->ctxt.regular,&sym,&t->ctxt.keys)) { confess(keyword); }
+       if (!trie₋keyword(t->ctxt.syms₋in₋regular,t->ctxt.regular,&sym,&t->ctxt.keys))
+         confess(keyword);
        confess(identifier);
      }
    }
@@ -82,14 +83,14 @@ int next₋token₋table(Translation * t)
 { int y;
    if (t->ctxt.tip₋unicode == 0) {
      y = next₋token₋inner₂(t,&t->symbol);
-     if (y != 0) { Diagnos(1,t->ctxt.source₋path,&t->symbol.gritty.interval,1, 
+     if (y != 0) { Log(t->source₋path,&t->symbol.gritty.interval,1, 
       "table scanner error, initial trouble"); exit(2); }
    } else {
      t->symbol₋passed = t->symbol;
      t->symbol = t->retrospect;
    }
    y = next₋token₋inner₂(t,&t->retrospect);
-   if (y != 0) { Diagnos(1,t->ctxt.source₋path,&t->retrospect.gritty.interval, 
+   if (y != 0) { Log(t->source₋path,&t->retrospect.gritty.interval, 
     1,"table scanner error, advance failure"); exit(3); }
 #if defined TRACE₋TOKENS
    void trace₋token(Symbol, struct collection *);
@@ -98,12 +99,47 @@ int next₋token₋table(Translation * t)
    return 0;
 }
 
-int Tableparse(struct Unicodes program, char8₋t * path, Translation * t)
+int match₋table(enum symbol₋class s, Translation * t)
 {
+   if (symbol₋equal(s,t)) { next₋token₋table(t); return 1; }
    return 0;
 }
 
-int Rendertable(Translation * t, Simulator * sim, chronology₋instant when)
+int expect₋table(enum symbol₋class s, Translation * t)
+{
+   if (match₋table(s,t)) return 1;
+   Log(t->source₋path,&t->symbol.gritty.interval,0,
+    "expect: unexpected symbol '⬚' is not '⬚'.", 
+    ﹟d((__builtin_int_t)s), 
+    ﹟d((__builtin_int_t)t->symbol.class));
+   return 0;
+}
+
+#pragma recto .table grammar
+
+inexorable void Operat(Translation * t)
+{
+   if (match₋table(ident,t)) { }
+   else if (match₋table(popsym,t)) { }
+   else if (match₋table(swapsym,t)) { }
+   else if (match₋table(dupsym,t)) { }
+   else if (match₋table(reportsym,t)) { }
+   else if (match₋table(boldsym,t)) { }
+   else if (match₋table(quote,t)) { }
+   else if (match₋table(times,t)) { }
+   else if (match₋table(divide,t)) { }
+   else if (match₋table(plus,t)) { }
+   else if (match₋table(minus,t)) { }
+   else Log(t->source₋path,&t->symbol.gritty.interval,0,"unknown token.");
+}
+
+int Tableparse(Translation * t)
+{
+   next₋token₋table(t); Operat(t);
+   return 0;
+}
+
+int Rendertable(Translation * t, Simulation * s, chronology₋instant when)
 {
    return 0;
 }
