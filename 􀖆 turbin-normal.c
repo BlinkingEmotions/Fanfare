@@ -63,14 +63,17 @@ enum ast₋type { file, definition, expression, statement, statements,
   🅩₋literal, 🅡₋literal, string₋to₋🅽, 🅩₋to₋🅡
 };
 
+TAILQ_HEAD(dynamic₋bag₋queue,dynamic₋bag); /* ⬷ defines and creates a type containing first and last. */
+
 struct dynamic₋bag {
   enum ast₋type type;
   chronology₋instant instant;
-  struct dynamic₋bag * sequence;
+  struct dynamic₋bag₋queue sequence;
   struct dynamic₋bag * scalar;
   char8₋t * source₋path;
-  struct  source₋location interval;
-};
+  struct source₋location interval;
+  TAILQ_ENTRY(dynamic₋bag) entries; /* ⬷ inserts next- and previous field. */
+}; 
 
 typedef struct translation {
   struct Unicodes program₋text;
@@ -83,9 +86,10 @@ typedef struct translation {
 
 struct dynamic₋bag * new₋Unit()
 { int size = sizeof(struct dynamic₋bag);
-  struct dynamic₋bag *node=(struct dynamic₋bag *)malloc(size),
-   init={ file,0,0,0 };
+  struct dynamic₋bag *node=(struct dynamic₋bag *)calloc(1,size),
+   init={ file,0,{0,0},0,0,0 };
    *node=init;
+   TAILQ_INIT(&node->sequence);
    return node;
 }
 
