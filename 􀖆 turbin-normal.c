@@ -9,7 +9,7 @@ enum symbol₋class { ident=1, machine₋integer, monetary, times, divide,
  createsym, namedsym, tradingsym, residentsym, withsym, schedulesym, 
  startssym, occurssym, exchangesym, currencysym, popsym, swapsym, dupsym, 
  reportsym, boldsym, quote, eot₋and₋file, unarbitrated₋symbol, lbrace, 
- rbrace, comma
+ rbrace, comma, dropsym
 };
 
 /* compile with ./retro-mac.sh essence-turbin */
@@ -56,23 +56,42 @@ typedef struct token₋detail
 
 typedef struct Symbol { enum symbol₋class class; Detail gritty; } Symbol;
 
+#pragma recto abstract and concrete syntax
+
 #include <sys/queue.h>
 #include <sys/rbtree.h>
 
-enum ast₋type { file, definition, expression, statement, statements, 
-  🅩₋literal, 🅡₋literal, string₋to₋🅽, 🅩₋to₋🅡
+enum ast₋type { file, definition, local, statements, 
+  if₋stmt,do₋stmt,bookkeep₋stmt,break₋stmt,
+  plus₋expr,minus₋expr,unairyneg₋expr,times₋expr,divide₋expr, 
+  🅩₋literal,🅡₋literal,string₋literal,string₋to₋🅽, 🅩₋to₋🅡, 
+  ident₋literal,instant₋literal,call₋expr
 };
 
-TAILQ_HEAD(dynamic₋bag₋queue,dynamic₋bag); /* ⬷ defines and creates a type containing first and last. */
+enum comparision { lt,lte,gt,gte,eqltwo,neq };
+
+enum boolean { or,and,not };
+
+TAILQ_HEAD(dynamic₋bag₋queue,dynamic₋bag); /* ⬷ defines and creates a type containing 'first' and 'last'. */
 
 struct dynamic₋bag {
   enum ast₋type type;
-  chronology₋instant instant;
-  struct dynamic₋bag₋queue sequence;
-  struct dynamic₋bag * scalar;
+  chronology₋instant constant₋instant;
+  struct dynamic₋bag₋queue sequence,compare₋else;
+  struct dynamic₋bag * scalar,*left,*right;
+  struct dynamic₋bag₋queue parameter₋list;
+  enum comparision condition;
+  enum boolean logic;
+  union {
+    int boolean;
+    Integer integer;
+    Instant instant;
+    Real real;
+    Nonabsolute string;
+  } any; /* a․𝘬․a 'variant'. */
   char8₋t * source₋path;
   struct source₋location interval;
-  TAILQ_ENTRY(dynamic₋bag) entries; /* ⬷ inserts next- and previous field. */
+  TAILQ_ENTRY(dynamic₋bag) entries; /* ⬷ inserts 'next'- and 'previous' fields. */
 }; 
 
 typedef struct translation {
@@ -81,14 +100,12 @@ typedef struct translation {
   struct language₋context ctxt;
   Symbol symbol₋passed,symbol,retrospect;
   struct collection *ident,*text;
-  struct dynamic₋bag * tree;
+  struct dynamic₋bag₋queue trees;
 } Translation;
 
 struct dynamic₋bag * new₋Unit()
 { int size = sizeof(struct dynamic₋bag);
-  struct dynamic₋bag *node=(struct dynamic₋bag *)calloc(1,size),
-   init={ file,0,{0,0},0,0,0 };
-   *node=init;
+  struct dynamic₋bag *node=(struct dynamic₋bag *)calloc(1,size);
    TAILQ_INIT(&node->sequence);
    return node;
 }
@@ -108,7 +125,6 @@ int Init₋translation₋unit(char8₋t * src₋path, Translation * t, int langu
    if (init₋regularpool(t->text)) return -2;
    t->source₋path = src₋path;
    t->program₋text = Run(U"2023-01-01 12:00:00 PRINT 'Starting simulation.'\n");
-   t->tree = new₋Unit();
    t->symbol₋passed.class = unarbitrated₋symbol;
    
    switch (language)
@@ -381,7 +397,7 @@ int next₋token₋streck(Translation * t)
    return 0;
 }
 
-#pragma recto Action routines
+#pragma recto action routines
 
 #pragma recto parsing northern 'således' tran-sact-ions and veri-fi-c-at-es
 
@@ -501,70 +517,87 @@ inexorable void Unit(Translation * t)
    next₋token₋streck(t); Sections(t); /* valid₋only(eot₋and₋file) */
 }
 
-typedef struct virtu₋context
-{
-  struct dynamic₋bag * program;
+typedef struct Simulator {
+  struct dynamic₋bag₋queue program;
   chronology₋instant last;
-} simul₋context;
+  rb_tree_t entities,currencies,countries,schedules,functions;
+  __builtin_int_t prompt_number;
+} Simulation;
 
-int BsimParse(Translation * t, simul₋context * ctxt₋out)
+int BsimParse(Translation * t, Simulation * ctxt₋out)
 {
    Unit(t);
-   ctxt₋out->program = t->tree;
+   ctxt₋out->program = t->trees;
    ctxt₋out->last = 0;
    return 0;
 }
 
 #pragma recto stochastic and deterministic simulation
 
-#undef true
-#include <string.h>
-
-typedef struct Itwiż₋Cuideam {
-   Instant effect;
-   Real weight₋lo, weight₋hi;
-   Nonabsolute unit₋lo, unit₋hi;
- } Exchange; /* the two units are sorted on sha-256. */
-
-typedef struct Currency { 
-  rb_node_t node;
-  char32̄_t * name;
-} Munita;
-
-typedef struct Entity {
+typedef struct entity {
   rb_node_t node;
   char32̄_t * name;
   struct timeserie history; /* a․𝘬․a 'book'. */
   version₋ts revision;
-} Entity;
+} entity;
 
-typedef struct Schedule {
+typedef struct currency {
+  rb_node_t node;
+  char32̄_t * name;
+} currency;
+
+typedef struct country {
+  rb_node_t node;
+  char32̄_t * name;
+} country;
+
+typedef struct schedule {
   rb_node_t node;
   char32̄_t * name;
   chronology₋instant starts;
   struct chronology₋relative period;
-} Schedule; /* Repeat never, hourly, daily, weekdays, weekend, fortnighly,
+} schedule; /* Repeat never, hourly, daily, weekdays, weekend, fortnighly,
   monthly, every three month, every six month, yearly and optional 
-  'end repeat on date'. */ 
+  'end repeat on date'. */
 
-typedef struct Simulator {
-  rb_tree_t entities; rb_tree_ops_t entity₋ops;
-  __builtin_int_t prompt_number;
-} Simulation;
+typedef struct exchange {
+  Instant effect;
+  Real weight₋lo, weight₋hi;
+  Nonabsolute unit₋lo, unit₋hi;
+} exchange;
 
-int IsReversed(Nonabsolute left, Nonabsolute right, struct collection * ident);
-int Append(Real vleft, Nonabsolute uleft, Real vright, Nonabsolute uright, 
- int reversed, Exchange * exch) ⓣ;
-int Append(char32̄_t name, Entity * entity) ⓣ;
-int Append(char32̄_t name, Munita * currency) ⓣ;
-int Conversion(Instant instant, Real value, Nonabsolute src, Nonabsolute dst, Real * also);
+typedef struct function {
+  rb_node_t node;
+  char32̄_t * name;
+  struct dynamic₋bag * definition;
+} function;
+
+int strcmp32(char32̄_t * p1, char32̄_t * p2)
+{ char32̄_t * s1=p1,*s2=p2, c1,c2;
+   do {
+     c1 = *s1++;
+     c2 = *s2++;
+     if (c1 == U'\0') return c1 - c2;
+   } while (c1 == c2);
+   return c1-c2;
+}
+
+signed int compare_entity_nodes(void * context, const void *node1, const void 
+ *node2) { return strcmp32(((entity *)node1)->name,((entity *)node2)->name); }
+signed int compare_function_nodes(void * context, const void *node1, const void 
+ *node2) { return strcmp32(((function *)node1)->name,((function *)node2)->name); }
+signed int compare_entity_key(void * context, const void *node, const void * 
+ key) { return strcmp32(((entity *)node)->name,(char32̄_t *)key); }
+signed int compare_function_key(void * context, const void *node, const void * 
+ key) { return strcmp32(((function *)node)->name,(char32̄_t *)key); }
 
 /* #include "ⓔ-helper.h" */
 
 #include <readline/readline.h>
+#include <string.h>
 
 void EnterInteractiveMode(int * quit, Simulation * 🅢);
-int Simulate(simul₋context * 🆂, Simulation * 🅢);
+int Simulate(Simulation * 🅢);
 /* extern int Zebra(int count, chronology₋instant toggles[], chronology₋
  instant now, double * out); sometime uniform and normal not same time. */
 
@@ -578,7 +611,19 @@ int Tableparse(Translation * t);
 
 #include "ⓔ-table.cxx"
 
-void Deinit₋simulation(simul₋context * ctxt)
+void Init₋simulation(Translation * t, Simulation * simulator)
+{
+   TAILQ_INIT(&t->trees);
+   struct dynamic₋bag * tree = new₋Unit();
+   TAILQ_INSERT_TAIL(&t->trees,tree,entries);
+   rb_tree_ops_t ops1={ compare_function_nodes,compare_function_key,0,0 };
+   rb_tree_ops_t ops7={ compare_function_nodes,compare_function_key,0,0 };
+   rb_tree_init(&simulator->entities,&ops1);
+   rb_tree_init(&simulator->functions,&ops7);
+   error₋panel.diagnosis₋count = 0;
+}
+
+void Deinit₋simulation(Translation * t, Simulation * 🅢)
 {
    
 }
@@ -737,13 +782,12 @@ main(
 )
 { Simulation simulator; unicode₋shatter events;
    Translation trans;
-    simul₋context machine₋ctxt;
-    error₋panel.diagnosis₋count = 0;
+    Init₋simulation(&trans,&simulator);
     if (collection₋init(sizeof(char8₋t *),4096,&filepaths₋sequence)) { 
      exit(1); }
     if (option₋machine₋interprets(argc,(char8₋t **)argv)) { exit(2); }
-    if (figures₋path) { branch₋figures₋file(); } /*  optional .table file rendered at end. */
-    if (rule₋path) { branch₋rule₋file(); }/*  optional and upper half of event file. */
+    if (figures₋path) { branch₋figures₋file(); } /*  optional .table file rendered at end-of-simulation. */
+    if (rule₋path) { branch₋rule₋file(); }/*  optional and upper half of event file simulated before set of files. */
     if (!interactive && collection₋count(&filepaths₋sequence) == 0)
     {
       vfprint("No event file given at command line.\n"); exit(3);
@@ -755,7 +799,8 @@ main(
       trans.program₋text = initial₋program;
       if (Init₋translation₋unit(rule₋path,&trans,1)) { exit(31); }
       if (Prepared(&trans)) { exit(4); }
-      if (BsimParse(&trans,&machine₋ctxt)) { exit(5); }
+      if (BsimParse(&trans,&simulator)) { exit(5); }
+      Fallow(rules);
     }
 again:
     if (idx >= collection₋count(&filepaths₋sequence)) { goto unagain; }
@@ -766,23 +811,24 @@ again:
     trans.program₋text = main₋program;
     if (Init₋translation₋unit(file₋streck,&trans,1)) { exit(33); }
     if (Prepared(&trans)) { exit(7); }
-    if (BsimParse(&trans,&machine₋ctxt)) { exit(8); }
+    if (BsimParse(&trans,&simulator)) { exit(8); }
     Fallow(events); idx+=1; goto again;
 unagain:
     if (interactive) { int quit; EnterInteractiveMode(&quit,&simulator); }
-    if (Simulate(&machine₋ctxt,&simulator)) { exit(9); }
+    if (Simulate(&simulator)) { exit(9); }
     
     if (figures₋path) /* ta-bell. */
     { chronology₋instant bye₋ts; /* 𝘦․𝘨 'material ending 2019-12-24 23:59:59 rendered 2022-09-23 17:05'. */
       symbols = Heap₋object₋size(figures)/4;
-      struct Unicodes report₋program = { symbols, figures };
-      trans.program₋text = report₋program;
+      struct Unicodes machine₋report = { symbols, figures };
+      trans.program₋text = machine₋report;
       if (Init₋translation₋unit(figures₋path,&trans,2)) { exit(37); }
       if (Tableparse(&trans)) { exit(10); }
       if (Rendertable(&trans,&simulator,bye₋ts)) { exit(11); }
+      Fallow(figures);
     }
     
-    Deinit₋simulation(&machine₋ctxt);
+    Deinit₋simulation(&trans,&simulator);
     
     return 0;
 } /*  simulate events and output figures often at end-of-simulation. */
