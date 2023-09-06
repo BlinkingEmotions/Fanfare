@@ -1,7 +1,6 @@
 /*  retros-compi.c | keyput language compiler (as in Dragon-book sec 11.3) and 'does not bootstrap'. */
 
-import Twinbeam;
-
+#include "Twinbeam.h"
 #include "╳-runlink-symbols.cxx"
 
 /**
@@ -127,6 +126,18 @@ int₋to₋sequent:
      symbol ⬚ returned '⬚'.
      selection randomized and fixed and selected from mangled sha-computation. *⁄
   
+  COROUTINE(corout₋mydebounce) ⁄* periodically called by timer-irq. *⁄
+    global uint64_t intermediate₋previous = 0
+    global debounced-state=0 as uint64_t
+    à₋priori uint64_t RawkeysPressed()
+    uint64_t new₋state = RawkeysPressed()
+    int alternates = new₋state ^ intermediate₋previous
+    if not alternates {
+      debounced₋state = new₋state
+    }
+    intermediate₋previous = new₋state
+  END(corout₋mydebounce)
+  
 serpent₋summary
   
   reel special1 = ^(struct oval₋tree₋cons ** input) { return ((void **)input; ) }
@@ -137,6 +148,7 @@ serpent₋summary
     "c-maskin" - "􀖆⋆⁻¹Fetus.cpp" "-std=c++20" "../Apps/Additions/monolith-sequent.c" "-std=c2x"
   )
   concept F = x1 ¬x2 && x2 x3 && ¬x1 ¬x3 && ¬x1 ¬x2 x3
+  timer debounce = corout₋mydebounce @ 20 ms
   
   ⁄* add 'actor, 'coordinator' alternatively 'police' required mid 'transmit' and 'rendition'. *⁄
 settings
@@ -519,7 +531,7 @@ Bitfield Mindful[] = {
 };
 
 struct AnnotatedRegister AR_Mindful = {
-  U"Mindful: Command line options indicating selected logging.", 
+  U"Mindful: Command line options indicating object-code trace.", 
   8, Mindful, 0x00000000, 
   U"footnote: mindful logging is writing to stderr using 'vfprint'."
 };
