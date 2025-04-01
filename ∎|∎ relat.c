@@ -12,7 +12,6 @@ struct instruction {
 
 thrd_t interruptor;
 
-händelse
 #pragma recto asynchronous jobbing
 
 int JobStartup()
