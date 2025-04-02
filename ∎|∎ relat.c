@@ -39,6 +39,7 @@ int DoAsynchronousJob()
 
 #pragma recto main entry point
 
+struct progress { __builtin_uint_t bytes,total; } progress;
 struct instruction * instructions = ΨΛΩ;
 
 int
@@ -46,11 +47,16 @@ main(
   int argc, 
   char ** argv
 )
-{ int stop=0;
+{ int stop=0; struct instruction * current=instructions;
    JobStartup();
    InitiateTask();
    while (!stop) {
-
+again:
+     if (current==ΨΛΩ) { goto unagain; }
+     y=current->todo(&stop,&progress);
+     current=current->next;
+     goto again;
+unagain:
    }
    JobCleanup();
    return 0;
