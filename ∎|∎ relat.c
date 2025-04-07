@@ -2,6 +2,7 @@
 
 #include <Twinbeam.h>
 #include <threads.h>
+#include <time.h>
 
 typedef int (^packet)(int * stop, void * ctxt);
 
@@ -10,7 +11,7 @@ struct instruction {
   struct instruction * next;
 };
 
-thrd_t interruptor;
+thrd_t control;
 
 #pragma recto asynchronous jobbing
 
@@ -26,6 +27,7 @@ int JobCleanup()
 
 int corout_installInstruction(coro_t * coro)
 {
+   coro_feedback execution₋micros;
 }
 
 int DoAsynchronousJob()
@@ -41,6 +43,7 @@ int DoAsynchronousJob()
 
 struct progress { __builtin_uint_t bytes,total; } progress;
 struct instruction * instructions = ΨΛΩ;
+struct timespec rqtp = { };
 
 int
 main(
@@ -54,6 +57,7 @@ main(
 again:
      if (current==ΨΛΩ) { goto unagain; }
      y=current->todo(&stop,&progress);
+     nanosleep(&rqtp,ΨΛΩ);
      current=current->next;
      goto again;
 unagain:
