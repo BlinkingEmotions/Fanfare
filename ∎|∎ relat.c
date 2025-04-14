@@ -15,12 +15,12 @@ thrd_t control;
 
 #pragma recto asynchronous jobbing
 
-int JobStartup()
+int CopyStartup()
 {
    return 0;
 }
 
-int JobCleanup()
+int CopyCleanup()
 {
    return 0;
 }
@@ -35,6 +35,7 @@ int DoAsynchronousJob()
    print("This is still an synchronous function\n");
    coro_t * coro = coro_await(corout_installInstruction);
    if (coro == NULL) { return -1; }
+   print("Task expected to consume ⬚ µs\n", coro->yield);
    coro_t * coro₋last = coro_await(corouut_runscript);
    if (coro₋last == NULL) { return -2; }
 }
@@ -45,13 +46,19 @@ struct progress { __builtin_uint_t bytes,total; } progress;
 struct instruction * instructions = ΨΛΩ;
 struct timespec rqtp = { };
 
+typedef struct __coro_t {
+  coro_function_t function;
+  ucontext_t original;
+  __builtin_int_t buffer1
+}
+
 int
 main(
   int argc, 
   char ** argv
 )
 { int stop=0; struct instruction * current=instructions;
-   JobStartup();
+   CopyStartup();
    InitiateTask();
    while (!stop) {
 again:
@@ -62,7 +69,7 @@ again:
      goto again;
 unagain:
    }
-   JobCleanup();
+   CopyCleanup();
    return 0;
 }
 
