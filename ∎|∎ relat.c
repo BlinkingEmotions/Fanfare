@@ -49,8 +49,12 @@ struct timespec rqtp = { };
 typedef struct __coro_t {
   coro_function_t function;
   ucontext_t original;
-  __builtin_int_t buffer1
-}
+  __builtin_int_t buffer1[50];
+  ucontext_t overlay;
+  __builtin_int_t buffer2[50];
+  __builtin_int_t yield;
+  int finished;
+};
 
 int
 main(
