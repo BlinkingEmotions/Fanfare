@@ -36,7 +36,9 @@ int DoAsynchronousJob()
    coro_t * coro = coro_await(corout_installInstruction);
    if (coro == NULL) { return -1; }
    print("Task expected to consume ⬚ µs\n", coro->yield);
-   coro_t * coro₋last = coro_await(corouut_runscript);
+   int y = coro_resume(coro);
+   if (y) { return -2; }
+   coro_t * coro₋last = coro_await(corout_runscript);
    if (coro₋last == NULL) { return -2; }
 }
 
